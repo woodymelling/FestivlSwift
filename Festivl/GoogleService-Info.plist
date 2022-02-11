@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>425326046688-bguc6kshg7gsocui2goqonugah4ruq1u.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.425326046688-bguc6kshg7gsocui2goqonugah4ruq1u</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDPre0eRxM03kj9_C-87rgkGnVfQOagEr8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>425326046688</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.Woody.Festivl</string>
+	<key>PROJECT_ID</key>
+	<string>festivl</string>
+	<key>STORAGE_BUCKET</key>
+	<string>festivl.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:425326046688:ios:31e95b26b69d8069d40f85</string>
+	<key>DATABASE_URL</key>
+	<string>https://festivl.firebaseio.com</string>
+</dict>
+</plist>

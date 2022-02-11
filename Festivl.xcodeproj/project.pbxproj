@@ -1,0 +1,401 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EF479E5027B629690075D7E2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EF479E4F27B629690075D7E2 /* GoogleService-Info.plist */; };
+		EF479E5227B629E00075D7E2 /* ServiceCore in Frameworks */ = {isa = PBXBuildFile; productRef = EF479E5127B629E00075D7E2 /* ServiceCore */; };
+		EF692E6C27B4CA48006F8E0D /* FestivlApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */; };
+		EF692E6E27B4CA48006F8E0D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF692E6D27B4CA48006F8E0D /* ContentView.swift */; };
+		EF692E7027B4CA49006F8E0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF692E6F27B4CA49006F8E0D /* Assets.xcassets */; };
+		EF692E7327B4CA49006F8E0D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF692E7227B4CA49006F8E0D /* Preview Assets.xcassets */; };
+		EF947B2D27B63F1900D1086D /* EventListFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EF947B2C27B63F1900D1086D /* EventListFeature */; };
+		EFCCBD9327B4CFEB004E5270 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = EFCCBD9227B4CFEB004E5270 /* ComposableArchitecture */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		EF479E4F27B629690075D7E2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		EF692E6827B4CA48006F8E0D /* Festivl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Festivl.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivlApp.swift; sourceTree = "<group>"; };
+		EF692E6D27B4CA48006F8E0D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		EF692E6F27B4CA49006F8E0D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EF692E7227B4CA49006F8E0D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		EFCCBD9027B4CA79004E5270 /* FestivlLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FestivlLibrary; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EF692E6527B4CA48006F8E0D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF947B2D27B63F1900D1086D /* EventListFeature in Frameworks */,
+				EF479E5227B629E00075D7E2 /* ServiceCore in Frameworks */,
+				EFCCBD9327B4CFEB004E5270 /* ComposableArchitecture in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EF479E4C27B6108C0075D7E2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EF692E5F27B4CA48006F8E0D = {
+			isa = PBXGroup;
+			children = (
+				EFCCBD9027B4CA79004E5270 /* FestivlLibrary */,
+				EF692E6A27B4CA48006F8E0D /* Festivl */,
+				EF692E6927B4CA48006F8E0D /* Products */,
+				EF479E4C27B6108C0075D7E2 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		EF692E6927B4CA48006F8E0D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EF692E6827B4CA48006F8E0D /* Festivl.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EF692E6A27B4CA48006F8E0D /* Festivl */ = {
+			isa = PBXGroup;
+			children = (
+				EF479E4F27B629690075D7E2 /* GoogleService-Info.plist */,
+				EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */,
+				EF692E6D27B4CA48006F8E0D /* ContentView.swift */,
+				EF692E6F27B4CA49006F8E0D /* Assets.xcassets */,
+				EF692E7127B4CA49006F8E0D /* Preview Content */,
+			);
+			path = Festivl;
+			sourceTree = "<group>";
+		};
+		EF692E7127B4CA49006F8E0D /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				EF692E7227B4CA49006F8E0D /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EF692E6727B4CA48006F8E0D /* Festivl */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF692E7627B4CA49006F8E0D /* Build configuration list for PBXNativeTarget "Festivl" */;
+			buildPhases = (
+				EF692E6427B4CA48006F8E0D /* Sources */,
+				EF692E6527B4CA48006F8E0D /* Frameworks */,
+				EF692E6627B4CA48006F8E0D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Festivl;
+			packageProductDependencies = (
+				EFCCBD9227B4CFEB004E5270 /* ComposableArchitecture */,
+				EF479E5127B629E00075D7E2 /* ServiceCore */,
+				EF947B2C27B63F1900D1086D /* EventListFeature */,
+			);
+			productName = Festivl;
+			productReference = EF692E6827B4CA48006F8E0D /* Festivl.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EF692E6027B4CA48006F8E0D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1320;
+				LastUpgradeCheck = 1320;
+				TargetAttributes = {
+					EF692E6727B4CA48006F8E0D = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+				};
+			};
+			buildConfigurationList = EF692E6327B4CA48006F8E0D /* Build configuration list for PBXProject "Festivl" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = EF692E5F27B4CA48006F8E0D;
+			packageReferences = (
+				EFCCBD9127B4CFEB004E5270 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+			);
+			productRefGroup = EF692E6927B4CA48006F8E0D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EF692E6727B4CA48006F8E0D /* Festivl */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EF692E6627B4CA48006F8E0D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF692E7327B4CA49006F8E0D /* Preview Assets.xcassets in Resources */,
+				EF479E5027B629690075D7E2 /* GoogleService-Info.plist in Resources */,
+				EF692E7027B4CA49006F8E0D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EF692E6427B4CA48006F8E0D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF692E6E27B4CA48006F8E0D /* ContentView.swift in Sources */,
+				EF692E6C27B4CA48006F8E0D /* FestivlApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		EF692E7427B4CA49006F8E0D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		EF692E7527B4CA49006F8E0D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EF692E7727B4CA49006F8E0D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Festivl/Preview Content\"";
+				DEVELOPMENT_TEAM = FYZE6539TN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Woody.Festivl;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		EF692E7827B4CA49006F8E0D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Festivl/Preview Content\"";
+				DEVELOPMENT_TEAM = FYZE6539TN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Woody.Festivl;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EF692E6327B4CA48006F8E0D /* Build configuration list for PBXProject "Festivl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF692E7427B4CA49006F8E0D /* Debug */,
+				EF692E7527B4CA49006F8E0D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EF692E7627B4CA49006F8E0D /* Build configuration list for PBXNativeTarget "Festivl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF692E7727B4CA49006F8E0D /* Debug */,
+				EF692E7827B4CA49006F8E0D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		EFCCBD9127B4CFEB004E5270 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.33.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		EF479E5127B629E00075D7E2 /* ServiceCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ServiceCore;
+		};
+		EF947B2C27B63F1900D1086D /* EventListFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EventListFeature;
+		};
+		EFCCBD9227B4CFEB004E5270 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EFCCBD9127B4CFEB004E5270 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = EF692E6027B4CA48006F8E0D /* Project object */;
+}
