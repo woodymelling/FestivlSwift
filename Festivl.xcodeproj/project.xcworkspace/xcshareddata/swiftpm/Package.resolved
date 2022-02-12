@@ -164,6 +164,15 @@
         }
       },
       {
+        "package": "CachedAsyncImage",
+        "repositoryURL": "https://github.com/lorenzofiamingo/SwiftUI-CachedAsyncImage",
+        "state": {
+          "branch": null,
+          "revision": "22e0873d0b0ac9a7b932839cdb9fabd018185cda",
+          "version": "1.10.1"
+        }
+      },
+      {
         "package": "xctest-dynamic-overlay",
         "repositoryURL": "https://github.com/pointfreeco/xctest-dynamic-overlay",
         "state": {

@@ -8,16 +8,21 @@
 import SwiftUI
 import ComposableArchitecture
 import ArtistsFeature
+import Models
 
 enum Tab {
     case schedule, artists, explore, settings
 }
 
-struct TabBarView: View {
+public struct TabBarView: View {
 
     let store: Store<TabBarState, TabBarAction>
 
-    var body: some View {
+    public init(store: Store<TabBarState, TabBarAction>) {
+        self.store = store
+    }
+
+    public var body: some View {
         WithViewStore(store) { viewStore in
             TabView(selection: viewStore.binding(\.$selectedTab)) {
                 Text("Schedule")
@@ -58,7 +63,7 @@ struct TabBarView_Previews: PreviewProvider {
     static var previews: some View {
         TabBarView(
             store: .init(
-                initialState: .init(),
+                initialState: .init(event: .testData),
                 reducer: tabBarReducer,
                 environment: TabBarEnvironment()
             )
@@ -66,22 +71,32 @@ struct TabBarView_Previews: PreviewProvider {
     }
 }
 
-struct TabBarState: Equatable {
+public struct TabBarState: Equatable {
+    public init(event: Event, artistListState: ArtistListState = ArtistListState.init()) {
+        self.event = event
+        self.artistListState = artistListState
+    }
+
+    public var event: Event
     @BindableState var selectedTab: Tab = .schedule
     var artistListState = ArtistListState.init()
 }
 
-enum TabBarAction: BindableAction {
+public enum TabBarAction: BindableAction {
     case binding(_ action: BindingAction<TabBarState>)
     case artistListAction(ArtistListAction)
 }
 
-struct TabBarEnvironment {}
+public struct TabBarEnvironment {
+    public init() { }
+}
 
-let tabBarReducer = Reducer.combine(
+public let tabBarReducer = Reducer.combine(
     Reducer<TabBarState, TabBarAction, TabBarEnvironment> { state, action, _ in
         switch action {
         case .binding:
+            return .none
+        case .artistListAction:
             return .none
         }
     }

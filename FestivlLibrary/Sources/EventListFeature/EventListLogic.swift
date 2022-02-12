@@ -11,15 +11,19 @@ import Services
 import Combine
 
 public struct EventListState: Equatable {
-    var events: [Event]
+    public var events: [Event]
+    @BindableState var searchText = ""
+    
     public init(events: [Event] = []) {
         self.events = events
     }
 }
 
-public enum EventListAction {
+public enum EventListAction: BindableAction {
     case firebaseUpdate([Event])
     case subscribeToEvents
+    case selectedEvent(Event)
+    case binding(_ action: BindingAction<EventListState>)
 }
 
 public struct EventListEnvironment {
@@ -47,5 +51,10 @@ public let eventListReducer = Reducer<EventListState, EventListAction, EventList
                 .firebaseUpdate($0)
             }
             .eraseToEffect()
+    case .binding:
+        return .none
+    case .selectedEvent:
+        return .none
     }
 }
+.binding()

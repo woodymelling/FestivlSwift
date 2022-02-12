@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ServiceCore
+import AppFeature
 
 @main
 struct FestivlApp: App {
@@ -17,7 +18,13 @@ struct FestivlApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AppView(
+                store: .init(
+                    initialState: .init(),
+                    reducer: appReducer,
+                    environment: .init()
+                )
+            )
         }
     }
 }

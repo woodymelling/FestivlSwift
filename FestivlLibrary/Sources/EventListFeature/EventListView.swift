@@ -8,6 +8,15 @@
 import SwiftUI
 import ComposableArchitecture
 import Services
+import Models
+import Utilities
+
+extension Event: Searchable {
+    public var searchTerms: [String] {
+        return [name]
+    }
+}
+
 
 public struct EventListView: View {
     let store: Store<EventListState, EventListAction>
@@ -24,11 +33,15 @@ public struct EventListView: View {
                         ProgressView()
                     } else {
                         List {
-                            ForEach(viewStore.events) { event in
+                            ForEach(viewStore.events.filterForSearchTerm(viewStore.searchText)) { event in
                                 EventRowView(event: event)
+                                    .onTapGesture {
+                                        viewStore.send(.selectedEvent(event))
+                                    }
                             }
                         }
                         .listStyle(.plain)
+                        .searchable(text: viewStore.binding(\.$searchText))
 
                     }
                 }

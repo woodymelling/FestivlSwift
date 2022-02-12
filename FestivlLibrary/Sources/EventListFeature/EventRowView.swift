@@ -8,6 +8,7 @@
 import SwiftUI
 import Utilities
 import Models
+import CachedAsyncImage
 
 struct EventRowView: View {
     var event: Event
@@ -23,7 +24,7 @@ struct EventRowView: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            AsyncImage(url: event.imageURL) { phase in
+            CachedAsyncImage(url: event.imageURL) { phase in
                 switch phase {
                 case .empty, .failure:
                     defaultImage

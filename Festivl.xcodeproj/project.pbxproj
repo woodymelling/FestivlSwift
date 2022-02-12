@@ -10,10 +10,9 @@
 		EF479E5027B629690075D7E2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EF479E4F27B629690075D7E2 /* GoogleService-Info.plist */; };
 		EF479E5227B629E00075D7E2 /* ServiceCore in Frameworks */ = {isa = PBXBuildFile; productRef = EF479E5127B629E00075D7E2 /* ServiceCore */; };
 		EF692E6C27B4CA48006F8E0D /* FestivlApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */; };
-		EF692E6E27B4CA48006F8E0D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF692E6D27B4CA48006F8E0D /* ContentView.swift */; };
 		EF692E7027B4CA49006F8E0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF692E6F27B4CA49006F8E0D /* Assets.xcassets */; };
 		EF692E7327B4CA49006F8E0D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF692E7227B4CA49006F8E0D /* Preview Assets.xcassets */; };
-		EF947B2D27B63F1900D1086D /* EventListFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EF947B2C27B63F1900D1086D /* EventListFeature */; };
+		EF947B2F27B7291600D1086D /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EF947B2E27B7291600D1086D /* AppFeature */; };
 		EFCCBD9327B4CFEB004E5270 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = EFCCBD9227B4CFEB004E5270 /* ComposableArchitecture */; };
 /* End PBXBuildFile section */
 
@@ -21,7 +20,6 @@
 		EF479E4F27B629690075D7E2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EF692E6827B4CA48006F8E0D /* Festivl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Festivl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivlApp.swift; sourceTree = "<group>"; };
-		EF692E6D27B4CA48006F8E0D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		EF692E6F27B4CA49006F8E0D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EF692E7227B4CA49006F8E0D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		EFCCBD9027B4CA79004E5270 /* FestivlLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FestivlLibrary; sourceTree = "<group>"; };
@@ -32,8 +30,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF947B2D27B63F1900D1086D /* EventListFeature in Frameworks */,
 				EF479E5227B629E00075D7E2 /* ServiceCore in Frameworks */,
+				EF947B2F27B7291600D1086D /* AppFeature in Frameworks */,
 				EFCCBD9327B4CFEB004E5270 /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -71,7 +69,6 @@
 			children = (
 				EF479E4F27B629690075D7E2 /* GoogleService-Info.plist */,
 				EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */,
-				EF692E6D27B4CA48006F8E0D /* ContentView.swift */,
 				EF692E6F27B4CA49006F8E0D /* Assets.xcassets */,
 				EF692E7127B4CA49006F8E0D /* Preview Content */,
 			);
@@ -105,7 +102,7 @@
 			packageProductDependencies = (
 				EFCCBD9227B4CFEB004E5270 /* ComposableArchitecture */,
 				EF479E5127B629E00075D7E2 /* ServiceCore */,
-				EF947B2C27B63F1900D1086D /* EventListFeature */,
+				EF947B2E27B7291600D1086D /* AppFeature */,
 			);
 			productName = Festivl;
 			productReference = EF692E6827B4CA48006F8E0D /* Festivl.app */;
@@ -165,7 +162,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF692E6E27B4CA48006F8E0D /* ContentView.swift in Sources */,
 				EF692E6C27B4CA48006F8E0D /* FestivlApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -386,9 +382,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = ServiceCore;
 		};
-		EF947B2C27B63F1900D1086D /* EventListFeature */ = {
+		EF947B2E27B7291600D1086D /* AppFeature */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = EventListFeature;
+			productName = AppFeature;
 		};
 		EFCCBD9227B4CFEB004E5270 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;

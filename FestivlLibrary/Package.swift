@@ -8,9 +8,8 @@ let package = Package(
     platforms: [.iOS(.v15)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
-        .library(
-            name: "FestivlLibrary",
-            targets: ["FestivlLibrary"]),
+        .library(name: "FestivlLibrary", targets: ["FestivlLibrary"]),
+        .library(name: "AppFeature", targets: ["AppFeature"]),
         .library(name: "TabBarFeature", targets: ["TabBarFeature"]),
         .library(name: "ArtistsFeature", targets: ["ArtistsFeature"]),
         .library(name: "ServiceCore", targets: ["ServiceCore"]),
@@ -23,7 +22,8 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.33.0"),
-        .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk.git", from: "8.0.0")
+        .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk.git", from: "8.0.0"),
+        .package(url: "https://github.com/lorenzofiamingo/SwiftUI-CachedAsyncImage", from: "1.0.0")
 
     ],
     targets: [
@@ -32,6 +32,15 @@ let package = Package(
         .target(
             name: "FestivlLibrary",
             dependencies: []
+        ),
+        .target(
+            name: "AppFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .target(name: "EventListFeature"),
+                .target(name: "Models"),
+                .target(name: "TabBarFeature")
+            ]
         ),
         .target(name: "Models", dependencies: [
             .target(name: "Utilities"),
@@ -68,9 +77,10 @@ let package = Package(
             name: "EventListFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "CachedAsyncImage", package: "SwiftUI-CachedAsyncImage"),
                 .target(name: "Models"),
                 .target(name: "Utilities"),
-                .target(name: "Services")
+                .target(name: "Services"),
             ]
         ),
         .testTarget(
