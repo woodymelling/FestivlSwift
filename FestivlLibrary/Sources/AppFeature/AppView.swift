@@ -8,7 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import EventListFeature
-import TabBarFeature
+import EventFeature
 
 public struct AppView: View {
     let store: Store<AppState, AppAction>
@@ -21,10 +21,10 @@ public struct AppView: View {
         WithViewStore(store) { viewStore in
             IfLetStore(
                 store.scope(
-                    state: \AppState.tabBarState,
-                    action: AppAction.tabBarAction
+                    state: \AppState.eventState,
+                    action: AppAction.eventAction
                 ),
-                then: TabBarView.init(store:),
+                then: EventView.init(store:),
                 else: {
                     EventListView(
                         store: store.scope(
@@ -43,7 +43,7 @@ struct AppView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             AppView(
                 store: .init(
-                    initialState: AppState(selectedEvent: .testData),
+                    initialState: AppState(),
                     reducer: appReducer,
                     environment: .init()
                 )

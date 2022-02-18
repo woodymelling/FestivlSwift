@@ -12,6 +12,7 @@ import Combine
 import Firebase
 import FirebaseFirestoreSwift
 import Utilities
+import IdentifiedCollections
 
 public protocol Service { }
 
@@ -39,7 +40,7 @@ public extension Service {
         }
     }
 
-    func observeQuery<T: Decodable>(_ query: Query) -> AnyPublisher<[T], FestivlError> {
+    func observeQuery<T: Decodable>(_ query: Query) -> AnyPublisher<IdentifiedArrayOf<T>, FestivlError>  where T: Identifiable {
         Publishers.QuerySnapshotPublisher(query: query)
             .flatMap { snapshot -> AnyPublisher<[T], FestivlError> in
                 do {
@@ -51,10 +52,14 @@ public extension Service {
                         .setFailureType(to: FestivlError.self)
                         .eraseToAnyPublisher()
                 } catch {
+                    let error = error
                     return Fail(error: .default(description: error.localizedDescription))
                         .eraseToAnyPublisher()
                 }
 
+            }
+            .map {
+                IdentifiedArray(uniqueElements: $0)
             }
             .eraseToAnyPublisher()
     }

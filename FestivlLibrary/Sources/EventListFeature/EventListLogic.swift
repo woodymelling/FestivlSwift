@@ -11,16 +11,16 @@ import Services
 import Combine
 
 public struct EventListState: Equatable {
-    public var events: [Event]
+    public var events: IdentifiedArrayOf<Event> = []
     @BindableState var searchText = ""
     
-    public init(events: [Event] = []) {
+    public init(events: IdentifiedArrayOf<Event> = []) {
         self.events = events
     }
 }
 
 public enum EventListAction: BindableAction {
-    case firebaseUpdate([Event])
+    case firebaseUpdate(IdentifiedArrayOf<Event>)
     case subscribeToEvents
     case selectedEvent(Event)
     case binding(_ action: BindingAction<EventListState>)
@@ -46,7 +46,7 @@ public let eventListReducer = Reducer<EventListState, EventListAction, EventList
         return environment
             .eventListService()
             .observeAllEvents()
-            .catch { _ in Empty<[Event], Never>() } // TODO: Error Handling
+            .eraseErrorToPrint(errorSource: "EventListPublisher")
             .map {
                 .firebaseUpdate($0)
             }

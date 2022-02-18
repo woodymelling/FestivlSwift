@@ -14,6 +14,7 @@ struct FestivlApp: App {
 
     init() {
         FirebaseServices.initialize()
+    
     }
 
     var body: some Scene {

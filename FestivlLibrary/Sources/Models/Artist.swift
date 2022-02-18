@@ -8,10 +8,12 @@
 import Foundation
 import FirebaseFirestoreSwift
 
+public typealias ArtistID = String
 
-public struct Artist: Codable, Identifiable, Hashable {
+
+public struct Artist: Codable, Identifiable {
     public init(
-        id: String? = nil,
+        id: ArtistID? = nil,
         name: String,
         description: String? = nil,
         tier: Int? = nil,
@@ -30,7 +32,7 @@ public struct Artist: Codable, Identifiable, Hashable {
         self.spotifyURL = spotifyURL
     }
 
-    @DocumentID public var id: String?
+    @DocumentID public var id: ArtistID?
     public var name: String
     public var description: String?
     public var tier: Int?
@@ -58,5 +60,22 @@ extension Artist {
             websiteURL: "www.google.com",
             spotifyURL: "www.spotify.com"
         )
+    }
+
+    public static var testValues: [Artist] {
+        [
+            .testData,
+
+            Artist(
+                id: "000000",
+                name: "Abstrakt Sonance",
+                description: "A sound design enthusiast, Abstrakt Sonance is a passionate and boundary pushing producer. Pushing soundsystem culture in Canada for over 10 years, from running his own nights, labels, and now traveling the globe. Touring 4 continents consistently, sets ever evolving, never even close to the same.",
+                tier: 0,
+                imageURL: URL(string: "https://www.stereofox.com/wp-content/uploads/2021/06/62e2a8f767578d02f208e5e93db0e26b43846243.jpg")!,
+                soundcloudURL: "https://soundcloud.com/ABSTRAKTSONANCE",
+                websiteURL: "https://abstraktsonance.bandcamp.com",
+                spotifyURL: "https://open.spotify.com/artist/00qKBesewdWy5l0bpMdosp"
+            )
+        ]
     }
 }

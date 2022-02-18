@@ -10,8 +10,9 @@ import SwiftUI
 
 extension View {
     public func previewAllColorModes() -> some View {
-        ForEach(ColorScheme.allCases.reversed(), id: \.self) {
-            self.colorScheme($0)
+        Group {
+            self.colorScheme(.dark).background(.black)
+            self.colorScheme(.light)
         }
     }
 }

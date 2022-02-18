@@ -60,7 +60,7 @@ extension Event: Equatable {
 public extension Event {
     static var testData: Event {
         Event(
-            id: "16tOy7egIbzF0T9riZYp",
+            id: UUID().uuidString,
             name: "Testival",
             startDate: Date(),
             endDate: Date(timeInterval: 100000, since: Date()),

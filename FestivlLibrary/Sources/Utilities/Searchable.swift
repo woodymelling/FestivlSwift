@@ -6,12 +6,13 @@
 //
 
 import Foundation
+import ComposableArchitecture
 
 public protocol Searchable {
     var searchTerms: [String] { get }
 }
 
-public extension Collection where Element: Searchable {
+public extension IdentifiedArray where Element: Searchable {
     func filterForSearchTerm(_ searchTerm: String) -> Self {
 
         guard !searchTerm.isEmpty else { return self }
@@ -22,6 +23,6 @@ public extension Collection where Element: Searchable {
             element.searchTerms.contains {
                 $0.lowercased().contains(lowerCaseSearchTerm)
             }
-        } as! Self
+        }
     }
 }

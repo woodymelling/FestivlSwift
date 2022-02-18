@@ -10,13 +10,17 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(name: "FestivlLibrary", targets: ["FestivlLibrary"]),
         .library(name: "AppFeature", targets: ["AppFeature"]),
+        .library(name: "EventFeature", targets: ["EventFeature"]),
         .library(name: "TabBarFeature", targets: ["TabBarFeature"]),
-        .library(name: "ArtistsFeature", targets: ["ArtistsFeature"]),
+        .library(name: "ArtistListFeature", targets: ["ArtistListFeature"]),
+        .library(name: "ArtistPageFeature", targets: ["ArtistPageFeature"]),
         .library(name: "ServiceCore", targets: ["ServiceCore"]),
         .library(name: "Services", targets: ["Services"]),
         .library(name: "Models", targets: ["Models"]),
         .library(name: "Utilities", targets: ["Utilities"]),
-        .library(name: "EventListFeature", targets: ["EventListFeature"])
+        .library(name: "Components", targets: ["Components"]),
+        .library(name: "EventListFeature", targets: ["EventListFeature"]),
+        .library(name: "ScheduleFeature", targets: ["ScheduleFeature"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -39,14 +43,28 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .target(name: "EventListFeature"),
                 .target(name: "Models"),
-                .target(name: "TabBarFeature")
+                .target(name: "EventFeature")
+            ]
+        ),
+        .target(
+            name: "EventFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .target(name: "TabBarFeature"),
+                .target(name: "Models"),
+                .target(name: "Services")
             ]
         ),
         .target(name: "Models", dependencies: [
             .target(name: "Utilities"),
             .product(name: "FirebaseFirestoreSwift-Beta", package: "Firebase"),
         ]),
-        .target(name: "Utilities", dependencies: []),
+        .target(name: "Utilities", dependencies: [
+            .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        ]),
+        .target(name: "Components", dependencies: [
+            .target(name: "Models")
+        ]),
         .target(name: "ServiceCore", dependencies: [
             .target(name: "Utilities"),
             .product(name: "FirebaseFirestore", package: "Firebase"),
@@ -62,15 +80,32 @@ let package = Package(
             name: "TabBarFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .target(name: "ArtistsFeature")
+                .target(name: "ArtistListFeature"),
+                .target(name: "Models"),
+                .target(name: "Utilities")
             ]
         ),
         .target(
-            name: "ArtistsFeature",
+            name: "ArtistListFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .target(name: "ArtistPageFeature"),
+                .target(name: "Models"),
+                .target(name: "Utilities"),
+                .target(name: "Services"),
+                .target(name: "Components")
+            ]
+        ),
+        .target(
+            name: "ArtistPageFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .target(name: "Models"),
-                .target(name: "Utilities")
+                .target(name: "Utilities"),
+                .target(name: "Components")
+            ],
+            resources: [
+                .copy("LinkIcons.xcassets")
             ]
         ),
         .target(
@@ -83,8 +118,17 @@ let package = Package(
                 .target(name: "Services"),
             ]
         ),
-        .testTarget(
-            name: "FestivlLibraryTests",
-            dependencies: ["FestivlLibrary"]),
+        .target(
+            name: "ScheduleFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .target(name: "Models"),
+                .target(name: "Utilities"),
+                .target(name: "Components")
+            ]
+
+        ),
+        .testTarget(name: "FestivlLibraryTests", dependencies: ["FestivlLibrary"]),
+        .testTarget(name: "ComponentTests", dependencies: ["Components"])
     ]
 )

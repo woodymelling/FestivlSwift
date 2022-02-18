@@ -42,7 +42,6 @@ public struct EventListView: View {
                         }
                         .listStyle(.plain)
                         .searchable(text: viewStore.binding(\.$searchText))
-
                     }
                 }
                 .navigationTitle("Events")
@@ -63,7 +62,7 @@ struct EventListView_Previews: PreviewProvider {
                     reducer: eventListReducer,
                     environment: .init(
                         eventListService: {
-                            EventListPreviewService()
+                            EventListMockService()
                         }
                     )
                 )

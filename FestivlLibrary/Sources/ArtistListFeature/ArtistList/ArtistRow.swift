@@ -8,13 +8,18 @@
 import SwiftUI
 import Models
 import Utilities
+import Components
+import IdentifiedCollections
 
 struct ArtistRow: View {
-    @State var artist: Artist
+    var artist: Artist
+    var event: Event
+    var stages: IdentifiedArrayOf<Stage>
+    var artistSets: IdentifiedArrayOf<ArtistSet>
 
     var body: some View {
         HStack(spacing: 10) {
-            AsyncImage(url: artist.imageURL, content: { phase in
+            AsyncImage(url: artist.imageURL ?? event.imageURL, content: { phase in
 
                 switch phase {
                 case .empty, .failure:
@@ -22,7 +27,7 @@ struct ArtistRow: View {
                 case .success(let image):
                     image
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .aspectRatio(contentMode: .fill)
                 @unknown default:
                     ProgressView()
                 }
@@ -31,9 +36,12 @@ struct ArtistRow: View {
            )
             .frame(width: 60, height: 60)
 
-            Rectangle()
-                .fill(Color.red)
-                .frame(width: 5)
+            StagesIndicatorView(
+                stages: artistSets.compactMap {
+                    stages[id: $0.stageID]
+                }
+            )
+            .frame(width: 5)
 
             Text(artist.name)
 
@@ -48,7 +56,7 @@ struct ArtistRowView_Previews: PreviewProvider {
             List {
                 ForEach(Array(0...10), id: \.self) { _ in
                     NavigationLink(destination: EmptyView()) {
-                        ArtistRow(artist: Artist.testData)
+//                        ArtistRow(artist: Artist.testData, event: .testData)
                     }
 
                 }
