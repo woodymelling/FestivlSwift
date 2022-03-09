@@ -10,20 +10,33 @@ import CoreGraphics
 import Models
 
 public struct ScheduleState: Equatable {
-    internal init(stages: IdentifiedArrayOf<Stage>, selectedStage: Stage, event: Event, zoomAmount: CGFloat = 1, selectedDate: Date) {
+    public init(
+        stages: IdentifiedArrayOf<Stage>,
+        artistSets: IdentifiedArrayOf<ArtistSet>,
+        selectedStage: Stage,
+        event: Event,
+        zoomAmount: CGFloat = 1,
+        selectedDate: Date,
+        scrollAmount: CGPoint = .zero
+    ) {
         self.stages = stages
+        self.artistSets = artistSets
         self.event = event
         self.zoomAmount = zoomAmount
         self.selectedStage = selectedStage
         self.selectedDate = selectedDate
+        self.scrollAmount = scrollAmount
     }
 
     public var stages: IdentifiedArrayOf<Stage>
+    public var artistSets: IdentifiedArrayOf<ArtistSet>
     public var event: Event
 
     public var zoomAmount: CGFloat = 1
     @BindableState public var selectedStage: Stage
     public var selectedDate: Date
+    @BindableState public var scrollAmount: CGPoint
+
 }
 
 public enum ScheduleAction: BindableAction {
@@ -53,3 +66,22 @@ public let scheduleReducer = Reducer<ScheduleState, ScheduleAction, ScheduleEnvi
     }
 }
 .binding()
+
+
+
+extension Store where State == ScheduleState, Action == ScheduleAction {
+    static var testStore: Store<ScheduleState, ScheduleAction> {
+        let time = Event.testData.festivalDates[0]
+        return Store(
+            initialState: .init(
+                stages: Stage.testValues.asIdentifedArray,
+                artistSets: ArtistSet.testValues(startTime: Calendar.current.date(bySettingHour: 13, minute: 0, second: 0, of: time)!).asIdentifedArray,
+                selectedStage: Stage.testValues[0],
+                event: .testData,
+                selectedDate: time
+            ),
+            reducer: scheduleReducer,
+            environment: .init()
+        )
+    }
+}

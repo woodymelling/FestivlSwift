@@ -12,6 +12,7 @@ import Combine
 import IdentifiedCollections
 import Utilities
 import TabBarFeature
+import SwiftUI
 
 public struct EventState: Equatable {
     var event: Event
@@ -25,25 +26,54 @@ public struct EventState: Equatable {
     // MARK: ArtistListState
     var artistListSearchText: String = ""
 
-    var tabBarState: TabBarState {
+    // MARK: ScheduleState
+    var scheduleSelectedStage: Stage?
+    var scheduleZoomAmount: CGFloat = 1
+    var scheduleSelectedDate: Date?
+    var scheduleScrollAmount: CGPoint = .zero
+
+    var eventLoaded: Bool {
+        return loadedArtists && loadedStages && loadedArtistSets
+    }
+
+    var loadedArtists = false
+    var loadedStages = false
+    var loadedArtistSets = false
+
+    var tabBarState: TabBarState? {
         get {
-            TabBarState(
+            guard eventLoaded,
+                let scheduleSelectedDate = scheduleSelectedDate,
+                let scheduleSelectedStage = scheduleSelectedStage
+            else { return nil}
+
+            return TabBarState(
                 event: event,
                 artists: artists,
                 stages: stages,
                 artistSets: artistSets,
                 selectedTab: selectedTab,
-                artistListSearchText: artistListSearchText
+                artistsListSearchText: artistListSearchText,
+                scheduleSelectedStage: scheduleSelectedStage,
+                scheduleZoomAmount: scheduleZoomAmount,
+                scheduleSelectedDate: scheduleSelectedDate,
+                scheduleScrollAmount: scheduleScrollAmount
             )
         }
 
         set {
+            guard let newValue = newValue else { return }
+
             self.selectedTab = newValue.selectedTab
             self.artists = newValue.artists
             self.event = newValue.event
             self.stages = newValue.stages
             self.artistSets = newValue.artistSets
             self.artistListSearchText = newValue.artistsListSearchText
+            self.scheduleSelectedDate = newValue.scheduleSelectedDate
+            self.scheduleSelectedStage = newValue.scheduleSelectedStage
+            self.scheduleZoomAmount = newValue.scheduleZoomAmount
+            self.scheduleScrollAmount = newValue.scheduleScrollAmount
         }
     }
 
@@ -54,6 +84,7 @@ public struct EventState: Equatable {
 
 public enum EventAction {
     case subscribeToDataPublishers
+    case setUpWhenDataLoaded
 
     case artistsPublisherUpdate(IdentifiedArrayOf<Artist>)
     case stagesPublisherUpdate(IdentifiedArrayOf<Stage>)
@@ -66,6 +97,7 @@ public struct EventEnvironment {
     public var artistService: () -> ArtistServiceProtocol
     public var stageService: () -> StageServiceProtocol
     public var artistSetService: () -> ArtistSetServiceProtocol
+    public var currentDate: () -> Date = { Date.now }
 
     public init(
         artistService: @escaping () -> ArtistServiceProtocol = { ArtistService.shared },
@@ -102,24 +134,58 @@ public let eventReducer = Reducer.combine(
 
         case .artistsPublisherUpdate(let artists):
             state.artists = artists
-            return .none
+            state.loadedArtists = true
+            return Effect(value: .setUpWhenDataLoaded)
+
         case .stagesPublisherUpdate(let stages):
             state.stages = stages
-            return .none
+            state.loadedStages = true
+            return Effect(value: .setUpWhenDataLoaded)
+
         case .artistSetsPublisherUpdate(let artistSets):
             state.artistSets = artistSets
-            return .none
+            state.loadedArtistSets = true
+            return Effect(value: .setUpWhenDataLoaded)
+
         case .tabBarAction:
+            return .none
+
+        case .setUpWhenDataLoaded:
+            guard state.eventLoaded else { return .none }
+
+            let selectedDate: Date
+
+            // Choose selected date based on now and event days
+            if (state.event.startDate...state.event.endDate).contains(environment.currentDate()) {
+                selectedDate = environment.currentDate().startOfDay
+            } else {
+                selectedDate = state.event.startDate.startOfDay
+            }
+
+            state.scheduleSelectedDate = selectedDate
+
+            // Choose selected stage based on stages and sets
+
+            // OPTIMIZATION POINT
+            let selectedStage = state.stages.first(where: { stage in
+                state.artistSets.contains {
+                    $0.isOnDate(selectedDate, dayStartsAtNoon: state.event.dayStartsAtNoon)
+                }
+            })
+
+            // TODO: What happens if there are no stages yet? Is that important
+            state.scheduleSelectedStage = selectedStage ?? state.stages.first!
+
             return .none
         }
     },
 
 
-    tabBarReducer.pullback(
+    tabBarReducer.optional().pullback(
         state: \EventState.tabBarState,
         action: /EventAction.tabBarAction,
         environment: { _ in TabBarEnvironment() }
     )
 
 )
-
+    .debug()

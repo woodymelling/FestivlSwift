@@ -20,6 +20,15 @@
         }
       },
       {
+        "package": "CollectionViewSlantedLayout",
+        "repositoryURL": "https://github.com/yacir/CollectionViewSlantedLayout",
+        "state": {
+          "branch": "master",
+          "revision": "0364421309bece26bff03da52c00222c55ed37bf",
+          "version": null
+        }
+      },
+      {
         "package": "combine-schedulers",
         "repositoryURL": "https://github.com/pointfreeco/combine-schedulers",
         "state": {

@@ -10,8 +10,8 @@ import Utilities
 
 struct ScheduleGridView: View {
     var body: some View {
-        GeometryReader { geo in
-            let hourSpacing = geo.size.height / 24
+        SingleAxisGeometryReader(axis: .vertical) { height in
+            let hourSpacing = height / 24
 
             ForEach(0..<24) { index in
 
@@ -29,7 +29,7 @@ struct ScheduleGridView: View {
 
                         path.addLine(
                             to: CGPoint(
-                                x: geo.size.width,
+                                x: 10000,
                                 y: lineHeight
                             )
                         )

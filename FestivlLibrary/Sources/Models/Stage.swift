@@ -46,7 +46,7 @@ extension Stage {
 extension Stage {
     public static var testData: Stage {
         return Stage(
-            id: nil,
+            id: "0",
             name: "The Living Room",
             symbol: "L",
             colorString: UIColor(red: 0.30, green: 0.15, blue: 0.51, alpha: 1.0).hexString,
@@ -60,7 +60,7 @@ extension Stage {
             .testData,
 
             Stage(
-                id: "0",
+                id: "1",
                 name: "The Fractal Forest",
                 symbol: "F",
                 colorString: "#3D8E53",
@@ -69,7 +69,7 @@ extension Stage {
             ),
 
             Stage(
-                id: "1",
+                id: "2",
                 name: "The Village",
                 symbol: "V",
                 colorString: "#2FCAD3",

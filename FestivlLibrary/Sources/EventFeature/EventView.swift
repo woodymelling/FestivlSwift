@@ -18,11 +18,15 @@ public struct EventView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            TabBarView(
-                store: store.scope(
+            IfLetStore(
+                store.scope(
                     state: \EventState.tabBarState,
                     action: EventAction.tabBarAction
-                )
+                ),
+                then: TabBarView.init(store:),
+                else: {
+                    ProgressView()
+                }
             )
             .onAppear { viewStore.send(.subscribeToDataPublishers) }
         }

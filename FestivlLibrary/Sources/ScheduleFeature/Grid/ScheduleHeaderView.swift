@@ -42,7 +42,7 @@ struct ScheduleHeaderButton: View {
     var body: some View {
         Text(stage.symbol)
             .font(.largeTitle)
-            .padding(25)
+            .padding(20)
             .background {
                 if isSelected {
                     Circle()

@@ -37,8 +37,8 @@ struct ScheduleHourLabelsView: View {
 
     var body: some View {
 
-        GeometryReader { geo in
-            let hourSpacing = geo.size.height / 24
+        SingleAxisGeometryReader(axis: .vertical) { height in
+            let hourSpacing = height / 24
 
             VStack(alignment: .trailing, spacing: 0) {
 
@@ -61,6 +61,8 @@ struct ScheduleHourLabelsView: View {
 
     }
 }
+
+
 
 struct ScheduleHourLinesView_Previews: PreviewProvider {
     static var previews: some View {

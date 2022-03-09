@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import ArtistListFeature
 import Models
+import ScheduleFeature
 
 public struct TabBarView: View {
 
@@ -21,18 +22,14 @@ public struct TabBarView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             TabView(selection: viewStore.binding(\.$selectedTab)) {
-                Text("Schedule")
+
+                ScheduleView(store: store.scope(state: \.scheduleState, action: TabBarAction.scheduleAction))
                     .tabItem {
                         Label("Schedule", systemImage: "calendar")
                     }
                     .tag(Tab.schedule)
 
-                ArtistListView(
-                    store: store.scope(
-                        state: \.artistListState,
-                        action: TabBarAction.artistListAction
-                    )
-                )
+                ArtistListView(store: store.scope(state: \.artistListState, action: TabBarAction.artistListAction))
                     .tabItem {
                         Label("Artists", systemImage: "person.3")
                     }
@@ -61,10 +58,15 @@ struct TabBarView_Previews: PreviewProvider {
             store: .init(
                 initialState: .init(
                     event: .testData,
-                    artists: IdentifiedArrayOf(uniqueElements: Artist.testValues),
-                    stages: IdentifiedArray(uniqueElements: [Stage.testData]),
-                    artistSets: IdentifiedArray(uniqueElements: [ArtistSet.testData]),
-                    artistListSearchText: ""
+                    artists: Artist.testValues.asIdentifedArray,
+                    stages: Stage.testValues.asIdentifedArray,
+                    artistSets: ArtistSet.testValues().asIdentifedArray,
+                    selectedTab: .schedule,
+                    artistsListSearchText: "",
+                    scheduleSelectedStage: Stage.testValues[0],
+                    scheduleZoomAmount: 1,
+                    scheduleSelectedDate: Event.testData.startDate,
+                    scheduleScrollAmount: .zero
                 ),
                 reducer: tabBarReducer,
                 environment: TabBarEnvironment()

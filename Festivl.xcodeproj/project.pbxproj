@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EF26A0B327D855CB00E10A71 /* FestivlManagerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF26A0B227D855CB00E10A71 /* FestivlManagerApp.swift */; };
+		EF26A0B727D855D100E10A71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF26A0B627D855D100E10A71 /* Assets.xcassets */; };
+		EF26A0BA27D855D100E10A71 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF26A0B927D855D100E10A71 /* Preview Assets.xcassets */; };
 		EF479E5027B629690075D7E2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EF479E4F27B629690075D7E2 /* GoogleService-Info.plist */; };
 		EF479E5227B629E00075D7E2 /* ServiceCore in Frameworks */ = {isa = PBXBuildFile; productRef = EF479E5127B629E00075D7E2 /* ServiceCore */; };
 		EF692E6C27B4CA48006F8E0D /* FestivlApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */; };
@@ -17,6 +20,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EF26A0B027D855CB00E10A71 /* FestivlManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FestivlManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF26A0B227D855CB00E10A71 /* FestivlManagerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivlManagerApp.swift; sourceTree = "<group>"; };
+		EF26A0B627D855D100E10A71 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EF26A0B927D855D100E10A71 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		EF26A0BB27D855D100E10A71 /* FestivlManager.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FestivlManager.entitlements; sourceTree = "<group>"; };
+		EF26A0BF27D855F800E10A71 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		EF26A0C027D85F5B00E10A71 /* FestivlApp */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FestivlApp; sourceTree = "<group>"; };
 		EF479E4F27B629690075D7E2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EF692E6827B4CA48006F8E0D /* Festivl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Festivl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivlApp.swift; sourceTree = "<group>"; };
@@ -26,6 +36,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EF26A0AD27D855CB00E10A71 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF692E6527B4CA48006F8E0D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -39,6 +56,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EF26A0B127D855CB00E10A71 /* FestivlManager */ = {
+			isa = PBXGroup;
+			children = (
+				EF26A0BF27D855F800E10A71 /* GoogleService-Info.plist */,
+				EF26A0B227D855CB00E10A71 /* FestivlManagerApp.swift */,
+				EF26A0B627D855D100E10A71 /* Assets.xcassets */,
+				EF26A0BB27D855D100E10A71 /* FestivlManager.entitlements */,
+				EF26A0B827D855D100E10A71 /* Preview Content */,
+			);
+			path = FestivlManager;
+			sourceTree = "<group>";
+		};
+		EF26A0B827D855D100E10A71 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				EF26A0B927D855D100E10A71 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		EF479E4C27B6108C0075D7E2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -49,8 +86,10 @@
 		EF692E5F27B4CA48006F8E0D = {
 			isa = PBXGroup;
 			children = (
+				EF26A0C027D85F5B00E10A71 /* FestivlApp */,
 				EFCCBD9027B4CA79004E5270 /* FestivlLibrary */,
 				EF692E6A27B4CA48006F8E0D /* Festivl */,
+				EF26A0B127D855CB00E10A71 /* FestivlManager */,
 				EF692E6927B4CA48006F8E0D /* Products */,
 				EF479E4C27B6108C0075D7E2 /* Frameworks */,
 			);
@@ -60,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				EF692E6827B4CA48006F8E0D /* Festivl.app */,
+				EF26A0B027D855CB00E10A71 /* FestivlManager.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -86,6 +126,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		EF26A0AF27D855CB00E10A71 /* FestivlManager */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF26A0BE27D855D100E10A71 /* Build configuration list for PBXNativeTarget "FestivlManager" */;
+			buildPhases = (
+				EF26A0AC27D855CB00E10A71 /* Sources */,
+				EF26A0AD27D855CB00E10A71 /* Frameworks */,
+				EF26A0AE27D855CB00E10A71 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FestivlManager;
+			productName = FestivlManager;
+			productReference = EF26A0B027D855CB00E10A71 /* FestivlManager.app */;
+			productType = "com.apple.product-type.application";
+		};
 		EF692E6727B4CA48006F8E0D /* Festivl */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF692E7627B4CA49006F8E0D /* Build configuration list for PBXNativeTarget "Festivl" */;
@@ -118,6 +175,9 @@
 				LastSwiftUpdateCheck = 1320;
 				LastUpgradeCheck = 1320;
 				TargetAttributes = {
+					EF26A0AF27D855CB00E10A71 = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
 					EF692E6727B4CA48006F8E0D = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
@@ -140,11 +200,21 @@
 			projectRoot = "";
 			targets = (
 				EF692E6727B4CA48006F8E0D /* Festivl */,
+				EF26A0AF27D855CB00E10A71 /* FestivlManager */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		EF26A0AE27D855CB00E10A71 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF26A0BA27D855D100E10A71 /* Preview Assets.xcassets in Resources */,
+				EF26A0B727D855D100E10A71 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF692E6627B4CA48006F8E0D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -158,6 +228,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EF26A0AC27D855CB00E10A71 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF26A0B327D855CB00E10A71 /* FestivlManagerApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF692E6427B4CA48006F8E0D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -169,6 +247,64 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		EF26A0BC27D855D100E10A71 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FestivlManager/FestivlManager.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"FestivlManager/Preview Content\"";
+				DEVELOPMENT_TEAM = FYZE6539TN;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Woody.FestivlManager;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		EF26A0BD27D855D100E10A71 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FestivlManager/FestivlManager.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"FestivlManager/Preview Content\"";
+				DEVELOPMENT_TEAM = FYZE6539TN;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Woody.FestivlManager;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		EF692E7427B4CA49006F8E0D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -346,6 +482,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EF26A0BE27D855D100E10A71 /* Build configuration list for PBXNativeTarget "FestivlManager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF26A0BC27D855D100E10A71 /* Debug */,
+				EF26A0BD27D855D100E10A71 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EF692E6327B4CA48006F8E0D /* Build configuration list for PBXProject "Festivl" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

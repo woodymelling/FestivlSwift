@@ -9,6 +9,8 @@ import Foundation
 import ComposableArchitecture
 import Models
 import ArtistListFeature
+import ScheduleFeature
+import SwiftUI
 
 
 public enum Tab {
@@ -21,15 +23,23 @@ public struct TabBarState: Equatable {
         artists: IdentifiedArrayOf<Artist>,
         stages: IdentifiedArrayOf<Stage>,
         artistSets: IdentifiedArrayOf<ArtistSet>,
-        selectedTab: Tab = .schedule,
-        artistListSearchText: String
+        selectedTab: Tab,
+        artistsListSearchText: String,
+        scheduleSelectedStage: Stage,
+        scheduleZoomAmount: CGFloat,
+        scheduleSelectedDate: Date,
+        scheduleScrollAmount: CGPoint
     ) {
         self.event = event
         self.artists = artists
         self.stages = stages
         self.artistSets = artistSets
         self.selectedTab = selectedTab
-        self.artistsListSearchText = artistListSearchText
+        self.artistsListSearchText = artistsListSearchText
+        self.scheduleSelectedStage = scheduleSelectedStage
+        self.scheduleZoomAmount = scheduleZoomAmount
+        self.scheduleSelectedDate = scheduleSelectedDate
+        self.scheduleScrollAmount = scheduleScrollAmount
     }
 
     public private(set) var event: Event
@@ -37,9 +47,16 @@ public struct TabBarState: Equatable {
     public private(set) var stages: IdentifiedArrayOf<Stage>
     public private(set) var artistSets: IdentifiedArrayOf<ArtistSet>
 
-    @BindableState public var selectedTab: Tab = .schedule
+    @BindableState public var selectedTab: Tab
 
-    public var artistsListSearchText: String
+    // ArtistState lifted state
+    public private(set) var artistsListSearchText: String
+
+    // ScheduleState lifted state
+    public private(set) var scheduleSelectedStage: Stage
+    public private(set) var scheduleZoomAmount: CGFloat
+    public private(set) var scheduleSelectedDate: Date
+    public private(set) var scheduleScrollAmount: CGPoint
     
     var artistListState: ArtistListState {
         get {
@@ -58,11 +75,36 @@ public struct TabBarState: Equatable {
             self.artistsListSearchText = newValue.searchText
         }
     }
+
+    var scheduleState: ScheduleState {
+        get {
+            .init(
+                stages: stages,
+                artistSets: artistSets,
+                selectedStage: scheduleSelectedStage,
+                event: event,
+                zoomAmount: scheduleZoomAmount,
+                selectedDate: scheduleSelectedDate,
+                scrollAmount: scheduleScrollAmount
+            )
+        }
+
+        set {
+            self.stages = newValue.stages
+            self.artistSets = newValue.artistSets
+            self.scheduleSelectedStage = newValue.selectedStage
+            self.event = newValue.event
+            self.scheduleZoomAmount = newValue.zoomAmount
+            self.scheduleSelectedDate = newValue.selectedDate
+            self.scheduleScrollAmount = newValue.scrollAmount
+        }
+    }
 }
 
 public enum TabBarAction: BindableAction {
     case binding(_ action: BindingAction<TabBarState>)
     case artistListAction(ArtistListAction)
+    case scheduleAction(ScheduleAction)
 }
 
 public struct TabBarEnvironment {
@@ -74,7 +116,7 @@ public let tabBarReducer = Reducer.combine(
         switch action {
         case .binding:
             return .none
-        case .artistListAction:
+        case .artistListAction, .scheduleAction:
             return .none
         }
     }
@@ -84,5 +126,10 @@ public let tabBarReducer = Reducer.combine(
         state: \TabBarState.artistListState,
         action: /TabBarAction.artistListAction,
         environment: { (_: TabBarEnvironment) in ArtistListEnvironment() }
-    )
+    ),
+
+    scheduleReducer.pullback(
+        state: \TabBarState.scheduleState,
+        action: /TabBarAction.scheduleAction,
+        environment: { _ in ScheduleEnvironment() })
 )

@@ -9,7 +9,7 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(name: "FestivlLibrary", targets: ["FestivlLibrary"]),
-        .library(name: "AppFeature", targets: ["AppFeature"]),
+        .library(name: "FestivlAppFeature", targets: ["FestivlAppFeature"]),
         .library(name: "EventFeature", targets: ["EventFeature"]),
         .library(name: "TabBarFeature", targets: ["TabBarFeature"]),
         .library(name: "ArtistListFeature", targets: ["ArtistListFeature"]),
@@ -21,13 +21,19 @@ let package = Package(
         .library(name: "Components", targets: ["Components"]),
         .library(name: "EventListFeature", targets: ["EventListFeature"]),
         .library(name: "ScheduleFeature", targets: ["ScheduleFeature"]),
+        .library(name: "ExploreFeature", targets: ["ExploreFeature"]),
+
+        // MARK: FestivlManager
+        .library(name: "FestivlManagerAppFeature", targets: ["FestivlManagerAppFeature"]),
+        .library(name: "FestivlManagerEventFeature", targets: ["FestivlManagerEventFeature"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.33.0"),
         .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk.git", from: "8.0.0"),
-        .package(url: "https://github.com/lorenzofiamingo/SwiftUI-CachedAsyncImage", from: "1.0.0")
+        .package(url: "https://github.com/lorenzofiamingo/SwiftUI-CachedAsyncImage", from: "1.0.0"),
+        .package(url: "https://github.com/yacir/CollectionViewSlantedLayout", branch: "master")
 
     ],
     targets: [
@@ -38,7 +44,7 @@ let package = Package(
             dependencies: []
         ),
         .target(
-            name: "AppFeature",
+            name: "FestivlAppFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .target(name: "EventListFeature"),
@@ -81,6 +87,7 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .target(name: "ArtistListFeature"),
+                .target(name: "ScheduleFeature"),
                 .target(name: "Models"),
                 .target(name: "Utilities")
             ]
@@ -128,7 +135,35 @@ let package = Package(
             ]
 
         ),
+        .target(
+            name: "ExploreFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "CollectionViewSlantedLayout", package: "CollectionViewSlantedLayout"),
+                .target(name: "Models"),
+                .target(name: "Utilities")
+            ]
+        ),
+
+        // MARK: FestivlManager
+        .target(
+            name: "FestivlManagerAppFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .target(name: "EventListFeature")
+            ]
+        ),
+        .target(
+            name: "FestivlManagerEventFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .target(name: "Models")
+            ]
+        ),
+
+        // MARK: Tests
         .testTarget(name: "FestivlLibraryTests", dependencies: ["FestivlLibrary"]),
-        .testTarget(name: "ComponentTests", dependencies: ["Components"])
+        .testTarget(name: "ComponentTests", dependencies: ["Components"]),
+        .testTarget(name: "SlantedListTests", dependencies: ["ExploreFeature"])
     ]
 )

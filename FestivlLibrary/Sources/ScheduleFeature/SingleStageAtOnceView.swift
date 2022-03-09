@@ -25,23 +25,8 @@ public struct SingleStageAtOnceView: View {
 
                 TabView(selection: viewStore.binding(\.$selectedStage).animation(.easeInOut(duration: 0.1))) {
                     ForEach(viewStore.stages) { stage in
-                        ScrollView {
-                            HStack {
-                                ScheduleHourLabelsView(dayStartsAtNoon: true)
-
-                                ScheduleGridView()
-
-                            }
-                            .frame(height: 1000 * viewStore.zoomAmount)
-
-                        }
-                        .tag(stage)
-                        .gesture(
-                            MagnificationGesture()
-                                .onChanged { value in
-                                    viewStore.send(.zoomed(value.magnitude))
-                                }
-                        )
+                        ScheduleScrollView(store: store, style: .singleStage(stage))
+                            .tag(stage)
                     }
 
                 }
@@ -58,6 +43,7 @@ struct SingleStageAtOnceView_Previews: PreviewProvider {
             store: .init(
                 initialState: .init(
                     stages: Stage.testValues.asIdentifedArray,
+                    artistSets: ArtistSet.testValues().asIdentifedArray,
                     selectedStage: Stage.testValues[0],
                     event: .testData,
                     selectedDate: Event.testData.festivalDates[0]

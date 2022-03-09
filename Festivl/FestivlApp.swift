@@ -7,7 +7,7 @@
 
 import SwiftUI
 import ServiceCore
-import AppFeature
+import FestivlAppFeature
 
 @main
 struct FestivlApp: App {

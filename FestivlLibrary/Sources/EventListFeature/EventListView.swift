@@ -46,6 +46,7 @@ public struct EventListView: View {
                 }
                 .navigationTitle("Events")
             }
+            .navigationViewStyle(.stack)
             .onAppear {
                 viewStore.send(.subscribeToEvents)
             }
