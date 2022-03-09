@@ -10,13 +10,15 @@
 		EF26A0B327D855CB00E10A71 /* FestivlManagerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF26A0B227D855CB00E10A71 /* FestivlManagerApp.swift */; };
 		EF26A0B727D855D100E10A71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF26A0B627D855D100E10A71 /* Assets.xcassets */; };
 		EF26A0BA27D855D100E10A71 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF26A0B927D855D100E10A71 /* Preview Assets.xcassets */; };
+		EF26A0C227D8649300E10A71 /* FestivlAppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EF26A0C127D8649300E10A71 /* FestivlAppFeature */; };
+		EF26A0CD27D86E7400E10A71 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EF26A0CC27D86E7400E10A71 /* GoogleService-Info.plist */; };
+		EF26A0CF27D87C1E00E10A71 /* ServiceCore in Frameworks */ = {isa = PBXBuildFile; productRef = EF26A0CE27D87C1E00E10A71 /* ServiceCore */; };
+		EF26A0D127D87C2500E10A71 /* FestivlManagerAppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EF26A0D027D87C2500E10A71 /* FestivlManagerAppFeature */; };
 		EF479E5027B629690075D7E2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EF479E4F27B629690075D7E2 /* GoogleService-Info.plist */; };
 		EF479E5227B629E00075D7E2 /* ServiceCore in Frameworks */ = {isa = PBXBuildFile; productRef = EF479E5127B629E00075D7E2 /* ServiceCore */; };
 		EF692E6C27B4CA48006F8E0D /* FestivlApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */; };
 		EF692E7027B4CA49006F8E0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF692E6F27B4CA49006F8E0D /* Assets.xcassets */; };
 		EF692E7327B4CA49006F8E0D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF692E7227B4CA49006F8E0D /* Preview Assets.xcassets */; };
-		EF947B2F27B7291600D1086D /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EF947B2E27B7291600D1086D /* AppFeature */; };
-		EFCCBD9327B4CFEB004E5270 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = EFCCBD9227B4CFEB004E5270 /* ComposableArchitecture */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,8 +27,9 @@
 		EF26A0B627D855D100E10A71 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EF26A0B927D855D100E10A71 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		EF26A0BB27D855D100E10A71 /* FestivlManager.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FestivlManager.entitlements; sourceTree = "<group>"; };
-		EF26A0BF27D855F800E10A71 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EF26A0C027D85F5B00E10A71 /* FestivlApp */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FestivlApp; sourceTree = "<group>"; };
+		EF26A0C327D8660200E10A71 /* FestivlManagerLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FestivlManagerLibrary; sourceTree = "<group>"; };
+		EF26A0CC27D86E7400E10A71 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EF479E4F27B629690075D7E2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EF692E6827B4CA48006F8E0D /* Festivl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Festivl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivlApp.swift; sourceTree = "<group>"; };
@@ -40,6 +43,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF26A0CF27D87C1E00E10A71 /* ServiceCore in Frameworks */,
+				EF26A0D127D87C2500E10A71 /* FestivlManagerAppFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,8 +53,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF479E5227B629E00075D7E2 /* ServiceCore in Frameworks */,
-				EF947B2F27B7291600D1086D /* AppFeature in Frameworks */,
-				EFCCBD9327B4CFEB004E5270 /* ComposableArchitecture in Frameworks */,
+				EF26A0C227D8649300E10A71 /* FestivlAppFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +63,7 @@
 		EF26A0B127D855CB00E10A71 /* FestivlManager */ = {
 			isa = PBXGroup;
 			children = (
-				EF26A0BF27D855F800E10A71 /* GoogleService-Info.plist */,
+				EF26A0CC27D86E7400E10A71 /* GoogleService-Info.plist */,
 				EF26A0B227D855CB00E10A71 /* FestivlManagerApp.swift */,
 				EF26A0B627D855D100E10A71 /* Assets.xcassets */,
 				EF26A0BB27D855D100E10A71 /* FestivlManager.entitlements */,
@@ -86,8 +90,9 @@
 		EF692E5F27B4CA48006F8E0D = {
 			isa = PBXGroup;
 			children = (
-				EF26A0C027D85F5B00E10A71 /* FestivlApp */,
 				EFCCBD9027B4CA79004E5270 /* FestivlLibrary */,
+				EF26A0C027D85F5B00E10A71 /* FestivlApp */,
+				EF26A0C327D8660200E10A71 /* FestivlManagerLibrary */,
 				EF692E6A27B4CA48006F8E0D /* Festivl */,
 				EF26A0B127D855CB00E10A71 /* FestivlManager */,
 				EF692E6927B4CA48006F8E0D /* Products */,
@@ -139,6 +144,10 @@
 			dependencies = (
 			);
 			name = FestivlManager;
+			packageProductDependencies = (
+				EF26A0CE27D87C1E00E10A71 /* ServiceCore */,
+				EF26A0D027D87C2500E10A71 /* FestivlManagerAppFeature */,
+			);
 			productName = FestivlManager;
 			productReference = EF26A0B027D855CB00E10A71 /* FestivlManager.app */;
 			productType = "com.apple.product-type.application";
@@ -157,9 +166,8 @@
 			);
 			name = Festivl;
 			packageProductDependencies = (
-				EFCCBD9227B4CFEB004E5270 /* ComposableArchitecture */,
 				EF479E5127B629E00075D7E2 /* ServiceCore */,
-				EF947B2E27B7291600D1086D /* AppFeature */,
+				EF26A0C127D8649300E10A71 /* FestivlAppFeature */,
 			);
 			productName = Festivl;
 			productReference = EF692E6827B4CA48006F8E0D /* Festivl.app */;
@@ -193,7 +201,6 @@
 			);
 			mainGroup = EF692E5F27B4CA48006F8E0D;
 			packageReferences = (
-				EFCCBD9127B4CFEB004E5270 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 			);
 			productRefGroup = EF692E6927B4CA48006F8E0D /* Products */;
 			projectDirPath = "";
@@ -210,6 +217,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF26A0CD27D86E7400E10A71 /* GoogleService-Info.plist in Resources */,
 				EF26A0BA27D855D100E10A71 /* Preview Assets.xcassets in Resources */,
 				EF26A0B727D855D100E10A71 /* Assets.xcassets in Resources */,
 			);
@@ -511,30 +519,22 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		EFCCBD9127B4CFEB004E5270 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.33.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
-		EF479E5127B629E00075D7E2 /* ServiceCore */ = {
+		EF26A0C127D8649300E10A71 /* FestivlAppFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FestivlAppFeature;
+		};
+		EF26A0CE27D87C1E00E10A71 /* ServiceCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ServiceCore;
 		};
-		EF947B2E27B7291600D1086D /* AppFeature */ = {
+		EF26A0D027D87C2500E10A71 /* FestivlManagerAppFeature */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = AppFeature;
+			productName = FestivlManagerAppFeature;
 		};
-		EFCCBD9227B4CFEB004E5270 /* ComposableArchitecture */ = {
+		EF479E5127B629E00075D7E2 /* ServiceCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = EFCCBD9127B4CFEB004E5270 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
-			productName = ComposableArchitecture;
+			productName = ServiceCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

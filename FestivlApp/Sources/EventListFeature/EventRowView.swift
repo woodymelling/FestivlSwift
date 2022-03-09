@@ -45,9 +45,6 @@ struct EventRowView: View {
                     .font(.caption2)
             }
             .frame(maxWidth: .infinity)
-
-            NavigationLink.empty
-
         }
     }
 }

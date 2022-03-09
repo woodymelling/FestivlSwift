@@ -49,7 +49,7 @@ extension Stage {
             id: "0",
             name: "The Living Room",
             symbol: "L",
-            colorString: UIColor(red: 0.30, green: 0.15, blue: 0.51, alpha: 1.0).hexString,
+            colorString: "#FF9F0A",
             iconImageURL: nil,
             sortIndex: 0
         )

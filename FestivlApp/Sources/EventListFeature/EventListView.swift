@@ -34,10 +34,11 @@ public struct EventListView: View {
                     } else {
                         List {
                             ForEach(viewStore.events.filterForSearchTerm(viewStore.searchText)) { event in
-                                EventRowView(event: event)
-                                    .onTapGesture {
-                                        viewStore.send(.selectedEvent(event))
-                                    }
+                                Button(action: { viewStore.send(.selectedEvent(event))
+
+                                }, label: {
+                                    EventRowView(event: event)
+                                })
                             }
                         }
                         .listStyle(.plain)
@@ -46,7 +47,9 @@ public struct EventListView: View {
                 }
                 .navigationTitle("Events")
             }
+            #if os(iOS)
             .navigationViewStyle(.stack)
+            #endif
             .onAppear {
                 viewStore.send(.subscribeToEvents)
             }

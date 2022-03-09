@@ -7,7 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
-import EventListFeature
+import ManagerEventListFeature
 import FestivlManagerEventFeature
 
 public struct FestivlManagerAppView: View {
@@ -26,14 +26,15 @@ public struct FestivlManagerAppView: View {
                 ),
                 then: FestivlManagerEventView.init(store:),
                 else: {
-                    EventListView(
+                    ManagerEventListView(
                         store: store.scope(
                             state: \FestivlManagerAppState.eventListState,
-                            action: FestivlManagerAppState.eventListAction
+                            action: FestivlManagerAppAction.eventListAction
                         )
                     )
                 }
             )
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 }
@@ -43,7 +44,7 @@ struct FestivlManagerAppView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             FestivlManagerAppView(
                 store: .init(
-                    initialState: .init(),
+                    initialState: .init(eventListState: .init()),
                     reducer: festivlManagerAppReducer,
                     environment: .init()
                 )

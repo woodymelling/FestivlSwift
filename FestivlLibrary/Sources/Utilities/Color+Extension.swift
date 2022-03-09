@@ -34,6 +34,11 @@ public extension Color {
         )
     }
 
+}
+
+#if os(iOS)
+
+public extension Color {
     var hexString: String {
         UIColor(self).hexString
     }
@@ -67,3 +72,4 @@ public extension UIColor {
     }
 
 }
+#endif

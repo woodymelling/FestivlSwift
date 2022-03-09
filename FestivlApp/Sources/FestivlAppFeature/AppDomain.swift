@@ -18,7 +18,6 @@ public struct AppState: Equatable {
     public init(
         eventListState: EventListState = .init()
     ) {
-
         self.eventListState = eventListState
     }
 }

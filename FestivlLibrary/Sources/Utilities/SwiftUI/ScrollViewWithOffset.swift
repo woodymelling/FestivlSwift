@@ -1,4 +1,6 @@
 import SwiftUI
+
+#if os(iOS)
 import UIKit
 
 public struct ScrollableView<Content: View>: UIViewControllerRepresentable {
@@ -129,4 +131,5 @@ struct ScrollableView_Previews: PreviewProvider {
         }
     }
 }
+#endif
 

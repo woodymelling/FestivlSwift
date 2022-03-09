@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ServiceCore
+import FestivlManagerAppFeature
 
 @main
 struct FestivlManagerApp: App {
@@ -17,7 +18,13 @@ struct FestivlManagerApp: App {
 
     var body: some Scene {
         WindowGroup {
-
+            FestivlManagerAppView(
+                store: .init(
+                    initialState: .init(eventListState: .init()),
+                    reducer: festivlManagerAppReducer,
+                    environment: .init()
+                )
+            )
         }
     }
 }
