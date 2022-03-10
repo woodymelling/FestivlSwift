@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import ManagerEventDashboardFeature
 
 public struct FestivlManagerEventView: View {
     let store: Store<FestivlManagerEventState, FestivlManagerEventAction>
@@ -17,7 +18,22 @@ public struct FestivlManagerEventView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+            Group {
+                if viewStore.eventLoaded {
+                    ManagerEventDashboardView(
+                        store: store.scope(
+                            state: \FestivlManagerEventState.dashboardState,
+                            action: FestivlManagerEventAction.dashboardAction
+                        )
+                    )
+                } else {
+                    ProgressView()
+                }
+            }
+            .onAppear {
+                viewStore.send(.subscribeToDataPublishers)
+            }
+
         }
     }
 }
@@ -27,7 +43,7 @@ struct FestivlManagerEventView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             FestivlManagerEventView(
                 store: .init(
-                    initialState: .init(),
+                    initialState: .init(event: .testData),
                     reducer: festivlManagerEventReducer,
                     environment: .init()
                 )

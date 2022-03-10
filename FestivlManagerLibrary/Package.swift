@@ -11,6 +11,8 @@ let package = Package(
         .library(name: "FestivlManagerAppFeature", targets: ["FestivlManagerAppFeature"]),
         .library(name: "FestivlManagerEventFeature", targets: ["FestivlManagerEventFeature"]),
         .library(name: "ManagerEventListFeature", targets: ["ManagerEventListFeature"]),
+        .library(name: "ManagerEventDashboardFeature", targets: ["ManagerEventDashboardFeature"]),
+        
 
     ],
     dependencies: [
@@ -31,18 +33,28 @@ let package = Package(
             ]
         ),
         .target(
-            name: "FestivlManagerEventFeature",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "Models", package: "FestivlLibrary")
-            ]
-        ),
-        .target(
             name: "ManagerEventListFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "Services", package: "FestivlLibrary")
+            ]
+        ),
+        .target(
+            name: "FestivlManagerEventFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Models", package: "FestivlLibrary"),
+                .product(name: "Services", package: "FestivlLibrary"),
+                .target(name: "ManagerEventDashboardFeature")
+            ]
+        ),
+
+        .target(
+            name: "ManagerEventDashboardFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Models", package: "FestivlLibrary")
             ]
         ),
     ]

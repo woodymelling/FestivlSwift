@@ -22,6 +22,7 @@ public struct ManagerEventListState: Equatable {
 public enum ManagerEventListAction {
     case subscribeToDataPublishers
     case eventsPublisherUpdate(IdentifiedArrayOf<Event>)
+    case didSelectEvent(Event)
 }
 
 public struct ManagerEventListEnvironment {
@@ -45,6 +46,8 @@ public let managerEventListReducer = Reducer<ManagerEventListState, ManagerEvent
 
     case .eventsPublisherUpdate(let events):
         state.events = events
+        return .none
+    case .didSelectEvent:
         return .none
     }
 }

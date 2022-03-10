@@ -28,14 +28,6 @@ public struct FestivlManagerAppEnvironment {
 }
 
 public let festivlManagerAppReducer = Reducer.combine(
-    Reducer<FestivlManagerAppState, FestivlManagerAppAction, FestivlManagerAppEnvironment> { state, action, _ in
-        switch action {
-        case .eventAction:
-            return .none
-        case .eventListAction:
-            return .none
-        }
-    },
     festivlManagerEventReducer.optional().pullback(
         state: \FestivlManagerAppState.eventState,
         action: /FestivlManagerAppAction.eventAction,
@@ -48,6 +40,21 @@ public let festivlManagerAppReducer = Reducer.combine(
         state: \FestivlManagerAppState.eventListState,
         action: /FestivlManagerAppAction.eventListAction,
         environment: { _ in .init() }
-    )
+    ),
+
+    Reducer<FestivlManagerAppState, FestivlManagerAppAction, FestivlManagerAppEnvironment> { state, action, _ in
+        switch action {
+        case .eventListAction(.didSelectEvent(let event)):
+            state.eventState = .init(event: event)
+            return .none
+        case .eventAction(.dashboardAction(.exitEvent)):
+            state.eventState = nil
+            return .none
+        case .eventAction:
+            return .none
+        case .eventListAction:
+            return .none
+        }
+    }
 )
 .debug()

@@ -23,7 +23,9 @@ public struct ManagerEventListView: View {
                 } else {
                     List {
                         ForEach(viewStore.events) { event in
-                            Button(action: {}, label: {
+                            Button(action: {
+                                viewStore.send(.didSelectEvent(event), animation: .linear)
+                            }, label: {
                                 EventListRow(event: event)
                             })
                             .buttonStyle(.plain)
