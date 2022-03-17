@@ -15,6 +15,7 @@ struct FestivlManagerApp: App {
 
     init() {
         FirebaseServices.initialize()
+        
     }
 
     @State var image: NSImage?

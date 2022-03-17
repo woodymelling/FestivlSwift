@@ -120,7 +120,7 @@ struct ManagerEventDashboardView_Previews: PreviewProvider {
                         artistSets: ArtistSet.testValues().asIdentifedArray,
                         sidebarSelection: .artists,
                         artistListSelectedArtist: nil,
-                        isShowingAddArtist: false
+                        createArtistState: nil
                     ),
                     reducer: managerEventDashboardReducer,
                     environment: .init()

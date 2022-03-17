@@ -9,6 +9,7 @@ import FirebaseFirestoreSwift
 import Utilities
 import Foundation
 import ComposableArchitecture
+import SwiftUI
 
 public struct ArtistSet: Identifiable, Codable, Equatable, StageScheduleCardRepresentable {
 

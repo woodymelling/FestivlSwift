@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import Models
 import ManagerArtistsFeature
+import CreateArtistFeature
 
 public enum SidebarPage {
     case artists, stages, schedule
@@ -30,7 +31,7 @@ public struct ManagerEventDashboardState: Equatable {
         artistSets: IdentifiedArrayOf<ArtistSet>,
         sidebarSelection: SidebarPage?,
         artistListSelectedArtist: Artist?,
-        isShowingAddArtist: Bool
+        createArtistState: CreateArtistState?
     ) {
         self.event = event
         self.artists = artists
@@ -38,7 +39,7 @@ public struct ManagerEventDashboardState: Equatable {
         self.artistSets = artistSets
         self.sidebarSelection = sidebarSelection
         self.artistListSelectedArtist = artistListSelectedArtist
-        self.isShowingAddArtist = isShowingAddArtist
+        self.createArtistState = createArtistState
     }
 
     public private(set) var event: Event
@@ -50,20 +51,22 @@ public struct ManagerEventDashboardState: Equatable {
 
     // MARK: ArtistList
     public var artistListSelectedArtist: Artist?
-    public var isShowingAddArtist: Bool
+    public var createArtistState: CreateArtistState?
 
     var artistsState: ManagerArtistsState {
         get {
             return .init(
                 artists: artists,
                 selectedArtist: artistListSelectedArtist,
-                isShowingAddArtist: isShowingAddArtist
+                event: event,
+                createArtistState: createArtistState
             )
         }
         set {
             self.artists = newValue.artists
             self.artistListSelectedArtist = newValue.selectedArtist
-            self.isShowingAddArtist = newValue.isShowingAddArtist
+            self.event = newValue.event
+            self.createArtistState = newValue.createArtistState
         }
     }
 }

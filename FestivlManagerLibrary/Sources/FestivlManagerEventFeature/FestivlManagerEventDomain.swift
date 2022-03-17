@@ -10,6 +10,7 @@ import Models
 import Services
 import Combine
 import ManagerEventDashboardFeature
+import CreateArtistFeature
 
 public struct FestivlManagerEventState: Equatable {
     public var event: Event
@@ -31,7 +32,8 @@ public struct FestivlManagerEventState: Equatable {
 
     // ArtistListState:
     var artistListSelectedArtist: Artist?
-    var isShowingAddArtist: Bool = false
+    var createArtistState: CreateArtistState?
+    
 
     var dashboardState: ManagerEventDashboardState {
         get {
@@ -42,7 +44,7 @@ public struct FestivlManagerEventState: Equatable {
                 artistSets: artistSets,
                 sidebarSelection: sidebarSelection,
                 artistListSelectedArtist: artistListSelectedArtist,
-                isShowingAddArtist: isShowingAddArtist
+                createArtistState: createArtistState
             )
         }
 
@@ -53,7 +55,7 @@ public struct FestivlManagerEventState: Equatable {
             self.artistSets = newValue.artistSets
             self.sidebarSelection = newValue.sidebarSelection
             self.artistListSelectedArtist = newValue.artistListSelectedArtist
-            self.isShowingAddArtist = newValue.isShowingAddArtist
+            self.createArtistState = newValue.createArtistState
         }
     }
     

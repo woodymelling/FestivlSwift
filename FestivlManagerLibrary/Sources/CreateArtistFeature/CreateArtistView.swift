@@ -62,12 +62,7 @@ public struct CreateArtistView: View {
 
                 HStack {
                     Button(viewStore.mode.saveButtonName) {
-//                        Task {
-//                            await viewStore.saveArtist()
-//                            if isSheet {
-//                                dismiss()
-//                            }
-//                        }
+                        viewStore.send(.saveButtonPressed)
                     }
 
 //                    if isSheet {
@@ -89,7 +84,7 @@ struct CreateArtistView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             CreateArtistView(
                 store: .init(
-                    initialState: .init(),
+                    initialState: .init(eventID: ""),
                     reducer: createArtistReducer,
                     environment: .init()
                 )

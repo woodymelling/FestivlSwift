@@ -20,6 +20,9 @@ public struct ManagerArtistsView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             List {
+                Button("Add Artist", action: {
+                    viewStore.send(.addArtistButtonPressed)
+                })
                 ForEach(viewStore.artists) { artist in
                     NavigationLink(
                         tag: artist,
@@ -39,12 +42,16 @@ public struct ManagerArtistsView: View {
                     })
                 }
             }
-            .sheet(
-                isPresented: viewStore.binding(\.$isShowingAddArtist),
-                content: {
-                    ManagerArti
-                }
-            )
+            .sheet(item: viewStore.binding(\ManagerArtistsState.$createArtistState)) { _ in
+
+                IfLetStore(
+                    store.scope(
+                        state: \.createArtistState,
+                        action: ManagerArtistsAction.createArtistAction
+                    ),
+                    then: CreateArtistView.init
+                )
+            }
         }
     }
 }
@@ -78,7 +85,8 @@ struct ManagerArtistsView_Previews: PreviewProvider {
                         initialState: .init(
                             artists: Artist.testValues.asIdentifedArray,
                             selectedArtist: nil,
-                            isShowingAddArtist: false
+                            event: .testData,
+                            createArtistState: nil
                         ),
                         reducer: managerArtistsReducer,
                         environment: .init()

@@ -53,7 +53,9 @@ let package = Package(
             .target(name: "Models"),
             .target(name: "ServiceCore"),
             .product(name: "FirebaseFirestore", package: "Firebase"),
-            .product(name: "FirebaseFirestoreSwift-Beta", package: "Firebase")
+            .product(name: "FirebaseFirestoreSwift-Beta", package: "Firebase"),
+            .product(name: "FirebaseStorage", package: "Firebase"),
+            .product(name: "FirebaseStorageSwift-Beta", package: "Firebase")
         ]),
 
         // MARK: Tests

@@ -14,7 +14,7 @@ import Models
 import IdentifiedCollections
 
 public protocol ArtistServiceProtocol: Service {
-    func createArtist(artist: Artist, eventID: String) async throws
+    func createArtist(artist: Artist, eventID: String) async throws -> Artist
     func updateArtist(artist: Artist, eventID: String) async throws
 
     func artistsPublisher(eventID: String) -> AnyPublisher<IdentifiedArrayOf<Artist>, FestivlError>
@@ -30,11 +30,15 @@ public class ArtistService: ArtistServiceProtocol {
 
     public static var shared = ArtistService()
 
-    public func createArtist(artist: Artist, eventID: String) async throws {
-        try await createDocument(
+    public func createArtist(artist: Artist, eventID: String) async throws -> Artist {
+        let document = try await createDocument(
             reference: getArtistListRef(eventID: eventID),
             data: artist
         )
+        
+        var artist = artist
+        artist.id = document.documentID
+        return artist
     }
 
     public func updateArtist(artist: Artist, eventID: String) async throws {
@@ -55,7 +59,12 @@ public class ArtistService: ArtistServiceProtocol {
 }
 
 public struct ArtistMockService: ArtistServiceProtocol {
-    public func createArtist(artist: Artist, eventID: String) async throws { }
+    public func createArtist(artist: Artist, eventID: String) async throws -> Artist {
+        var artist = artist
+        artist.id = UUID().uuidString
+        
+        return artist
+    }
 
     public func updateArtist(artist: Artist, eventID: String) async throws { }
 
