@@ -12,7 +12,9 @@ let package = Package(
         .library(name: "FestivlManagerEventFeature", targets: ["FestivlManagerEventFeature"]),
         .library(name: "ManagerEventListFeature", targets: ["ManagerEventListFeature"]),
         .library(name: "ManagerEventDashboardFeature", targets: ["ManagerEventDashboardFeature"]),
-        
+        .library(name: "ManagerArtistsFeature", targets: ["ManagerArtistsFeature"]),
+        .library(name: "MacOSComponents", targets: ["MacOSComponents"]),
+        .library(name: "CreateArtistFeature", targets: ["CreateArtistFeature"]),
 
     ],
     dependencies: [
@@ -54,7 +56,32 @@ let package = Package(
             name: "ManagerEventDashboardFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "Models", package: "FestivlLibrary")
+                .product(name: "Models", package: "FestivlLibrary"),
+                .target(name: "ManagerArtistsFeature")
+            ]
+        ),
+        .target(
+            name: "ManagerArtistsFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Models", package: "FestivlLibrary"),
+                .target(name: "CreateArtistFeature")
+            ]
+        ),
+        .target(
+            name: "MacOSComponents",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Utilities", package: "FestivlLibrary")
+            ]
+        ),
+        .target(
+            name: "CreateArtistFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Models", package: "FestivlLibrary"),
+                .target(name: "MacOSComponents"),
+                .product(name: "Services", package: "FestivlLibrary")
             ]
         ),
     ]

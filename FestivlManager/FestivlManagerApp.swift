@@ -8,6 +8,7 @@
 import SwiftUI
 import ServiceCore
 import FestivlManagerAppFeature
+import MacOSComponents
 
 @main
 struct FestivlManagerApp: App {
@@ -16,8 +17,11 @@ struct FestivlManagerApp: App {
         FirebaseServices.initialize()
     }
 
+    @State var image: NSImage?
+
     var body: some Scene {
         WindowGroup {
+//            ImagePicker(outputImage: $image)
             FestivlManagerAppView(
                 store: .init(
                     initialState: .init(eventListState: .init()),

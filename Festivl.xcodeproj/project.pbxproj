@@ -14,6 +14,7 @@
 		EF26A0CD27D86E7400E10A71 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EF26A0CC27D86E7400E10A71 /* GoogleService-Info.plist */; };
 		EF26A0CF27D87C1E00E10A71 /* ServiceCore in Frameworks */ = {isa = PBXBuildFile; productRef = EF26A0CE27D87C1E00E10A71 /* ServiceCore */; };
 		EF26A0D127D87C2500E10A71 /* FestivlManagerAppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EF26A0D027D87C2500E10A71 /* FestivlManagerAppFeature */; };
+		EF28EC5927E0432B008FCE36 /* MacOSComponents in Frameworks */ = {isa = PBXBuildFile; productRef = EF28EC5827E0432B008FCE36 /* MacOSComponents */; };
 		EF479E5027B629690075D7E2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EF479E4F27B629690075D7E2 /* GoogleService-Info.plist */; };
 		EF479E5227B629E00075D7E2 /* ServiceCore in Frameworks */ = {isa = PBXBuildFile; productRef = EF479E5127B629E00075D7E2 /* ServiceCore */; };
 		EF692E6C27B4CA48006F8E0D /* FestivlApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */; };
@@ -44,6 +45,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF26A0CF27D87C1E00E10A71 /* ServiceCore in Frameworks */,
+				EF28EC5927E0432B008FCE36 /* MacOSComponents in Frameworks */,
 				EF26A0D127D87C2500E10A71 /* FestivlManagerAppFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -147,6 +149,7 @@
 			packageProductDependencies = (
 				EF26A0CE27D87C1E00E10A71 /* ServiceCore */,
 				EF26A0D027D87C2500E10A71 /* FestivlManagerAppFeature */,
+				EF28EC5827E0432B008FCE36 /* MacOSComponents */,
 			);
 			productName = FestivlManager;
 			productReference = EF26A0B027D855CB00E10A71 /* FestivlManager.app */;
@@ -531,6 +534,10 @@
 		EF26A0D027D87C2500E10A71 /* FestivlManagerAppFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FestivlManagerAppFeature;
+		};
+		EF28EC5827E0432B008FCE36 /* MacOSComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MacOSComponents;
 		};
 		EF479E5127B629E00075D7E2 /* ServiceCore */ = {
 			isa = XCSwiftPackageProductDependency;

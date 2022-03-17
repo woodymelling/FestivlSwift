@@ -29,6 +29,10 @@ public struct FestivlManagerEventState: Equatable {
     // SidebarState:
     var sidebarSelection: SidebarPage? = .artists
 
+    // ArtistListState:
+    var artistListSelectedArtist: Artist?
+    var isShowingAddArtist: Bool = false
+
     var dashboardState: ManagerEventDashboardState {
         get {
             .init(
@@ -36,7 +40,9 @@ public struct FestivlManagerEventState: Equatable {
                 artists: artists,
                 stages: stages,
                 artistSets: artistSets,
-                sidebarSelection: sidebarSelection
+                sidebarSelection: sidebarSelection,
+                artistListSelectedArtist: artistListSelectedArtist,
+                isShowingAddArtist: isShowingAddArtist
             )
         }
 
@@ -46,6 +52,8 @@ public struct FestivlManagerEventState: Equatable {
             self.stages = newValue.stages
             self.artistSets = newValue.artistSets
             self.sidebarSelection = newValue.sidebarSelection
+            self.artistListSelectedArtist = newValue.artistListSelectedArtist
+            self.isShowingAddArtist = newValue.isShowingAddArtist
         }
     }
     
@@ -132,5 +140,6 @@ public let festivlManagerEventReducer = Reducer.combine(
     )
 
 )
+.debug()
 
 

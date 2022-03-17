@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import Models
+import ManagerArtistsFeature
 
 public struct ManagerEventDashboardView: View {
     let store: Store<ManagerEventDashboardState, ManagerEventDashboardAction>
@@ -44,7 +45,12 @@ struct Sidebar: View {
             List {
                 Section("Setup") {
                     NavigationLink(
-                        destination: Text("Artists"),
+                        destination: ManagerArtistsView(
+                            store: store.scope(
+                                state: \.artistsState,
+                                action: ManagerEventDashboardAction.artistsAction
+                            )
+                        ),
                         tag: SidebarPage.artists,
                         selection: viewStore.binding(\.$sidebarSelection)
                     ) {
@@ -112,7 +118,9 @@ struct ManagerEventDashboardView_Previews: PreviewProvider {
                         artists: Artist.testValues.asIdentifedArray,
                         stages: Stage.testValues.asIdentifedArray,
                         artistSets: ArtistSet.testValues().asIdentifedArray,
-                        sidebarSelection: .artists
+                        sidebarSelection: .artists,
+                        artistListSelectedArtist: nil,
+                        isShowingAddArtist: false
                     ),
                     reducer: managerEventDashboardReducer,
                     environment: .init()

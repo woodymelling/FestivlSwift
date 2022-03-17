@@ -57,4 +57,4 @@ public let festivlManagerAppReducer = Reducer.combine(
         }
     }
 )
-.debug()
+    .debug()
