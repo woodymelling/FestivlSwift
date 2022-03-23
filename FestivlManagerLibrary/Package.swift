@@ -11,7 +11,6 @@ let package = Package(
         .library(name: "FestivlManagerAppFeature", targets: ["FestivlManagerAppFeature"]),
         .library(name: "FestivlManagerEventFeature", targets: ["FestivlManagerEventFeature"]),
         .library(name: "ManagerEventListFeature", targets: ["ManagerEventListFeature"]),
-        .library(name: "ManagerEventDashboardFeature", targets: ["ManagerEventDashboardFeature"]),
         .library(name: "ManagerArtistsFeature", targets: ["ManagerArtistsFeature"]),
         .library(name: "MacOSComponents", targets: ["MacOSComponents"]),
         .library(name: "CreateArtistFeature", targets: ["CreateArtistFeature"]),
@@ -50,15 +49,6 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "Services", package: "FestivlLibrary"),
-                .target(name: "ManagerEventDashboardFeature")
-            ]
-        ),
-
-        .target(
-            name: "ManagerEventDashboardFeature",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "Models", package: "FestivlLibrary"),
                 .target(name: "ManagerArtistsFeature"),
                 .target(name: "StagesFeature")
             ]

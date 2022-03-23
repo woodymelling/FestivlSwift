@@ -12,9 +12,9 @@ import ManagerArtistsFeature
 import StagesFeature
 
 public struct ManagerEventDashboardView: View {
-    let store: Store<ManagerEventDashboardState, ManagerEventDashboardAction>
+    let store: Store<FestivlManagerEventState, ManagerEventDashboardAction>
 
-    public init(store: Store<ManagerEventDashboardState, ManagerEventDashboardAction>) {
+    public init(store: Store<FestivlManagerEventState, ManagerEventDashboardAction>) {
         self.store = store
     }
 
@@ -39,7 +39,7 @@ public struct ManagerEventDashboardView: View {
 }
 
 struct Sidebar: View {
-    let store: Store<ManagerEventDashboardState, ManagerEventDashboardAction>
+    let store: Store<FestivlManagerEventState, ManagerEventDashboardAction>
 
     var body: some View {
         WithViewStore(store) { viewStore in
@@ -48,7 +48,7 @@ struct Sidebar: View {
                     NavigationLink(
                         destination: ManagerArtistsView(
                             store: store.scope(
-                                state: \ManagerEventDashboardState.artistsState,
+                                state: \FestivlManagerEventState.artistsState,
                                 action: ManagerEventDashboardAction.artistsAction
                             )
                         ),
@@ -61,7 +61,7 @@ struct Sidebar: View {
                     NavigationLink(
                         destination: StagesView(
                             store: store.scope(
-                                state: \ManagerEventDashboardState.stagesState,
+                                state: \FestivlManagerEventState.stagesState,
                                 action: ManagerEventDashboardAction.stagesAction)),
                         tag: SidebarPage.stages,
                         selection: viewStore.binding(\.$sidebarSelection)
@@ -90,7 +90,7 @@ struct Sidebar: View {
 }
 
 struct SidebarEventInfoView: View {
-    let store: Store<ManagerEventDashboardState, ManagerEventDashboardAction>
+    let store: Store<FestivlManagerEventState, ManagerEventDashboardAction>
 
     var body: some View {
         WithViewStore(store) { viewStore in
@@ -117,16 +117,7 @@ struct ManagerEventDashboardView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             ManagerEventDashboardView(
                 store: .init(
-                    initialState: .init(
-                        event: .testData,
-                        artists: Artist.testValues.asIdentifedArray,
-                        stages: Stage.testValues.asIdentifedArray,
-                        artistSets: ArtistSet.testValues().asIdentifedArray,
-                        sidebarSelection: .artists,
-                        artistListSelectedArtist: nil,
-                        createArtistState: nil,
-                        stagesListSelectedStage: nil
-                    ),
+                    initialState: .init(event: .testData),
                     reducer: managerEventDashboardReducer,
                     environment: .init()
                 )

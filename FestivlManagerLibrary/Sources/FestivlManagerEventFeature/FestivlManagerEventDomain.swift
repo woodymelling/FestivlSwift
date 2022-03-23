@@ -9,7 +9,6 @@ import ComposableArchitecture
 import Models
 import Services
 import Combine
-import ManagerEventDashboardFeature
 import CreateArtistFeature
 
 public struct FestivlManagerEventState: Equatable {
@@ -28,7 +27,7 @@ public struct FestivlManagerEventState: Equatable {
     var loadedArtistSets = false
 
     // SidebarState:
-    var sidebarSelection: SidebarPage? = .artists
+    @BindableState var sidebarSelection: SidebarPage? = .artists
 
     // ArtistListState:
     var artistListSelectedArtist: Artist?
@@ -36,33 +35,6 @@ public struct FestivlManagerEventState: Equatable {
 
     // StageListState:
     var stagesListSelectedStage: Stage?
-
-
-    var dashboardState: ManagerEventDashboardState {
-        get {
-            .init(
-                event: event,
-                artists: artists,
-                stages: stages,
-                artistSets: artistSets,
-                sidebarSelection: sidebarSelection,
-                artistListSelectedArtist: artistListSelectedArtist,
-                createArtistState: createArtistState,
-                stagesListSelectedStage: stagesListSelectedStage
-            )
-        }
-
-        set {
-            self.event = newValue.event
-            self.artists = newValue.artists
-            self.stages = newValue.stages
-            self.artistSets = newValue.artistSets
-            self.sidebarSelection = newValue.sidebarSelection
-            self.artistListSelectedArtist = newValue.artistListSelectedArtist
-            self.createArtistState = newValue.createArtistState
-            self.stagesListSelectedStage = newValue.stagesListSelectedStage
-        }
-    }
     
     public init(event: Event) {
         self.event = event
@@ -139,7 +111,7 @@ public let festivlManagerEventReducer = Reducer.combine(
     },
 
     managerEventDashboardReducer.pullback(
-        state: \.dashboardState,
+        state: \.self,
         action: /FestivlManagerEventAction.dashboardAction,
         environment: { _ in
             .init()

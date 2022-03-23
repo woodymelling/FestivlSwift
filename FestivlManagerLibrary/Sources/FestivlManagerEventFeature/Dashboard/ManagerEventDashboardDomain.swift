@@ -24,41 +24,7 @@ public enum SidebarPage {
     }
 }
 
-public struct ManagerEventDashboardState: Equatable {
-    public init(
-        event: Event,
-        artists: IdentifiedArrayOf<Artist>,
-        stages: IdentifiedArrayOf<Stage>,
-        artistSets: IdentifiedArrayOf<ArtistSet>,
-        sidebarSelection: SidebarPage?,
-        artistListSelectedArtist: Artist?,
-        createArtistState: CreateArtistState?,
-        stagesListSelectedStage: Stage?
-    ) {
-        self.event = event
-        self.artists = artists
-        self.stages = stages
-        self.artistSets = artistSets
-        self.sidebarSelection = sidebarSelection
-        self.artistListSelectedArtist = artistListSelectedArtist
-        self.createArtistState = createArtistState
-        self.stagesListSelectedStage = stagesListSelectedStage
-    }
-
-    public private(set) var event: Event
-    public private(set) var artists: IdentifiedArrayOf<Artist>
-    public private(set) var stages: IdentifiedArrayOf<Stage>
-    public private(set) var artistSets: IdentifiedArrayOf<ArtistSet>
-
-    @BindableState public var sidebarSelection: SidebarPage?
-
-    // MARK: ArtistList
-    public var artistListSelectedArtist: Artist?
-    public var createArtistState: CreateArtistState?
-
-    // MARK: StagesList
-    public var stagesListSelectedStage: Stage?
-
+extension FestivlManagerEventState {
     var artistsState: ManagerArtistsState {
         get {
             return .init(
@@ -94,7 +60,7 @@ public struct ManagerEventDashboardState: Equatable {
 }
 
 public enum ManagerEventDashboardAction: BindableAction {
-    case binding(_ action: BindingAction<ManagerEventDashboardState>)
+    case binding(_ action: BindingAction<FestivlManagerEventState>)
     case artistsAction(ManagerArtistsAction)
     case stagesAction(StagesAction)
 
@@ -106,7 +72,7 @@ public struct ManagerEventDashboardEnvironment {
 }
 
 public let managerEventDashboardReducer = Reducer.combine(
-    Reducer<ManagerEventDashboardState, ManagerEventDashboardAction, ManagerEventDashboardEnvironment> { state, action, _ in
+    Reducer<FestivlManagerEventState, ManagerEventDashboardAction, ManagerEventDashboardEnvironment> { state, action, _ in
         switch action {
         case .binding:
             return .none
@@ -122,13 +88,13 @@ public let managerEventDashboardReducer = Reducer.combine(
     .binding(),
 
     managerArtistsReducer.pullback(
-        state: \ManagerEventDashboardState.artistsState,
+        state: \FestivlManagerEventState.artistsState,
         action: /ManagerEventDashboardAction.artistsAction,
         environment: { _ in .init() }
     ),
 
     stagesReducer.pullback(
-        state: \ManagerEventDashboardState.stagesState,
+        state: \FestivlManagerEventState.stagesState,
         action: /ManagerEventDashboardAction.stagesAction,
         environment: { _ in .init() }
     )

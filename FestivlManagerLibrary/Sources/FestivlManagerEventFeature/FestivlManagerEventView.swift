@@ -7,7 +7,6 @@
 
 import SwiftUI
 import ComposableArchitecture
-import ManagerEventDashboardFeature
 
 public struct FestivlManagerEventView: View {
     let store: Store<FestivlManagerEventState, FestivlManagerEventAction>
@@ -22,7 +21,7 @@ public struct FestivlManagerEventView: View {
                 if viewStore.eventLoaded {
                     ManagerEventDashboardView(
                         store: store.scope(
-                            state: \FestivlManagerEventState.dashboardState,
+                            state: { $0 },
                             action: FestivlManagerEventAction.dashboardAction
                         )
                     )
