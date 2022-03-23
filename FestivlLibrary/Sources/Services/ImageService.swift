@@ -67,5 +67,15 @@ extension NSImage {
         let jpegData = bitmapRep.representation(using: NSBitmapImageRep.FileType.png, properties: [:])!
         return jpegData
     }
+
+    public static func fromURL(url: URL) async -> NSImage? {
+        do {
+            let response = try await URLSession.shared.data(for: URLRequest(url: url))
+
+            return NSImage(data: response.0)
+        } catch {
+            return nil
+        }
+    }
 }
 #endif

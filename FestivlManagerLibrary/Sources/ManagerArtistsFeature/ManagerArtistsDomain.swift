@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import Models
 import CreateArtistFeature
+import ManagerArtistDetailFeature
 
 public struct ManagerArtistsState: Equatable {
     public init(
@@ -28,12 +29,27 @@ public struct ManagerArtistsState: Equatable {
     @BindableState public var selectedArtist: Artist?
     
     @BindableState public var createArtistState: CreateArtistState?
+
+    var artistDetailState: ManagerArtistDetailState? {
+        get {
+            guard let selectedArtist = selectedArtist else {
+                return nil
+            }
+
+            return .init(artist: selectedArtist, event: event)
+        }
+
+        set {
+            self.selectedArtist = newValue?.artist
+        }
+    }
 }
 
 public enum ManagerArtistsAction: BindableAction {
     case binding(_ action: BindingAction<ManagerArtistsState>)
     case addArtistButtonPressed
     case createArtistAction(CreateArtistAction)
+    case artistDetailAction(ManagerArtistDetailAction)
 }
 
 public struct ManagerArtistsEnvironment {
@@ -47,14 +63,22 @@ public let managerArtistsReducer = Reducer<ManagerArtistsState, ManagerArtistsAc
         action: /ManagerArtistsAction.createArtistAction,
         environment: { _ in .init()}
     ),
+
+    managerArtistDetailReducer.optional().pullback(
+        state: \.artistDetailState,
+        action: /ManagerArtistsAction.artistDetailAction,
+        environment: { _ in .init() }
+    ),
     
     Reducer { state, action, _ in
         switch action {
         case .binding:
             return .none
+            
         case .addArtistButtonPressed:
             state.createArtistState = .init(eventID: state.event.id!)
             return .none
+
         case .createArtistAction(.closeModal(let navigateToArtist)):
             if let navigateToArtist = navigateToArtist {
                 state.artists[id: navigateToArtist.id] = navigateToArtist
@@ -62,7 +86,16 @@ public let managerArtistsReducer = Reducer<ManagerArtistsState, ManagerArtistsAc
             }
             state.createArtistState = nil
             return .none
+
         case .createArtistAction:
+            return .none
+
+        case .artistDetailAction(.editArtist):
+            guard let selectedArtist = state.selectedArtist else { return .none }
+            state.createArtistState = .init(editing: selectedArtist, eventID: state.event.id!)
+            return .none
+
+        case .artistDetailAction:
             return .none
         }
     }

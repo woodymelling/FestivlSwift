@@ -15,6 +15,8 @@ let package = Package(
         .library(name: "ManagerArtistsFeature", targets: ["ManagerArtistsFeature"]),
         .library(name: "MacOSComponents", targets: ["MacOSComponents"]),
         .library(name: "CreateArtistFeature", targets: ["CreateArtistFeature"]),
+        .library(name: "ManagerArtistDetailFeature", targets: ["ManagerArtistDetailFeature"]),
+        .library(name: "StagesFeature", targets: ["StagesFeature"]),
 
     ],
     dependencies: [
@@ -65,14 +67,16 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
-                .target(name: "CreateArtistFeature")
+                .target(name: "CreateArtistFeature"),
+                .target(name: "ManagerArtistDetailFeature")
             ]
         ),
         .target(
             name: "MacOSComponents",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "Utilities", package: "FestivlLibrary")
+                .product(name: "Utilities", package: "FestivlLibrary"),
+                .product(name: "Models", package: "FestivlLibrary")
             ]
         ),
         .target(
@@ -82,6 +86,23 @@ let package = Package(
                 .product(name: "Models", package: "FestivlLibrary"),
                 .target(name: "MacOSComponents"),
                 .product(name: "Services", package: "FestivlLibrary")
+            ]
+        ),
+        .target(
+            name: "ManagerArtistDetailFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Models", package: "FestivlLibrary"),
+                .target(name: "MacOSComponents"),
+                .product(name: "Services", package: "FestivlLibrary"),
+                .product(name: "SharedResources", package: "FestivlLibrary")
+            ]
+        ),
+        .target(
+            name: "StagesFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Models", package: "FestivlLibrary"),
             ]
         ),
     ]

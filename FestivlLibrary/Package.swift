@@ -9,16 +9,12 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(name: "FestivlLibrary", targets: ["FestivlLibrary"]),
-
         .library(name: "ServiceCore", targets: ["ServiceCore"]),
         .library(name: "Services", targets: ["Services"]),
         .library(name: "Models", targets: ["Models"]),
         .library(name: "Utilities", targets: ["Utilities"]),
         .library(name: "Components", targets: ["Components"]),
-        
-
-        // MARK: FestivlManager
-
+        .library(name: "SharedResources", targets: ["SharedResources"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -57,6 +53,13 @@ let package = Package(
             .product(name: "FirebaseStorage", package: "Firebase"),
             .product(name: "FirebaseStorageSwift-Beta", package: "Firebase")
         ]),
+        .target(
+            name: "SharedResources",
+            dependencies: [],
+            resources: [
+                .copy("LinkIcons.xcassets")
+            ]
+        ),
 
         // MARK: Tests
         .testTarget(name: "FestivlLibraryTests", dependencies: ["FestivlLibrary"]),

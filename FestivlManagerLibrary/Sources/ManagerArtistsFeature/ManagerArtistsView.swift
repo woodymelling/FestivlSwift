@@ -9,6 +9,8 @@ import SwiftUI
 import ComposableArchitecture
 import Models
 import CreateArtistFeature
+import MacOSComponents
+import ManagerArtistDetailFeature
 
 public struct ManagerArtistsView: View {
     let store: Store<ManagerArtistsState, ManagerArtistsAction>
@@ -20,14 +22,23 @@ public struct ManagerArtistsView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             List {
-                Button("Add Artist", action: {
-                    viewStore.send(.addArtistButtonPressed)
-                })
+                Spacer()
+                    .frame(height: 20)
+
+                
                 ForEach(viewStore.artists) { artist in
                     NavigationLink(
                         tag: artist,
                         selection: viewStore.binding(\.$selectedArtist),
-                        destination: { Text(artist.name) },
+                        destination: {
+                            IfLetStore(
+                                store.scope(
+                                    state: \.artistDetailState,
+                                    action: ManagerArtistsAction.artistDetailAction
+                                ),
+                                then: ManagerArtistDetailView.init
+                            )
+                        },
                         label: { ArtistRow(artist: artist) }
                     )
                 }
@@ -61,16 +72,8 @@ struct ArtistRow: View {
 
     var body: some View {
         HStack {
-            AsyncImage(url: artist.imageURL) { image in
-                image
-                    .resizable()
-            } placeholder: {
-                Image(systemName: "person.fill")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-            }
-            .frame(square: 50)
-
+            ArtistIcon(artist: artist)
+                .frame(square: 50)
             Text(artist.name)
         }
     }

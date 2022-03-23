@@ -83,10 +83,8 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "Utilities", package: "FestivlLibrary"),
-                .product(name: "Components", package: "FestivlLibrary")
-            ],
-            resources: [
-                .copy("LinkIcons.xcassets")
+                .product(name: "Components", package: "FestivlLibrary"),
+                .product(name: "SharedResources", package: "FestivlLibrary")
             ]
         ),
 

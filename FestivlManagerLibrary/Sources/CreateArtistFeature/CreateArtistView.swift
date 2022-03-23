@@ -53,8 +53,6 @@ public struct CreateArtistView: View {
                             ImagePicker(outputImage: viewStore.binding(\.$image), selectedImage: viewStore.binding(\.$selectedImage))
                             Spacer()
                         }
-
-
                     }
                 }
 
@@ -65,16 +63,17 @@ public struct CreateArtistView: View {
                         viewStore.send(.saveButtonPressed)
                     }
 
-//                    if isSheet {
-//                        Button("Cancel", role: .cancel) {
-//                            dismiss()
-//                        }
-//                    }
+                    Button("Cancel", action: {
+                        viewStore.send(.cancelButtonPressed)
+                    })
                 }
                 .padding()
             }
             .padding(.horizontal)
             .frame(minWidth: 500, minHeight: 600)
+            .onAppear {
+                viewStore.send(.loadImageIfRequired)
+            }
         }
     }
 }

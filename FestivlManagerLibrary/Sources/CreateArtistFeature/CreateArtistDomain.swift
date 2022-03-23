@@ -47,6 +47,7 @@ public struct CreateArtistState: Equatable, Identifiable {
         soundcloudURL = artist.soundcloudURL ?? ""
         spotifyURL = artist.spotifyURL ?? ""
         websiteURL = artist.websiteURL ?? ""
+        imageURL = artist.imageURL
     }
 
     public init(eventID: EventID) {
@@ -66,6 +67,9 @@ public struct CreateArtistState: Equatable, Identifiable {
     @BindableState var soundcloudURL = ""
     @BindableState var spotifyURL = ""
     @BindableState var websiteURL = ""
+    var imageURL: URL?
+
+    var loading = false
     
     var didUpdateImage = false
 }
@@ -73,8 +77,11 @@ public struct CreateArtistState: Equatable, Identifiable {
 public enum CreateArtistAction: BindableAction {
     case binding(_ action: BindingAction<CreateArtistState>)
     case saveButtonPressed
+    case cancelButtonPressed
     case finishedUploadingArtist(Artist)
     case closeModal(navigateTo: Artist?)
+    case loadImageIfRequired
+    case imageLoaded(Result<NSImage?, NSError>)
 }
 
 public struct CreateArtistEnvironment {
@@ -101,8 +108,33 @@ public let createArtistReducer = Reducer<CreateArtistState, CreateArtistAction, 
         
     case .binding:
         return .none
+
+    case .loadImageIfRequired:
+        if let imageURL = state.imageURL {
+            state.loading = true
+            return Effect.asyncTask {
+                await NSImage.fromURL(url: imageURL)
+            }
+            .map { result in
+                CreateArtistAction.imageLoaded(result)
+            }
+            .receive(on: DispatchQueue.main)
+            .eraseToEffect()
+        } else {
+            return .none
+        }
+
+    case .imageLoaded(let imageResult):
+        if case let .success(image) = imageResult, let image = image {
+            state.image = image
+            state.selectedImage = image
+        }
+
+        return .none
         
     case .saveButtonPressed:
+
+        state.loading = true
         
         var artist = Artist(
             name: state.name,
@@ -113,48 +145,66 @@ public let createArtistReducer = Reducer<CreateArtistState, CreateArtistAction, 
             websiteURL: state.websiteURL,
             spotifyURL: state.spotifyURL
         )
-        
-        // Create immutable copies so that we don't capture state in the closure
-        let image = state.image
-        let eventID = state.eventID
-        let didUpdateImage = state.didUpdateImage
-        let mode = state.mode
- 
-        return Effect.asyncTask {
 
-            if let image = image, didUpdateImage {
-                let imageURL = try await environment.imageService().uploadImage(
-                    image,
-                    fileName: environment.uuid().uuidString
-                )
-                artist.imageURL = imageURL
-            }
-            
-            switch mode {
-            case .create:
-                artist = try await environment.artistService().createArtist(
-                    artist: artist,
-                    eventID: eventID
-                )
-                
-            case let .edit(originalArtist: originalArtist):
-                artist.id = originalArtist.id
-                try await environment.artistService().updateArtist(
-                    artist: artist,
-                    eventID: eventID
-                )
-            }
+        return uploadArtist(
+            artist: artist,
+            image: state.image,
+            eventID: state.eventID,
+            didUpdateImage: state.didUpdateImage,
+            mode: state.mode,
+            environment: environment
+        )
 
-        }
-        .receive(on: DispatchQueue.main)
-        .map { _ in
-            .finishedUploadingArtist(artist)
-        }
-        .eraseToEffect()
     case .finishedUploadingArtist(let artist):
+        state.loading = false
         return Effect(value: .closeModal(navigateTo: artist))
     case .closeModal:
         return .none
+    case .cancelButtonPressed:
+        return .init(value: .closeModal(navigateTo: nil))
     }
 }
 .binding()
+
+private func uploadArtist(
+    artist: Artist,
+    image: NSImage?,
+    eventID: EventID,
+    didUpdateImage: Bool,
+    mode: Mode,
+    environment: CreateArtistEnvironment
+) -> Effect<CreateArtistAction, Never> {
+
+    var artist = artist
+    return Effect.asyncTask {
+
+        if let image = image, didUpdateImage {
+            let imageURL = try await environment.imageService().uploadImage(
+                image,
+                fileName: environment.uuid().uuidString
+            )
+            artist.imageURL = imageURL
+        }
+
+        switch mode {
+        case .create:
+            artist = try await environment.artistService().createArtist(
+                artist: artist,
+                eventID: eventID
+            )
+
+        case let .edit(originalArtist: originalArtist):
+            artist.id = originalArtist.id
+            try await environment.artistService().updateArtist(
+                artist: artist,
+                eventID: eventID
+            )
+        }
+
+    }
+    .receive(on: DispatchQueue.main)
+    .map { _ in
+        CreateArtistAction.finishedUploadingArtist(artist)
+    }
+    .eraseToEffect()
+}
