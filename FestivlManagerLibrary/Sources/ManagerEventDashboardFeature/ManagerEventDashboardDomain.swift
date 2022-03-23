@@ -32,7 +32,8 @@ public struct ManagerEventDashboardState: Equatable {
         artistSets: IdentifiedArrayOf<ArtistSet>,
         sidebarSelection: SidebarPage?,
         artistListSelectedArtist: Artist?,
-        createArtistState: CreateArtistState?
+        createArtistState: CreateArtistState?,
+        stagesListSelectedStage: Stage?
     ) {
         self.event = event
         self.artists = artists
@@ -41,6 +42,7 @@ public struct ManagerEventDashboardState: Equatable {
         self.sidebarSelection = sidebarSelection
         self.artistListSelectedArtist = artistListSelectedArtist
         self.createArtistState = createArtistState
+        self.stagesListSelectedStage = stagesListSelectedStage
     }
 
     public private(set) var event: Event
@@ -53,6 +55,9 @@ public struct ManagerEventDashboardState: Equatable {
     // MARK: ArtistList
     public var artistListSelectedArtist: Artist?
     public var createArtistState: CreateArtistState?
+
+    // MARK: StagesList
+    public var stagesListSelectedStage: Stage?
 
     var artistsState: ManagerArtistsState {
         get {
@@ -75,13 +80,15 @@ public struct ManagerEventDashboardState: Equatable {
         get {
             StagesState(
                 stages: stages,
-                event: event
+                event: event,
+                selectedStage: stagesListSelectedStage
             )
         }
 
         set {
             self.stages = newValue.stages
             self.event = newValue.event
+            self.stagesListSelectedStage = newValue.selectedStage
         }
     }
 }

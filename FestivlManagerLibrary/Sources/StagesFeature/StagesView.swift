@@ -23,12 +23,17 @@ public struct StagesView: View {
             } else {
                 List {
                     ForEach(viewStore.stages) { stage in
-                        NavigationLink(destination: Text(stage.name)) {
-                            StageListRow(stage: stage)
-                        }
+                        NavigationLink(
+                            tag: stage,
+                            selection: viewStore.binding(\.$selectedStage),
+                            destination: {
+                                Text(stage.name)
+                            },
+                            label: { StageListRow(stage: stage) }
+                        )
                     }
                     .onMove { indices, newOffset in
-//                        viewStore.stagesReordered(fromOffsets: indices, toOffset: newOffset)
+                        viewStore.send(.stagesReordered(fromOffsets: indices, toOffset: newOffset))
                     }
                 }
                 
@@ -94,7 +99,8 @@ struct StagesView_Previews: PreviewProvider {
                 store: .init(
                     initialState: .init(
                         stages: Stage.testValues.asIdentifedArray,
-                        event: .testData
+                        event: .testData,
+                        selectedStage: nil
                     ),
                     reducer: stagesReducer,
                     environment: .init()

@@ -12,18 +12,23 @@ import Services
 public struct StagesState: Equatable {
     public init(
         stages: IdentifiedArrayOf<Stage>,
-        event: Event
+        event: Event,
+        selectedStage: Stage?
     ) {
         self.stages = stages
         self.event = event
+        self.selectedStage = selectedStage
     }
 
     public var stages: IdentifiedArrayOf<Stage>
     public var event: Event
+
+    @BindableState public var selectedStage: Stage?
 }
 
-public enum StagesAction {
+public enum StagesAction: BindableAction {
     case stagesReordered(fromOffsets: IndexSet, toOffset: Int)
+    case binding(_ action: BindingAction<StagesState>)
 }
 
 public struct StagesEnvironment {
@@ -44,8 +49,11 @@ public let stagesReducer = Reducer<StagesState, StagesAction, StagesEnvironment>
         let eventID = state.event.id!
 
         return updateStageSortOrder(newOrder: state.stages, eventID: state.event.id!, environment: environment)
+    case .binding:
+        return .none
     }
 }
+.binding()
 
 private func updateStageSortOrder(
     newOrder stages: IdentifiedArrayOf<Stage>,

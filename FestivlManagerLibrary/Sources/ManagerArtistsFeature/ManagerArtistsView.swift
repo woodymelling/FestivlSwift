@@ -24,7 +24,6 @@ public struct ManagerArtistsView: View {
             List {
                 Spacer()
                     .frame(height: 20)
-
                 
                 ForEach(viewStore.artists) { artist in
                     NavigationLink(

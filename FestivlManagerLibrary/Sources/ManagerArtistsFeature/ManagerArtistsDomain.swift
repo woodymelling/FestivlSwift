@@ -27,7 +27,6 @@ public struct ManagerArtistsState: Equatable {
     public var event: Event
 
     @BindableState public var selectedArtist: Artist?
-    
     @BindableState public var createArtistState: CreateArtistState?
 
     var artistDetailState: ManagerArtistDetailState? {

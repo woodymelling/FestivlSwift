@@ -33,7 +33,10 @@ public struct FestivlManagerEventState: Equatable {
     // ArtistListState:
     var artistListSelectedArtist: Artist?
     var createArtistState: CreateArtistState?
-    
+
+    // StageListState:
+    var stagesListSelectedStage: Stage?
+
 
     var dashboardState: ManagerEventDashboardState {
         get {
@@ -44,7 +47,8 @@ public struct FestivlManagerEventState: Equatable {
                 artistSets: artistSets,
                 sidebarSelection: sidebarSelection,
                 artistListSelectedArtist: artistListSelectedArtist,
-                createArtistState: createArtistState
+                createArtistState: createArtistState,
+                stagesListSelectedStage: stagesListSelectedStage
             )
         }
 
@@ -56,6 +60,7 @@ public struct FestivlManagerEventState: Equatable {
             self.sidebarSelection = newValue.sidebarSelection
             self.artistListSelectedArtist = newValue.artistListSelectedArtist
             self.createArtistState = newValue.createArtistState
+            self.stagesListSelectedStage = newValue.stagesListSelectedStage
         }
     }
     
