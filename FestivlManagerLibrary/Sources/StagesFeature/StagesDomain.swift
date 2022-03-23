@@ -8,27 +8,33 @@
 import ComposableArchitecture
 import Models
 import Services
+import AddEditStageFeature
 
 public struct StagesState: Equatable {
     public init(
         stages: IdentifiedArrayOf<Stage>,
         event: Event,
-        selectedStage: Stage?
+        selectedStage: Stage?,
+        addEditStageState: AddEditStageState?
     ) {
         self.stages = stages
         self.event = event
         self.selectedStage = selectedStage
+        self.addEditStageState = addEditStageState
     }
 
     public var stages: IdentifiedArrayOf<Stage>
     public var event: Event
 
     @BindableState public var selectedStage: Stage?
+    @BindableState public var addEditStageState: AddEditStageState?
 }
 
 public enum StagesAction: BindableAction {
     case stagesReordered(fromOffsets: IndexSet, toOffset: Int)
     case binding(_ action: BindingAction<StagesState>)
+    case addStageButtonPressed
+    case addEditStageAction(AddEditStageAction)
 }
 
 public struct StagesEnvironment {
@@ -40,20 +46,51 @@ public struct StagesEnvironment {
     }
 }
 
-public let stagesReducer = Reducer<StagesState, StagesAction, StagesEnvironment> { state, action, environment in
-    switch action {
-    case .stagesReordered(let source, let destination):
-        state.stages.move(fromOffsets: source, toOffset: destination)
+public let stagesReducer = Reducer<StagesState, StagesAction, StagesEnvironment>.combine (
 
-        let stages = state.stages
-        let eventID = state.event.id!
+    addEditStageReducer.optional().pullback(
+        state: \.addEditStageState,
+        action: /StagesAction.addEditStageAction,
+        environment: { _ in .init() }
+    ),
 
-        return updateStageSortOrder(newOrder: state.stages, eventID: state.event.id!, environment: environment)
-    case .binding:
-        return .none
+    Reducer { state, action, environment in
+        switch action {
+        case .stagesReordered(let source, let destination):
+            state.stages.move(fromOffsets: source, toOffset: destination)
+
+            let stages = state.stages
+            let eventID = state.event.id!
+
+            return updateStageSortOrder(newOrder: state.stages, eventID: state.event.id!, environment: environment)
+
+        case .addStageButtonPressed:
+            state.addEditStageState = .init(
+                eventID: state.event.id!,
+                stageCount: state.stages.count
+            )
+            return .none
+
+        case .addEditStageAction(.closeModal(let navigateToStage)):
+            if let navigateToStage = navigateToStage {
+                state.stages[id: navigateToStage.id] = navigateToStage
+
+                state.selectedStage = navigateToStage
+            }
+
+            state.addEditStageState = nil
+
+            return .none
+
+        case .addEditStageAction:
+            return .none
+
+        case .binding:
+            return .none
+        }
     }
-}
-.binding()
+    .binding()
+)
 
 private func updateStageSortOrder(
     newOrder stages: IdentifiedArrayOf<Stage>,

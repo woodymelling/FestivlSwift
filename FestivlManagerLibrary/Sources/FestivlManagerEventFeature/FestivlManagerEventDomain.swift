@@ -10,6 +10,7 @@ import Models
 import Services
 import Combine
 import CreateArtistFeature
+import AddEditStageFeature
 
 public struct FestivlManagerEventState: Equatable {
     public var event: Event
@@ -35,6 +36,7 @@ public struct FestivlManagerEventState: Equatable {
 
     // StageListState:
     var stagesListSelectedStage: Stage?
+    var addEditStageState: AddEditStageState?
     
     public init(event: Event) {
         self.event = event

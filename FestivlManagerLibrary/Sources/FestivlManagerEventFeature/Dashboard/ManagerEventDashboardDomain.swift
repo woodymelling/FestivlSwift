@@ -47,7 +47,8 @@ extension FestivlManagerEventState {
             StagesState(
                 stages: stages,
                 event: event,
-                selectedStage: stagesListSelectedStage
+                selectedStage: stagesListSelectedStage,
+                addEditStageState: addEditStageState
             )
         }
 
@@ -55,6 +56,7 @@ extension FestivlManagerEventState {
             self.stages = newValue.stages
             self.event = newValue.event
             self.stagesListSelectedStage = newValue.selectedStage
+            self.addEditStageState = newValue.addEditStageState
         }
     }
 }

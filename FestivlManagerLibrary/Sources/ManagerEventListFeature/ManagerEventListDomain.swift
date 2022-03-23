@@ -51,4 +51,3 @@ public let managerEventListReducer = Reducer<ManagerEventListState, ManagerEvent
         return .none
     }
 }
-    .debug()

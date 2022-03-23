@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import Models
+import AddEditStageFeature
 
 public struct StagesView: View {
     let store: Store<StagesState, StagesAction>
@@ -18,36 +19,51 @@ public struct StagesView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            if viewStore.stages.isEmpty {
-                Text("No Stages")
-            } else {
-                List {
-                    ForEach(viewStore.stages) { stage in
-                        NavigationLink(
-                            tag: stage,
-                            selection: viewStore.binding(\.$selectedStage),
-                            destination: {
-                                Text(stage.name)
-                            },
-                            label: { StageListRow(stage: stage) }
-                        )
+            Group {
+                if viewStore.stages.isEmpty {
+                    Text("No Stages")
+                } else {
+                    List {
+                        ForEach(viewStore.stages) { stage in
+                            NavigationLink(
+                                tag: stage,
+                                selection: viewStore.binding(\.$selectedStage),
+                                destination: {
+                                    Text(stage.name)
+                                },
+                                label: { StageListRow(stage: stage) }
+                            )
+                        }
+                        .onMove { indices, newOffset in
+                            viewStore.send(.stagesReordered(fromOffsets: indices, toOffset: newOffset))
+                        }
                     }
-                    .onMove { indices, newOffset in
-                        viewStore.send(.stagesReordered(fromOffsets: indices, toOffset: newOffset))
-                    }
-                }
-                
-            }
-        }
-        .toolbar {
-            ToolbarItemGroup(placement: .primaryAction) {
-                Button(action: {
 
-                }, label: {
-                    Label("Add", systemImage: "plus")
-                })
+                }
             }
-        }
+            .toolbar {
+                ToolbarItemGroup(placement: .primaryAction) {
+                    Button(action: {
+                        viewStore.send(.addStageButtonPressed)
+                    }, label: {
+                        Label("Add Stage", systemImage: "plus")
+                            .labelStyle(.iconOnly)
+                    })
+                }
+            }
+            .sheet(item: viewStore.binding(\StagesState.$addEditStageState)) { _ in
+                IfLetStore(
+                    store.scope(
+                        state: \.addEditStageState,
+                        action: StagesAction.addEditStageAction
+                    ),
+                    then: AddEditStageView.init
+                )
+            }
+
+
+       }
+
     }
 }
 
@@ -100,7 +116,8 @@ struct StagesView_Previews: PreviewProvider {
                     initialState: .init(
                         stages: Stage.testValues.asIdentifedArray,
                         event: .testData,
-                        selectedStage: nil
+                        selectedStage: nil,
+                        addEditStageState: nil
                     ),
                     reducer: stagesReducer,
                     environment: .init()

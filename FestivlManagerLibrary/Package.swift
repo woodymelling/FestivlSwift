@@ -16,6 +16,7 @@ let package = Package(
         .library(name: "CreateArtistFeature", targets: ["CreateArtistFeature"]),
         .library(name: "ManagerArtistDetailFeature", targets: ["ManagerArtistDetailFeature"]),
         .library(name: "StagesFeature", targets: ["StagesFeature"]),
+        .library(name: "AddEditStageFeature", targets: ["AddEditStageFeature"]),
 
     ],
     dependencies: [
@@ -94,8 +95,20 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Services", package: "FestivlLibrary")
+                .product(name: "Services", package: "FestivlLibrary"),
+                .target(name: "AddEditStageFeature")
             ]
         ),
+        .target(
+            name: "AddEditStageFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Models", package: "FestivlLibrary"),
+                .product(name: "Components", package: "FestivlLibrary"),
+                .product(name: "Services", package: "FestivlLibrary"),
+                .target(name: "MacOSComponents")
+            ]
+        ),
+
     ]
 )

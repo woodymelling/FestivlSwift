@@ -14,7 +14,7 @@ import IdentifiedCollections
 import Combine
 
 public protocol StageServiceProtocol: Service {
-    func createStage(stage: Stage, eventID: String) async throws
+    func createStage(stage: Stage, eventID: String) async throws -> Stage
     func updateStage(stage: Stage, eventID: String) async throws
     func updateStageSortOrder(newOrder: IdentifiedArrayOf<Stage>, eventID: String) async throws
 
@@ -33,11 +33,15 @@ public class StageService: StageServiceProtocol {
 
     public static var shared = StageService()
 
-    public func createStage(stage: Stage, eventID: String) async throws {
-        try await createDocument(
+    public func createStage(stage: Stage, eventID: String) async throws -> Stage {
+        let document = try await createDocument(
             reference: getStagesRef(eventID: eventID),
             data: stage
         )
+
+        var stage = stage
+        stage.id = document.documentID
+        return stage
     }
 
     public func updateStage(stage: Stage, eventID: String) async throws {
@@ -75,7 +79,11 @@ public class StageService: StageServiceProtocol {
 }
 
 struct StageMockService: StageServiceProtocol {
-    func createStage(stage: Stage, eventID: String) async throws {}
+    func createStage(stage: Stage, eventID: String) async throws -> Stage {
+        var stage = stage
+        stage.id = UUID().uuidString
+        return stage
+    }
 
     func updateStage(stage: Stage, eventID: String) async throws {}
 

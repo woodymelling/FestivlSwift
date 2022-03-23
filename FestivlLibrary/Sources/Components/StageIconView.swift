@@ -29,7 +29,7 @@ public struct StageIconView: View {
                     .minimumScaleFactor(0.001)
                     .padding(2)
                     .frame(square: geo.size.minSideLength)
-                    .background(LinearGradient(colors: [stage.color, Color(uiColor: UIColor.secondarySystemBackground)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                    .background(LinearGradient(colors: [stage.color, Color.secondary], startPoint: .topLeading, endPoint: .bottomTrailing))
                     .clipShape(Circle())
 
             })
