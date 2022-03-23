@@ -73,3 +73,25 @@ public class StageService: StageServiceProtocol {
         try observeDocument(getStagesRef(eventID: eventID).document(stage.ensureIDExists()))
     }
 }
+
+struct StageMockService: StageServiceProtocol {
+    func createStage(stage: Stage, eventID: String) async throws {}
+
+    func updateStage(stage: Stage, eventID: String) async throws {}
+
+    func updateStageSortOrder(newOrder: IdentifiedArrayOf<Stage>, eventID: String) async throws {}
+
+    func stagesPublisher(eventID: String) -> AnyPublisher<IdentifiedArrayOf<Stage>, FestivlError> {
+        Just(Stage.testValues.asIdentifedArray)
+            .setFailureType(to: FestivlError.self)
+            .eraseToAnyPublisher()
+    }
+
+    func watchStage(stage: Stage, eventID: String) throws -> AnyPublisher<Stage, FestivlError> {
+        Just(Stage.testData)
+            .setFailureType(to: FestivlError.self)
+            .eraseToAnyPublisher()
+    }
+
+    
+}

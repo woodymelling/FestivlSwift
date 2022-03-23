@@ -59,7 +59,8 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
-                .target(name: "ManagerArtistsFeature")
+                .target(name: "ManagerArtistsFeature"),
+                .target(name: "StagesFeature")
             ]
         ),
         .target(
@@ -103,6 +104,7 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
+                .product(name: "Services", package: "FestivlLibrary")
             ]
         ),
     ]

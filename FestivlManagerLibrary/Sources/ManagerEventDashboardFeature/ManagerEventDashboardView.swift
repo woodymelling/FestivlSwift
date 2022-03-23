@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import Models
 import ManagerArtistsFeature
+import StagesFeature
 
 public struct ManagerEventDashboardView: View {
     let store: Store<ManagerEventDashboardState, ManagerEventDashboardAction>
@@ -47,7 +48,7 @@ struct Sidebar: View {
                     NavigationLink(
                         destination: ManagerArtistsView(
                             store: store.scope(
-                                state: \.artistsState,
+                                state: \ManagerEventDashboardState.artistsState,
                                 action: ManagerEventDashboardAction.artistsAction
                             )
                         ),
@@ -58,7 +59,10 @@ struct Sidebar: View {
                     }
 
                     NavigationLink(
-                        destination: Text("Stages"),
+                        destination: StagesView(
+                            store: store.scope(
+                                state: \ManagerEventDashboardState.stagesState,
+                                action: ManagerEventDashboardAction.stagesAction)),
                         tag: SidebarPage.stages,
                         selection: viewStore.binding(\.$sidebarSelection)
                     ) {

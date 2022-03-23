@@ -9,6 +9,7 @@ import ComposableArchitecture
 import Models
 import ManagerArtistsFeature
 import CreateArtistFeature
+import StagesFeature
 
 public enum SidebarPage {
     case artists, stages, schedule
@@ -69,11 +70,26 @@ public struct ManagerEventDashboardState: Equatable {
             self.createArtistState = newValue.createArtistState
         }
     }
+
+    var stagesState: StagesState {
+        get {
+            StagesState(
+                stages: stages,
+                event: event
+            )
+        }
+
+        set {
+            self.stages = newValue.stages
+            self.event = newValue.event
+        }
+    }
 }
 
 public enum ManagerEventDashboardAction: BindableAction {
     case binding(_ action: BindingAction<ManagerEventDashboardState>)
     case artistsAction(ManagerArtistsAction)
+    case stagesAction(StagesAction)
 
     case exitEvent
 }
@@ -92,6 +108,8 @@ public let managerEventDashboardReducer = Reducer.combine(
             return .none
         case .artistsAction:
             return .none
+        case .stagesAction:
+            return .none
         }
     }
     .binding(),
@@ -99,6 +117,12 @@ public let managerEventDashboardReducer = Reducer.combine(
     managerArtistsReducer.pullback(
         state: \ManagerEventDashboardState.artistsState,
         action: /ManagerEventDashboardAction.artistsAction,
+        environment: { _ in .init() }
+    ),
+
+    stagesReducer.pullback(
+        state: \ManagerEventDashboardState.stagesState,
+        action: /ManagerEventDashboardAction.stagesAction,
         environment: { _ in .init() }
     )
 )
