@@ -88,7 +88,8 @@ struct ManagerArtistsView_Previews: PreviewProvider {
                             artists: Artist.testValues.asIdentifedArray,
                             selectedArtist: nil,
                             event: .testData,
-                            createArtistState: nil
+                            createArtistState: nil,
+                            isPresentingDeleteConfirmation: false
                         ),
                         reducer: managerArtistsReducer,
                         environment: .init()

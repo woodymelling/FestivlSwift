@@ -55,8 +55,26 @@ public struct ManagerArtistDetailView: View {
                     }, label: {
                         Label("Edit", systemImage: "pencil")
                     })
+
+                    Button(role: .destructive, action: {
+                        viewStore.send(.deleteButtonPressed)
+                    }, label: {
+                        Label("Delete", systemImage: "trash")
+                    })
                 }
             }
+            .confirmationDialog(
+                "Are you sure you want to delete \(viewStore.artist.name)?",
+                isPresented: viewStore.binding(\.$isPresentingDeleteConfirmation),
+                actions: {
+                    Button("Cancel", role: .cancel) {
+                        viewStore.send(.deleteConfirmationCancelled)
+                    }
+
+                    Button("Delete", role: .destructive) {
+                        viewStore.send(.deleteArtist)
+                    }
+                })
         }
     }
 }
@@ -107,7 +125,11 @@ struct ManagerArtistDetailView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             ManagerArtistDetailView(
                 store: .init(
-                    initialState: .init(artist: .testData, event: .testData),
+                    initialState: .init(
+                        artist: .testData,
+                        event: .testData,
+                        isPresentingDeleteConfirmation: false
+                    ),
                     reducer: managerArtistDetailReducer,
                     environment: .init(artistService: { ArtistMockService() })
                 )

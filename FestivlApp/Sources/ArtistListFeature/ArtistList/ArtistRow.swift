@@ -45,6 +45,7 @@ struct ArtistRow: View {
 
             Text(artist.name)
 
+            Spacer()
         }
     }
 

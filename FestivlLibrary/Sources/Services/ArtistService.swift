@@ -16,6 +16,7 @@ import IdentifiedCollections
 public protocol ArtistServiceProtocol: Service {
     func createArtist(artist: Artist, eventID: String) async throws -> Artist
     func updateArtist(artist: Artist, eventID: String) async throws
+    func deleteArtist(artist: Artist, eventID: String) async throws
 
     func artistsPublisher(eventID: String) -> AnyPublisher<IdentifiedArrayOf<Artist>, FestivlError>
     func watchArtist(artist: Artist, eventID: String) throws -> AnyPublisher<Artist, FestivlError>
@@ -48,6 +49,12 @@ public class ArtistService: ArtistServiceProtocol {
         )
     }
 
+    public func deleteArtist(artist: Artist, eventID: String) async throws {
+        try await deleteDocument(
+            documentReference: getArtistListRef(eventID: eventID).document(artist.ensureIDExists())
+        )
+    }
+
     public func artistsPublisher(eventID: String) -> AnyPublisher<IdentifiedArrayOf<Artist>, FestivlError> {
         observeQuery(getArtistListRef(eventID: eventID).order(by: "name"))
     }
@@ -67,6 +74,8 @@ public struct ArtistMockService: ArtistServiceProtocol {
     }
 
     public func updateArtist(artist: Artist, eventID: String) async throws { }
+
+    public func deleteArtist(artist: Artist, eventID: String) async throws { }
 
     public func artistsPublisher(eventID: String) -> AnyPublisher<IdentifiedArrayOf<Artist>, FestivlError> {
         let testData = Artist.testData

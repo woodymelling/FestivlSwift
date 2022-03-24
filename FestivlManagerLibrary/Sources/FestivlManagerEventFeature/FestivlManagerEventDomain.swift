@@ -33,10 +33,20 @@ public struct FestivlManagerEventState: Equatable {
     // ArtistListState:
     var artistListSelectedArtist: Artist?
     var createArtistState: CreateArtistState?
+    var isPresentingArtistDeleteConfirmation: Bool = false
 
     // StageListState:
     var stagesListSelectedStage: Stage?
     var addEditStageState: AddEditStageState?
+
+    var dashboardState: Self {
+        get {
+            return self
+        }
+        set {
+            self = newValue
+        }
+    }
     
     public init(event: Event) {
         self.event = event
@@ -71,6 +81,15 @@ public struct FestivlManagerEventEnvironment {
 }
 
 public let festivlManagerEventReducer = Reducer.combine(
+
+    managerEventDashboardReducer.pullback(
+        state: \.dashboardState,
+        action: /FestivlManagerEventAction.dashboardAction,
+        environment: { _ in
+            .init()
+        }
+    ),
+
     Reducer<FestivlManagerEventState, FestivlManagerEventAction, FestivlManagerEventEnvironment> { state, action, environment in
         switch action {
         case .subscribeToDataPublishers:
@@ -110,16 +129,7 @@ public let festivlManagerEventReducer = Reducer.combine(
         case .dashboardAction:
             return .none
         }
-    },
-
-    managerEventDashboardReducer.pullback(
-        state: \.self,
-        action: /FestivlManagerEventAction.dashboardAction,
-        environment: { _ in
-            .init()
-        }
-    )
-
+    }
 )
 .debug()
 

@@ -15,12 +15,14 @@ public struct ManagerArtistsState: Equatable {
         artists: IdentifiedArrayOf<Artist>,
         selectedArtist: Artist?,
         event: Event,
-        createArtistState: CreateArtistState?
+        createArtistState: CreateArtistState?,
+        isPresentingDeleteConfirmation: Bool
     ) {
         self.artists = artists
         self.selectedArtist = selectedArtist
         self.createArtistState = createArtistState
         self.event = event
+        self.isPresentingDeleteConfirmation = isPresentingDeleteConfirmation 
     }
 
     public var artists: IdentifiedArrayOf<Artist>
@@ -29,17 +31,26 @@ public struct ManagerArtistsState: Equatable {
     @BindableState public var selectedArtist: Artist?
     @BindableState public var createArtistState: CreateArtistState?
 
+    public var isPresentingDeleteConfirmation: Bool
+
     var artistDetailState: ManagerArtistDetailState? {
         get {
             guard let selectedArtist = selectedArtist else {
                 return nil
             }
 
-            return .init(artist: selectedArtist, event: event)
+            return .init(
+                artist: selectedArtist,
+                event: event,
+                isPresentingDeleteConfirmation: isPresentingDeleteConfirmation
+            )
         }
 
         set {
-            self.selectedArtist = newValue?.artist
+            guard let newValue = newValue else { return }
+            self.selectedArtist = newValue.artist
+            self.event = newValue.event
+            self.isPresentingDeleteConfirmation = newValue.isPresentingDeleteConfirmation
         }
     }
 }
@@ -92,6 +103,11 @@ public let managerArtistsReducer = Reducer<ManagerArtistsState, ManagerArtistsAc
         case .artistDetailAction(.editArtist):
             guard let selectedArtist = state.selectedArtist else { return .none }
             state.createArtistState = .init(editing: selectedArtist, eventID: state.event.id!)
+            return .none
+            
+        case .artistDetailAction(.artistDeletionSucceeded):
+            state.selectedArtist = nil
+            state.isPresentingDeleteConfirmation = false
             return .none
 
         case .artistDetailAction:

@@ -40,6 +40,13 @@ public extension Service {
         }
     }
 
+    func deleteDocument(documentReference: DocumentReference) async throws {
+        return try await withUnsafeThrowingContinuation { continuation in
+            documentReference.delete()
+            continuation.resume()
+        }
+    }
+
     func observeQuery<T: Decodable>(_ query: Query) -> AnyPublisher<IdentifiedArrayOf<T>, FestivlError>  where T: Identifiable {
         Publishers.QuerySnapshotPublisher(query: query)
             .flatMap { snapshot -> AnyPublisher<[T], FestivlError> in

@@ -31,7 +31,8 @@ extension FestivlManagerEventState {
                 artists: artists,
                 selectedArtist: artistListSelectedArtist,
                 event: event,
-                createArtistState: createArtistState
+                createArtistState: createArtistState,
+                isPresentingDeleteConfirmation: isPresentingArtistDeleteConfirmation
             )
         }
         set {
@@ -39,6 +40,7 @@ extension FestivlManagerEventState {
             self.artistListSelectedArtist = newValue.selectedArtist
             self.event = newValue.event
             self.createArtistState = newValue.createArtistState
+            self.isPresentingArtistDeleteConfirmation = newValue.isPresentingDeleteConfirmation
         }
     }
 
@@ -74,6 +76,19 @@ public struct ManagerEventDashboardEnvironment {
 }
 
 public let managerEventDashboardReducer = Reducer.combine(
+
+    managerArtistsReducer.pullback(
+        state: \FestivlManagerEventState.artistsState,
+        action: /ManagerEventDashboardAction.artistsAction,
+        environment: { _ in .init() }
+    ),
+
+    stagesReducer.pullback(
+        state: \FestivlManagerEventState.stagesState,
+        action: /ManagerEventDashboardAction.stagesAction,
+        environment: { _ in .init() }
+    ),
+
     Reducer<FestivlManagerEventState, ManagerEventDashboardAction, ManagerEventDashboardEnvironment> { state, action, _ in
         switch action {
         case .binding:
@@ -87,19 +102,8 @@ public let managerEventDashboardReducer = Reducer.combine(
             return .none
         }
     }
-    .binding(),
+    .binding()
 
-    managerArtistsReducer.pullback(
-        state: \FestivlManagerEventState.artistsState,
-        action: /ManagerEventDashboardAction.artistsAction,
-        environment: { _ in .init() }
-    ),
-
-    stagesReducer.pullback(
-        state: \FestivlManagerEventState.stagesState,
-        action: /ManagerEventDashboardAction.stagesAction,
-        environment: { _ in .init() }
-    )
 )
 
 

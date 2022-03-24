@@ -55,25 +55,6 @@ public struct ArtistListView: View {
     }
 }
 
-//extension Collection where Element == ArtistListState {
-//    var indexed: [String: [Artist]] {
-//        var dict: [String: [Artist]] = .init()
-//
-//
-//        _ = self.map { artist in
-//            let key = artist.name.first!.isLetter ? String(artist.name.capitalized.first!) : "123"
-//
-//            if dict[key] == nil {
-//                dict[key] = []
-//            }
-//
-//            dict[key]!.append(artist)
-//        }
-//
-//        return dict
-//    }
-//}
-
 struct ArtistListView_Previews: PreviewProvider {
     static var previews: some View {
         ArtistListView(

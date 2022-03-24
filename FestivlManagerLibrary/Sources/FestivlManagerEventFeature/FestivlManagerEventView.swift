@@ -21,7 +21,7 @@ public struct FestivlManagerEventView: View {
                 if viewStore.eventLoaded {
                     ManagerEventDashboardView(
                         store: store.scope(
-                            state: { $0 },
+                            state: \.dashboardState,
                             action: FestivlManagerEventAction.dashboardAction
                         )
                     )
