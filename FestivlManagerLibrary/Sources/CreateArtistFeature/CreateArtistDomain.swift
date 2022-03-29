@@ -125,6 +125,7 @@ public let createArtistReducer = Reducer<CreateArtistState, CreateArtistAction, 
         }
 
     case .imageLoaded(let imageResult):
+        state.loading = false
         if case let .success(image) = imageResult, let image = image {
             state.image = image
             state.selectedImage = image

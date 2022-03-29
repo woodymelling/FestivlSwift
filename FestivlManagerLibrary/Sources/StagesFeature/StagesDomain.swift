@@ -9,18 +9,21 @@ import ComposableArchitecture
 import Models
 import Services
 import AddEditStageFeature
+import StageDetailFeature
 
 public struct StagesState: Equatable {
     public init(
         stages: IdentifiedArrayOf<Stage>,
         event: Event,
         selectedStage: Stage?,
-        addEditStageState: AddEditStageState?
+        addEditStageState: AddEditStageState?,
+        isPresentingDeleteConfirmation: Bool
     ) {
         self.stages = stages
         self.event = event
         self.selectedStage = selectedStage
         self.addEditStageState = addEditStageState
+        self.isPresentingDeleteConfirmation = isPresentingDeleteConfirmation
     }
 
     public var stages: IdentifiedArrayOf<Stage>
@@ -28,6 +31,30 @@ public struct StagesState: Equatable {
 
     @BindableState public var selectedStage: Stage?
     @BindableState public var addEditStageState: AddEditStageState?
+
+    public var isPresentingDeleteConfirmation: Bool
+
+    var stageDetailState: StageDetailState? {
+        get {
+            guard let selectedStage = selectedStage else {
+                return nil
+            }
+
+            return .init(
+                stage: selectedStage,
+                event: event,
+                isPresentingDeleteConfirmation: isPresentingDeleteConfirmation
+            )
+        }
+
+        set {
+            guard let newValue = newValue else { return }
+
+            self.selectedStage = newValue.stage
+            self.event = newValue.event
+            self.isPresentingDeleteConfirmation = newValue.isPresentingDeleteConfirmation
+        }
+    }
 }
 
 public enum StagesAction: BindableAction {
@@ -35,6 +62,7 @@ public enum StagesAction: BindableAction {
     case binding(_ action: BindingAction<StagesState>)
     case addStageButtonPressed
     case addEditStageAction(AddEditStageAction)
+    case stageDetailAction(StageDetailAction)
 }
 
 public struct StagesEnvironment {
@@ -51,6 +79,12 @@ public let stagesReducer = Reducer<StagesState, StagesAction, StagesEnvironment>
     addEditStageReducer.optional().pullback(
         state: \.addEditStageState,
         action: /StagesAction.addEditStageAction,
+        environment: { _ in .init() }
+    ),
+
+    stageDetailReducer.optional().pullback(
+        state: \.stageDetailState,
+        action: /StagesAction.stageDetailAction,
         environment: { _ in .init() }
     ),
 
@@ -82,7 +116,25 @@ public let stagesReducer = Reducer<StagesState, StagesAction, StagesEnvironment>
 
             return .none
 
-        case .addEditStageAction:
+        case .stageDetailAction(.editStage):
+            guard let selectedStage = state.selectedStage else {
+                return .none
+            }
+
+            state.addEditStageState = .init(
+                editing: selectedStage,
+                eventID: state.event.id!,
+                stageCount: state.stages.count
+            )
+
+            return .none
+
+        case .stageDetailAction(.stageDeletionSucceeded):
+            state.selectedStage = nil
+            state.isPresentingDeleteConfirmation = false
+            return .none
+
+        case .addEditStageAction, .stageDetailAction:
             return .none
 
         case .binding:

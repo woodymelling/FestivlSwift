@@ -38,6 +38,7 @@ public struct FestivlManagerEventState: Equatable {
     // StageListState:
     var stagesListSelectedStage: Stage?
     var addEditStageState: AddEditStageState?
+    var isPresentingStageDeleteConfirmation: Bool = false
 
     var dashboardState: Self {
         get {

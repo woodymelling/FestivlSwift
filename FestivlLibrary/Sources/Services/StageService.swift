@@ -17,6 +17,7 @@ public protocol StageServiceProtocol: Service {
     func createStage(stage: Stage, eventID: String) async throws -> Stage
     func updateStage(stage: Stage, eventID: String) async throws
     func updateStageSortOrder(newOrder: IdentifiedArrayOf<Stage>, eventID: String) async throws
+    func deleteStage(stage: Stage, eventID: String) async throws
 
     func stagesPublisher(eventID: String) ->  AnyPublisher<IdentifiedArrayOf<Stage>, FestivlError>
     func watchStage(stage: Stage, eventID: String) throws -> AnyPublisher<Stage, FestivlError>
@@ -69,6 +70,14 @@ public class StageService: StageServiceProtocol {
         }
     }
 
+    public func deleteStage(stage: Stage, eventID: String) async throws {
+        try await deleteDocument(
+            documentReference: getStagesRef(
+                eventID: eventID
+            ).document(stage.ensureIDExists())
+        )
+    }
+
     public func stagesPublisher(eventID: String) -> AnyPublisher<IdentifiedArrayOf<Stage>, FestivlError> {
         observeQuery(getStagesRef(eventID: eventID).order(by: "sortIndex"))
     }
@@ -88,6 +97,8 @@ struct StageMockService: StageServiceProtocol {
     func updateStage(stage: Stage, eventID: String) async throws {}
 
     func updateStageSortOrder(newOrder: IdentifiedArrayOf<Stage>, eventID: String) async throws {}
+
+    func deleteStage(stage: Stage, eventID: String) async throws {}
 
     func stagesPublisher(eventID: String) -> AnyPublisher<IdentifiedArrayOf<Stage>, FestivlError> {
         Just(Stage.testValues.asIdentifedArray)

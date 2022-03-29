@@ -71,9 +71,8 @@ public struct CreateArtistView: View {
             }
             .padding(.horizontal)
             .frame(minWidth: 500, minHeight: 600)
-            .onAppear {
-                viewStore.send(.loadImageIfRequired)
-            }
+            .onAppear { viewStore.send(.loadImageIfRequired) }
+            .loading(viewStore.loading)
         }
     }
 }

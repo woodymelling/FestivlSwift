@@ -8,6 +8,15 @@
 import Foundation
 
 public enum FestivlFormatting {
+    public static func weekdayFormat(for date: Date) -> String {
+        return date.formatted(.dateTime.weekday(.wide))
+    }
+
+    public static func weekdayWithDatesFormat(for date: Date) -> String {
+        return date.formatted(.dateTime.weekday(.wide).day().month())
+    }
+
+
     public static func timeIntervalFormat(startTime: Date, endTime: Date) -> String {
 
         let timeFormat = Date.FormatStyle.dateTime.hour().minute()
@@ -37,6 +46,6 @@ public enum FestivlFormatting {
             timeOfDay = "Night"
         }
 
-        return "\(date.formatted(.dateTime.weekday(.wide))) \(timeOfDay)"
+        return "\(FestivlFormatting.weekdayFormat(for: date)) \(timeOfDay)"
     }
 }

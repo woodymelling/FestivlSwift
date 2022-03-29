@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import Models
 import AddEditStageFeature
+import StageDetailFeature
 
 public struct StagesView: View {
     let store: Store<StagesState, StagesAction>
@@ -29,7 +30,13 @@ public struct StagesView: View {
                                 tag: stage,
                                 selection: viewStore.binding(\.$selectedStage),
                                 destination: {
-                                    Text(stage.name)
+                                    IfLetStore(
+                                        store.scope(
+                                            state: \.stageDetailState,
+                                            action: StagesAction.stageDetailAction
+                                        ),
+                                        then: StageDetailView.init
+                                    )
                                 },
                                 label: { StageListRow(stage: stage) }
                             )
@@ -117,7 +124,7 @@ struct StagesView_Previews: PreviewProvider {
                         stages: Stage.testValues.asIdentifedArray,
                         event: .testData,
                         selectedStage: nil,
-                        addEditStageState: nil
+                        addEditStageState: nil, isPresentingDeleteConfirmation: false
                     ),
                     reducer: stagesReducer,
                     environment: .init()

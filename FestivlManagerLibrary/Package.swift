@@ -17,7 +17,8 @@ let package = Package(
         .library(name: "ManagerArtistDetailFeature", targets: ["ManagerArtistDetailFeature"]),
         .library(name: "StagesFeature", targets: ["StagesFeature"]),
         .library(name: "AddEditStageFeature", targets: ["AddEditStageFeature"]),
-
+        .library(name: "StageDetailFeature", targets: ["StageDetailFeature"]),
+        .library(name: "ManagerScheduleFeature", targets: ["ManagerScheduleFeature"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -96,7 +97,8 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "Services", package: "FestivlLibrary"),
-                .target(name: "AddEditStageFeature")
+                .target(name: "AddEditStageFeature"),
+                .target(name: "StageDetailFeature")
             ]
         ),
         .target(
@@ -109,6 +111,22 @@ let package = Package(
                 .target(name: "MacOSComponents")
             ]
         ),
-
+        .target(
+            name: "StageDetailFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Models", package: "FestivlLibrary"),
+                .product(name: "Services", package: "FestivlLibrary"),
+                .product(name: "Components", package: "FestivlLibrary"),
+            ]
+        ),
+        .target(
+            name: "ManagerScheduleFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Models", package: "FestivlLibrary"),
+                .product(name: "Components", package: "FestivlLibrary")
+            ]
+        ),
     ]
 )

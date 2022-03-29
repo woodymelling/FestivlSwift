@@ -75,6 +75,15 @@ extension Stage {
                 colorString: "#2FCAD3",
                 iconImageURL: nil,
                 sortIndex: 2
+            ),
+
+            Stage(
+                id: "3",
+                name: "The Pagoda",
+                symbol: "P",
+                colorString: "#AE1790",
+                iconImageURL: nil,
+                sortIndex: 2
             )
         ]
     }

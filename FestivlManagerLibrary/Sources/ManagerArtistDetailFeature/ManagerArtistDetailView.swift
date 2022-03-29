@@ -74,7 +74,11 @@ public struct ManagerArtistDetailView: View {
                     Button("Delete", role: .destructive) {
                         viewStore.send(.deleteArtist)
                     }
-                })
+                }
+            )
+            .onAppear {
+                viewStore.send(.subscribeToArtist)
+            }
         }
     }
 }
