@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import Models
+import MacOSComponents
 
 public struct TimelineHeaderView: View {
     let store: Store<TimelineHeaderState, TimelineHeaderAction>
@@ -21,7 +22,7 @@ public struct TimelineHeaderView: View {
             VStack {
                 EventDaySelector(
                     title: "Current Date",
-                    selectedDate: viewStore.binding(\.$selectedDate),
+                    selectedDate: viewStore.binding(\.$selectedDate).animation(),
                     festivalDates: viewStore.festivalDates
                 )
                 .frame(maxWidth: 200)

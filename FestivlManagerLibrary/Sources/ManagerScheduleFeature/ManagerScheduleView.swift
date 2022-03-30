@@ -1,51 +1,46 @@
 //
-//  ManagerScheduleView.swift
+//  File.swift
+//  
 //
-//
-//  Created by Woody on 3/28/2022.
+//  Created by Woodrow Melling on 3/30/22.
 //
 
-import SwiftUI
+import Foundation
 import ComposableArchitecture
-import Models
+import SwiftUI
+import AddEditArtistSetFeature
 
 public struct ManagerScheduleView: View {
-    let store: Store<ManagerScheduleState, ManagerScheduleAction>
-
     public init(store: Store<ManagerScheduleState, ManagerScheduleAction>) {
         self.store = store
     }
 
+    let store: Store<ManagerScheduleState, ManagerScheduleAction>
+
     public var body: some View {
         WithViewStore(store) { viewStore in
-            HStack(alignment: .top) {
-                VStack {
-                    TimelineHeaderView(store: store.scope(
-                        state: \.headerState,
-                        action: ManagerScheduleAction.headerAction
-                    ))
-                    .padding(.leading, 45)
-
-                    ScrollView {
-                        HStack {
-                            ScheduleHourLabelsView(
-                                dayStartsAtNoon: viewStore.event.dayStartsAtNoon
-                            )
-                            .frame(width: 45)
-
-                            ZStack {
-                                GridView(
-                                    timelineHeight: viewStore.timelineHeight,
-                                    stageCount: viewStore.stages.count
-                                )
-//                                CardsContainer()
-                            }
-                        }
-                        .padding(.vertical)
+            ManagerTimelineView(store: store)
+                .toolbar {
+                    ToolbarItemGroup(placement: .primaryAction) {
+                        Button(action: {
+                            viewStore.send(.addEditArtistSetButtonPressed)
+                        }, label: {
+                            Label("Add Stage", systemImage: "plus")
+                                .labelStyle(.iconOnly)
+                        })
                     }
                 }
-            }
+                .sheet(item: viewStore.binding(\ManagerScheduleState.$addEditArtistSetState)) { _ in
+                    IfLetStore(
+                        store.scope(
+                            state: \ManagerScheduleState.addEditArtistSetState,
+                            action: ManagerScheduleAction.addEditArtistSetAction
+                        ),
+                        then: AddEditArtistSetView.init
+                    )
+                }
         }
+        
     }
 }
 

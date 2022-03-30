@@ -8,17 +8,38 @@
 import ComposableArchitecture
 import Models
 import SwiftUI
+import AddEditArtistSetFeature
 
 var gridColor: Color = Color(NSColor.controlColor)
 
 public struct ManagerScheduleState: Equatable {
-    public var event: Event
-    public var selectedDate: Date
-    public var zoomAmount: CGFloat
+    public init(
+        event: Event,
+        selectedDate: Date,
+        zoomAmount: CGFloat,
+        artists: IdentifiedArrayOf<Artist>,
+        stages: IdentifiedArrayOf<Stage>,
+        artistSets: IdentifiedArrayOf<ArtistSet>,
+        addEditArtistSetState: AddEditArtistSetState?
+    ) {
+        self.event = event
+        self.selectedDate = selectedDate
+        self.zoomAmount = zoomAmount
+        self.artists = artists
+        self.stages = stages
+        self.artistSets = artistSets
+        self.addEditArtistSetState = addEditArtistSetState
+    }
 
-    public var artists: IdentifiedArrayOf<Artist>
-    public var stages: IdentifiedArrayOf<Stage>
-    public var artistSets: IdentifiedArrayOf<ArtistSet>
+    public let event: Event
+    public var selectedDate: Date
+    @BindableState public var zoomAmount: CGFloat
+
+    public let artists: IdentifiedArrayOf<Artist>
+    public let stages: IdentifiedArrayOf<Stage>
+    public let artistSets: IdentifiedArrayOf<ArtistSet>
+
+    @BindableState public var addEditArtistSetState: AddEditArtistSetState?
 
     var timelineHeight: CGFloat {
         return 1000 * zoomAmount
@@ -37,10 +58,21 @@ public struct ManagerScheduleState: Equatable {
             self.selectedDate = newValue.selectedDate
         }
     }
+
+    var artistSetsForDate: IdentifiedArrayOf<ArtistSet> {
+        artistSets.filter {
+            $0.isOnDate(selectedDate, dayStartsAtNoon: event.dayStartsAtNoon)
+        }
+    }
 }
 
-public enum ManagerScheduleAction {
+public enum ManagerScheduleAction: BindableAction {
+    case binding(_ action: BindingAction<ManagerScheduleState>)
     case headerAction(TimelineHeaderAction)
+    case addEditArtistSetAction(AddEditArtistSetAction)
+
+    case addEditArtistSetButtonPressed
+    case didTapArtistSet(ArtistSet)
 }
 
 public struct ManagerScheduleEnvironment {
@@ -48,17 +80,51 @@ public struct ManagerScheduleEnvironment {
 }
 
 public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerScheduleAction, ManagerScheduleEnvironment>.combine(
+
+    addEditArtistSetReducer.optional().pullback(
+        state: \ManagerScheduleState.addEditArtistSetState,
+        action: /ManagerScheduleAction.addEditArtistSetAction,
+        environment: { _ in .init()}
+    ),
+
     timelineHeaderReducer.pullback(
         state: \ManagerScheduleState.headerState,
         action: /ManagerScheduleAction.headerAction,
-        environment: { _ in
-            .init()
-        }
+        environment: { _ in .init() }
     ),
 
     Reducer { state, action, _ in
-        return .none
+        switch action {
+        case .binding:
+            return .none
+
+        case .addEditArtistSetButtonPressed:
+            state.addEditArtistSetState = .init(
+                event: state.event,
+                artists: state.artists,
+                stages: state.stages
+            )
+            return .none
+
+        case .didTapArtistSet(let artistSet):
+            state.addEditArtistSetState = .init(
+                editing: artistSet,
+                event: state.event,
+                artists: state.artists,
+                stages: state.stages
+            )
+
+            return .none
+
+        case .addEditArtistSetAction(.closeModal):
+            state.addEditArtistSetState = nil
+            return .none
+            
+        case .headerAction, .addEditArtistSetAction:
+            return .none
+        }
     }
+    .binding()
 )
 
 

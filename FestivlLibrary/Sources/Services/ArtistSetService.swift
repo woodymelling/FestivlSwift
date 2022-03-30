@@ -16,7 +16,7 @@ import Models
 import IdentifiedCollections
 
 public protocol ArtistSetServiceProtocol: Service {
-    func createArtistSet(_ set: ArtistSet, eventID: String) async throws
+    func createArtistSet(_ set: ArtistSet, eventID: String) async throws -> ArtistSet
     func updateArtistSet(_ set: ArtistSet, eventID: String) async throws
 
     func artistSetPublisher(eventID: String) -> AnyPublisher<IdentifiedArrayOf<ArtistSet>, FestivlError>
@@ -33,11 +33,15 @@ public class ArtistSetService: ArtistSetServiceProtocol {
     }
     
 
-    public func createArtistSet(_ set: ArtistSet, eventID: String) async throws {
-        try await createDocument(
+    public func createArtistSet(_ set: ArtistSet, eventID: String) async throws -> ArtistSet {
+        let document = try await createDocument(
             reference: getArtistSetRef(eventID: eventID),
             data: set
         )
+
+        var set = set
+        set.id = document.documentID
+        return set
     }
 
     public func updateArtistSet(_ set: ArtistSet, eventID: String) async throws {

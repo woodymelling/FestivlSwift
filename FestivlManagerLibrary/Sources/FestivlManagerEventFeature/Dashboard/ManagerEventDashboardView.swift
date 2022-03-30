@@ -10,6 +10,7 @@ import ComposableArchitecture
 import Models
 import ManagerArtistsFeature
 import StagesFeature
+import ManagerScheduleFeature
 
 public struct ManagerEventDashboardView: View {
     let store: Store<FestivlManagerEventState, ManagerEventDashboardAction>
@@ -70,7 +71,12 @@ struct Sidebar: View {
                     }
 
                     NavigationLink(
-                        destination: Text("Schedule"),
+                        destination: ManagerScheduleView(
+                            store: store.scope(
+                                state: \FestivlManagerEventState.scheduleState,
+                                action: ManagerEventDashboardAction.scheduleAction
+                            )
+                        ),
                         tag: SidebarPage.schedule,
                         selection: viewStore.binding(\.$sidebarSelection)
                     ) {
@@ -103,11 +109,11 @@ struct SidebarEventInfoView: View {
                     })
                 },
                 label: {
-                       Text(viewStore.event.name)
+                    Text(viewStore.event.name)
                         .lineLimit(1)
                 })
-                .menuStyle(.borderlessButton)
-                .padding()
+            .menuStyle(.borderlessButton)
+            .padding()
         }
     }
 }
@@ -122,7 +128,7 @@ struct ManagerEventDashboardView_Previews: PreviewProvider {
                     environment: .init()
                 )
             )
-                .preferredColorScheme($0)
+            .preferredColorScheme($0)
         }
     }
 }

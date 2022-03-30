@@ -83,7 +83,7 @@ extension Stage {
                 symbol: "P",
                 colorString: "#AE1790",
                 iconImageURL: nil,
-                sortIndex: 2
+                sortIndex: 3
             )
         ]
     }

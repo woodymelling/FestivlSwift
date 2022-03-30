@@ -8,9 +8,12 @@
 import Foundation
 import ComposableArchitecture
 import Models
+import Utilities
 
 extension Store where State == ManagerScheduleState, Action == ManagerScheduleAction {
     static var previewStore: Store<ManagerScheduleState, ManagerScheduleAction> {
+
+        let startTime = Event.testData.festivalDates.first!.startOfDay.addingTimeInterval(12.hours)
         return .init(
             initialState: .init(
                 event: .testData,
@@ -18,7 +21,8 @@ extension Store where State == ManagerScheduleState, Action == ManagerScheduleAc
                 zoomAmount: 1,
                 artists: Artist.testValues.asIdentifedArray,
                 stages: Stage.testValues.asIdentifedArray,
-                artistSets: ArtistSet.testValues(startTime: Event.testData.festivalDates.first!).asIdentifedArray
+                artistSets: ArtistSet.testValues(startTime: startTime).asIdentifedArray,
+                addEditArtistSetState: nil
             ),
             reducer: managerScheduleReducer,
             environment: .init()

@@ -10,6 +10,7 @@ import Models
 import ManagerArtistsFeature
 import CreateArtistFeature
 import StagesFeature
+import ManagerScheduleFeature
 
 public enum SidebarPage {
     case artists, stages, schedule
@@ -63,12 +64,33 @@ extension FestivlManagerEventState {
             self.isPresentingStageDeleteConfirmation = newValue.isPresentingDeleteConfirmation
         }
     }
+
+    var scheduleState: ManagerScheduleState {
+        get {
+            ManagerScheduleState(
+                event: self.event,
+                selectedDate: self.scheduleSelectedDate,
+                zoomAmount: self.scheduleZoomAmount,
+                artists: self.artists,
+                stages: self.stages,
+                artistSets: self.artistSets,
+                addEditArtistSetState: self.addEditArtistSetState
+            )
+        }
+
+        set {
+            self.scheduleSelectedDate = newValue.selectedDate
+            self.scheduleZoomAmount = newValue.zoomAmount
+            self.addEditArtistSetState = newValue.addEditArtistSetState
+        }
+    }
 }
 
 public enum ManagerEventDashboardAction: BindableAction {
     case binding(_ action: BindingAction<FestivlManagerEventState>)
     case artistsAction(ManagerArtistsAction)
     case stagesAction(StagesAction)
+    case scheduleAction(ManagerScheduleAction)
 
     case exitEvent
 }
@@ -91,6 +113,12 @@ public let managerEventDashboardReducer = Reducer.combine(
         environment: { _ in .init() }
     ),
 
+    managerScheduleReducer.pullback(
+        state: \FestivlManagerEventState.scheduleState,
+        action: /ManagerEventDashboardAction.scheduleAction,
+        environment: { _ in .init() }
+    ),
+
     Reducer<FestivlManagerEventState, ManagerEventDashboardAction, ManagerEventDashboardEnvironment> { state, action, _ in
         switch action {
         case .binding:
@@ -98,9 +126,7 @@ public let managerEventDashboardReducer = Reducer.combine(
         case .exitEvent:
             // Handled at top level
             return .none
-        case .artistsAction:
-            return .none
-        case .stagesAction:
+        case .artistsAction, .stagesAction, .scheduleAction:
             return .none
         }
     }

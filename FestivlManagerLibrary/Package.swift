@@ -19,6 +19,7 @@ let package = Package(
         .library(name: "AddEditStageFeature", targets: ["AddEditStageFeature"]),
         .library(name: "StageDetailFeature", targets: ["StageDetailFeature"]),
         .library(name: "ManagerScheduleFeature", targets: ["ManagerScheduleFeature"]),
+        .library(name: "AddEditArtistSetFeature", targets: ["AddEditArtistSetFeature"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -52,7 +53,8 @@ let package = Package(
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "Services", package: "FestivlLibrary"),
                 .target(name: "ManagerArtistsFeature"),
-                .target(name: "StagesFeature")
+                .target(name: "StagesFeature"),
+                .target(name: "ManagerScheduleFeature")
             ]
         ),
         .target(
@@ -69,7 +71,8 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Utilities", package: "FestivlLibrary"),
-                .product(name: "Models", package: "FestivlLibrary")
+                .product(name: "Models", package: "FestivlLibrary"),
+                .product(name: "Components", package: "FestivlLibrary")
             ]
         ),
         .target(
@@ -125,8 +128,20 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Components", package: "FestivlLibrary")
+                .product(name: "Components", package: "FestivlLibrary"),
+                .target(name: "MacOSComponents"),
+                .target(name: "AddEditArtistSetFeature")
             ]
         ),
+        .target(
+            name: "AddEditArtistSetFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Models", package: "FestivlLibrary"),
+                .product(name: "Services", package: "FestivlLibrary"),
+                .target(name: "MacOSComponents")
+            ]
+        ),
+        
     ]
 )

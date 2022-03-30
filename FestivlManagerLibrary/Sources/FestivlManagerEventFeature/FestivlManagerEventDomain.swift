@@ -11,6 +11,7 @@ import Services
 import Combine
 import CreateArtistFeature
 import AddEditStageFeature
+import AddEditArtistSetFeature
 
 public struct FestivlManagerEventState: Equatable {
     public var event: Event
@@ -40,6 +41,11 @@ public struct FestivlManagerEventState: Equatable {
     var addEditStageState: AddEditStageState?
     var isPresentingStageDeleteConfirmation: Bool = false
 
+    // ScheduleState:
+    var scheduleSelectedDate: Date
+    var scheduleZoomAmount: CGFloat = 1
+    var addEditArtistSetState: AddEditArtistSetState?
+
     var dashboardState: Self {
         get {
             return self
@@ -51,6 +57,7 @@ public struct FestivlManagerEventState: Equatable {
     
     public init(event: Event) {
         self.event = event
+        self.scheduleSelectedDate = event.festivalDates.first!.startOfDay
     }
 }
 
@@ -125,6 +132,7 @@ public let festivlManagerEventReducer = Reducer.combine(
         case .artistSetsPublisherUpdate(let artistSets):
             state.artistSets = artistSets
             state.loadedArtistSets = true
+            print("Artist Set COUNT: \(artistSets.count)")
             return .none
 
         case .dashboardAction:

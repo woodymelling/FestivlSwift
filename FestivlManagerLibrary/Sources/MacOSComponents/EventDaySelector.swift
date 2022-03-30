@@ -9,13 +9,19 @@ import Foundation
 import SwiftUI
 import Components
 
-struct EventDaySelector: View {
+public struct EventDaySelector: View {
+    public init(title: String, selectedDate: Binding<Date>, festivalDates: [Date]) {
+        self.title = title
+        self._selectedDate = selectedDate
+        self.festivalDates = festivalDates
+    }
+
     var title: String
     @Binding var selectedDate: Date
     var festivalDates: [Date]
 
 
-    var body: some View {
+    public var body: some View {
 
         Picker(title, selection: $selectedDate, content: {
             ForEach(festivalDates, id: \.self, content: { date in
