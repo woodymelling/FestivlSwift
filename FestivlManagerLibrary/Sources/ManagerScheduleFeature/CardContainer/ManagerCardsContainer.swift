@@ -8,6 +8,8 @@
 import SwiftUI
 import ComposableArchitecture
 import Models
+import UniformTypeIdentifiers
+import Utilities
 
 struct ManagerCardsContainerView: View {
     let store: Store<ManagerScheduleState, ManagerScheduleAction>
@@ -46,13 +48,26 @@ struct ManagerCardsContainerView: View {
                     .onTapGesture {
                         viewStore.send(.didTapArtistSet(artistSet))
                     }
+                    .onDrag {
+                        return artistSet.itemProvider
+                    }
+                    
+
                 }
+                .onDrop(
+                    of: [ArtistSet.typeIdentifier],
+                    delegate: ScheduleDropDelegate(
+                        geometry: geo,
+                        viewStore: viewStore
+                    )
+                )
+
             }
         }
-    }
 
-    
+    }
 }
+
 
 /// Get the frame size for an artistSet in a specfic container
 private func sizeForSet(
@@ -120,6 +135,21 @@ func secondsToY(_ seconds: Int, containerHeight: CGFloat) -> CGFloat {
     let dayInSeconds: CGFloat = 86400
     let progress = CGFloat(seconds) / dayInSeconds
     return containerHeight * progress
+}
+
+func stageIndex(x: CGFloat, numberOfStages: Int, gridWidth: CGFloat) -> Int {
+    let columnWidth = gridWidth / CGFloat(numberOfStages)
+
+    return Int(x / columnWidth)
+}
+
+func yToTime(yPos: CGFloat, height: CGFloat, selectedDate: Date) -> Date {
+    return selectedDate.startOfDay.addingTimeInterval(Double(yToSeconds(yPos: yPos, height: height)))
+}
+
+func yToSeconds(yPos: CGFloat, height: CGFloat) -> Int {
+    let progress = yPos / height
+    return Int(CGFloat(1.days) * progress)
 }
 
 struct SwiftUIView_Previews: PreviewProvider {

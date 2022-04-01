@@ -19,26 +19,39 @@ public struct ManagerScheduleView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            ManagerTimelineView(store: store)
-                .toolbar {
-                    ToolbarItemGroup(placement: .primaryAction) {
-                        Button(action: {
-                            viewStore.send(.addEditArtistSetButtonPressed)
-                        }, label: {
-                            Label("Add Stage", systemImage: "plus")
-                                .labelStyle(.iconOnly)
-                        })
+            HStack {
+                ScheduleArtistList(artists: viewStore.artists)
+                    .padding(.top, 50)
+
+                Divider()
+                    .padding(.top, 50)
+
+                ManagerTimelineView(store: store)
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .primaryAction) {
+                    if viewStore.loading {
+                        ProgressView()
                     }
+
+                    Button(action: {
+                        viewStore.send(.addEditArtistSetButtonPressed)
+                    }, label: {
+                        Label("Add Artist Set", systemImage: "plus")
+                            .labelStyle(.iconOnly)
+                    })
                 }
-                .sheet(item: viewStore.binding(\ManagerScheduleState.$addEditArtistSetState)) { _ in
-                    IfLetStore(
-                        store.scope(
-                            state: \ManagerScheduleState.addEditArtistSetState,
-                            action: ManagerScheduleAction.addEditArtistSetAction
-                        ),
-                        then: AddEditArtistSetView.init
-                    )
-                }
+            }
+            .sheet(item: viewStore.binding(\ManagerScheduleState.$addEditArtistSetState)) { _ in
+                IfLetStore(
+                    store.scope(
+                        state: \ManagerScheduleState.addEditArtistSetState,
+                        action: ManagerScheduleAction.addEditArtistSetAction
+                    ),
+                    then: AddEditArtistSetView.init
+                )
+            }
+
         }
         
     }

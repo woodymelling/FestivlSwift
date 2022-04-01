@@ -18,11 +18,13 @@ import IdentifiedCollections
 public protocol ArtistSetServiceProtocol: Service {
     func createArtistSet(_ set: ArtistSet, eventID: String) async throws -> ArtistSet
     func updateArtistSet(_ set: ArtistSet, eventID: String) async throws
+    func deleteArtistSet(_ set: ArtistSet, eventID: String) async throws
 
     func artistSetPublisher(eventID: String) -> AnyPublisher<IdentifiedArrayOf<ArtistSet>, FestivlError>
 }
 
 public class ArtistSetService: ArtistSetServiceProtocol {
+
     private let db = Firestore.firestore()
     public static var shared = ArtistSetService()
 
@@ -49,6 +51,10 @@ public class ArtistSetService: ArtistSetServiceProtocol {
             documentReference: getArtistSetRef(eventID: eventID).document(set.ensureIDExists()),
             data: set
         )
+    }
+
+    public func deleteArtistSet(_ set: ArtistSet, eventID: String) async throws {
+        try await deleteDocument(documentReference: getArtistSetRef(eventID: eventID).document(set.ensureIDExists()))
     }
 
     public func artistSetPublisher(eventID: String) -> AnyPublisher<IdentifiedArrayOf<ArtistSet>, FestivlError> {

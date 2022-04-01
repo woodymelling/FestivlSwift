@@ -9,6 +9,7 @@ import ComposableArchitecture
 import Models
 import SwiftUI
 import AddEditArtistSetFeature
+import Services
 
 var gridColor: Color = Color(NSColor.controlColor)
 
@@ -39,7 +40,10 @@ public struct ManagerScheduleState: Equatable {
     public let stages: IdentifiedArrayOf<Stage>
     public let artistSets: IdentifiedArrayOf<ArtistSet>
 
+    public var loading: Bool = false
+
     @BindableState public var addEditArtistSetState: AddEditArtistSetState?
+    
 
     var timelineHeight: CGFloat {
         return 1000 * zoomAmount
@@ -73,10 +77,25 @@ public enum ManagerScheduleAction: BindableAction {
 
     case addEditArtistSetButtonPressed
     case didTapArtistSet(ArtistSet)
+
+    case didMoveArtistSet(ArtistSet, newStage: Stage, newTime: Date)
+    case finishedSavingArtistSetMove(ArtistSet)
+
+    case didDropArtist(Artist, stage: Stage, time: Date)
+    case finishedSavingArtistDrop(ArtistSet)
+
+    case deleteArtistSet(ArtistSet)
+    case finishedDeletingArtistSet
 }
 
 public struct ManagerScheduleEnvironment {
-    public init() {}
+    var artistSetService: () -> ArtistSetServiceProtocol
+
+    public init(
+        artistSetService: @escaping () -> ArtistSetServiceProtocol = { ArtistSetService.shared }
+    ) {
+        self.artistSetService = artistSetService
+    }
 }
 
 public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerScheduleAction, ManagerScheduleEnvironment>.combine(
@@ -93,7 +112,7 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
         environment: { _ in .init() }
     ),
 
-    Reducer { state, action, _ in
+    Reducer { state, action, environment in
         switch action {
         case .binding:
             return .none
@@ -116,8 +135,38 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
 
             return .none
 
+        case .didMoveArtistSet(let artistSet, let newStage, let newTime):
+            state.loading = true
+            return updateArtistSet(
+                artistSet,
+                newStage: newStage,
+                newTime: newTime,
+                eventID: state.event.id!,
+                environment: environment
+            )
+
+        case .didDropArtist(let artist, let stage, let time):
+
+            state.loading = true
+
+            return createArtistSet(
+                artist,
+                stage: stage,
+                time: time,
+                eventID: state.event.id!,
+                environment: environment
+            )
+
         case .addEditArtistSetAction(.closeModal):
             state.addEditArtistSetState = nil
+            return .none
+
+        case .deleteArtistSet(let artistSet):
+
+            return deleteArtistSet(artistSet, eventID: state.event.id!, environment: environment)
+
+        case .finishedSavingArtistSetMove, .finishedSavingArtistDrop, .finishedDeletingArtistSet:
+            state.loading = false
             return .none
             
         case .headerAction, .addEditArtistSetAction:
@@ -128,4 +177,79 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
 )
 
 
+private func updateArtistSet(
+    _ artistSet: ArtistSet,
+    newStage: Stage,
+    newTime: Date,
+    eventID: String,
+    environment: ManagerScheduleEnvironment
+) -> Effect<ManagerScheduleAction, Never> {
+    var artistSet = artistSet
 
+    artistSet.stageID = newStage.id!
+
+    let roundedNewTime = newTime.round(precision: 15.minutes)
+
+    let setLength = artistSet.setLength
+
+    artistSet.startTime = roundedNewTime
+    artistSet.endTime = roundedNewTime + setLength
+
+    return Effect.asyncTask {
+        try await environment.artistSetService()
+            .updateArtistSet(
+                artistSet,
+                eventID: eventID
+            )
+    }
+    .receive(on: DispatchQueue.main)
+    .map { _ in
+        ManagerScheduleAction.finishedSavingArtistSetMove(artistSet)
+    }
+    .eraseToEffect()
+}
+
+private func createArtistSet(
+    _ artist: Artist,
+    stage: Stage,
+    time: Date,
+    eventID: String,
+    environment: ManagerScheduleEnvironment
+) -> Effect<ManagerScheduleAction, Never> {
+
+    let time = time.round(precision: 15.minutes)
+    let set = ArtistSet(
+        id: nil,
+        artistID: artist.id!,
+        artistName: artist.name,
+        stageID: stage.id!,
+        startTime: time,
+        endTime: time + 1.hours
+    )
+
+    return Effect.asyncTask {
+        try await environment.artistSetService()
+            .createArtistSet(set, eventID: eventID)
+    }
+    .receive(on: DispatchQueue.main)
+    .map { _ in
+        ManagerScheduleAction.finishedSavingArtistDrop(set)
+    }
+    .eraseToEffect()
+}
+
+
+private func deleteArtistSet(
+    _ artistSet: ArtistSet,
+    eventID: String,
+    environment: ManagerScheduleEnvironment
+) -> Effect<ManagerScheduleAction, Never> {
+    return Effect.asyncTask {
+        try await environment.artistSetService()
+            .deleteArtistSet(artistSet, eventID: eventID)
+    }
+    .map { _ in
+        ManagerScheduleAction.finishedDeletingArtistSet
+    }
+    .eraseToEffect()
+}

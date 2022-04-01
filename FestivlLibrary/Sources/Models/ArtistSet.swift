@@ -38,6 +38,12 @@ public struct ArtistSet: Identifiable, Codable, Equatable, StageScheduleCardRepr
 }
 
 extension ArtistSet {
+    public var setLength: TimeInterval {
+        endTime.timeIntervalSinceReferenceDate - startTime.timeIntervalSinceReferenceDate
+    }
+}
+
+extension ArtistSet {
     public static var testData: ArtistSet {
         return ArtistSet(
             id: nil,

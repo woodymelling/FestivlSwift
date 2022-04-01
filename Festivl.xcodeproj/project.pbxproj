@@ -23,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2067AB8E27F54B28001E85BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		EF26A0B027D855CB00E10A71 /* FestivlManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FestivlManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF26A0B227D855CB00E10A71 /* FestivlManagerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivlManagerApp.swift; sourceTree = "<group>"; };
 		EF26A0B627D855D100E10A71 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -65,6 +66,7 @@
 		EF26A0B127D855CB00E10A71 /* FestivlManager */ = {
 			isa = PBXGroup;
 			children = (
+				2067AB8E27F54B28001E85BE /* Info.plist */,
 				EF26A0CC27D86E7400E10A71 /* GoogleService-Info.plist */,
 				EF26A0B227D855CB00E10A71 /* FestivlManagerApp.swift */,
 				EF26A0B627D855D100E10A71 /* Assets.xcassets */,
@@ -273,6 +275,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FestivlManager/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -303,6 +306,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = FestivlManager/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

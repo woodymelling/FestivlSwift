@@ -46,10 +46,18 @@ public struct ManagerTimelineView: View {
                     }
                 }
 
-                ScheduleZoomSlider(
-                    zoomAmount: viewStore.binding(\.$zoomAmount)
-                )
-                .frame(width: 80, height: 200)
+                VStack {
+                    ScheduleZoomSlider(
+                        zoomAmount: viewStore.binding(\.$zoomAmount)
+                    )
+                    .frame(height: 200)
+
+                    Spacer()
+
+                    ScheduleDeleteView(store: store)
+                        .padding(.bottom)
+                }
+                .frame(width: 80)
                 .padding(.top, 100)
             }
         }
