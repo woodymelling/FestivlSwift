@@ -17,54 +17,8 @@ struct ManagerCardsContainerView: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             GeometryReader { geo in
+                artistSetCards(viewStore: viewStore, geo: geo)
 
-                ForEachStore(
-                    self.store.scope(
-                        state: \.displayedArtistSetCardStates,
-                        action: ManagerScheduleAction.artistSetCard(id:action:)
-                    )
-                ) { artistSetStore in
-                    WithViewStore(artistSetStore) { artistSetViewStore in
-                        let artistSet = artistSetViewStore.artistSet
-                        let size = sizeForSet(
-                            artistSet,
-                            containerSize: geo.size,
-                            stageCount: viewStore.stages.count
-                        )
-                        // Placement works by center of the view, move it to the top left
-                        let offset = CGSize(width: size.width / 2, height: size.height / 2)
-
-                        ArtistSetCardView(
-                            store: artistSetStore,
-                            viewHeight: geo.size.height,
-                            selectedDate: viewStore.selectedDate
-                        )
-                        .frame(size: size)
-                        .position(
-                            x: xPlacementForSet(
-                                artistSet,
-                                containerWidth: geo.size.width,
-                                stages: viewStore.stages
-                            ),
-                            y: dateToY(
-                                artistSet.startTime,
-                                containerHeight: geo.size.height,
-                                dayStartsAtNoon: viewStore.event.dayStartsAtNoon
-                            )
-                        )
-                        .offset(offset)
-                        .onDrag {
-                            return artistSet.itemProvider
-                        }
-                    }
-                }
-                .onDrop(
-                    of: [ArtistSet.typeIdentifier],
-                    delegate: ScheduleDropDelegate(
-                        geometry: geo,
-                        viewStore: viewStore
-                    )
-                )
 
             }
             .coordinateSpace(name: "ScheduleTimeline")
@@ -72,12 +26,66 @@ struct ManagerCardsContainerView: View {
         }
 
     }
+
+    @ViewBuilder func artistSetCards(
+        viewStore: ViewStore<ManagerScheduleState, ManagerScheduleAction>,
+        geo: GeometryProxy
+    ) -> some View {
+        ForEachStore(
+            self.store.scope(
+                state: \.displayedArtistSetCardStates,
+                action: ManagerScheduleAction.artistSetCard(id:action:)
+            )
+        ) { artistSetStore in
+            WithViewStore(artistSetStore) { artistSetViewStore in
+                let artistSet = artistSetViewStore.artistSet
+                let size = sizeForSet(
+                    artistSet,
+                    containerSize: geo.size,
+                    stageCount: viewStore.stages.count
+                )
+                // Placement works by center of the view, move it to the top left
+                let offset = CGSize(width: size.width / 2, height: size.height / 2)
+
+                ArtistSetCardView(
+                    store: artistSetStore,
+                    viewHeight: geo.size.height,
+                    selectedDate: viewStore.selectedDate
+                )
+                .frame(size: size)
+                .position(
+                    x: xPlacementForSet(
+                        artistSet,
+                        containerWidth: geo.size.width,
+                        stages: viewStore.stages
+                    ),
+                    y: dateToY(
+                        artistSet.startTime,
+                        containerHeight: geo.size.height,
+                        dayStartsAtNoon: viewStore.event.dayStartsAtNoon
+                    )
+                )
+                .offset(offset)
+                .onDrag {
+                    return artistSet.itemProvider
+                }
+            }
+        }
+        .onDrop(
+            of: [ArtistSet.typeIdentifier],
+            delegate: ScheduleDropDelegate(
+                geometry: geo,
+                viewStore: viewStore
+            )
+        )
+    }
+
 }
 
 
 /// Get the frame size for an artistSet in a specfic container
 private func sizeForSet(
-    _ artistSet: ArtistSet,
+    _ artistSet: StageScheduleCardRepresentable,
     containerSize: CGSize,
     stageCount: Int
 ) -> CGSize {
@@ -93,7 +101,7 @@ private func sizeForSet(
 
 /// Get the X placement for set in a container of a specifc width
 func xPlacementForSet(
-    _ artistSet: ArtistSet,
+    _ artistSet: StageScheduleCardRepresentable,
     containerWidth: CGFloat,
     stages: IdentifiedArrayOf<Stage>
 ) -> CGFloat {
@@ -102,7 +110,7 @@ func xPlacementForSet(
 
 /// Get the y placement for a set in a container of a specific height
 func yPlacementForSet(
-    _ artistSet: ArtistSet,
+    _ artistSet: ScheduleCardRepresentable,
     containerHeight: CGFloat,
     dayStartsAtNoon: Bool
 ) -> CGFloat {

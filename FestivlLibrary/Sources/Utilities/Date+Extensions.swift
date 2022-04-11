@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 public extension Date {
     func startOfDay(dayStartsAtNoon: Bool) -> Date {

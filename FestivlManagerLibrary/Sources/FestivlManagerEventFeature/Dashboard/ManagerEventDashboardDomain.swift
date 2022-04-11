@@ -77,6 +77,7 @@ extension FestivlManagerEventState {
                 artists: self.artists,
                 stages: self.stages,
                 artistSets: self.artistSets,
+                groupSets: self.groupSets,
                 addEditArtistSetState: self.addEditArtistSetState
             )
         }
@@ -86,6 +87,7 @@ extension FestivlManagerEventState {
             self.scheduleZoomAmount = newValue.zoomAmount
             self.addEditArtistSetState = newValue.addEditArtistSetState
             self.artistSets = newValue.artistSets
+            self.groupSets = newValue.groupSets
         }
     }
 }

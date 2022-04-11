@@ -21,6 +21,7 @@ public struct FestivlManagerEventState: Equatable {
     var artists: IdentifiedArrayOf<Artist> = .init()
     var stages: IdentifiedArrayOf<Stage> = .init()
     var artistSets: IdentifiedArrayOf<ArtistSet> = .init()
+    var groupSets: IdentifiedArrayOf<GroupSet> = .init()
 
     var eventLoaded: Bool {
         return loadedArtists && loadedStages && loadedArtistSets
@@ -31,7 +32,7 @@ public struct FestivlManagerEventState: Equatable {
     var loadedArtistSets = false
 
     // SidebarState:
-    @BindableState var sidebarSelection: SidebarPage? = .artists
+    @BindableState var sidebarSelection: SidebarPage? = .schedule
     @BindableState var editEventState: AddEditEventState?
 
     // ArtistListState:
@@ -71,7 +72,7 @@ public enum FestivlManagerEventAction {
 
     case artistsPublisherUpdate(IdentifiedArrayOf<Artist>)
     case stagesPublisherUpdate(IdentifiedArrayOf<Stage>)
-    case artistSetsPublisherUpdate(IdentifiedArrayOf<ArtistSet>)
+    case artistSetsPublisherUpdate((artistSets: IdentifiedArrayOf<ArtistSet>, groupSets: IdentifiedArrayOf<GroupSet>))
 
     case dashboardAction(ManagerEventDashboardAction)
 }
@@ -134,10 +135,11 @@ public let festivlManagerEventReducer = Reducer.combine(
             state.loadedStages = true
             return .none
 
-        case .artistSetsPublisherUpdate(let artistSets):
-            state.artistSets = artistSets
+        case .artistSetsPublisherUpdate(let sets):
+            state.artistSets = sets.artistSets
+            state.groupSets = sets.groupSets
             state.loadedArtistSets = true
-            print("Artist Set COUNT: \(artistSets.count)")
+
             return .none
 
         case .dashboardAction:

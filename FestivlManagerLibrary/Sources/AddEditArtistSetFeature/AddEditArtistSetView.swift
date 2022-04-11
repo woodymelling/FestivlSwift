@@ -25,12 +25,46 @@ public struct AddEditArtistSetView: View {
                     .font(.largeTitle)
 
                 Form {
+                    if viewStore.selectedArtists.count > 1 {
+                        Section {
+                            TextField("Group Set Name", text: viewStore.binding(\.$groupSetName))
+                        }
+                    }
+
                     Section {
+
+                        if viewStore.couldShowGroupSetArtistList && viewStore.selectedArtists.count > 0 {
+                            Section("Group Artists:") {
+                                Spacer()
+                                ForEach(viewStore.selectedArtists) { (artist: Artist) in
+                                    HStack {
+                                        Text(artist.name)
+
+                                        Button(action: {
+                                            viewStore.send(.removeArtistWithID(artist.id!) )
+                                        }, label: {
+                                            Label("Remove Artist", systemImage: "minus.circle")
+                                                .labelStyle(.iconOnly)
+                                        })
+
+                                    }
+
+                                }
+                            }
+
+                        }
+
                         ArtistSelector(
                             artists: viewStore.artists,
                             selectedArtist: viewStore.binding(\.$selectedArtist)
                         )
+                        if viewStore.selectedArtist != nil && viewStore.selectedArtists.count == 1 {
+                            Button("Add More Artists") {
+                                viewStore.send(.addMoreArtistsButtonPressed)
+                            }
+                        }
                     }
+                    Spacer()
 
                     Section {
                         StageSelector(
@@ -38,6 +72,8 @@ public struct AddEditArtistSetView: View {
                             selectedStage: viewStore.binding(\.$selectedStage)
                         )
                     }
+
+                    Spacer()
 
                     Section {
 

@@ -48,6 +48,19 @@ struct Sidebar: View {
             List {
                 Section("Setup") {
                     NavigationLink(
+                        destination: ManagerScheduleView(
+                            store: store.scope(
+                                state: \FestivlManagerEventState.scheduleState,
+                                action: ManagerEventDashboardAction.scheduleAction
+                            )
+                        ),
+                        tag: SidebarPage.schedule,
+                        selection: viewStore.binding(\.$sidebarSelection)
+                    ) {
+                        Label("Schedule", systemImage: "calendar")
+                    }
+
+                    NavigationLink(
                         destination: ManagerArtistsView(
                             store: store.scope(
                                 state: \FestivlManagerEventState.artistsState,
@@ -69,19 +82,6 @@ struct Sidebar: View {
                         selection: viewStore.binding(\.$sidebarSelection)
                     ) {
                         Label("Stages", systemImage: "mappin.and.ellipse")
-                    }
-
-                    NavigationLink(
-                        destination: ManagerScheduleView(
-                            store: store.scope(
-                                state: \FestivlManagerEventState.scheduleState,
-                                action: ManagerEventDashboardAction.scheduleAction
-                            )
-                        ),
-                        tag: SidebarPage.schedule,
-                        selection: viewStore.binding(\.$sidebarSelection)
-                    ) {
-                        Label("Schedule", systemImage: "calendar")
                     }
                 }
             }

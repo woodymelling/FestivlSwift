@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import Models
 
 public struct AddEditGroupSetView: View {
     let store: Store<AddEditGroupSetState, AddEditGroupSetAction>
@@ -27,7 +28,11 @@ struct AddEditGroupSetView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             AddEditGroupSetView(
                 store: .init(
-                    initialState: .init(),
+                    initialState: .init(
+                        event: .testData,
+                        artists: Artist.testValues.asIdentifedArray,
+                        stages: Stage.testValues.asIdentifedArray
+                    ),
                     reducer: addEditGroupSetReducer,
                     environment: .init()
                 )

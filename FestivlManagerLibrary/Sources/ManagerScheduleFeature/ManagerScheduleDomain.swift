@@ -21,6 +21,7 @@ public struct ManagerScheduleState: Equatable {
         artists: IdentifiedArrayOf<Artist>,
         stages: IdentifiedArrayOf<Stage>,
         artistSets: IdentifiedArrayOf<ArtistSet>,
+        groupSets: IdentifiedArrayOf<GroupSet>,
         addEditArtistSetState: AddEditArtistSetState?
     ) {
         self.event = event
@@ -29,6 +30,7 @@ public struct ManagerScheduleState: Equatable {
         self.artists = artists
         self.stages = stages
         self.artistSets = artistSets
+        self.groupSets = groupSets
         self.addEditArtistSetState = addEditArtistSetState
 
     }
@@ -40,6 +42,7 @@ public struct ManagerScheduleState: Equatable {
     public let artists: IdentifiedArrayOf<Artist>
     public let stages: IdentifiedArrayOf<Stage>
     public var artistSets: IdentifiedArrayOf<ArtistSet>
+    public var groupSets: IdentifiedArrayOf<GroupSet>
 
     public var loading: Bool = false
 

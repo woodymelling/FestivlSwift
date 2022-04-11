@@ -25,7 +25,6 @@ let package = Package(
         .package(url: "https://github.com/yacir/CollectionViewSlantedLayout", branch: "master"),
         .package(url: "https://github.com/lorenzofiamingo/SwiftUI-CachedAsyncImage", from: "1.0.0"),
         .package(name: "FestivlLibrary", path: "../FestivlLibrary"),
-        .package(url: "https://github.com/onevcat/Kingfisher", from: "7.2.0"),
         .package(url: "https://github.com/dmytro-anokhin/url-image", from: "3.0.0")
     ],
     targets: [
