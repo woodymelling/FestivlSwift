@@ -22,7 +22,6 @@ struct ManagerCardsContainerView: View {
 
             }
             .coordinateSpace(name: "ScheduleTimeline")
-            .border(.green)
         }
 
     }
@@ -34,7 +33,7 @@ struct ManagerCardsContainerView: View {
         ForEachStore(
             self.store.scope(
                 state: \.displayedScheduleCardStates,
-                action: ManagerScheduleAction.artistSetCard(id:action:)
+                action: ManagerScheduleAction.scheduleCard(id:action:)
             )
         ) { setCardStore in
             WithViewStore(setCardStore) { setCardViewStore in
@@ -79,10 +78,7 @@ struct ManagerCardsContainerView: View {
                 viewStore: viewStore
             )
         )
-        .onAppear {
-            print("GRCheck displayed", viewStore.displayedScheduleCardStates.map { $0.set.type })
-            print("GRCheck all", viewStore.scheduleCardStates.map { $0.set.type })
-        }
+
     }
 
 }
