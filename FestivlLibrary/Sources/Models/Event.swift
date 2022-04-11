@@ -29,17 +29,16 @@ public struct Event: Codable, Identifiable {
     }
 
     @DocumentID public var id: EventID?
-    public let name: String
-    public let startDate: Date
-    public let endDate: Date
-    public let dayStartsAtNoon: Bool
-    public let imageURL: URL?
+    public var name: String
+    public var startDate: Date
+    public var endDate: Date
+    public var dayStartsAtNoon: Bool
+    public var imageURL: URL?
 
     public var festivalDates: [Date] {
         var dates: [Date] = []
-        let calendar = Calendar.current
-        var cur = calendar.startOfDay(for: startDate)
-        let end = calendar.startOfDay(for: endDate)
+        var cur = startDate.startOfDay(dayStartsAtNoon: dayStartsAtNoon)
+        let end = endDate.startOfDay(dayStartsAtNoon: dayStartsAtNoon)
         repeat {
             dates.append(cur)
             cur += 1.days

@@ -42,6 +42,7 @@ struct ScheduleDropDelegate: DropDelegate {
                 numberOfStages: viewStore.stages.count,
                 gridWidth: geometry.size.width
             )
+            
 
             guard let droppedStage = viewStore.stages[safe: stageIndex] else {
                 print("Failed to find stage at index: \(stageIndex)")
@@ -51,8 +52,11 @@ struct ScheduleDropDelegate: DropDelegate {
             let droppedTime = yToTime(
                 yPos: dropPoint.y,
                 height: geometry.size.height,
-                selectedDate: viewStore.selectedDate
+                selectedDate: viewStore.selectedDate,
+                dayStartsAtNoon: viewStore.event.dayStartsAtNoon
             )
+
+            print("DroppedTime:", droppedTime.formatted(), "Dropped Stage: \(droppedStage.name)")
 
             switch type {
             case ArtistSet.typeString:
@@ -98,7 +102,8 @@ extension DraggableItem {
     }
 
     var itemProvider: NSItemProvider {
-        NSItemProvider(object: "\(UUID().uuidString):\(Self.typeString):\(self.id!)" as NSString)
+        print("Draggin Item")
+        return NSItemProvider(object: "\(UUID().uuidString):\(Self.typeString):\(self.id!)" as NSString)
     }
 
     static var typeIdentifier: String {

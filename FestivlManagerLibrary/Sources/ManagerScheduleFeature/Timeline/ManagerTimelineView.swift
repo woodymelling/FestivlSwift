@@ -41,9 +41,11 @@ public struct ManagerTimelineView: View {
                                 
                                 ManagerCardsContainerView(store: store)
                             }
+
                         }
                         .padding(.vertical)
                     }
+
                 }
 
                 VStack {

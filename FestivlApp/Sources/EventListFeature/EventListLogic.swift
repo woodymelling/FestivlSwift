@@ -23,6 +23,7 @@ public enum EventListAction: BindableAction {
     case firebaseUpdate(IdentifiedArrayOf<Event>)
     case subscribeToEvents
     case selectedEvent(Event)
+    
     case binding(_ action: BindingAction<EventListState>)
 }
 

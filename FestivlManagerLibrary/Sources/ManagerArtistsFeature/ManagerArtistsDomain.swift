@@ -16,13 +16,15 @@ public struct ManagerArtistsState: Equatable {
         selectedArtist: Artist?,
         event: Event,
         createArtistState: CreateArtistState?,
-        isPresentingDeleteConfirmation: Bool
+        isPresentingDeleteConfirmation: Bool,
+        bulkAddState: BulkAddState?
     ) {
         self.artists = artists
         self.selectedArtist = selectedArtist
         self.createArtistState = createArtistState
         self.event = event
-        self.isPresentingDeleteConfirmation = isPresentingDeleteConfirmation 
+        self.isPresentingDeleteConfirmation = isPresentingDeleteConfirmation
+        self.bulkAddState = bulkAddState
     }
 
     public var artists: IdentifiedArrayOf<Artist>
@@ -30,6 +32,7 @@ public struct ManagerArtistsState: Equatable {
 
     @BindableState public var selectedArtist: Artist?
     @BindableState public var createArtistState: CreateArtistState?
+    @BindableState public var bulkAddState: BulkAddState?
 
     public var isPresentingDeleteConfirmation: Bool
 
@@ -58,8 +61,10 @@ public struct ManagerArtistsState: Equatable {
 public enum ManagerArtistsAction: BindableAction {
     case binding(_ action: BindingAction<ManagerArtistsState>)
     case addArtistButtonPressed
+    case bulkAddButtonPressed
     case createArtistAction(CreateArtistAction)
     case artistDetailAction(ManagerArtistDetailAction)
+    case bulkAddAction(BulkAddAction)
 }
 
 public struct ManagerArtistsEnvironment {
@@ -79,6 +84,12 @@ public let managerArtistsReducer = Reducer<ManagerArtistsState, ManagerArtistsAc
         action: /ManagerArtistsAction.artistDetailAction,
         environment: { _ in .init() }
     ),
+
+    bulkAddReducer.optional().pullback(
+        state: \.bulkAddState,
+        action: /ManagerArtistsAction.bulkAddAction,
+        environment: { _ in .init() }
+    ),
     
     Reducer { state, action, _ in
         switch action {
@@ -89,6 +100,11 @@ public let managerArtistsReducer = Reducer<ManagerArtistsState, ManagerArtistsAc
             state.createArtistState = .init(eventID: state.event.id!)
             return .none
 
+        case .bulkAddButtonPressed:
+
+            state.bulkAddState = .init(eventID: state.event.id!)
+            return .none
+
         case .createArtistAction(.closeModal(let navigateToArtist)):
             if let navigateToArtist = navigateToArtist {
                 state.artists[id: navigateToArtist.id] = navigateToArtist
@@ -97,7 +113,8 @@ public let managerArtistsReducer = Reducer<ManagerArtistsState, ManagerArtistsAc
             state.createArtistState = nil
             return .none
 
-        case .createArtistAction:
+        case .bulkAddAction(.closeModal):
+            state.bulkAddState = nil
             return .none
 
         case .artistDetailAction(.editArtist):
@@ -110,7 +127,7 @@ public let managerArtistsReducer = Reducer<ManagerArtistsState, ManagerArtistsAc
             state.isPresentingDeleteConfirmation = false
             return .none
 
-        case .artistDetailAction:
+        case .artistDetailAction, .createArtistAction, .bulkAddAction:
             return .none
         }
     }

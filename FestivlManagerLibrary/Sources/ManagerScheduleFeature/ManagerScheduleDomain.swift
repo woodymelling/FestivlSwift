@@ -30,6 +30,7 @@ public struct ManagerScheduleState: Equatable {
         self.stages = stages
         self.artistSets = artistSets
         self.addEditArtistSetState = addEditArtistSetState
+
     }
 
     public let event: Event
@@ -38,7 +39,7 @@ public struct ManagerScheduleState: Equatable {
 
     public let artists: IdentifiedArrayOf<Artist>
     public let stages: IdentifiedArrayOf<Stage>
-    public let artistSets: IdentifiedArrayOf<ArtistSet>
+    public var artistSets: IdentifiedArrayOf<ArtistSet>
 
     public var loading: Bool = false
 
@@ -63,10 +64,37 @@ public struct ManagerScheduleState: Equatable {
         }
     }
 
+    // MARK: Optimization Point
+    var artistSetCardStates: IdentifiedArrayOf<ArtistSetCardState> {
+        get {
+
+            artistSets.compactMap {
+                guard let stage = stages[id: $0.stageID] else { return nil }
+
+                return ArtistSetCardState(artistSet: $0, stage: stage, event: event)
+            }
+            .asIdentifedArray
+        }
+
+        set {
+            artistSets = newValue.map { $0.artistSet }.asIdentifedArray
+        }
+    }
+
     var artistSetsForDate: IdentifiedArrayOf<ArtistSet> {
         artistSets.filter {
             $0.isOnDate(selectedDate, dayStartsAtNoon: event.dayStartsAtNoon)
         }
+    }
+
+    // MARK: Optimization Point
+    var displayedArtistSetCardStates: IdentifiedArrayOf<ArtistSetCardState> {
+        artistSetsForDate.compactMap {
+            guard let stage = stages[id: $0.stageID] else { return nil }
+
+            return ArtistSetCardState(artistSet: $0, stage: stage, event: event)
+        }
+        .asIdentifedArray
     }
 }
 
@@ -76,7 +104,6 @@ public enum ManagerScheduleAction: BindableAction {
     case addEditArtistSetAction(AddEditArtistSetAction)
 
     case addEditArtistSetButtonPressed
-    case didTapArtistSet(ArtistSet)
 
     case didMoveArtistSet(ArtistSet, newStage: Stage, newTime: Date)
     case finishedSavingArtistSetMove(ArtistSet)
@@ -86,6 +113,8 @@ public enum ManagerScheduleAction: BindableAction {
 
     case deleteArtistSet(ArtistSet)
     case finishedDeletingArtistSet
+
+    case artistSetCard(id: ArtistSetCardState.ID, action: ArtistSetCardAction)
 }
 
 public struct ManagerScheduleEnvironment {
@@ -112,6 +141,12 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
         environment: { _ in .init() }
     ),
 
+    artistSetCardReducer.forEach(
+        state: \ManagerScheduleState.artistSetCardStates,
+        action: /ManagerScheduleAction.artistSetCard,
+        environment: { _ in .init() }
+    ),
+
     Reducer { state, action, environment in
         switch action {
         case .binding:
@@ -123,16 +158,6 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
                 artists: state.artists,
                 stages: state.stages
             )
-            return .none
-
-        case .didTapArtistSet(let artistSet):
-            state.addEditArtistSetState = .init(
-                editing: artistSet,
-                event: state.event,
-                artists: state.artists,
-                stages: state.stages
-            )
-
             return .none
 
         case .didMoveArtistSet(let artistSet, let newStage, let newTime):
@@ -167,6 +192,28 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
 
         case .finishedSavingArtistSetMove, .finishedSavingArtistDrop, .finishedDeletingArtistSet:
             state.loading = false
+            return .none
+
+        case .artistSetCard(id: let id, action: .didTap):
+            guard let artistSet = state.artistSets[id: id] else { return .none }
+            state.addEditArtistSetState = .init(
+                editing: artistSet,
+                event: state.event,
+                artists: state.artists,
+                stages: state.stages
+            )
+
+            return .none
+
+        case .artistSetCard(_, action: .didFinishDragging):
+            state.loading = true
+            return .none
+
+        case .artistSetCard(_, action: .didFinishSavingDrag):
+            state.loading = false
+            return .none
+
+        case .artistSetCard:
             return .none
             
         case .headerAction, .addEditArtistSetAction:
@@ -248,6 +295,7 @@ private func deleteArtistSet(
         try await environment.artistSetService()
             .deleteArtistSet(artistSet, eventID: eventID)
     }
+    .receive(on: DispatchQueue.main)
     .map { _ in
         ManagerScheduleAction.finishedDeletingArtistSet
     }

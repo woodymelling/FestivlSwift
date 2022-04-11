@@ -47,21 +47,31 @@ public struct ManagerArtistsView: View {
                     Button(action: {
                         viewStore.send(.addArtistButtonPressed)
                     }, label: {
-                        Label("Add Artist", systemImage: "plus")
+                        Label("Add Artist", systemImage: "person.badge.plus")
                             .labelStyle(.iconOnly)
                     })
                 }
-            }
-            .sheet(item: viewStore.binding(\ManagerArtistsState.$createArtistState)) { _ in
+                ToolbarItem {
 
-                IfLetStore(
-                    store.scope(
-                        state: \.createArtistState,
-                        action: ManagerArtistsAction.createArtistAction
-                    ),
-                    then: CreateArtistView.init
-                )
+                    Button(action: {
+                        viewStore.send(.bulkAddButtonPressed)
+                    }, label: {
+                        Label("Bulk Add Artists", systemImage: "person.3")
+                    })
+                }
             }
+            .sheet(
+                scoping: store,
+                state: \.$createArtistState,
+                action: ManagerArtistsAction.createArtistAction,
+                then: CreateArtistView.init
+            )
+            .sheet(
+                scoping: store,
+                state: \.$bulkAddState,
+                action: ManagerArtistsAction.bulkAddAction,
+                then: BulkAddView.init
+            )
         }
     }
 }
@@ -89,7 +99,8 @@ struct ManagerArtistsView_Previews: PreviewProvider {
                             selectedArtist: nil,
                             event: .testData,
                             createArtistState: nil,
-                            isPresentingDeleteConfirmation: false
+                            isPresentingDeleteConfirmation: false,
+                            bulkAddState: nil
                         ),
                         reducer: managerArtistsReducer,
                         environment: .init()

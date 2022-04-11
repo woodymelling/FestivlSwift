@@ -48,7 +48,7 @@ public struct AddEditArtistSetState: Equatable, Identifiable {
         self.artists = artists
         self.stages = stages
 
-        self.selectedDate = event.festivalDates.first!.startOfDay
+        self.selectedDate = event.festivalDates.first!.startOfDay(dayStartsAtNoon: event.dayStartsAtNoon)
     }
 
     public init(editing artistSet: ArtistSet, event: Event, artists: IdentifiedArrayOf<Artist>, stages: IdentifiedArrayOf<Stage>) {
@@ -58,7 +58,7 @@ public struct AddEditArtistSetState: Equatable, Identifiable {
         self.artists = artists
         self.stages = stages
 
-        self.selectedDate = artistSet.startTime.startOfDay
+        self.selectedDate = artistSet.startTime.startOfDay(dayStartsAtNoon: event.dayStartsAtNoon)
         self.startTime = artistSet.startTime
         self.endTime = artistSet.endTime
         self.selectedStage = stages[id: artistSet.stageID]

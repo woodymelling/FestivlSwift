@@ -63,7 +63,7 @@ public struct CreateArtistState: Equatable, Identifiable {
     @BindableState var image: NSImage?
     @BindableState var selectedImage: NSImage?
     @BindableState var tierStepperValue = 0
-    @BindableState var includeInExplore: Bool = false
+    @BindableState var includeInExplore: Bool = true
     @BindableState var soundcloudURL = ""
     @BindableState var spotifyURL = ""
     @BindableState var websiteURL = ""
@@ -72,6 +72,7 @@ public struct CreateArtistState: Equatable, Identifiable {
     var loading = false
     
     var didUpdateImage = false
+    var didLoadImage = false
 }
 
 public enum CreateArtistAction: BindableAction {
@@ -110,6 +111,8 @@ public let createArtistReducer = Reducer<CreateArtistState, CreateArtistAction, 
         return .none
 
     case .loadImageIfRequired:
+        guard state.didLoadImage else { return .none }
+        state.didLoadImage = true
         if let imageURL = state.imageURL {
             state.loading = true
             return Effect.asyncTask {
@@ -120,6 +123,7 @@ public let createArtistReducer = Reducer<CreateArtistState, CreateArtistAction, 
             }
             .receive(on: DispatchQueue.main)
             .eraseToEffect()
+            
         } else {
             return .none
         }
@@ -180,6 +184,7 @@ private func uploadArtist(
     return Effect.asyncTask {
 
         if let image = image, didUpdateImage {
+            print("Image Size: \(image.size)")
             let imageURL = try await environment.imageService().uploadImage(
                 image,
                 fileName: environment.uuid().uuidString

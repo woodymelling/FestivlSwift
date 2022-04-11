@@ -25,7 +25,7 @@ struct FestivlManagerApp: App {
 //            ImagePicker(outputImage: $image)
             FestivlManagerAppView(
                 store: .init(
-                    initialState: .init(eventListState: .init()),
+                    initialState: .init(eventListState: .init(addEventState: nil)),
                     reducer: festivlManagerAppReducer,
                     environment: .init()
                 )

@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import MacOSComponents
 import Models
+import Components
 
 public struct AddEditArtistSetView: View {
     let store: Store<AddEditArtistSetState, AddEditArtistSetAction>
@@ -77,6 +78,7 @@ public struct AddEditArtistSetView: View {
                     .padding()
                 }
             }
+            .loading(viewStore.loading)
             .padding()
             .frame(minWidth: 500)
         }

@@ -13,6 +13,7 @@ import IdentifiedCollections
 import Utilities
 import TabBarFeature
 import SwiftUI
+import ImageCache
 
 public struct EventState: Equatable {
     var event: Event
@@ -83,12 +84,14 @@ public struct EventState: Equatable {
 }
 
 public enum EventAction {
+    case preLoadArtistImages
     case subscribeToDataPublishers
     case setUpWhenDataLoaded
 
     case artistsPublisherUpdate(IdentifiedArrayOf<Artist>)
     case stagesPublisherUpdate(IdentifiedArrayOf<Stage>)
     case artistSetsPublisherUpdate(IdentifiedArrayOf<ArtistSet>)
+    case finishedLoadingArtistImages
 
     case tabBarAction(TabBarAction)
 }
@@ -134,6 +137,15 @@ public let eventReducer = Reducer.combine(
 
         case .artistsPublisherUpdate(let artists):
             state.artists = artists
+            return Effect(value: .preLoadArtistImages)
+
+        case .preLoadArtistImages:
+
+            return preloadArtistImages(artists: state.artists)
+                .receive(on: DispatchQueue.main)
+                .eraseToEffect()
+
+        case .finishedLoadingArtistImages:
             state.loadedArtists = true
             return Effect(value: .setUpWhenDataLoaded)
 
@@ -157,9 +169,9 @@ public let eventReducer = Reducer.combine(
 
             // Choose selected date based on now and event days
             if (state.event.startDate...state.event.endDate).contains(environment.currentDate()) {
-                selectedDate = environment.currentDate().startOfDay
+                selectedDate = environment.currentDate().startOfDay(dayStartsAtNoon: state.event.dayStartsAtNoon)
             } else {
-                selectedDate = state.event.startDate.startOfDay
+                selectedDate = state.event.startDate.startOfDay(dayStartsAtNoon: state.event.dayStartsAtNoon)
             }
 
             state.scheduleSelectedDate = selectedDate
@@ -188,4 +200,23 @@ public let eventReducer = Reducer.combine(
     )
 
 )
-    .debug()
+//    .debug()
+
+func preloadArtistImages(artists: IdentifiedArrayOf<Artist>) -> Effect<EventAction, Never> {
+    return .asyncTask {
+        return .finishedLoadingArtistImages
+        await withTaskGroup(of: Void.self) { group in
+            for artist in artists.reversed() {
+                if let url = artist.imageURL {
+                    group.addTask {
+                        await ImageCache.shared.loadAndStoreImage(url: url, size: .square(60))
+                        print("Loaded Image For:", artist.name)
+                    }
+                }
+            }
+
+            await group.waitForAll()
+        }
+        return .finishedLoadingArtistImages
+    }
+}

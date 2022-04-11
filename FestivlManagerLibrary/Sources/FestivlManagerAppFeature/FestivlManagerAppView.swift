@@ -44,7 +44,7 @@ struct FestivlManagerAppView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             FestivlManagerAppView(
                 store: .init(
-                    initialState: .init(eventListState: .init()),
+                    initialState: .init(eventListState: .init(addEventState: nil)),
                     reducer: festivlManagerAppReducer,
                     environment: .init()
                 )

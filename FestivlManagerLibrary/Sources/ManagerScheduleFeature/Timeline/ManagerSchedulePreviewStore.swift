@@ -13,7 +13,7 @@ import Utilities
 extension Store where State == ManagerScheduleState, Action == ManagerScheduleAction {
     static var previewStore: Store<ManagerScheduleState, ManagerScheduleAction> {
 
-        let startTime = Event.testData.festivalDates.first!.startOfDay.addingTimeInterval(12.hours)
+        let startTime = Event.testData.festivalDates.first!.startOfDay(dayStartsAtNoon: Event.testData.dayStartsAtNoon)
         return .init(
             initialState: .init(
                 event: .testData,

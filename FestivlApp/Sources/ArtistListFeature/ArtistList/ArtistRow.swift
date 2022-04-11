@@ -10,6 +10,7 @@ import Models
 import Utilities
 import Components
 import IdentifiedCollections
+import ImageCache
 
 struct ArtistRow: View {
     var artist: Artist
@@ -19,22 +20,14 @@ struct ArtistRow: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            AsyncImage(url: artist.imageURL ?? event.imageURL, content: { phase in
 
-                switch phase {
-                case .empty, .failure:
-                    ProgressView()
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                @unknown default:
-                    ProgressView()
-                }
-
+            Group {
+                CachedAsyncImage(
+                    url: artist.imageURL,
+                    placeholder: Image(systemName: "person"),
+                    size: .square(60)
+                )
             }
-           )
-            .frame(width: 60, height: 60)
 
             StagesIndicatorView(
                 stages: artistSets.compactMap {

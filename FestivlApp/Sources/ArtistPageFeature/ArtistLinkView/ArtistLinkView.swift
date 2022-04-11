@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Utilities
+import SharedResources
 
 struct ArtistLinkView: View {
 
@@ -16,11 +17,11 @@ struct ArtistLinkView: View {
         var icon: Image {
             switch self {
             case .soundcloud:
-                return Image("soundcloud", bundle: .module)
+                return SharedResources.LinkIcons.soundcloud
             case .spotify:
-                return Image("spotify", bundle: .module)
+                return SharedResources.LinkIcons.spotify
             case .website:
-                return Image(systemName: "globe")
+                return SharedResources.LinkIcons.website
             }
         }
 

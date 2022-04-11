@@ -176,10 +176,10 @@ public struct ImagePicker: View {
         .background(Color(.underPageBackgroundColor))
         .onDrop(of: ["public.file-url"], isTargeted: nil, perform: handleOnDrop(providers:))
         .onChange(of: viewModel.selectedImage, perform: { image in
-            outputImage = image
+            outputImage = image?.resized(to: viewModel.destinationSize)
         })
         .onChange(of: selectedImage, perform: { image in
-            viewModel.image = image
+            viewModel.image = image?.resized(to: viewModel.destinationSize)
         })
 
     }

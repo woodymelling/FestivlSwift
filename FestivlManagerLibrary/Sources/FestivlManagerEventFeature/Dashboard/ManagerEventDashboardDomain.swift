@@ -11,6 +11,7 @@ import ManagerArtistsFeature
 import CreateArtistFeature
 import StagesFeature
 import ManagerScheduleFeature
+import AddEditEventFeature
 
 public enum SidebarPage {
     case artists, stages, schedule
@@ -33,7 +34,8 @@ extension FestivlManagerEventState {
                 selectedArtist: artistListSelectedArtist,
                 event: event,
                 createArtistState: createArtistState,
-                isPresentingDeleteConfirmation: isPresentingArtistDeleteConfirmation
+                isPresentingDeleteConfirmation: isPresentingArtistDeleteConfirmation,
+                bulkAddState: artistBulkAddState
             )
         }
         set {
@@ -42,6 +44,7 @@ extension FestivlManagerEventState {
             self.event = newValue.event
             self.createArtistState = newValue.createArtistState
             self.isPresentingArtistDeleteConfirmation = newValue.isPresentingDeleteConfirmation
+            self.artistBulkAddState = newValue.bulkAddState
         }
     }
 
@@ -82,6 +85,7 @@ extension FestivlManagerEventState {
             self.scheduleSelectedDate = newValue.selectedDate
             self.scheduleZoomAmount = newValue.zoomAmount
             self.addEditArtistSetState = newValue.addEditArtistSetState
+            self.artistSets = newValue.artistSets
         }
     }
 }
@@ -91,7 +95,9 @@ public enum ManagerEventDashboardAction: BindableAction {
     case artistsAction(ManagerArtistsAction)
     case stagesAction(StagesAction)
     case scheduleAction(ManagerScheduleAction)
+    case editEventAction(AddEditEventAction)
 
+    case editEvent
     case exitEvent
 }
 
@@ -100,6 +106,12 @@ public struct ManagerEventDashboardEnvironment {
 }
 
 public let managerEventDashboardReducer = Reducer.combine(
+
+    addEditEventReducer.optional().pullback(
+        state: \FestivlManagerEventState.editEventState,
+        action: /ManagerEventDashboardAction.editEventAction,
+        environment: { _ in .init() }
+    ),
 
     managerArtistsReducer.pullback(
         state: \FestivlManagerEventState.artistsState,
@@ -126,7 +138,15 @@ public let managerEventDashboardReducer = Reducer.combine(
         case .exitEvent:
             // Handled at top level
             return .none
-        case .artistsAction, .stagesAction, .scheduleAction:
+
+        case .editEvent:
+            state.editEventState = .init(editing: state.event)
+            return .none
+
+        case .editEventAction(.closeModal):
+            state.editEventState = nil
+            return .none
+        case .artistsAction, .stagesAction, .scheduleAction, .editEventAction:
             return .none
         }
     }

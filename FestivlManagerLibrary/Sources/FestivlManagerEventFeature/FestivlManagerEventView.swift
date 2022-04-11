@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import Models
 
 public struct FestivlManagerEventView: View {
     let store: Store<FestivlManagerEventState, FestivlManagerEventAction>
@@ -36,6 +37,7 @@ public struct FestivlManagerEventView: View {
         }
     }
 }
+
 
 struct FestivlManagerEventView_Previews: PreviewProvider {
     static var previews: some View {

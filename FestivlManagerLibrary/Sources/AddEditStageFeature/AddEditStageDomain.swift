@@ -49,6 +49,7 @@ public struct AddEditStageState: Equatable, Identifiable {
 
     var loading = false
     var didUpdateImage = false
+    var hasLoadedImage = false
 
     var stageCount: Int
 
@@ -119,6 +120,9 @@ public let addEditStageReducer = Reducer<AddEditStageState, AddEditStageAction, 
         return .none
 
     case .loadImageIfRequired:
+        guard !state.hasLoadedImage else { return .none }
+        state.hasLoadedImage = true
+
         if let imageURL = state.editingImageURL {
             state.loading = true
             return Effect.asyncTask {

@@ -17,42 +17,46 @@ struct ManagerCardsContainerView: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             GeometryReader { geo in
-                ForEach(viewStore.artistSetsForDate) { artistSet in
 
-                    let size = sizeForSet(
-                        artistSet,
-                        containerSize: geo.size,
-                        stageCount: viewStore.stages.count
+                ForEachStore(
+                    self.store.scope(
+                        state: \.displayedArtistSetCardStates,
+                        action: ManagerScheduleAction.artistSetCard(id:action:)
                     )
-                    // Placement works by center of the view, move it to the top left
-                    let offset = CGSize(width: size.width / 2, height: size.height / 2)
-
-                    ArtistSetCardView(
-                        artistSet: artistSet,
-                        stage: viewStore.stages[id: artistSet.stageID]!
-                    )
-                    .frame(size: size)
-                    .position(
-                        x: xPlacementForSet(
+                ) { artistSetStore in
+                    WithViewStore(artistSetStore) { artistSetViewStore in
+                        let artistSet = artistSetViewStore.artistSet
+                        let size = sizeForSet(
                             artistSet,
-                            containerWidth: geo.size.width,
-                            stages: viewStore.stages
-                        ),
-                        y: dateToY(
-                            artistSet.startTime,
-                            containerHeight: geo.size.height,
-                            dayStartsAtNoon: viewStore.event.dayStartsAtNoon
+                            containerSize: geo.size,
+                            stageCount: viewStore.stages.count
                         )
-                    )
-                    .offset(offset)
-                    .onTapGesture {
-                        viewStore.send(.didTapArtistSet(artistSet))
-                    }
-                    .onDrag {
-                        return artistSet.itemProvider
-                    }
-                    
+                        // Placement works by center of the view, move it to the top left
+                        let offset = CGSize(width: size.width / 2, height: size.height / 2)
 
+                        ArtistSetCardView(
+                            store: artistSetStore,
+                            viewHeight: geo.size.height,
+                            selectedDate: viewStore.selectedDate
+                        )
+                        .frame(size: size)
+                        .position(
+                            x: xPlacementForSet(
+                                artistSet,
+                                containerWidth: geo.size.width,
+                                stages: viewStore.stages
+                            ),
+                            y: dateToY(
+                                artistSet.startTime,
+                                containerHeight: geo.size.height,
+                                dayStartsAtNoon: viewStore.event.dayStartsAtNoon
+                            )
+                        )
+                        .offset(offset)
+                        .onDrag {
+                            return artistSet.itemProvider
+                        }
+                    }
                 }
                 .onDrop(
                     of: [ArtistSet.typeIdentifier],
@@ -63,6 +67,8 @@ struct ManagerCardsContainerView: View {
                 )
 
             }
+            .coordinateSpace(name: "ScheduleTimeline")
+            .border(.green)
         }
 
     }
@@ -143,8 +149,10 @@ func stageIndex(x: CGFloat, numberOfStages: Int, gridWidth: CGFloat) -> Int {
     return Int(x / columnWidth)
 }
 
-func yToTime(yPos: CGFloat, height: CGFloat, selectedDate: Date) -> Date {
-    return selectedDate.startOfDay.addingTimeInterval(Double(yToSeconds(yPos: yPos, height: height)))
+func yToTime(yPos: CGFloat, height: CGFloat, selectedDate: Date, dayStartsAtNoon: Bool) -> Date {
+    return selectedDate
+        .startOfDay(dayStartsAtNoon: dayStartsAtNoon)
+        .addingTimeInterval(Double(yToSeconds(yPos: yPos, height: height)))
 }
 
 func yToSeconds(yPos: CGFloat, height: CGFloat) -> Int {

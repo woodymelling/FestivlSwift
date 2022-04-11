@@ -8,8 +8,12 @@
 import Foundation
 
 public extension Date {
-    var startOfDay: Date {
-        Calendar.current.startOfDay(for: self)
+    func startOfDay(dayStartsAtNoon: Bool) -> Date {
+        if dayStartsAtNoon {
+            return Calendar.current.startOfDay(for: self) + 12.hours
+        } else {
+            return Calendar.current.startOfDay(for: self)
+        }
     }
 
     static func - (lhs: Date, rhs: Date) -> TimeInterval {
@@ -32,4 +36,32 @@ public extension Date {
         let seconds = (self.timeIntervalSinceReferenceDate / precision).rounded(rule) *  precision;
         return Date(timeIntervalSinceReferenceDate: seconds)
     }
+}
+
+public extension Date {
+    func toY(containerHeight: CGFloat, dayStartsAtNoon: Bool) -> CGFloat {
+
+        let calendar = Calendar.autoupdatingCurrent
+
+        var hoursIntoTheDay = calendar.component(.hour, from: self)
+        let minutesIntoTheHour = calendar.component(.minute, from: self)
+
+        if dayStartsAtNoon {
+            // Shift the hour start by 12 hours, we're doing nights, not days
+            hoursIntoTheDay = (hoursIntoTheDay + 12) % 24
+        }
+
+        let hourInSeconds = hoursIntoTheDay * 60 * 60
+        let minuteInSeconds = minutesIntoTheHour * 60
+
+        return secondsToY(hourInSeconds + minuteInSeconds, containerHeight: containerHeight)
+    }
+}
+
+
+/// Get the y placement for a specific numbers of seconds
+public func secondsToY(_ seconds: Int, containerHeight: CGFloat) -> CGFloat {
+    let dayInSeconds: CGFloat = 86400
+    let progress = CGFloat(seconds) / dayInSeconds
+    return containerHeight * progress
 }

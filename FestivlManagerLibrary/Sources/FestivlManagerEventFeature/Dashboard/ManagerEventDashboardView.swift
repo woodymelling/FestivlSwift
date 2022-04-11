@@ -11,6 +11,7 @@ import Models
 import ManagerArtistsFeature
 import StagesFeature
 import ManagerScheduleFeature
+import AddEditEventFeature
 
 public struct ManagerEventDashboardView: View {
     let store: Store<FestivlManagerEventState, ManagerEventDashboardAction>
@@ -92,6 +93,12 @@ struct Sidebar: View {
             SidebarEventInfoView(store: store)
 
         }
+        .sheet(
+            scoping: store,
+            state: \.$editEventState,
+            action: ManagerEventDashboardAction.editEventAction,
+            then: AddEditEventView.init
+        )
     }
 }
 
@@ -102,11 +109,16 @@ struct SidebarEventInfoView: View {
         WithViewStore(store) { viewStore in
             Menu(
                 content: {
+                    Button(action: { viewStore.send(.editEvent)}, label: {
+                        Label("Edit \(viewStore.event.name)", systemImage: "pencil")
+                    })
+
                     Button(role: .destructive, action: {
                         viewStore.send(.exitEvent)
                     }, label: {
                         Label("Exit \(viewStore.event.name)", systemImage: "xmark")
                     })
+                    
                 },
                 label: {
                     Text(viewStore.event.name)

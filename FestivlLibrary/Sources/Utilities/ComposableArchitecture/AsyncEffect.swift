@@ -20,4 +20,15 @@ public extension Effect where Failure == Never {
         .catchToEffect()
         .eraseToEffect()
     }
+
+    static func asyncTask(
+        _ action: @escaping () async -> Output
+    ) -> Effect<Output, Never> {
+        Effect<Output, Never>.future { promise in
+            Task {
+                promise(.success(await action()))
+            }
+        }
+        .eraseToEffect()
+    }
 }

@@ -40,25 +40,39 @@ struct ScheduleHeaderButton: View {
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        Text(stage.symbol)
-            .font(.largeTitle)
-            .padding(20)
-            .background {
-                if isSelected {
-                    Circle()
-                        .fill(stage.color)
-                }
+        AsyncImage(url: stage.iconImageURL, content: { phase in
+            switch phase {
+            case .empty, .failure:
+                Text(stage.symbol)
+                    .font(.largeTitle)
+                    .padding(20)
+            case .success(let image):
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            @unknown default:
+                Text(stage.symbol)
+                    .font(.largeTitle)
+                    .padding(20)
             }
-            .scaleEffect(press ? 0.8 : 1)
-            .pressAndReleaseAction(
-                pressing: $press,
-                animation: .easeInOut(duration: 0.05),
-                onRelease: {
-                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                    onSelect(stage)
+        })
+        .frame(square: 60)
+        .background {
+            if isSelected {
+                Circle()
+                    .fill(stage.color)
+            }
+        }
+        .scaleEffect(press ? 0.8 : 1)
+        .pressAndReleaseAction(
+            pressing: $press,
+            animation: .easeInOut(duration: 0.05),
+            onRelease: {
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                onSelect(stage)
 
-                }
-            )
+            }
+        )
     }
 }
 

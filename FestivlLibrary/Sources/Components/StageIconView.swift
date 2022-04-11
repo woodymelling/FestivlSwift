@@ -10,31 +10,29 @@ import Models
 import Utilities
 
 public struct StageIconView: View {
-
-    var stage: Stage
-
     public init(stage: Stage) {
         self.stage = stage
     }
 
+    var stage: Stage
+
     public var body: some View {
         GeometryReader { geo in
             AsyncImage(url: stage.iconImageURL, content: { image in
-                image
-                    .resizable()
-                
+                image.resizable()
             }, placeholder: {
                 Text(stage.symbol)
                     .font(.system(size: 500, weight: .bold))
                     .minimumScaleFactor(0.001)
                     .padding(2)
-                    .frame(square: geo.size.minSideLength)
-                    .background(LinearGradient(colors: [stage.color, Color.secondary], startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .clipShape(Circle())
-
+                    .background(LinearGradient(colors: [stage.color, .primary], startPoint: .topLeading, endPoint: .bottomTrailing))
+            })
+            .frame(square: geo.size.minSideLength)
+            .if(stage.iconImageURL == nil, transform: {
+                $0.background(LinearGradient(colors: [stage.color, .primary], startPoint: .topLeading, endPoint: .bottomTrailing))
             })
 
-
+            .clipShape(Circle())
         }
 
 

@@ -20,6 +20,8 @@ let package = Package(
         .library(name: "StageDetailFeature", targets: ["StageDetailFeature"]),
         .library(name: "ManagerScheduleFeature", targets: ["ManagerScheduleFeature"]),
         .library(name: "AddEditArtistSetFeature", targets: ["AddEditArtistSetFeature"]),
+        .library(name: "AddEditEventFeature", targets: ["AddEditEventFeature"]),
+        .library(name: "AddEditGroupSetFeature", targets: ["AddEditGroupSetFeature"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -43,7 +45,8 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Services", package: "FestivlLibrary")
+                .product(name: "Services", package: "FestivlLibrary"),
+                .target(name: "AddEditEventFeature")
             ]
         ),
         .target(
@@ -54,7 +57,8 @@ let package = Package(
                 .product(name: "Services", package: "FestivlLibrary"),
                 .target(name: "ManagerArtistsFeature"),
                 .target(name: "StagesFeature"),
-                .target(name: "ManagerScheduleFeature")
+                .target(name: "ManagerScheduleFeature"),
+                .target(name: "AddEditEventFeature")
             ]
         ),
         .target(
@@ -142,6 +146,25 @@ let package = Package(
                 .target(name: "MacOSComponents")
             ]
         ),
+        .target(
+            name: "AddEditEventFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Models", package: "FestivlLibrary"),
+                .product(name: "Services", package: "FestivlLibrary"),
+                .target(name: "MacOSComponents")
+            ]
+        ),
+
+            .target(
+                name: "AddEditGroupSetFeature",
+                dependencies: [
+                    .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                    .product(name: "Models", package: "FestivlLibrary"),
+                    .product(name: "Services", package: "FestivlLibrary"),
+                    .target(name: "MacOSComponents")
+                ]
+            ),
         
     ]
 )

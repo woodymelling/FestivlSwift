@@ -10,6 +10,7 @@ import ComposableArchitecture
 import Models
 import AddEditStageFeature
 import StageDetailFeature
+import Components
 
 public struct StagesView: View {
     let store: Store<StagesState, StagesAction>
@@ -79,7 +80,7 @@ struct StageListRow: View {
     var body: some View {
         HStack {
             StageIconView(stage: stage)
-                .frame(square: 30)
+                .frame(square: 60)
             Text(stage.name)
                 .font(.title2)
                 .lineLimit(1)
@@ -89,29 +90,6 @@ struct StageListRow: View {
             Image(systemName: "chevron.right")
         }
         .padding(.horizontal)
-    }
-}
-
-struct StageIconView: View {
-
-    var stage: Stage
-
-    var body: some View {
-        GeometryReader { geo in
-            AsyncImage(url: stage.iconImageURL, content: { image in
-                image.resizable()
-            }, placeholder: {
-                Text(stage.symbol)
-                    .font(.system(size: 500, weight: .bold))
-                    .minimumScaleFactor(0.001)
-                    .padding(2)
-            })
-            .frame(square: geo.size.minSideLength)
-            .background(LinearGradient(colors: [stage.color, .primary], startPoint: .topLeading, endPoint: .bottomTrailing))
-            .clipShape(Circle())
-        }
-
-
     }
 }
 

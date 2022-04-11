@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import AddEditEventFeature
 
 public struct ManagerEventListView: View {
     let store: Store<ManagerEventListState, ManagerEventListAction>
@@ -17,7 +18,17 @@ public struct ManagerEventListView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            Group {
+            VStack {
+                HStack {
+                    Spacer()
+                    Button(action: { viewStore.send(.didTapAddEventButton) }, label: {
+                        Image(systemName: "plus")
+                            .resizable()
+                    })
+                    .frame(square: 18)
+                    .padding()
+                    .buttonStyle(.borderless)
+                }
                 if viewStore.loadingEvents {
                     ProgressView()
                 } else {
@@ -36,6 +47,12 @@ public struct ManagerEventListView: View {
                     .listStyle(.inset)
                 }
             }
+            .sheet(
+                scoping: store,
+                state: \ManagerEventListState.$addEventState,
+                action: ManagerEventListAction.addEventAction,
+                then: AddEditEventView.init
+            )
             .onAppear {
                 viewStore.send(.subscribeToDataPublishers)
             }
@@ -49,7 +66,7 @@ struct ManagerEventListView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             ManagerEventListView(
                 store: .init(
-                    initialState: .init(),
+                    initialState: .init(addEventState: nil),
                     reducer: managerEventListReducer,
                     environment: .init()
                 )

@@ -16,6 +16,7 @@ let package = Package(
         .library(name: "EventListFeature", targets: ["EventListFeature"]),
         .library(name: "ScheduleFeature", targets: ["ScheduleFeature"]),
         .library(name: "ExploreFeature", targets: ["ExploreFeature"]),
+        .library(name: "ImageCache", targets: ["ImageCache"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -23,7 +24,9 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.33.0"),
         .package(url: "https://github.com/yacir/CollectionViewSlantedLayout", branch: "master"),
         .package(url: "https://github.com/lorenzofiamingo/SwiftUI-CachedAsyncImage", from: "1.0.0"),
-        .package(name: "FestivlLibrary", path: "../FestivlLibrary")
+        .package(name: "FestivlLibrary", path: "../FestivlLibrary"),
+        .package(url: "https://github.com/onevcat/Kingfisher", from: "7.2.0"),
+        .package(url: "https://github.com/dmytro-anokhin/url-image", from: "3.0.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -34,7 +37,9 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .target(name: "EventListFeature"),
                 .product(name: "Models", package: "FestivlLibrary"),
-                .target(name: "EventFeature")
+                .target(name: "EventFeature"),
+                .product(name: "URLImage", package: "url-image"),
+                .product(name: "URLImageStore", package: "url-image")
             ]
         ),
         .target(
@@ -53,7 +58,8 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .target(name: "TabBarFeature"),
                 .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Services", package: "FestivlLibrary")
+                .product(name: "Services", package: "FestivlLibrary"),
+                .target(name: "ImageCache")
             ]
         ),
         .target(
@@ -74,7 +80,8 @@ let package = Package(
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "Utilities", package: "FestivlLibrary"),
                 .product(name: "Services", package: "FestivlLibrary"),
-                .product(name: "Components", package: "FestivlLibrary")
+                .product(name: "Components", package: "FestivlLibrary"),
+                .target(name: "ImageCache")
             ]
         ),
         .target(
@@ -106,6 +113,7 @@ let package = Package(
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "Utilities", package: "FestivlLibrary")
             ]
-        )
+        ),
+        .target(name: "ImageCache"),
     ]
 )

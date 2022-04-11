@@ -12,6 +12,8 @@ import Combine
 import CreateArtistFeature
 import AddEditStageFeature
 import AddEditArtistSetFeature
+import AddEditEventFeature
+import ManagerArtistsFeature
 
 public struct FestivlManagerEventState: Equatable {
     public var event: Event
@@ -30,11 +32,13 @@ public struct FestivlManagerEventState: Equatable {
 
     // SidebarState:
     @BindableState var sidebarSelection: SidebarPage? = .artists
+    @BindableState var editEventState: AddEditEventState?
 
     // ArtistListState:
     var artistListSelectedArtist: Artist?
     var createArtistState: CreateArtistState?
     var isPresentingArtistDeleteConfirmation: Bool = false
+    var artistBulkAddState: BulkAddState?
 
     // StageListState:
     var stagesListSelectedStage: Stage?
@@ -45,6 +49,7 @@ public struct FestivlManagerEventState: Equatable {
     var scheduleSelectedDate: Date
     var scheduleZoomAmount: CGFloat = 1
     var addEditArtistSetState: AddEditArtistSetState?
+    
 
     var dashboardState: Self {
         get {
@@ -57,7 +62,7 @@ public struct FestivlManagerEventState: Equatable {
     
     public init(event: Event) {
         self.event = event
-        self.scheduleSelectedDate = event.festivalDates.first!.startOfDay
+        self.scheduleSelectedDate = event.festivalDates.first!.startOfDay(dayStartsAtNoon: event.dayStartsAtNoon)
     }
 }
 
