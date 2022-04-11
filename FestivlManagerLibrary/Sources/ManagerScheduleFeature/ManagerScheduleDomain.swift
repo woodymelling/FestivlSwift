@@ -68,36 +68,52 @@ public struct ManagerScheduleState: Equatable {
     }
 
     // MARK: Optimization Point
-    var artistSetCardStates: IdentifiedArrayOf<ArtistSetCardState> {
+    var scheduleCardStates: IdentifiedArrayOf<ScheduleCardState> {
         get {
 
-            artistSets.compactMap {
+            let artistSets: [ScheduleCardState] = artistSets.compactMap {
                 guard let stage = stages[id: $0.stageID] else { return nil }
 
-                return ArtistSetCardState(artistSet: $0, stage: stage, event: event)
+                return ScheduleCardState(
+                    set: $0.asAnyStageScheduleCardRepresentable(),
+                    stage: stage,
+                    event: event
+                )
             }
-            .asIdentifedArray
+
+            let groupSets: [ScheduleCardState] = groupSets.compactMap {
+                guard let stage = stages[id: $0.stageID] else { return nil }
+
+                return ScheduleCardState(
+                    set: $0.asAnyStageScheduleCardRepresentable(),
+                    stage: stage,
+                    event: event
+                )
+            }
+
+
+            return (artistSets + groupSets).asIdentifedArray
         }
 
         set {
-            artistSets = newValue.map { $0.artistSet }.asIdentifedArray
-        }
-    }
+            // TODO: I think endTime is the only thing that can be changed in here, add additional if neccesary
+            for card in newValue {
+                switch card.set.type {
+                case .artistSet:
+                    artistSets[id: card.id]?.endTime = card.set.endTime
 
-    var artistSetsForDate: IdentifiedArrayOf<ArtistSet> {
-        artistSets.filter {
-            $0.isOnDate(selectedDate, dayStartsAtNoon: event.dayStartsAtNoon)
+                case .groupSet:
+                    groupSets[id: card.id]?.endTime = card.set.endTime
+                }
+            }
         }
     }
 
     // MARK: Optimization Point
-    var displayedArtistSetCardStates: IdentifiedArrayOf<ArtistSetCardState> {
-        artistSetsForDate.compactMap {
-            guard let stage = stages[id: $0.stageID] else { return nil }
-
-            return ArtistSetCardState(artistSet: $0, stage: stage, event: event)
+    var displayedScheduleCardStates: IdentifiedArrayOf<ScheduleCardState> {
+        scheduleCardStates.filter {
+            $0.set.isOnDate(selectedDate, dayStartsAtNoon: event.dayStartsAtNoon)
         }
-        .asIdentifedArray
     }
 }
 
@@ -108,7 +124,7 @@ public enum ManagerScheduleAction: BindableAction {
 
     case addEditArtistSetButtonPressed
 
-    case didMoveArtistSet(ArtistSet, newStage: Stage, newTime: Date)
+    case didMoveScheduleCard(ArtistSet, newStage: Stage, newTime: Date)
     case finishedSavingArtistSetMove(ArtistSet)
 
     case didDropArtist(Artist, stage: Stage, time: Date)
@@ -117,7 +133,7 @@ public enum ManagerScheduleAction: BindableAction {
     case deleteArtistSet(ArtistSet)
     case finishedDeletingArtistSet
 
-    case artistSetCard(id: ArtistSetCardState.ID, action: ArtistSetCardAction)
+    case scheduleCard(id: ScheduleCardState.ID, action: ScheduleCardAction)
 }
 
 public struct ManagerScheduleEnvironment {
@@ -144,9 +160,9 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
         environment: { _ in .init() }
     ),
 
-    artistSetCardReducer.forEach(
-        state: \ManagerScheduleState.artistSetCardStates,
-        action: /ManagerScheduleAction.artistSetCard,
+    scheduleCardReducer.forEach(
+        state: \ManagerScheduleState.scheduleCardStates,
+        action: /ManagerScheduleAction.scheduleCard,
         environment: { _ in .init() }
     ),
 
@@ -163,7 +179,7 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
             )
             return .none
 
-        case .didMoveArtistSet(let artistSet, let newStage, let newTime):
+        case .didMoveScheduleCard(let artistSet, let newStage, let newTime):
             state.loading = true
             return updateArtistSet(
                 artistSet,
@@ -197,7 +213,7 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
             state.loading = false
             return .none
 
-        case .artistSetCard(id: let id, action: .didTap):
+        case .scheduleCard(id: let id, action: .didTap):
             guard let artistSet = state.artistSets[id: id] else { return .none }
             state.addEditArtistSetState = .init(
                 editing: artistSet,
@@ -208,15 +224,24 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
 
             return .none
 
-        case .artistSetCard(_, action: .didFinishDragging):
+        case .scheduleCard(let id, action: .didFinishDragging):
             state.loading = true
-            return .none
 
-        case .artistSetCard(_, action: .didFinishSavingDrag):
+            guard let card = state.scheduleCardStates[id: id] else { return .none }
+
+            return saveArtistSetDrag(
+                groupSets: state.groupSets,
+                artistSets: state.artistSets,
+                set: card.set,
+                eventID: state.event.id!,
+                environment: environment
+            )
+
+        case .scheduleCard(_, action: .didFinishSavingDrag):
             state.loading = false
             return .none
 
-        case .artistSetCard:
+        case .scheduleCard:
             return .none
             
         case .headerAction, .addEditArtistSetAction:
@@ -303,4 +328,35 @@ private func deleteArtistSet(
         ManagerScheduleAction.finishedDeletingArtistSet
     }
     .eraseToEffect()
+}
+
+// Probably move this above to allow for access to the groupSets/artistSets array
+private func saveArtistSetDrag(
+    groupSets: IdentifiedArrayOf<GroupSet>,
+    artistSets: IdentifiedArrayOf<ArtistSet>,
+    set: AnyStageScheduleCardRepresentable,
+    eventID: EventID,
+    environment: ManagerScheduleEnvironment
+) -> Effect<ManagerScheduleAction, Never> {
+    Effect.asyncTask {
+
+        switch set.type {
+        case .groupSet:
+
+            guard let set = groupSets[id: set.id] else { return }
+            try await environment.artistSetService()
+                .updateGroupSet(set, eventID: eventID)
+        case .artistSet:
+            guard let set = artistSets[id: set.id] else { return }
+            try await environment.artistSetService()
+                .updateArtistSet(set, eventID: eventID)
+        }
+
+    }
+    .receive(on: DispatchQueue.main)
+    .map { _ in
+        ManagerScheduleAction.scheduleCard(id: set.id, action: .didFinishDragging)
+    }
+    .eraseToEffect()
+
 }

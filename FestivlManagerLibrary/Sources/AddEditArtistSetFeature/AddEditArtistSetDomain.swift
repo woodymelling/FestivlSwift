@@ -257,12 +257,20 @@ private func saveGroupSet(
         return Effect(value: .saveValidationError("Start time must be before the end time"))
     }
 
+    func setTime(for time: Date) -> Date {
+        let calendar = Calendar.current
+        return calendar.date(
+            byAdding: calendar.dateComponents([.hour, .minute], from: time),
+            to: calendar.startOfDay(for: state.selectedDate)
+        ) ?? Date()
+    }
+
     var groupSet = GroupSet(
         name: state.groupSetName,
         artists: Array(state.selectedArtists),
         stageID: selectedStage.id!,
-        startTime: state.startTime,
-        endTime: state.endTime
+        startTime: setTime(for: state.startTime),
+        endTime: setTime(for: state.endTime)
     )
 
     return Effect.asyncTask {

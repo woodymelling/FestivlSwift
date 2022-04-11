@@ -33,41 +33,42 @@ struct ManagerCardsContainerView: View {
     ) -> some View {
         ForEachStore(
             self.store.scope(
-                state: \.displayedArtistSetCardStates,
+                state: \.displayedScheduleCardStates,
                 action: ManagerScheduleAction.artistSetCard(id:action:)
             )
-        ) { artistSetStore in
-            WithViewStore(artistSetStore) { artistSetViewStore in
-                let artistSet = artistSetViewStore.artistSet
+        ) { setCardStore in
+            WithViewStore(setCardStore) { setCardViewStore in
+                let set = setCardViewStore.set
                 let size = sizeForSet(
-                    artistSet,
+                    set,
                     containerSize: geo.size,
                     stageCount: viewStore.stages.count
                 )
                 // Placement works by center of the view, move it to the top left
                 let offset = CGSize(width: size.width / 2, height: size.height / 2)
 
-                ArtistSetCardView(
-                    store: artistSetStore,
+                ScheduleCardView(
+                    store: setCardStore,
                     viewHeight: geo.size.height,
                     selectedDate: viewStore.selectedDate
                 )
                 .frame(size: size)
+
                 .position(
                     x: xPlacementForSet(
-                        artistSet,
+                        set,
                         containerWidth: geo.size.width,
                         stages: viewStore.stages
                     ),
                     y: dateToY(
-                        artistSet.startTime,
+                        set.startTime,
                         containerHeight: geo.size.height,
                         dayStartsAtNoon: viewStore.event.dayStartsAtNoon
                     )
                 )
                 .offset(offset)
                 .onDrag {
-                    return artistSet.itemProvider
+                    return set.itemProvider
                 }
             }
         }
@@ -78,20 +79,27 @@ struct ManagerCardsContainerView: View {
                 viewStore: viewStore
             )
         )
+        .onAppear {
+            print("GRCheck displayed", viewStore.displayedScheduleCardStates.map { $0.set.type })
+            print("GRCheck all", viewStore.scheduleCardStates.map { $0.set.type })
+        }
     }
 
 }
 
 
 /// Get the frame size for an artistSet in a specfic container
-private func sizeForSet(
-    _ artistSet: StageScheduleCardRepresentable,
+private func sizeForSet<T: StageScheduleCardRepresentable>(
+    _ set: T,
     containerSize: CGSize,
     stageCount: Int
 ) -> CGSize {
+    if let set = set as? AnyStageScheduleCardRepresentable {
+        print("GROUP SET", set.type)
+    }
     let width = containerSize.width / CGFloat(stageCount) - 1
 
-    let setLengthInSeconds = artistSet.endTime.timeIntervalSince(artistSet.startTime)
+    let setLengthInSeconds = set.endTime.timeIntervalSince(set.startTime)
     let height = secondsToY(
         Int(setLengthInSeconds),
         containerHeight: containerSize.height
@@ -100,22 +108,22 @@ private func sizeForSet(
 }
 
 /// Get the X placement for set in a container of a specifc width
-func xPlacementForSet(
-    _ artistSet: StageScheduleCardRepresentable,
+func xPlacementForSet<T: StageScheduleCardRepresentable>(
+    _ set: T,
     containerWidth: CGFloat,
     stages: IdentifiedArrayOf<Stage>
 ) -> CGFloat {
-    return (containerWidth / CGFloat(stages.count)) * CGFloat(stages[id: artistSet.stageID]!.sortIndex)
+    return (containerWidth / CGFloat(stages.count)) * CGFloat(stages[id: set.stageID]!.sortIndex)
 }
 
 /// Get the y placement for a set in a container of a specific height
-func yPlacementForSet(
-    _ artistSet: ScheduleCardRepresentable,
+func yPlacementForSet<T: StageScheduleCardRepresentable>(
+    _ set: T,
     containerHeight: CGFloat,
     dayStartsAtNoon: Bool
 ) -> CGFloat {
     return dateToY(
-        artistSet.startTime,
+        set.startTime,
         containerHeight: containerHeight,
         dayStartsAtNoon: dayStartsAtNoon
     )

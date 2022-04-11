@@ -67,7 +67,7 @@ struct ScheduleDropDelegate: DropDelegate {
 
                 let newTime = droppedTime - (artistSet.setLength / 2)
 
-                viewStore.send(.didMoveArtistSet(artistSet, newStage: droppedStage, newTime: newTime))
+                viewStore.send(.didMoveScheduleCard(artistSet, newStage: droppedStage, newTime: newTime))
 
             case Artist.typeString:
 
@@ -93,17 +93,36 @@ struct ScheduleDropDelegate: DropDelegate {
 
 extension ArtistSet: DraggableItem {}
 extension Artist: DraggableItem {}
+extension GroupSet: DraggableItem {}
 
-protocol DraggableItem: Identifiable where ID == String? { }
+extension AnyStageScheduleCardRepresentable: DraggableItem {
+    var typeString: String {
+        switch self.type {
+        case .groupSet:
+            return GroupSet.typeString
+        case .artistSet:
+            return ArtistSet.typeString
+        }
+    }
+}
+
+protocol DraggableItem: Identifiable where ID == String? {
+    var typeString: String { get }
+}
+
 extension DraggableItem {
+
+    var typeString: String {
+        return Self.typeString
+    }
 
     static var typeString: String {
         return String(describing: Self.self)
     }
 
     var itemProvider: NSItemProvider {
-        print("Draggin Item")
-        return NSItemProvider(object: "\(UUID().uuidString):\(Self.typeString):\(self.id!)" as NSString)
+        print("Dragging Item")
+        return NSItemProvider(object: "\(UUID().uuidString):\(self.typeString):\(self.id!)" as NSString)
     }
 
     static var typeIdentifier: String {

@@ -10,8 +10,14 @@ import SwiftUI
 import Models
 import ComposableArchitecture
 
-struct ArtistSetCardView: View {
-    var store: Store<ArtistSetCardState, ArtistSetCardAction>
+struct ScheduleCardView: View {
+    internal init(store: Store<ScheduleCardState, ScheduleCardAction>, viewHeight: CGFloat, selectedDate: Date) {
+        self.store = store
+        self.viewHeight = viewHeight
+        self.selectedDate = selectedDate
+    }
+
+    var store: Store<ScheduleCardState, ScheduleCardAction>
     var viewHeight: CGFloat
     var selectedDate: Date
 
@@ -38,12 +44,15 @@ struct ArtistSetCardView: View {
 
                                 let hideArtistName = geo.size.height < 15
                                 let hideSetTime = geo.size.height < 30
-                                Text(viewStore.artistSet.artistName)
+                                Text(viewStore.set.title)
                                     .isHidden(hideArtistName, remove: hideArtistName)
 
-                                Text(viewStore.artistSet.startTime.formatted(date: .abbreviated, time: .shortened))
+                                if let subtext = viewStore.set.subtext {
+                                    Text(subtext)
+                                        .font(.caption)
+                                }
 
-                                Text(viewStore.artistSet.startTime...viewStore.artistSet.endTime)
+                                Text(viewStore.set.startTime...viewStore.set.endTime)
                                     .font(.caption)
                                     .isHidden(hideSetTime, remove: hideSetTime)
                             }
