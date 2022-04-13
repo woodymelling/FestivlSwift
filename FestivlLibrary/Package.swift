@@ -21,7 +21,7 @@ let package = Package(
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.33.0"),
         .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk.git", from: "8.0.0"),
-        .package(name: "Introspect", url: "https://github.com/siteline/SwiftUI-Introspect.git", from: "0.0.0")
+        .package(name: "Kingfisher", url: "https://github.com/onevcat/Kingfisher", from: "7.2.0")
 
     ],
     targets: [
@@ -37,7 +37,8 @@ let package = Package(
         ]),
         .target(name: "Utilities", dependencies: [
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-            .product(name: "Introspect", package: "Introspect")
+            .product(name: "Kingfisher", package: "Kingfisher")
+
         ]),
         .target(name: "Components", dependencies: [
             .target(name: "Models")

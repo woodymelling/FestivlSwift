@@ -9,13 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import EventListFeature
 import EventFeature
-import URLImage
-import URLImageStore
 
-let urlImageService = URLImageService(
-    fileStore: URLImageFileStore(),
-    inMemoryStore: URLImageInMemoryStore()
-)
 
 public struct AppView: View {
     let store: Store<AppState, AppAction>
@@ -43,7 +37,6 @@ public struct AppView: View {
                 }
             )
         }
-        .environment(\.urlImageService, urlImageService)
 
     }
 }

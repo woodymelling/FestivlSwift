@@ -12,7 +12,7 @@ import Combine
 import IdentifiedCollections
 import Utilities
 import SwiftUI
-import ImageCache
+import Kingfisher
 
 public struct EventState: Equatable {
     var event: Event
@@ -59,14 +59,20 @@ public struct EventState: Equatable {
 }
 
 public enum EventAction {
-    case preLoadArtistImages
+
     case subscribeToDataPublishers
     case setUpWhenDataLoaded
 
     case artistsPublisherUpdate(IdentifiedArrayOf<Artist>)
-    case stagesPublisherUpdate(IdentifiedArrayOf<Stage>)
-    case artistSetsPublisherUpdate((artistSets: IdentifiedArrayOf<ArtistSet>, groupSets: IdentifiedArrayOf<GroupSet>))
+    case preLoadArtistImages
     case finishedLoadingArtistImages
+
+    case stagesPublisherUpdate(IdentifiedArrayOf<Stage>)
+    case preLoadStageImages
+    case finishedLoadingStageImages
+
+    case artistSetsPublisherUpdate((artistSets: IdentifiedArrayOf<ArtistSet>, groupSets: IdentifiedArrayOf<GroupSet>))
+
 
     case tabBarAction(TabBarAction)
 }
@@ -110,6 +116,7 @@ public let eventReducer = Reducer.combine(
             )
             .eraseToEffect()
 
+        // MARK: Artists Loading
         case .artistsPublisherUpdate(let artists):
             state.artists = artists
             return Effect(value: .preLoadArtistImages)
@@ -124,13 +131,24 @@ public let eventReducer = Reducer.combine(
             state.loadedArtists = true
             return Effect(value: .setUpWhenDataLoaded)
 
+        // MARK: Stages Loading
         case .stagesPublisherUpdate(let stages):
             state.stages = stages
             if !state.loadedStages {
                 state.scheduleSelectedStage = stages.first!
             }
+
+            return Effect(value: .preLoadStageImages)
+
+        case .preLoadStageImages:
+            return preloadStageImages(stages: state.stages)
+                .receive(on: DispatchQueue.main)
+                .eraseToEffect()
+
+        case .finishedLoadingStageImages:
             state.loadedStages = true
             return Effect(value: .setUpWhenDataLoaded)
+
 
         case .artistSetsPublisherUpdate(let schedule):
             state.artistSets = schedule.artistSets
@@ -183,19 +201,14 @@ public let eventReducer = Reducer.combine(
 
 func preloadArtistImages(artists: IdentifiedArrayOf<Artist>) -> Effect<EventAction, Never> {
     return .asyncTask {
+        await ImageCacher.preFetchImage(urls: artists.compactMap { $0.imageURL })
         return .finishedLoadingArtistImages
-        await withTaskGroup(of: Void.self) { group in
-            for artist in artists.reversed() {
-                if let url = artist.imageURL {
-                    group.addTask {
-                        await ImageCache.shared.loadAndStoreImage(url: url, size: .square(60))
-                        print("Loaded Image For:", artist.name)
-                    }
-                }
-            }
+    }
+}
 
-            await group.waitForAll()
-        }
-        return .finishedLoadingArtistImages
+func preloadStageImages(stages: IdentifiedArrayOf<Stage>) -> Effect<EventAction, Never> {
+    return .asyncTask {
+        await ImageCacher.preFetchImage(urls: stages.compactMap{ $0.iconImageURL })
+        return .finishedLoadingStageImages
     }
 }

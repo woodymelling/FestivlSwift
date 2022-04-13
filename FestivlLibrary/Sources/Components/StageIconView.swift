@@ -18,9 +18,7 @@ public struct StageIconView: View {
 
     public var body: some View {
         GeometryReader { geo in
-            AsyncImage(url: stage.iconImageURL, content: { image in
-                image.resizable()
-            }, placeholder: {
+            CachedAsyncImage(url: stage.iconImageURL, placeholder: {
                 Text(stage.symbol)
                     .font(.system(size: 500, weight: .bold))
                     .minimumScaleFactor(0.001)

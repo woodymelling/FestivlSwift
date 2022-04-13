@@ -9,26 +9,46 @@ import SwiftUI
 import IdentifiedCollections
 import Models
 import Components
+import Utilities
 
 struct ScheduleHeaderView: View {
     var stages: IdentifiedArrayOf<Stage>
     @Binding var selectedStage: Stage
-    var body: some View {
-        HStack {
 
-            ForEach(stages) { stage in
+
+    var body: some View {
+        ZStack(alignment: .bottom) {
+
+
+
+
+            HStack {
+
+                ForEach(stages) { stage in
+                    Spacer()
+                    ScheduleHeaderButton(
+                        stage: stage,
+                        isSelected: selectedStage == stage,
+                        onSelect: {
+                            selectedStage = $0
+                        }
+                    )
+                    .shadow()
+                }
                 Spacer()
-                ScheduleHeaderButton(
-                    stage: stage,
-                    isSelected: selectedStage == stage,
-                    onSelect: {
-                        selectedStage = $0
-                    }
-                )
             }
-            Spacer()
+            .background(Color(uiColor: .systemBackground))
+            .padding(.bottom)
+            .frame(maxWidth: .infinity)
+            .shadow()
+
         }
-        .frame(maxWidth: .infinity)
+    }
+}
+
+private extension View {
+    func shadow() -> some View {
+        self.shadow(color: Color(uiColor: .systemBackground), radius: 4, x: 0, y: 0)
     }
 }
 
@@ -40,21 +60,10 @@ struct ScheduleHeaderButton: View {
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        AsyncImage(url: stage.iconImageURL, content: { phase in
-            switch phase {
-            case .empty, .failure:
-                Text(stage.symbol)
-                    .font(.largeTitle)
-                    .padding(20)
-            case .success(let image):
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            @unknown default:
-                Text(stage.symbol)
-                    .font(.largeTitle)
-                    .padding(20)
-            }
+        CachedAsyncImage(url: stage.iconImageURL, placeholder: {
+            Text(stage.symbol)
+                .font(.largeTitle)
+                .padding(20)
         })
         .frame(square: 60)
         .background {

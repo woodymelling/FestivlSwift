@@ -10,7 +10,7 @@ import Models
 import Utilities
 import Components
 import IdentifiedCollections
-import ImageCache
+
 
 struct ArtistRow: View {
     var artist: Artist
@@ -22,11 +22,13 @@ struct ArtistRow: View {
         HStack(spacing: 10) {
 
             Group {
-                CachedAsyncImage(
-                    url: artist.imageURL,
-                    placeholder: Image(systemName: "person"),
-                    size: .square(60)
-                )
+                CachedAsyncImage(url: artist.imageURL, placeholder: {
+                    Image(systemName: "person.fill")
+                        .resizable()
+                        .frame(square: 30)
+
+                })
+                .frame(square: 60)
             }
 
             StagesIndicatorView(
@@ -37,6 +39,7 @@ struct ArtistRow: View {
             .frame(width: 5)
 
             Text(artist.name)
+                .lineLimit(1)
 
             Spacer()
         }

@@ -13,7 +13,7 @@ struct AllStagesAtOnceView: View {
 
     var body: some View {
         WithViewStore(store) { viewStore in
-            ScheduleScrollView(store: store, style: .allStages, scrollViewHandler: .init())
+            ScheduleScrollView(store: store, style: .allStages, headerHeight: 0, scrollViewHandler: .init())
         }
     }
 }

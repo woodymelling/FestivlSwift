@@ -16,6 +16,8 @@ public struct SingleStageAtOnceView: View {
 
     @StateObject var scrollViewModel: ViewModel = .init()
 
+    @State private var headerHeight: CGFloat = 0
+
     public init(store: Store<ScheduleState, ScheduleAction>) {
         self.store = store
     }
@@ -23,21 +25,34 @@ public struct SingleStageAtOnceView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
 
-            VStack(spacing: 0) {
-                ScheduleHeaderView(stages: viewStore.stages, selectedStage: viewStore.binding(\.$selectedStage).animation(.easeInOut(duration: 0.1)))
-                    .padding(.bottom)
+            ZStack(alignment: .top) {
+
 
                 TabView(selection: viewStore.binding(\.$selectedStage).animation(.easeInOut(duration: 0.1))) {
                     ForEach(viewStore.stages) { stage in
-                        ScheduleScrollView(store: store, style: .singleStage(stage), scrollViewHandler: scrollViewModel)
+                        ScheduleScrollView(store: store, style: .singleStage(stage), headerHeight: headerHeight, scrollViewHandler: scrollViewModel)
                             .tag(stage)
                     }
 
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
+
+                ScheduleHeaderView(stages: viewStore.stages, selectedStage: viewStore.binding(\.$selectedStage).animation(.easeInOut(duration: 0.1)))
+                    .background(GeometryReader { geometry in
+                        Color.clear.preference(
+                            key: HeaderHeightPreferenceKey.self,
+                            value: geometry.size.height
+                        )
+                    })
+
+
             }
+            .onPreferenceChange(HeaderHeightPreferenceKey.self, perform: {
+                headerHeight = $0
+            })
 
         }
+
     }
 
     class ViewModel: ObservableObject {
@@ -45,7 +60,18 @@ public struct SingleStageAtOnceView: View {
 
         init() {}
     }
+
+    private struct HeaderHeightPreferenceKey: PreferenceKey {
+        
+        static var defaultValue: CGFloat = 0
+
+        static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+            value = max(value, nextValue())
+        }
+    }
 }
+
+
 
 struct SingleStageAtOnceView_Previews: PreviewProvider {
     static var previews: some View {

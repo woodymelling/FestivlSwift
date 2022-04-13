@@ -92,6 +92,15 @@
         }
       },
       {
+        "package": "Kingfisher",
+        "repositoryURL": "https://github.com/onevcat/Kingfisher",
+        "state": {
+          "branch": null,
+          "revision": "1a7b5480eb750a8e171654b9b1cb0a2cbeb27a55",
+          "version": "7.2.1"
+        }
+      },
+      {
         "package": "leveldb",
         "repositoryURL": "https://github.com/firebase/leveldb.git",
         "state": {
@@ -182,30 +191,12 @@
         }
       },
       {
-        "package": "CachedAsyncImage",
-        "repositoryURL": "https://github.com/lorenzofiamingo/SwiftUI-CachedAsyncImage",
-        "state": {
-          "branch": null,
-          "revision": "22e0873d0b0ac9a7b932839cdb9fabd018185cda",
-          "version": "1.10.1"
-        }
-      },
-      {
         "package": "Introspect",
         "repositoryURL": "https://github.com/siteline/SwiftUI-Introspect.git",
         "state": {
           "branch": null,
           "revision": "f2616860a41f9d9932da412a8978fec79c06fe24",
           "version": "0.1.4"
-        }
-      },
-      {
-        "package": "URLImage",
-        "repositoryURL": "https://github.com/dmytro-anokhin/url-image",
-        "state": {
-          "branch": null,
-          "revision": "4042f955f1fdff00ced85545e1eecdbf969b5cd0",
-          "version": "3.1.1"
         }
       },
       {

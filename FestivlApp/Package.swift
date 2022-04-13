@@ -15,16 +15,13 @@ let package = Package(
         .library(name: "EventListFeature", targets: ["EventListFeature"]),
         .library(name: "ScheduleFeature", targets: ["ScheduleFeature"]),
         .library(name: "ExploreFeature", targets: ["ExploreFeature"]),
-        .library(name: "ImageCache", targets: ["ImageCache"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.33.0"),
         .package(url: "https://github.com/yacir/CollectionViewSlantedLayout", branch: "master"),
-        .package(url: "https://github.com/lorenzofiamingo/SwiftUI-CachedAsyncImage", from: "1.0.0"),
         .package(name: "FestivlLibrary", path: "../FestivlLibrary"),
-        .package(url: "https://github.com/dmytro-anokhin/url-image", from: "3.0.0"),
         .package(name: "Introspect", url: "https://github.com/siteline/SwiftUI-Introspect.git", from: "0.0.0"),
         .package(url: "https://github.com/stonko1994/SimultaneouslyScrollView", from: "1.0.0")
     ],
@@ -38,15 +35,12 @@ let package = Package(
                 .target(name: "EventListFeature"),
                 .product(name: "Models", package: "FestivlLibrary"),
                 .target(name: "EventFeature"),
-                .product(name: "URLImage", package: "url-image"),
-                .product(name: "URLImageStore", package: "url-image")
             ]
         ),
         .target(
             name: "EventListFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "CachedAsyncImage", package: "SwiftUI-CachedAsyncImage"),
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "Utilities", package: "FestivlLibrary"),
                 .product(name: "Services", package: "FestivlLibrary")
@@ -61,7 +55,6 @@ let package = Package(
                 .target(name: "ArtistListFeature"),
                 .target(name: "ScheduleFeature"),
                 .target(name: "ExploreFeature"),
-                .target(name: "ImageCache")
             ]
         ),
         .target(
@@ -73,7 +66,6 @@ let package = Package(
                 .product(name: "Utilities", package: "FestivlLibrary"),
                 .product(name: "Services", package: "FestivlLibrary"),
                 .product(name: "Components", package: "FestivlLibrary"),
-                .target(name: "ImageCache")
             ]
         ),
         .target(
@@ -108,6 +100,5 @@ let package = Package(
                 .product(name: "Utilities", package: "FestivlLibrary")
             ]
         ),
-        .target(name: "ImageCache"),
     ]
 )

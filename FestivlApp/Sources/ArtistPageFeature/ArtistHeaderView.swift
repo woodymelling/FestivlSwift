@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Models
+import Utilities
 
 struct ArtistHeaderView: View {
     var artist: Artist
@@ -16,22 +17,12 @@ struct ArtistHeaderView: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            AsyncImage(url: artist.imageURL ?? event.imageURL, content: { phase in
 
-                switch phase {
-                case .empty, .failure:
-                    ProgressView()
-                case .success(let image):
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height: initialHeight)
-
-                @unknown default:
-                    ProgressView()
-                }
-
+            CachedAsyncImage(url: artist.imageURL ?? event.imageURL, placeholder: {
+                ProgressView()
             })
+            .frame(height: initialHeight)
+            .aspectRatio(contentMode: .fill)
             .clipped()
             .overlay(
                 LinearGradient(
