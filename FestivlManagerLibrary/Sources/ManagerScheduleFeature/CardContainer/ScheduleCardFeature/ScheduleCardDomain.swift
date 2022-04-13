@@ -21,10 +21,10 @@ public struct ScheduleCardState: Equatable, Identifiable {
 }
 
 struct ScheduleCardEnvironment {
-    var artistSetService: () -> ArtistSetServiceProtocol
+    var artistSetService: () -> ScheduleServiceProtocol
 
     public init(
-        artistSetService: @escaping () -> ArtistSetServiceProtocol = { ArtistSetService.shared }
+        artistSetService: @escaping () -> ScheduleServiceProtocol = { ScheduleService.shared }
     ) {
         self.artistSetService = artistSetService
     }

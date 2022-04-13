@@ -27,11 +27,12 @@ struct ScheduleCardView: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             VStack(spacing: 0) {
+                Rectangle()
+                    .frame(height: 1)
+                    .foregroundColor(viewStore.stage.color)
+                    .brightness(colorScheme == .light ? -0.1 : 0.3)
                 ZStack {
-                    Rectangle()
-                        .frame(height: 1)
-                        .foregroundColor(viewStore.stage.color)
-                        .brightness(colorScheme == .light ? -0.1 : 0.3)
+
 
                     HStack {
                         Rectangle()

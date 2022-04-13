@@ -15,7 +15,7 @@ import ServiceCore
 import Models
 import IdentifiedCollections
 
-public protocol ArtistSetServiceProtocol: Service {
+public protocol ScheduleServiceProtocol: Service {
     func createArtistSet(_ set: ArtistSet, eventID: String) async throws -> ArtistSet
     func updateArtistSet(_ set: ArtistSet, eventID: String) async throws
     func deleteArtistSet(_ set: ArtistSet, eventID: String) async throws
@@ -24,12 +24,12 @@ public protocol ArtistSetServiceProtocol: Service {
     func updateGroupSet(_ set: GroupSet, eventID: String) async throws
     func deleteGroupSet(_ set: GroupSet, eventID: String) async throws
 
-    func artistSetPublisher(eventID: String) -> AnyPublisher<(IdentifiedArrayOf<ArtistSet>, IdentifiedArrayOf<GroupSet>), FestivlError>
+    func schedulePublisher(eventID: String) -> AnyPublisher<(IdentifiedArrayOf<ArtistSet>, IdentifiedArrayOf<GroupSet>), FestivlError>
 }
 
-public class ArtistSetService: ArtistSetServiceProtocol {
+public class ScheduleService: ScheduleServiceProtocol {
     private let db = Firestore.firestore()
-    public static var shared = ArtistSetService()
+    public static var shared = ScheduleService()
 
     // MARK: Refs
     private func getArtistSetRef(eventID: String) -> CollectionReference {
@@ -71,7 +71,7 @@ public class ArtistSetService: ArtistSetServiceProtocol {
         observeQuery(getArtistSetRef(eventID: eventID))
     }
 
-    public func artistSetPublisher(eventID: String) -> AnyPublisher<(IdentifiedArrayOf<ArtistSet>, IdentifiedArrayOf<GroupSet>), FestivlError> {
+    public func schedulePublisher(eventID: String) -> AnyPublisher<(IdentifiedArrayOf<ArtistSet>, IdentifiedArrayOf<GroupSet>), FestivlError> {
 
         let artistSetPublisher: AnyPublisher<IdentifiedArrayOf<ArtistSet>, FestivlError> = observeQuery(
             getArtistSetRef(eventID: eventID)

@@ -11,6 +11,13 @@ import Models
 import CreateArtistFeature
 import MacOSComponents
 import ManagerArtistDetailFeature
+import Utilities
+
+extension Artist: Searchable {
+    public var searchTerms: [String] {
+        return [name]
+    }
+}
 
 public struct ManagerArtistsView: View {
     let store: Store<ManagerArtistsState, ManagerArtistsAction>
@@ -24,8 +31,10 @@ public struct ManagerArtistsView: View {
             List {
                 Spacer()
                     .frame(height: 20)
+
+                TextField("Search...", text: viewStore.binding(\.$searchText))
                 
-                ForEach(viewStore.artists) { artist in
+                ForEach(viewStore.artists.filterForSearchTerm(viewStore.searchText)) { artist in
                     NavigationLink(
                         tag: artist,
                         selection: viewStore.binding(\.$selectedArtist),
@@ -100,7 +109,8 @@ struct ManagerArtistsView_Previews: PreviewProvider {
                             event: .testData,
                             createArtistState: nil,
                             isPresentingDeleteConfirmation: false,
-                            bulkAddState: nil
+                            bulkAddState: nil,
+                            searchText: ""
                         ),
                         reducer: managerArtistsReducer,
                         environment: .init()

@@ -10,26 +10,39 @@ import SwiftUI
 import ComposableArchitecture
 import Models
 import MacOSComponents
+import Utilities
+
+extension Artist: Searchable {
+    public var searchTerms: [String] {
+        [name]
+    }
+}
 
 struct ScheduleArtistList: View {
 
-    var artists: IdentifiedArrayOf<Artist>
+    var store: Store<ManagerScheduleState, ManagerScheduleAction>
 
 
     var body: some View {
-        List {
-            ForEach(artists) { artist in
-                HStack {
-                    ArtistIcon(artist: artist)
-                        .frame(square: 50)
-                    Text(artist.name)
-                }
-                .onDrag {
-                    artist.itemProvider
+        WithViewStore(store) { viewStore in
+            List {
+                TextField("Search...", text: viewStore.binding(\.$artistSearchText))
+                    .textFieldStyle(.roundedBorder)
+
+                ForEach(viewStore.artists.filterForSearchTerm(viewStore.artistSearchText)) { artist in
+                    HStack {
+                        ArtistIcon(artist: artist)
+                            .frame(square: 50)
+                        Text(artist.name)
+                    }
+                    .onDrag {
+                        artist.itemProvider
+                    }
                 }
             }
+            .frame(width: 150)
         }
-        .frame(width: 150)
+
     }
 }
 

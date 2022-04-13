@@ -151,6 +151,10 @@ private func updateStageSortOrder(
 ) -> Effect<StagesAction, Never> {
     return .fireAndForget {
         Task {
+            var stages = stages
+            for (index, stage) in stages.enumerated() {
+                stages[id: stage.id]?.sortIndex = index
+            }
 
             try? await environment
                 .stageService()

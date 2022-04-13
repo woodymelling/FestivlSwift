@@ -14,16 +14,16 @@ struct CardContainerView: View {
     var style: ScheduleStyle
     let store: Store<ScheduleState, ScheduleAction>
 
-    func artistSets(for viewStore: ViewStore<ScheduleState, ScheduleAction>) -> [ArtistSet] {
+    func artistSets(for viewStore: ViewStore<ScheduleState, ScheduleAction>) -> IdentifiedArrayOf<AnyStageScheduleCardRepresentable> {
 
         switch style {
         case .singleStage(let stage):
-            return viewStore.artistSets.filter {
+            return viewStore.scheduleCards.filter {
                 stage.id == $0.stageID && $0.isOnDate(viewStore.selectedDate, dayStartsAtNoon: viewStore.event.dayStartsAtNoon)
             }
 
         case .allStages:
-            return viewStore.artistSets.filter {
+            return viewStore.scheduleCards.filter {
                 $0.isOnDate(viewStore.selectedDate, dayStartsAtNoon: viewStore.event.dayStartsAtNoon)
             }
         }
@@ -46,7 +46,7 @@ struct CardContainerView: View {
                         stages: viewStore.stages
                     ) : 0
                     
-                    ArtistSetCardView(artistSet: artistSet, stages: viewStore.stages)
+                    ScheduleCardView(artistSet, stages: viewStore.stages)
                         .frame(size: size)
                         .fixedSize()
                         .position(

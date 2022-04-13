@@ -83,5 +83,69 @@
             landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "50FFDEC1-0CD7-40AC-AA8A-259F297552F5"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FestivlManagerLibrary/Sources/ManagerScheduleFeature/CardContainer/ScheduleDropDelegate.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
+            landmarkName = "performDrop(info:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "50FFDEC1-0CD7-40AC-AA8A-259F297552F5 - 1a854a087990053d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for closure #1 @Sendable () async -&gt; () in ManagerScheduleFeature.ScheduleDropDelegate.performDrop(info: SwiftUI.DropInfo) -&gt; Swift.Bool"
+                  moduleName = "FestivlManager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/woodrow.melling/source/Festivl/FestivlManagerLibrary/Sources/ManagerScheduleFeature/CardContainer/ScheduleDropDelegate.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "52"
+                  endingLineNumber = "52"
+                  offsetFromSymbolStart = "3192">
+               </Location>
+               <Location
+                  uuid = "50FFDEC1-0CD7-40AC-AA8A-259F297552F5 - 5f4804e23bb05a0e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for closure #1 @Sendable () async -&gt; () in ManagerScheduleFeature.ScheduleDropDelegate.performDrop(info: SwiftUI.DropInfo) -&gt; Swift.Bool"
+                  moduleName = "FestivlManager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/woodrow.melling/source/Festivl/FestivlManagerLibrary/Sources/ManagerScheduleFeature/CardContainer/ScheduleDropDelegate.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "52"
+                  endingLineNumber = "52"
+                  offsetFromSymbolStart = "3460">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7E696A08-3C5B-4096-83CB-E6732F56BFF7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FestivlManagerLibrary/Sources/ManagerScheduleFeature/CardContainer/ManagerCardsContainer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "109"
+            endingLineNumber = "109"
+            landmarkName = "xPlacementForSet(_:containerWidth:stages:)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

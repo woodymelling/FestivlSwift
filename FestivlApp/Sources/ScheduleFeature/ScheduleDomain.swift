@@ -13,6 +13,7 @@ public struct ScheduleState: Equatable {
     public init(
         stages: IdentifiedArrayOf<Stage>,
         artistSets: IdentifiedArrayOf<ArtistSet>,
+        groupSets: IdentifiedArrayOf<GroupSet>,
         selectedStage: Stage,
         event: Event,
         zoomAmount: CGFloat = 1,
@@ -20,16 +21,17 @@ public struct ScheduleState: Equatable {
         scrollAmount: CGPoint = .zero
     ) {
         self.stages = stages
-        self.artistSets = artistSets
         self.event = event
         self.zoomAmount = zoomAmount
         self.selectedStage = selectedStage
         self.selectedDate = selectedDate
         self.scrollAmount = scrollAmount
+
+        self.scheduleCards = (artistSets.map { $0.asAnyStageScheduleCardRepresentable() } + groupSets.map { $0.asAnyStageScheduleCardRepresentable() }).asIdentifedArray
     }
 
+    public var scheduleCards: IdentifiedArrayOf<AnyStageScheduleCardRepresentable>
     public var stages: IdentifiedArrayOf<Stage>
-    public var artistSets: IdentifiedArrayOf<ArtistSet>
     public var event: Event
 
     public var zoomAmount: CGFloat = 1
@@ -76,6 +78,7 @@ extension Store where State == ScheduleState, Action == ScheduleAction {
             initialState: .init(
                 stages: Stage.testValues.asIdentifedArray,
                 artistSets: ArtistSet.testValues(startTime: Calendar.current.date(bySettingHour: 13, minute: 0, second: 0, of: time)!).asIdentifedArray,
+                groupSets: .init(),
                 selectedStage: Stage.testValues[0],
                 event: .testData,
                 selectedDate: time

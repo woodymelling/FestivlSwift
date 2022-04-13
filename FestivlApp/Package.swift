@@ -10,7 +10,6 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(name: "FestivlAppFeature", targets: ["FestivlAppFeature"]),
         .library(name: "EventFeature", targets: ["EventFeature"]),
-        .library(name: "TabBarFeature", targets: ["TabBarFeature"]),
         .library(name: "ArtistListFeature", targets: ["ArtistListFeature"]),
         .library(name: "ArtistPageFeature", targets: ["ArtistPageFeature"]),
         .library(name: "EventListFeature", targets: ["EventListFeature"]),
@@ -25,7 +24,9 @@ let package = Package(
         .package(url: "https://github.com/yacir/CollectionViewSlantedLayout", branch: "master"),
         .package(url: "https://github.com/lorenzofiamingo/SwiftUI-CachedAsyncImage", from: "1.0.0"),
         .package(name: "FestivlLibrary", path: "../FestivlLibrary"),
-        .package(url: "https://github.com/dmytro-anokhin/url-image", from: "3.0.0")
+        .package(url: "https://github.com/dmytro-anokhin/url-image", from: "3.0.0"),
+        .package(name: "Introspect", url: "https://github.com/siteline/SwiftUI-Introspect.git", from: "0.0.0"),
+        .package(url: "https://github.com/stonko1994/SimultaneouslyScrollView", from: "1.0.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -55,20 +56,12 @@ let package = Package(
             name: "EventFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .target(name: "TabBarFeature"),
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "Services", package: "FestivlLibrary"),
-                .target(name: "ImageCache")
-            ]
-        ),
-        .target(
-            name: "TabBarFeature",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .target(name: "ArtistListFeature"),
                 .target(name: "ScheduleFeature"),
-                .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Utilities", package: "FestivlLibrary")
+                .target(name: "ExploreFeature"),
+                .target(name: "ImageCache")
             ]
         ),
         .target(
@@ -100,7 +93,9 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "Utilities", package: "FestivlLibrary"),
-                .product(name: "Components", package: "FestivlLibrary")
+                .product(name: "Components", package: "FestivlLibrary"),
+                .product(name: "Introspect", package: "Introspect"),
+                .product(name: "SimultaneouslyScrollView", package: "SimultaneouslyScrollView")
             ]
 
         ),

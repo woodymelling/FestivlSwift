@@ -17,7 +17,8 @@ public struct ManagerArtistsState: Equatable {
         event: Event,
         createArtistState: CreateArtistState?,
         isPresentingDeleteConfirmation: Bool,
-        bulkAddState: BulkAddState?
+        bulkAddState: BulkAddState?,
+        searchText: String
     ) {
         self.artists = artists
         self.selectedArtist = selectedArtist
@@ -25,10 +26,13 @@ public struct ManagerArtistsState: Equatable {
         self.event = event
         self.isPresentingDeleteConfirmation = isPresentingDeleteConfirmation
         self.bulkAddState = bulkAddState
+        self.searchText = searchText
     }
 
     public var artists: IdentifiedArrayOf<Artist>
     public var event: Event
+
+    @BindableState public var searchText: String
 
     @BindableState public var selectedArtist: Artist?
     @BindableState public var createArtistState: CreateArtistState?

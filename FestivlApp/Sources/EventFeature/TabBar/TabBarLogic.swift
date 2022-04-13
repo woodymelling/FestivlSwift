@@ -1,0 +1,94 @@
+//
+//  File.swift
+//  
+//
+//  Created by Woody on 2/14/22.
+//
+
+import Foundation
+import ComposableArchitecture
+import Models
+import ArtistListFeature
+import ScheduleFeature
+import SwiftUI
+
+
+public enum Tab {
+    case schedule, artists, explore, settings
+}
+
+public extension EventState {
+    
+    var artistListState: ArtistListState {
+        get {
+            .init(
+                event: event,
+                artists: artists,
+                stages: stages,
+                artistSets: artistSets,
+                searchText: artistListSearchText
+            )
+        }
+
+        set {
+            self.event = newValue.event
+            self.artists = IdentifiedArray(uniqueElements: newValue.artistStates.map { $0.artist })
+            self.artistListSearchText = newValue.searchText
+        }
+    }
+
+    var scheduleState: ScheduleState {
+        get {
+            .init(
+                stages: stages,
+                artistSets: artistSets,
+                groupSets: groupSets,
+                selectedStage: scheduleSelectedStage,
+                event: event,
+                zoomAmount: scheduleZoomAmount,
+                selectedDate: scheduleSelectedDate,
+                scrollAmount: scheduleScrollAmount
+            )
+        }
+
+        set {
+            self.scheduleZoomAmount = newValue.zoomAmount
+            self.scheduleSelectedDate = newValue.selectedDate
+            self.scheduleScrollAmount = newValue.scrollAmount
+            self.scheduleSelectedStage = newValue.selectedStage
+        }
+    }
+}
+
+public enum TabBarAction: BindableAction {
+    case binding(_ action: BindingAction<EventState>)
+    case artistListAction(ArtistListAction)
+    case scheduleAction(ScheduleAction)
+}
+
+public struct TabBarEnvironment {
+    public init() { }
+}
+
+public let tabBarReducer = Reducer.combine(
+    Reducer<EventState, TabBarAction, TabBarEnvironment> { state, action, _ in
+        switch action {
+        case .binding:
+            return .none
+        case .artistListAction, .scheduleAction:
+            return .none
+        }
+    }
+    .binding(),
+
+    artistListReducer.pullback(
+        state: \EventState.artistListState,
+        action: /TabBarAction.artistListAction,
+        environment: { (_: TabBarEnvironment) in ArtistListEnvironment() }
+    ),
+
+    scheduleReducer.pullback(
+        state: \EventState.scheduleState,
+        action: /TabBarAction.scheduleAction,
+        environment: { _ in ScheduleEnvironment() })
+)

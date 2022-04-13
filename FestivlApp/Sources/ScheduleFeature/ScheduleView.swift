@@ -69,6 +69,7 @@ struct ScheduleView_Previews: PreviewProvider {
                     initialState: .init(
                         stages: Stage.testValues.asIdentifedArray,
                         artistSets: ArtistSet.testValues(startTime: Calendar.current.date(bySettingHour: 13, minute: 0, second: 0, of: time)!).asIdentifedArray,
+                        groupSets: .init(),
                         selectedStage: Stage.testValues[0],
                         event: .testData,
                         selectedDate: time

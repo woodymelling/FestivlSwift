@@ -119,6 +119,15 @@
         }
       },
       {
+        "package": "SimultaneouslyScrollView",
+        "repositoryURL": "https://github.com/stonko1994/SimultaneouslyScrollView",
+        "state": {
+          "branch": null,
+          "revision": "03283fcc014e01c8a45882dcbcf3cf719854e3c1",
+          "version": "1.0.0"
+        }
+      },
+      {
         "package": "swift-case-paths",
         "repositoryURL": "https://github.com/pointfreeco/swift-case-paths",
         "state": {
@@ -179,6 +188,15 @@
           "branch": null,
           "revision": "22e0873d0b0ac9a7b932839cdb9fabd018185cda",
           "version": "1.10.1"
+        }
+      },
+      {
+        "package": "Introspect",
+        "repositoryURL": "https://github.com/siteline/SwiftUI-Introspect.git",
+        "state": {
+          "branch": null,
+          "revision": "f2616860a41f9d9932da412a8978fec79c06fe24",
+          "version": "0.1.4"
         }
       },
       {

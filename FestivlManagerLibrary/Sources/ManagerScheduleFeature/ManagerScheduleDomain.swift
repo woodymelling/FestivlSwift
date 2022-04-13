@@ -22,7 +22,8 @@ public struct ManagerScheduleState: Equatable {
         stages: IdentifiedArrayOf<Stage>,
         artistSets: IdentifiedArrayOf<ArtistSet>,
         groupSets: IdentifiedArrayOf<GroupSet>,
-        addEditArtistSetState: AddEditArtistSetState?
+        addEditArtistSetState: AddEditArtistSetState?,
+        artistSearchText: String
     ) {
         self.event = event
         self.selectedDate = selectedDate
@@ -32,12 +33,15 @@ public struct ManagerScheduleState: Equatable {
         self.artistSets = artistSets
         self.groupSets = groupSets
         self.addEditArtistSetState = addEditArtistSetState
+        self.artistSearchText = artistSearchText
 
     }
 
     public let event: Event
     public var selectedDate: Date
     @BindableState public var zoomAmount: CGFloat
+
+    @BindableState public var artistSearchText: String
 
     public let artists: IdentifiedArrayOf<Artist>
     public let stages: IdentifiedArrayOf<Stage>
@@ -124,8 +128,8 @@ public enum ManagerScheduleAction: BindableAction {
 
     case addEditArtistSetButtonPressed
 
-    case didMoveScheduleCard(ArtistSet, newStage: Stage, newTime: Date)
-    case finishedSavingArtistSetMove(ArtistSet)
+    case didMoveScheduleCard(AnyStageScheduleCardRepresentable, newStage: Stage, newTime: Date)
+    case finishedSavingScheduleCardMove(AnyStageScheduleCardRepresentable)
 
     case didDropArtist(Artist, stage: Stage, time: Date)
     case finishedSavingArtistDrop(ArtistSet)
@@ -137,10 +141,10 @@ public enum ManagerScheduleAction: BindableAction {
 }
 
 public struct ManagerScheduleEnvironment {
-    var artistSetService: () -> ArtistSetServiceProtocol
+    var artistSetService: () -> ScheduleServiceProtocol
 
     public init(
-        artistSetService: @escaping () -> ArtistSetServiceProtocol = { ArtistSetService.shared }
+        artistSetService: @escaping () -> ScheduleServiceProtocol = { ScheduleService.shared }
     ) {
         self.artistSetService = artistSetService
     }
@@ -183,6 +187,8 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
             state.loading = true
             return updateArtistSet(
                 artistSet,
+                groupSets: state.groupSets,
+                artistSets: state.artistSets,
                 newStage: newStage,
                 newTime: newTime,
                 eventID: state.event.id!,
@@ -209,18 +215,34 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
 
             return deleteArtistSet(artistSet, eventID: state.event.id!, environment: environment)
 
-        case .finishedSavingArtistSetMove, .finishedSavingArtistDrop, .finishedDeletingArtistSet:
+        case .finishedSavingScheduleCardMove, .finishedSavingArtistDrop, .finishedDeletingArtistSet:
             state.loading = false
             return .none
 
         case .scheduleCard(id: let id, action: .didTap):
-            guard let artistSet = state.artistSets[id: id] else { return .none }
-            state.addEditArtistSetState = .init(
-                editing: artistSet,
-                event: state.event,
-                artists: state.artists,
-                stages: state.stages
-            )
+
+            guard let set = state.scheduleCardStates[id: id]?.set else { return .none }
+
+            switch set.type {
+            case .artistSet:
+                guard let artistSet = state.artistSets[id: id] else { return .none }
+                state.addEditArtistSetState = .init(
+                    editing: artistSet,
+                    event: state.event,
+                    artists: state.artists,
+                    stages: state.stages
+                )
+
+            case .groupSet:
+                guard let groupSet = state.groupSets[id: id] else { return .none }
+                state.addEditArtistSetState = .init(
+                    editing: groupSet,
+                    event: state.event,
+                    artists: state.artists,
+                    stages: state.stages
+                )
+            }
+
 
             return .none
 
@@ -253,35 +275,63 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
 
 
 private func updateArtistSet(
-    _ artistSet: ArtistSet,
+    _ set: AnyStageScheduleCardRepresentable,
+    groupSets: IdentifiedArrayOf<GroupSet>,
+    artistSets: IdentifiedArrayOf<ArtistSet>,
     newStage: Stage,
     newTime: Date,
     eventID: String,
     environment: ManagerScheduleEnvironment
 ) -> Effect<ManagerScheduleAction, Never> {
-    var artistSet = artistSet
 
-    artistSet.stageID = newStage.id!
 
     let roundedNewTime = newTime.round(precision: 15.minutes)
+    let setLength = set.setLength
+    let startTime = roundedNewTime
+    let endTime = roundedNewTime + setLength
 
-    let setLength = artistSet.setLength
+    switch set.type {
+    case .groupSet:
+        guard var groupSet = groupSets[id: set.id] else {
+            print("Failed to find group set with id: \(set.id!)")
+            return .none
+        }
 
-    artistSet.startTime = roundedNewTime
-    artistSet.endTime = roundedNewTime + setLength
+        groupSet.stageID = newStage.id!
+        groupSet.startTime = startTime
+        groupSet.endTime = endTime
 
-    return Effect.asyncTask {
-        try await environment.artistSetService()
-            .updateArtistSet(
-                artistSet,
-                eventID: eventID
-            )
+        return .asyncTask {
+            do {
+                try await environment.artistSetService().updateGroupSet(groupSet, eventID: eventID)
+            } catch {
+                print("Error updating group set:", error)
+            }
+
+            return .finishedSavingScheduleCardMove(groupSet.asAnyStageScheduleCardRepresentable())
+        }
+
+    case .artistSet:
+        guard var artistSet = artistSets[id: set.id] else {
+            print("Failed to find artist set with id: \(set.id!)")
+            return .none
+        }
+
+        artistSet.stageID = newStage.id!
+        artistSet.startTime = startTime
+        artistSet.endTime = endTime
+
+        return .asyncTask {
+            do {
+                try await environment.artistSetService().updateArtistSet(artistSet, eventID: eventID)
+            } catch {
+                print("Error updating artist set:", error)
+            }
+
+            return .finishedSavingScheduleCardMove(artistSet.asAnyStageScheduleCardRepresentable())
+        }
+
     }
-    .receive(on: DispatchQueue.main)
-    .map { _ in
-        ManagerScheduleAction.finishedSavingArtistSetMove(artistSet)
-    }
-    .eraseToEffect()
 }
 
 private func createArtistSet(
@@ -355,7 +405,7 @@ private func saveArtistSetDrag(
     }
     .receive(on: DispatchQueue.main)
     .map { _ in
-        ManagerScheduleAction.scheduleCard(id: set.id, action: .didFinishDragging)
+        ManagerScheduleAction.scheduleCard(id: set.id, action: .didFinishSavingDrag)
     }
     .eraseToEffect()
 

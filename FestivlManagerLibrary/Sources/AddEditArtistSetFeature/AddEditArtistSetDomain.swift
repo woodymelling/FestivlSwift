@@ -103,10 +103,10 @@ public enum AddEditArtistSetAction: BindableAction {
 }
 
 public struct AddEditArtistSetEnvironment {
-    var artistSetService: () -> ArtistSetServiceProtocol
+    var artistSetService: () -> ScheduleServiceProtocol
 
     public init(
-        artistSetService: @escaping () -> ArtistSetServiceProtocol = { ArtistSetService.shared }
+        artistSetService: @escaping () -> ScheduleServiceProtocol = { ScheduleService.shared }
     ) {
         self.artistSetService = artistSetService
     }
@@ -283,7 +283,7 @@ private func saveGroupSet(
                 groupSet.id = originalGroupSet.id
                 try await environment.artistSetService().updateGroupSet(groupSet, eventID: state.event.id!)
 
-            case .editArtistSet(let originalArtistSet):
+            case .editArtistSet:
                 // Delete the old artistSet, create new GroupSet
                 fatalError()
 

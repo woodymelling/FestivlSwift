@@ -7,7 +7,6 @@
 
 import SwiftUI
 import ComposableArchitecture
-import TabBarFeature
 import Models
 
 public struct EventView: View {
@@ -19,16 +18,15 @@ public struct EventView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            IfLetStore(
-                store.scope(
-                    state: \EventState.tabBarState,
-                    action: EventAction.tabBarAction
-                ),
-                then: TabBarView.init(store:),
-                else: {
+
+            Group {
+                if viewStore.eventLoaded {
+                    TabBarView(store: store.scope(state: \.tabBarState, action: EventAction.tabBarAction))
+                } else {
                     LoadingView(event: viewStore.event)
                 }
-            )
+
+            }
             .onAppear { viewStore.send(.subscribeToDataPublishers) }
         }
     }

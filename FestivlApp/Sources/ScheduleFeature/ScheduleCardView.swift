@@ -11,13 +11,13 @@ import Utilities
 import Components
 import ComposableArchitecture
 
-struct ArtistSetCardView: View {
-    var artistSet: ArtistSet
+struct ScheduleCardView: View {
+    var card: AnyStageScheduleCardRepresentable
     var stageColor: Color
 
-    init(artistSet: ArtistSet, stages: IdentifiedArrayOf<Stage>) {
-        self.artistSet = artistSet
-        self.stageColor = stages[id: artistSet.stageID]!.color
+    init(_ card: AnyStageScheduleCardRepresentable, stages: IdentifiedArrayOf<Stage>) {
+        self.card = card
+        self.stageColor = stages[id: card.stageID]!.color
     }
 
     var body: some View {
@@ -38,10 +38,15 @@ struct ArtistSetCardView: View {
 
                         let hideArtistName = geo.size.height < 15
                         let hideSetTime = geo.size.height < 30
-                        Text(artistSet.artistName)
+                        Text(card.title)
                             .isHidden(hideArtistName, remove: hideArtistName)
 
-                        Text(FestivlFormatting.timeIntervalFormat(startTime: artistSet.startTime, endTime: artistSet.endTime))
+                        if let subtext = card.subtext {
+                            Text(subtext)
+                                .font(.caption)
+                        }
+
+                        Text(FestivlFormatting.timeIntervalFormat(startTime: card.startTime, endTime: card.endTime))
                             .font(.caption)
                             .isHidden(hideSetTime, remove: hideSetTime)
                     }
@@ -60,7 +65,7 @@ struct ArtistSetCardView: View {
 
 struct ArtistSetCardView_Previews: PreviewProvider {
     static var previews: some View {
-        ArtistSetCardView(artistSet: .testValues()[0], stages: Stage.testValues.asIdentifedArray)
+        ScheduleCardView(ArtistSet.testValues()[0].asAnyStageScheduleCardRepresentable(), stages: Stage.testValues.asIdentifedArray)
             .frame(width: 300, height: 100)
             .previewLayout(.sizeThatFits)
             .previewAllColorModes()

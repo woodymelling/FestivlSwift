@@ -93,10 +93,10 @@ public enum AddEditGroupSetAction: BindableAction {
 }
 
 public struct AddEditGroupSetEnvironment {
-    var artistSetService: () -> ArtistSetServiceProtocol
+    var artistSetService: () -> ScheduleServiceProtocol
 
     public init(
-        artistSetService: @escaping () -> ArtistSetServiceProtocol = { ArtistSetService.shared }
+        artistSetService: @escaping () -> ScheduleServiceProtocol = { ScheduleService.shared }
     ) {
         self.artistSetService = artistSetService
     }

@@ -23,7 +23,8 @@ extension Store where State == ManagerScheduleState, Action == ManagerScheduleAc
                 stages: Stage.testValues.asIdentifedArray,
                 artistSets: ArtistSet.testValues(startTime: startTime).asIdentifedArray,
                 groupSets: .init(),
-                addEditArtistSetState: nil
+                addEditArtistSetState: nil,
+                artistSearchText: ""
             ),
             reducer: managerScheduleReducer,
             environment: .init()

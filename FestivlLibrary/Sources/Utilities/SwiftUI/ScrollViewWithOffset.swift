@@ -16,8 +16,9 @@ public struct ScrollableView<Content: View>: UIViewControllerRepresentable {
     public func makeUIViewController(context: Context) -> UIScrollViewViewController<Content> {
         let vc = UIScrollViewViewController(hostingController: UIHostingController(rootView: content()))
         vc.hostingController.view.invalidateIntrinsicContentSize()
-        vc.scrollView.setContentOffset(offset, animated: false)
+
         vc.delegate = context.coordinator
+        vc.scrollView.setContentOffset(offset, animated: false)
         return vc
     }
 

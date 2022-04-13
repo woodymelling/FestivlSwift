@@ -8,6 +8,7 @@
 import Foundation
 import ComposableArchitecture
 import Utilities
+import SwiftUI
 
 public protocol ScheduleCardRepresentable: Identifiable, Equatable {
     var startTime: Date { get }

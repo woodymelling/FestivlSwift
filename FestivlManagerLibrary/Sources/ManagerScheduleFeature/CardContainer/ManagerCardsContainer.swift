@@ -18,12 +18,9 @@ struct ManagerCardsContainerView: View {
         WithViewStore(store) { viewStore in
             GeometryReader { geo in
                 artistSetCards(viewStore: viewStore, geo: geo)
-
-
             }
             .coordinateSpace(name: "ScheduleTimeline")
         }
-
     }
 
     @ViewBuilder func artistSetCards(

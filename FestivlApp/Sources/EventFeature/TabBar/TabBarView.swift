@@ -13,9 +13,9 @@ import ScheduleFeature
 
 public struct TabBarView: View {
 
-    let store: Store<TabBarState, TabBarAction>
+    let store: Store<EventState, TabBarAction>
 
-    public init(store: Store<TabBarState, TabBarAction>) {
+    public init(store: Store<EventState, TabBarAction>) {
         self.store = store
     }
 
@@ -51,26 +51,26 @@ public struct TabBarView: View {
         }
     }
 }
-
-struct TabBarView_Previews: PreviewProvider {
-    static var previews: some View {
-        TabBarView(
-            store: .init(
-                initialState: .init(
-                    event: .testData,
-                    artists: Artist.testValues.asIdentifedArray,
-                    stages: Stage.testValues.asIdentifedArray,
-                    artistSets: ArtistSet.testValues().asIdentifedArray,
-                    selectedTab: .schedule,
-                    artistsListSearchText: "",
-                    scheduleSelectedStage: Stage.testValues[0],
-                    scheduleZoomAmount: 1,
-                    scheduleSelectedDate: Event.testData.startDate,
-                    scheduleScrollAmount: .zero
-                ),
-                reducer: tabBarReducer,
-                environment: TabBarEnvironment()
-            )
-        )
-    }
-}
+//
+//struct TabBarView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        TabBarView(
+//            store: .init(
+//                initialState: .init(
+//                    event: .testData,
+//                    artists: Artist.testValues.asIdentifedArray,
+//                    stages: Stage.testValues.asIdentifedArray,
+//                    artistSets: ArtistSet.testValues().asIdentifedArray,
+//                    selectedTab: .schedule,
+//                    artistsListSearchText: "",
+//                    scheduleSelectedStage: Stage.testValues[0],
+//                    scheduleZoomAmount: 1,
+//                    scheduleSelectedDate: Event.testData.startDate,
+//                    scheduleScrollAmount: .zero
+//                ),
+//                reducer: tabBarReducer,
+//                environment: TabBarEnvironment()
+//            )
+//        )
+//    }
+//}

@@ -20,7 +20,9 @@ public struct ManagerScheduleView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             HStack {
-                ScheduleArtistList(artists: viewStore.artists)
+
+                
+                ScheduleArtistList(store: store)
                     .padding(.top, 50)
 
                 Divider()

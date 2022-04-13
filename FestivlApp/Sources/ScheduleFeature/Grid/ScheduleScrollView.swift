@@ -8,10 +8,14 @@
 import SwiftUI
 import ComposableArchitecture
 import Utilities
+import Introspect
+import SimultaneouslyScrollView
 
 struct ScheduleScrollView: View {
     let store: Store<ScheduleState, ScheduleAction>
     let style: ScheduleStyle
+    @ObservedObject var scrollViewHandler: SingleStageAtOnceView.ViewModel
+
     var body: some View {
         WithViewStore(store) { viewStore in
             ScrollView {
@@ -26,6 +30,9 @@ struct ScheduleScrollView: View {
                 }
                 .frame(height: 1000 * viewStore.zoomAmount)
             }
+            .introspectScrollView { scrollView in
+                scrollViewHandler.scrollViewHandler.register(scrollView: scrollView)
+            }
             .gesture(
                 MagnificationGesture()
                     .onChanged { value in
@@ -39,6 +46,6 @@ struct ScheduleScrollView: View {
 
 struct ScheduleScrollView_Previews: PreviewProvider {
     static var previews: some View {
-        ScheduleScrollView(store: .testStore, style: .allStages)
+        ScheduleScrollView(store: .testStore, style: .allStages, scrollViewHandler: .init())
     }
 }

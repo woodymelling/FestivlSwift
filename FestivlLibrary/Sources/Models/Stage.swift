@@ -18,7 +18,7 @@ public struct Stage: Codable, Identifiable, Hashable, Equatable {
     public let symbol: String
     public let colorString: String
     public var iconImageURL: URL?
-    public let sortIndex: Int
+    public var sortIndex: Int
 
     public init(
         id: StageID? = nil,

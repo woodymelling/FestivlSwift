@@ -35,7 +35,8 @@ extension FestivlManagerEventState {
                 event: event,
                 createArtistState: createArtistState,
                 isPresentingDeleteConfirmation: isPresentingArtistDeleteConfirmation,
-                bulkAddState: artistBulkAddState
+                bulkAddState: artistBulkAddState,
+                searchText: artistListSearchText
             )
         }
         set {
@@ -45,6 +46,7 @@ extension FestivlManagerEventState {
             self.createArtistState = newValue.createArtistState
             self.isPresentingArtistDeleteConfirmation = newValue.isPresentingDeleteConfirmation
             self.artistBulkAddState = newValue.bulkAddState
+            self.artistListSearchText = newValue.searchText
         }
     }
 
@@ -78,7 +80,8 @@ extension FestivlManagerEventState {
                 stages: self.stages,
                 artistSets: self.artistSets,
                 groupSets: self.groupSets,
-                addEditArtistSetState: self.addEditArtistSetState
+                addEditArtistSetState: self.addEditArtistSetState,
+                artistSearchText: self.scheduleArtistSearchText
             )
         }
 
@@ -88,6 +91,7 @@ extension FestivlManagerEventState {
             self.addEditArtistSetState = newValue.addEditArtistSetState
             self.artistSets = newValue.artistSets
             self.groupSets = newValue.groupSets
+            self.scheduleArtistSearchText = newValue.artistSearchText
         }
     }
 }

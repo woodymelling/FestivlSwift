@@ -40,6 +40,7 @@ public struct FestivlManagerEventState: Equatable {
     var createArtistState: CreateArtistState?
     var isPresentingArtistDeleteConfirmation: Bool = false
     var artistBulkAddState: BulkAddState?
+    var artistListSearchText: String = ""
 
     // StageListState:
     var stagesListSelectedStage: Stage?
@@ -50,6 +51,8 @@ public struct FestivlManagerEventState: Equatable {
     var scheduleSelectedDate: Date
     var scheduleZoomAmount: CGFloat = 1
     var addEditArtistSetState: AddEditArtistSetState?
+    var scheduleArtistSearchText = ""
+
     
 
     var dashboardState: Self {
@@ -80,13 +83,13 @@ public enum FestivlManagerEventAction {
 public struct FestivlManagerEventEnvironment {
     public var artistService: () -> ArtistServiceProtocol
     public var stageService: () -> StageServiceProtocol
-    public var artistSetService: () -> ArtistSetServiceProtocol
+    public var artistSetService: () -> ScheduleServiceProtocol
     public var currentDate: () -> Date = { Date.now }
 
     public init(
         artistService: @escaping () -> ArtistServiceProtocol = { ArtistService.shared },
         stageService: @escaping () -> StageServiceProtocol = { StageService.shared },
-        artistSetService: @escaping () -> ArtistSetServiceProtocol = { ArtistSetService.shared }
+        artistSetService: @escaping () -> ScheduleServiceProtocol = { ScheduleService.shared }
     ) {
         self.artistService = artistService
         self.stageService = stageService
@@ -119,7 +122,7 @@ public let festivlManagerEventReducer = Reducer.combine(
                     .map { FestivlManagerEventAction.stagesPublisherUpdate($0) },
 
                 environment.artistSetService()
-                    .artistSetPublisher(eventID: state.event.id!)
+                    .schedulePublisher(eventID: state.event.id!)
                     .eraseErrorToPrint(errorSource: "ArtistSetServicePublisher")
                     .map { FestivlManagerEventAction.artistSetsPublisherUpdate($0) }
             )

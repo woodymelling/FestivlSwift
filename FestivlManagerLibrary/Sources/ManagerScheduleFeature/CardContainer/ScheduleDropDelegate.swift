@@ -67,7 +67,17 @@ struct ScheduleDropDelegate: DropDelegate {
 
                 let newTime = droppedTime - (artistSet.setLength / 2)
 
-                viewStore.send(.didMoveScheduleCard(artistSet, newStage: droppedStage, newTime: newTime))
+                viewStore.send(.didMoveScheduleCard(artistSet.asAnyStageScheduleCardRepresentable(), newStage: droppedStage, newTime: newTime))
+
+            case GroupSet.typeString:
+                guard let groupSet = viewStore.groupSets[id: id] else {
+                    print("Failed to find groupSet with id:", id)
+                    return
+                }
+
+                let newTime = droppedTime - (groupSet.setLength / 2)
+
+                viewStore.send(.didMoveScheduleCard(groupSet.asAnyStageScheduleCardRepresentable(), newStage: droppedStage, newTime: newTime))
 
             case Artist.typeString:
 
@@ -79,6 +89,7 @@ struct ScheduleDropDelegate: DropDelegate {
                 let time = droppedTime - (1.hours / 2)
 
                 viewStore.send(.didDropArtist(artist, stage: droppedStage, time: time))
+                
 
             default:
                 print("Failed with no proper type")
