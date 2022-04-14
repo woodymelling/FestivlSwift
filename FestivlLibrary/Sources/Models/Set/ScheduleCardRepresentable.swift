@@ -10,11 +10,17 @@ import ComposableArchitecture
 import Utilities
 import SwiftUI
 
+
+public enum ScheduleCardType: Equatable {
+    case artistSet(ArtistID), groupSet([ArtistID])
+}
+
 public protocol ScheduleCardRepresentable: Identifiable, Equatable {
     var startTime: Date { get }
     var endTime: Date { get }
     var title: String { get }
     var subtext: String? { get }
+    var type: ScheduleCardType { get }
 }
 
 public protocol StageScheduleCardRepresentable: ScheduleCardRepresentable {
@@ -28,6 +34,7 @@ public extension ScheduleCardRepresentable {
 
     /// Get the frame size for an artistSet in a specfic container
     func size(in containerSize: CGSize, stageCount: Int) -> CGSize {
+        print("CONTAINERSIZE: \(containerSize)")
         let setLengthInSeconds = endTime.timeIntervalSince(startTime)
         let height = secondsToY(Int(setLengthInSeconds), containerHeight: containerSize.height)
         let width = containerSize.width / CGFloat(stageCount)
@@ -69,11 +76,6 @@ public struct AnyStageScheduleCardRepresentable: StageScheduleCardRepresentable 
 
     public var type: ScheduleCardType
 
-    public enum ScheduleCardType {
-        case artistSet, groupSet
-    }
-
-
     public init<T: StageScheduleCardRepresentable>(_ representable: T) where T.ID == String? {
         self.stageID = representable.stageID
         self.startTime = representable.startTime
@@ -81,14 +83,7 @@ public struct AnyStageScheduleCardRepresentable: StageScheduleCardRepresentable 
         self.title = representable.title
         self.subtext = representable.subtext
         self.id = representable.id
-
-        if T.self == ArtistSet.self {
-            type = .artistSet
-        } else if T.self == GroupSet.self {
-            type = .groupSet
-        } else {
-            fatalError()
-        }
+        self.type = representable.type
     }
 }
 

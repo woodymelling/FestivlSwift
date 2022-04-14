@@ -20,31 +20,39 @@ struct ScheduleScrollView: View {
 
     var body: some View {
         WithViewStore(store) { viewStore in
-            ScrollView {
-                Spacer()
-                    .frame(height: headerHeight)
-                HStack {
-                    ScheduleHourLabelsView(dayStartsAtNoon: true)
+            
+            ScrollViewReader { proxy in
+                ScrollView {
+                    Spacer()
+                        .frame(height: headerHeight)
+                    HStack {
+                        ScheduleHourLabelsView(dayStartsAtNoon: true)
 
-                    ZStack {
+                        ZStack {
 
-                        ScheduleGridView()
-                        CardContainerView(style: style, store: store)
+                            ScheduleGridView()
+                            CardContainerView(style: style, store: store)
+
+                        }
                     }
+                    .frame(height: 1000 * viewStore.zoomAmount)
                 }
-                .frame(height: 1000 * viewStore.zoomAmount)
-            }
-            .introspectScrollView { scrollView in
-                scrollViewHandler.scrollViewHandler.register(scrollView: scrollView)
-            }
-            .gesture(
-                MagnificationGesture()
-                    .onChanged { value in
-                        viewStore.send(.zoomed(value.magnitude))
+                .onChange(of: viewStore.cardToDisplay, perform: { cardToDisplay in
+                    withAnimation {
+                        proxy.scrollTo(cardToDisplay?.id)
                     }
-            )
-            .onAppear {
-                print("HEADER HEIGHT", headerHeight)
+
+                })
+                .introspectScrollView { scrollView in
+                    scrollViewHandler.scrollViewHandler.register(scrollView: scrollView)
+                }
+                .gesture(
+                    MagnificationGesture()
+                        .onChanged { value in
+                            viewStore.send(.zoomed(value.magnitude))
+                        }
+                )
+
             }
         }
 

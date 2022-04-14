@@ -12,14 +12,14 @@ import IdentifiedCollections
 public struct ArtistPageState: Equatable, Identifiable {
     public var artist: Artist
     public var event: Event
-    public var sets: IdentifiedArrayOf<ArtistSet>
+    public var sets: IdentifiedArrayOf<AnyStageScheduleCardRepresentable>
     public var stages: IdentifiedArrayOf<Stage>
     public var id: Artist.ID {
         return artist.id
     }
 
 
-    public init(artist: Artist, event: Event, sets: IdentifiedArrayOf<ArtistSet>, stages: IdentifiedArrayOf<Stage>) {
+    public init(artist: Artist, event: Event, sets: IdentifiedArrayOf<AnyStageScheduleCardRepresentable>, stages: IdentifiedArrayOf<Stage>) {
         self.artist = artist
         self.event = event
         self.sets = sets
@@ -28,7 +28,7 @@ public struct ArtistPageState: Equatable, Identifiable {
 }
 
 public enum ArtistPageAction {
-
+    case didTapArtistSet(AnyStageScheduleCardRepresentable)
 }
 
 public struct ArtistPageEnvironment {
@@ -36,5 +36,8 @@ public struct ArtistPageEnvironment {
 }
 
 public let artistPageReducer = Reducer<ArtistPageState, ArtistPageAction, ArtistPageEnvironment> { state, action, _ in
-    return .none
+    switch action {
+    case .didTapArtistSet:
+        return .none
+    }
 }

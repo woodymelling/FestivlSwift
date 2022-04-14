@@ -18,14 +18,20 @@ struct CardContainerView: View {
 
         switch style {
         case .singleStage(let stage):
-            return viewStore.scheduleCards.filter {
-                stage.id == $0.stageID && $0.isOnDate(viewStore.selectedDate, dayStartsAtNoon: viewStore.event.dayStartsAtNoon)
-            }
+            return viewStore.schedule[.init(
+                date: viewStore.selectedDate,
+                stageID: stage.id!
+            )] ?? .init()
 
         case .allStages:
-            return viewStore.scheduleCards.filter {
-                $0.isOnDate(viewStore.selectedDate, dayStartsAtNoon: viewStore.event.dayStartsAtNoon)
+            return viewStore.schedule.keys.filter {
+                $0.date == viewStore.selectedDate
             }
+            .flatMap {
+                viewStore.schedule[$0] ?? .init()
+            }
+            .asIdentifedArray
+
         }
     }
 
@@ -46,14 +52,19 @@ struct CardContainerView: View {
                         stages: viewStore.stages
                     ) : 0
                     
-                    ScheduleCardView(artistSet, stages: viewStore.stages)
+                    ScheduleCardView(
+                        artistSet,
+                        stages: viewStore.stages,
+                        isSelected: viewStore.cardToDisplay == artistSet
+                    )
                         .frame(size: size)
-                        .fixedSize()
+//                        .fixedSize()
                         .position(
-                            x: xPosition,
-                            y: artistSet.yPlacement(dayStartsAtNoon: viewStore.event.dayStartsAtNoon, containerHeight: geo.size.height)
+                            x: xPosition + offset.width,
+                            y: artistSet.yPlacement(dayStartsAtNoon: viewStore.event.dayStartsAtNoon, containerHeight: geo.size.height) + offset.height
                         )
-                        .offset(offset)
+                        .id(artistSet.id)
+
                 }
             }
 

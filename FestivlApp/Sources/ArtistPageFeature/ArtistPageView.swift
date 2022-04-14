@@ -23,11 +23,16 @@ public struct ArtistPageView: View {
                 ArtistHeaderView(artist: viewStore.artist, event: viewStore.event)
 
                 List {
-                    ForEach(viewStore.sets) { artistSet in
-                        ArtistSetView(
-                            set: artistSet,
-                            stages: viewStore.stages
-                        )
+                    ForEach(viewStore.sets) { scheduleSet in
+                        Button(action: {
+                            viewStore.send(.didTapArtistSet(scheduleSet))
+                        }, label: {
+                            SetView(
+                                set: scheduleSet,
+                                stages: viewStore.stages
+                            )
+                        })
+
                     }
 
                     if let description = viewStore.artist.description {
@@ -69,7 +74,7 @@ struct ArtistPageView_Previews: PreviewProvider {
             NavigationView {
                 ArtistPageView(
                     store: .init(
-                        initialState: .init(artist: Artist.testValues[1], event: .testData, sets: [.testData], stages: IdentifiedArrayOf(uniqueElements: [.testData])),
+                        initialState: .init(artist: Artist.testValues[1], event: .testData, sets: [ArtistSet.testData.asAnyStageScheduleCardRepresentable()], stages: IdentifiedArrayOf(uniqueElements: [.testData])),
                         reducer: artistPageReducer,
                         environment: .init()
                     )

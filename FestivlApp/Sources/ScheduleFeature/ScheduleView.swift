@@ -68,11 +68,12 @@ struct ScheduleView_Previews: PreviewProvider {
                 store: .init(
                     initialState: .init(
                         stages: Stage.testValues.asIdentifedArray,
-                        artistSets: ArtistSet.testValues(startTime: Calendar.current.date(bySettingHour: 13, minute: 0, second: 0, of: time)!).asIdentifedArray,
-                        groupSets: .init(),
+                        schedule: .init(),
                         selectedStage: Stage.testValues[0],
                         event: .testData,
-                        selectedDate: time
+                        selectedDate: time,
+                        cardToDisplay: nil,
+                        selectedArtistState: nil
                     ),
                     reducer: scheduleReducer,
                     environment: .init()

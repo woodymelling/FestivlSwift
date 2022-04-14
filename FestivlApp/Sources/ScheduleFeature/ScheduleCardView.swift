@@ -14,10 +14,12 @@ import ComposableArchitecture
 struct ScheduleCardView: View {
     var card: AnyStageScheduleCardRepresentable
     var stageColor: Color
+    var isSelected: Bool
 
-    init(_ card: AnyStageScheduleCardRepresentable, stages: IdentifiedArrayOf<Stage>) {
+    init(_ card: AnyStageScheduleCardRepresentable, stages: IdentifiedArrayOf<Stage>, isSelected: Bool) {
         self.card = card
         self.stageColor = stages[id: card.stageID]!.color
+        self.isSelected = isSelected
     }
 
     var body: some View {
@@ -60,12 +62,13 @@ struct ScheduleCardView: View {
         }
         .frame(maxWidth: .infinity)
         .background(stageColor)
+        .border(.white, width: isSelected ? 1 : 0 )
     }
 }
 
 struct ArtistSetCardView_Previews: PreviewProvider {
     static var previews: some View {
-        ScheduleCardView(ArtistSet.testValues()[0].asAnyStageScheduleCardRepresentable(), stages: Stage.testValues.asIdentifedArray)
+        ScheduleCardView(ArtistSet.testValues()[0].asAnyStageScheduleCardRepresentable(), stages: Stage.testValues.asIdentifedArray, isSelected: false)
             .frame(width: 300, height: 100)
             .previewLayout(.sizeThatFits)
             .previewAllColorModes()

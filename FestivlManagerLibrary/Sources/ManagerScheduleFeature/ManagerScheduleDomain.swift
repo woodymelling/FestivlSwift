@@ -34,7 +34,6 @@ public struct ManagerScheduleState: Equatable {
         self.groupSets = groupSets
         self.addEditArtistSetState = addEditArtistSetState
         self.artistSearchText = artistSearchText
-
     }
 
     public let event: Event

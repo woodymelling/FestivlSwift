@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import Models
 import ComposableArchitecture
+import Components
 
 struct ScheduleCardView: View {
     internal init(store: Store<ScheduleCardState, ScheduleCardAction>, viewHeight: CGFloat, selectedDate: Date) {
@@ -53,7 +54,7 @@ struct ScheduleCardView: View {
                                         .font(.caption)
                                 }
 
-                                Text(viewStore.set.startTime...viewStore.set.endTime)
+                                Text(FestivlFormatting.timeIntervalFormat(startTime: viewStore.set.startTime, endTime: viewStore.set.endTime))
                                     .font(.caption)
                                     .isHidden(hideSetTime, remove: hideSetTime)
                             }

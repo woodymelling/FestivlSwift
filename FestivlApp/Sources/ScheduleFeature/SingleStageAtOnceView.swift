@@ -79,11 +79,12 @@ struct SingleStageAtOnceView_Previews: PreviewProvider {
             store: .init(
                 initialState: .init(
                     stages: Stage.testValues.asIdentifedArray,
-                    artistSets: ArtistSet.testValues().asIdentifedArray,
-                    groupSets: .init(),
+                    schedule: .init(),
                     selectedStage: Stage.testValues[0],
                     event: .testData,
-                    selectedDate: Event.testData.festivalDates[0]
+                    selectedDate: Event.testData.festivalDates[0],
+                    cardToDisplay: nil,
+                    selectedArtistState: nil
                 ),
                 reducer: scheduleReducer,
                 environment: .init()

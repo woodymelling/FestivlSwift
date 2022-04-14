@@ -11,7 +11,7 @@ import SwiftUI
 public extension Date {
     func startOfDay(dayStartsAtNoon: Bool) -> Date {
         if dayStartsAtNoon {
-            return Calendar.current.startOfDay(for: self) + 12.hours
+            return Calendar.current.startOfDay(for: self - 12.hours) + 12.hours
         } else {
             return Calendar.current.startOfDay(for: self)
         }

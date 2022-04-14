@@ -87,7 +87,8 @@ let package = Package(
                 .product(name: "Utilities", package: "FestivlLibrary"),
                 .product(name: "Components", package: "FestivlLibrary"),
                 .product(name: "Introspect", package: "Introspect"),
-                .product(name: "SimultaneouslyScrollView", package: "SimultaneouslyScrollView")
+                .product(name: "SimultaneouslyScrollView", package: "SimultaneouslyScrollView"),
+                .target(name: "ArtistPageFeature")
             ]
 
         ),

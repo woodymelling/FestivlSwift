@@ -60,10 +60,17 @@ struct ScheduleHeaderButton: View {
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        CachedAsyncImage(url: stage.iconImageURL, placeholder: {
+        CachedAsyncImage(url: stage.iconImageURL, renderingMode: .template, placeholder: {
             Text(stage.symbol)
                 .font(.largeTitle)
                 .padding(20)
+        })
+        .if(colorScheme == .light, transform: {
+            $0.if(isSelected) {
+                $0.foregroundColor(.white)
+            } else: {
+                $0.foregroundColor(stage.color)
+            }
         })
         .frame(square: 60)
         .background {

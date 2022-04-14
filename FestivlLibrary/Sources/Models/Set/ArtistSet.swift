@@ -14,7 +14,7 @@ import SwiftUI
 public struct ArtistSet: Identifiable, Codable, Equatable {
 
     @DocumentID public var id: String?
-    public var artistID: Artist.ID
+    public var artistID: ArtistID
     public var artistName: String
     public var stageID: StageID
     public var startTime: Date
@@ -22,7 +22,7 @@ public struct ArtistSet: Identifiable, Codable, Equatable {
 
     public init(
         id: String?,
-        artistID: Artist.ID,
+        artistID: ArtistID,
         artistName: String,
         stageID: StageID,
         startTime: Date,
@@ -44,6 +44,10 @@ extension ArtistSet: StageScheduleCardRepresentable {
 
     public var subtext: String? {
         nil
+    }
+
+    public var type: ScheduleCardType {
+        .artistSet(artistID)
     }
 }
 

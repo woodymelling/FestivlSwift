@@ -5,7 +5,6 @@
 //  Created by Woodrow Melling on 4/12/22.
 //
 
-#if os(iOS)
 import SwiftUI
 import Kingfisher
 
@@ -35,7 +34,9 @@ public struct CachedAsyncImage<Content: View>: View {
                 }
                 .setProcessor(DownsamplingImageProcessor(size: geo.size))
                 .cacheOriginalImage()
+                #if os(iOS)
                 .scaleFactor(UIScreen.main.scale)
+                #endif
                 .aspectRatio(contentMode: .fill)
         }
 
@@ -57,5 +58,3 @@ public struct ImageCacher {
 
     }
 }
-
-#endif

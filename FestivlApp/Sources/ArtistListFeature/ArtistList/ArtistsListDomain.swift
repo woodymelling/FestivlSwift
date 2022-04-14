@@ -22,7 +22,7 @@ public struct ArtistListState: Equatable {
 
     public var event: Event
     public var artistStates: IdentifiedArrayOf<ArtistPageState>
-    public var artistSets: IdentifiedArrayOf<ArtistSet>
+    public var schedule: Schedule
     public var stages: IdentifiedArrayOf<Stage>
     
     @BindableState public var searchText: String = ""
@@ -31,19 +31,27 @@ public struct ArtistListState: Equatable {
         event: Event,
         artists: IdentifiedArrayOf<Artist>,
         stages: IdentifiedArrayOf<Stage>,
-        artistSets: IdentifiedArrayOf<ArtistSet>,
+        schedule: Schedule,
         searchText: String
     ) {
         self.event = event
         self.stages = stages
-        self.artistSets = artistSets
+        self.schedule = schedule
         self.searchText = searchText
 
         self.artistStates = IdentifiedArray(uniqueElements: artists.map { artist in
             ArtistPageState(
                 artist: artist,
                 event: event,
-                sets: artistSets.filter { $0.artistID == artist.id },
+                sets: schedule.values.flatMap { $0.filter {
+                    switch $0.type {
+                    case .artistSet(let artistID):
+                        return artistID == artist.id
+
+                    case .groupSet(let artistIDs):
+                        return artistIDs.contains(artist.id ?? "")
+                    }
+                }}.asIdentifedArray,
                 stages: stages
             )
         })

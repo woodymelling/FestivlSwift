@@ -150,6 +150,6 @@ public let festivlManagerEventReducer = Reducer.combine(
         }
     }
 )
-.debug()
+//.debug()
 
 

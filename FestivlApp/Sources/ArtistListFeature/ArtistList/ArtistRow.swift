@@ -16,7 +16,7 @@ struct ArtistRow: View {
     var artist: Artist
     var event: Event
     var stages: IdentifiedArrayOf<Stage>
-    var artistSets: IdentifiedArrayOf<ArtistSet>
+    var sets: IdentifiedArrayOf<AnyStageScheduleCardRepresentable>
 
     var body: some View {
         HStack(spacing: 10) {
@@ -32,7 +32,7 @@ struct ArtistRow: View {
             }
 
             StagesIndicatorView(
-                stages: artistSets.compactMap {
+                stages: sets.compactMap {
                     stages[id: $0.stageID]
                 }
             )

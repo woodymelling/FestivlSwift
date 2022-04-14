@@ -13,13 +13,14 @@ import IdentifiedCollections
 import Utilities
 import SwiftUI
 import Kingfisher
+import ArtistPageFeature
+
 
 public struct EventState: Equatable {
     var event: Event
     var artists: IdentifiedArrayOf<Artist> = .init()
     var stages: IdentifiedArrayOf<Stage> = .init()
-    var artistSets: IdentifiedArrayOf<ArtistSet> = .init()
-    var groupSets: IdentifiedArrayOf<GroupSet> = .init()
+    var schedule: Schedule = .init()
 
     // MARK: TabBarState
     @BindableState var selectedTab: Tab = .schedule
@@ -31,7 +32,8 @@ public struct EventState: Equatable {
     var scheduleSelectedStage: Stage = .testData
     var scheduleZoomAmount: CGFloat = 1
     var scheduleSelectedDate: Date
-    var scheduleScrollAmount: CGPoint = .zero
+    var scheduleCardToDisplay: AnyStageScheduleCardRepresentable?
+    var scheduleSelectedArtistState: ArtistPageState?
 
     var eventLoaded: Bool {
         return loadedArtists && loadedStages && loadedArtistSets
@@ -94,6 +96,12 @@ public struct EventEnvironment {
     }
 }
 
+extension StageScheduleCardRepresentable {
+    func scheduleKey(dayStartsAtNoon: Bool) -> SchedulePageIdentifier {
+        .init(date: startTime.startOfDay(dayStartsAtNoon: dayStartsAtNoon), stageID: stageID)
+    }
+}
+
 public let eventReducer = Reducer.combine(
     Reducer<EventState, EventAction, EventEnvironment> { state, action, environment in
         switch action {
@@ -150,9 +158,22 @@ public let eventReducer = Reducer.combine(
             return Effect(value: .setUpWhenDataLoaded)
 
 
-        case .artistSetsPublisherUpdate(let schedule):
-            state.artistSets = schedule.artistSets
-            state.groupSets = schedule.groupSets
+        case .artistSetsPublisherUpdate(let scheduleData):
+
+            for artistSet in scheduleData.artistSets {
+                state.schedule.insert(
+                    for: artistSet.scheduleKey(dayStartsAtNoon: state.event.dayStartsAtNoon),
+                    value: artistSet.asAnyStageScheduleCardRepresentable()
+                )
+            }
+
+            for groupSet in scheduleData.groupSets {
+                state.schedule.insert(
+                    for: groupSet.scheduleKey(dayStartsAtNoon: state.event.dayStartsAtNoon),
+                    value: groupSet.asAnyStageScheduleCardRepresentable()
+                )
+            }
+
             state.loadedArtistSets = true
             return Effect(value: .setUpWhenDataLoaded)
 
@@ -174,12 +195,10 @@ public let eventReducer = Reducer.combine(
             state.scheduleSelectedDate = selectedDate
 
             // Choose selected stage based on stages and sets
-
-            // OPTIMIZATION POINT
             let selectedStage = state.stages.first(where: { stage in
-                state.artistSets.contains {
+                state.schedule[SchedulePageIdentifier(date: state.scheduleSelectedDate, stageID: stage.id!)]?.contains {
                     $0.isOnDate(selectedDate, dayStartsAtNoon: state.event.dayStartsAtNoon)
-                }
+                } ?? false
             })
 
             // TODO: What happens if there are no stages yet? Is that important
@@ -197,7 +216,7 @@ public let eventReducer = Reducer.combine(
     )
 
 )
-    .debug()
+//    .debug()
 
 func preloadArtistImages(artists: IdentifiedArrayOf<Artist>) -> Effect<EventAction, Never> {
     return .asyncTask {

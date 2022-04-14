@@ -32,6 +32,7 @@ public struct ArtistListView: View {
                                 self.store.scope(state: \.artistStates, action: ArtistListAction.artistDetail)
                             ) { artistStore in
                                 WithViewStore(artistStore) { artistViewStore in
+                                    
                                     NavigationLink(destination: {
                                         ArtistPageView(store: artistStore)
                                     }, label: {
@@ -39,7 +40,7 @@ public struct ArtistListView: View {
                                             artist: artistViewStore.artist,
                                             event: artistViewStore.event,
                                             stages: artistViewStore.stages,
-                                            artistSets: artistViewStore.sets
+                                            sets: artistViewStore.sets
                                         )
                                     })
                                 }
@@ -63,7 +64,7 @@ struct ArtistListView_Previews: PreviewProvider {
                     event: .testData,
                     artists: [],
                     stages: [],
-                    artistSets: [],
+                    schedule: .init(),
                     searchText: ""
                 ),
                 reducer: artistListReducer,

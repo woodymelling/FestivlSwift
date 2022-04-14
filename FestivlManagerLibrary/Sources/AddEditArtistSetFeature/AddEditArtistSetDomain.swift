@@ -24,6 +24,34 @@ enum Mode: Equatable {
     }
 }
 
+extension Date {
+    var timeOnly: Date {
+        Date.distantPast.atTimeOfDate(self)
+    }
+
+    func atTimeOfDate(_ secondDate: Date) -> Date {
+        let calendar = Calendar.autoupdatingCurrent
+        let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: secondDate)
+
+        return self.atTime(
+            hour: timeComponents.hour ?? 0,
+            minute: timeComponents.minute ?? 0,
+            seconds: timeComponents.second ?? 0
+        )
+    }
+
+    public func atTime(hour: Int = 0, minute: Int = 0, seconds: Int = 0) -> Date {
+        let calendar = Calendar.autoupdatingCurrent
+        var components = calendar.dateComponents([.day, .month, .year], from: self)
+
+        components.hour = hour
+        components.minute = minute
+        components.second = seconds
+
+        return calendar.date(from: components) ?? self
+    }
+}
+
 public struct AddEditArtistSetState: Equatable, Identifiable {
     public var id = UUID()
 
@@ -66,8 +94,8 @@ public struct AddEditArtistSetState: Equatable, Identifiable {
         self.stages = stages
 
         self.selectedDate = artistSet.startTime.startOfDay(dayStartsAtNoon: event.dayStartsAtNoon)
-        self.startTime = artistSet.startTime
-        self.endTime = artistSet.endTime
+        self.startTime = artistSet.startTime.timeOnly
+        self.endTime = artistSet.endTime.timeOnly
         self.selectedStage = stages[id: artistSet.stageID]
         self.selectedArtist = artists[id: artistSet.artistID]
     }
@@ -82,8 +110,8 @@ public struct AddEditArtistSetState: Equatable, Identifiable {
 
         self.groupSetName = groupSet.name
         self.selectedDate = groupSet.startTime.startOfDay(dayStartsAtNoon: event.dayStartsAtNoon)
-        self.startTime = groupSet.startTime
-        self.endTime = groupSet.endTime
+        self.startTime = groupSet.startTime.timeOnly
+        self.endTime = groupSet.endTime.timeOnly
         self.selectedStage = stages[id: groupSet.stageID]
         self.selectedArtists = groupSet.artistIDs.compactMap { artists[id: $0] }.asIdentifedArray
 

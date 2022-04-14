@@ -25,7 +25,7 @@ public extension EventState {
                 event: event,
                 artists: artists,
                 stages: stages,
-                artistSets: artistSets,
+                schedule: schedule,
                 searchText: artistListSearchText
             )
         }
@@ -41,21 +41,21 @@ public extension EventState {
         get {
             .init(
                 stages: stages,
-                artistSets: artistSets,
-                groupSets: groupSets,
+                schedule: schedule,
                 selectedStage: scheduleSelectedStage,
                 event: event,
                 zoomAmount: scheduleZoomAmount,
                 selectedDate: scheduleSelectedDate,
-                scrollAmount: scheduleScrollAmount
+                cardToDisplay: scheduleCardToDisplay,
+                selectedArtistState: scheduleSelectedArtistState
             )
         }
 
         set {
             self.scheduleZoomAmount = newValue.zoomAmount
             self.scheduleSelectedDate = newValue.selectedDate
-            self.scheduleScrollAmount = newValue.scrollAmount
             self.scheduleSelectedStage = newValue.selectedStage
+            self.scheduleCardToDisplay = newValue.cardToDisplay
         }
     }
 }
@@ -75,6 +75,15 @@ public let tabBarReducer = Reducer.combine(
         switch action {
         case .binding:
             return .none
+        case .artistListAction(.artistDetail(_, .didTapArtistSet(let scheduleCard))):
+            state.selectedTab = .schedule
+            return Effect(value: .scheduleAction(.showAndHighlightCard(scheduleCard)))
+
+        case .scheduleAction(.didTapCard(let scheduleCard)):
+            state.selectedTab = .artists
+
+            return .none
+
         case .artistListAction, .scheduleAction:
             return .none
         }
