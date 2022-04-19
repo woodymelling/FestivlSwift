@@ -22,19 +22,23 @@ struct EventRowView: View {
     }
 
     var body: some View {
-        HStack(spacing: 10) {
-            CachedAsyncImage(url: event.imageURL, placeholder: {
-                defaultImage
-            })
-            .frame(width: 60, height: 60)
+        ZStack {
+            NavigationLink(destination: { EmptyView() }, label: { EmptyView() })
+            HStack(spacing: 10) {
+                CachedAsyncImage(url: event.imageURL, placeholder: {
+                    defaultImage
+                })
+                .frame(width: 60, height: 60)
 
-            VStack(alignment: .leading) {
-                Text(event.name)
-                Text(eventDateString)
-                    .lineLimit(1)
-                    .font(.caption2)
+                VStack(alignment: .leading) {
+                    Text(event.name)
+                    Text(eventDateString)
+                        .lineLimit(1)
+                        .font(.caption2)
+                }
+
+                Spacer()
             }
-            .frame(maxWidth: .infinity)
         }
     }
 }

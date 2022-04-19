@@ -9,11 +9,16 @@ import ComposableArchitecture
 import Models
 
 public struct ExploreState: Equatable {
-    public init(artists: [Artist]) {
+    public init(artists: IdentifiedArrayOf<Artist>, stages: IdentifiedArrayOf<Stage>, schedule: Schedule) {
         self.artists = artists
+        self.stages = stages
+        self.schedule = schedule
     }
 
-    let artists: [Artist]
+    public let artists: IdentifiedArrayOf<Artist>
+    public let stages: IdentifiedArrayOf<Stage>
+    public let schedule: Schedule
+
 }
 
 public enum ExploreAction {

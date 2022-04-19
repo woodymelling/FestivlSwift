@@ -23,12 +23,13 @@ public struct ExploreView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             VStack {
-                Text(String(viewStore.artists.count))
-                ExploreViewHosting(artists: viewStore.artists)
+                ExploreViewHosting(
+                    artists: viewStore.artists,
+                    stages: viewStore.stages,
+                    schedule: viewStore.schedule
+                )
             }
-
-
-
+            .ignoresSafeArea()
         }
     }
 
@@ -41,7 +42,7 @@ struct ExploreView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             ExploreView(
                 store: .init(
-                    initialState: .init(artists: Artist.testValues),
+                    initialState: .init(artists: Artist.testValues.asIdentifedArray, stages: Stage.testValues.asIdentifedArray, schedule: [:]),
                     reducer: exploreReducer,
                     environment: .init()
                 )

@@ -39,6 +39,9 @@ public struct EventState: Equatable {
     var deviceOrientation: DeviceOrientation = .portrait
     var currentTime: Date = Date()
 
+    // MARK: ExploreState
+    var exploreArtists: IdentifiedArrayOf<Artist> = .init()
+
     var eventLoaded: Bool {
         return loadedArtists && loadedStages && loadedArtistSets
     }
@@ -130,6 +133,12 @@ public let eventReducer = Reducer.combine(
             // MARK: Artists Loading
         case .artistsPublisherUpdate(let artists):
             state.artists = artists
+
+            state.exploreArtists = artists
+                .filter { $0.imageURL != nil }
+                .shuffled()
+                .asIdentifedArray
+            
             return Effect(value: .preLoadArtistImages)
 
         case .preLoadArtistImages:
@@ -220,7 +229,7 @@ public let eventReducer = Reducer.combine(
     )
 
 )
-    .debug()
+//    .debug()
 
 func preloadArtistImages(artists: IdentifiedArrayOf<Artist>) -> Effect<EventAction, Never> {
     return .asyncTask {

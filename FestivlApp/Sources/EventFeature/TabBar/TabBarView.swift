@@ -10,6 +10,7 @@ import ComposableArchitecture
 import ArtistListFeature
 import Models
 import ScheduleFeature
+import ExploreFeature
 
 public struct TabBarView: View {
 
@@ -35,7 +36,7 @@ public struct TabBarView: View {
                     }
                     .tag(Tab.artists)
 
-                Text("Explore")
+                ExploreView(store: store.scope(state: \.exploreState, action: TabBarAction.exploreAction))
                     .tabItem {
                         // TODO: Get better icon
                         Label("Explore", systemImage: "barometer")

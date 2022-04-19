@@ -11,14 +11,18 @@ import Models
 import CollectionViewSlantedLayout
 import SwiftUI
 import Utilities
+import ComposableArchitecture
 
 struct ExploreViewHosting: UIViewControllerRepresentable {
-    var artists: [Artist]
+    var artists: IdentifiedArrayOf<Artist>
+    var stages: IdentifiedArrayOf<Stage>
+    var schedule: Schedule
+
 
     typealias UIViewControllerType = ExploreViewController
 
     func makeUIViewController(context: Context) -> ExploreViewController {
-        ExploreViewController(exploreArtists: artists)
+        ExploreViewController(exploreArtists: artists, stages: stages, schedule: schedule)
     }
 
     func updateUIViewController(_ vc: ExploreViewController, context: Context) {
@@ -30,11 +34,17 @@ struct ExploreViewHosting: UIViewControllerRepresentable {
 }
 
 class ExploreViewController: UICollectionViewController {
-    var exploreArtists: [Artist] = []
+    var exploreArtists: IdentifiedArrayOf<Artist>
+    var stages: IdentifiedArrayOf<Stage>
+    var schedule: Schedule
 
     let layout = CollectionViewSlantedLayout()
 
-    init(exploreArtists: [Artist]) {
+    init(exploreArtists: IdentifiedArrayOf<Artist>, stages: IdentifiedArrayOf<Stage>, schedule: Schedule) {
+
+        self.exploreArtists = exploreArtists
+        self.stages = stages
+        self.schedule = schedule
 
         super.init(collectionViewLayout: UICollectionViewLayout())
 
@@ -72,9 +82,8 @@ class ExploreViewController: UICollectionViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
 
-        if let top = UIApplication.shared.keyWindow?.safeAreaInsets.top {
-            collectionView.contentInset = UIEdgeInsets(top: -top, left: 0, bottom: 0, right: 0)
-        }
+        collectionView.contentInset = UIEdgeInsets(top: -view.safeAreaInsets.top, left: 0, bottom: 0, right: 0)
+    
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -95,12 +104,24 @@ class ExploreViewController: UICollectionViewController {
 
         let cell: ArtistExploreCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArtistExploreCell", for: indexPath) as! ArtistExploreCell
 
-        cell.initWithArtist(artist: exploreArtists[indexPath.row])
+        let artist = exploreArtists[indexPath.row]
+        cell.initWithArtist(
+            artist: artist,
+            stages: schedule
+                .scheduleItemsForArtist(artist: artist)
+                .compactMap {
+                    stages[id: $0.stageID]
+                }
+        )
 
-        let colors: [UIColor] = [.red, .green, .blue]
-        cell.backgroundColor = colors[wrapped: indexPath.row]
+        if let layout = collectionView.collectionViewLayout as? CollectionViewSlantedLayout {
+
+            let angle = -tan(CGFloat(layout.slantingSize)/view.frame.width)
+            cell.artistNameLabel.transform = CGAffineTransform(rotationAngle: angle)
+                    cell.stageIndicator.transform = CGAffineTransform(rotationAngle: angle)
+                }
+
         return cell
-
     }
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -110,16 +131,16 @@ class ExploreViewController: UICollectionViewController {
 //        navigationController?.setNavigationBarHidden(false, animated: true)
 //        navigationController?.pushViewController(vc, animated: true)
     }
-//
-//    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        guard let collectionView = collectionView else {return}
-//        guard let visibleCells = collectionView.visibleCells as? [ArtistExploreCell] else {return}
-//        for parallaxCell in visibleCells {
-//            let yOffset = (collectionView.contentOffset.y - parallaxCell.frame.origin.y) / parallaxCell.imageHeight
-//            let xOffset = (collectionView.contentOffset.x - parallaxCell.frame.origin.x) / parallaxCell.imageWidth
-//            parallaxCell.offset(CGPoint(x: xOffset * xOffsetSpeed / 1.5, y: yOffset * yOffsetSpeed / 1.5))
-//        }
-//    }
+
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let collectionView = collectionView else {return}
+        guard let visibleCells = collectionView.visibleCells as? [ArtistExploreCell] else {return}
+        for parallaxCell in visibleCells {
+            let yOffset = (collectionView.contentOffset.y - parallaxCell.frame.origin.y) / parallaxCell.imageHeight
+            let xOffset = (collectionView.contentOffset.x - parallaxCell.frame.origin.x) / parallaxCell.imageWidth
+            parallaxCell.offset(CGPoint(x: xOffset * xOffsetSpeed / 1.5, y: yOffset * yOffsetSpeed / 1.5))
+        }
+    }
 }
 
 
@@ -131,6 +152,6 @@ extension ExploreViewController: CollectionViewDelegateSlantedLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: CollectionViewSlantedLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGFloat {
-        return 275
+        return 350
     }
 }

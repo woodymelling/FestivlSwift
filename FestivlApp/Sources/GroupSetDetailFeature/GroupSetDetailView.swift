@@ -34,7 +34,7 @@ public struct GroupSetDetailView: View {
 
                     }
 
-                    if case let .groupSet(artistIDs) = viewStore.groupSet.type {
+                    if case .groupSet = viewStore.groupSet.type {
                         Section("Artists") {
                             ForEachStore(
                                 self.store.scope(

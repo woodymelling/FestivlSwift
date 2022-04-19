@@ -11,6 +11,7 @@ import Models
 import ArtistListFeature
 import ScheduleFeature
 import SwiftUI
+import ExploreFeature
 
 
 public enum Tab {
@@ -66,12 +67,27 @@ public extension EventState {
             self.currentTime = newValue.currentTime
         }
     }
+
+    var exploreState: ExploreState {
+        get {
+            .init(
+                artists: exploreArtists,
+                stages: stages,
+                schedule: schedule
+            )
+        }
+
+        set {
+            self.exploreArtists = newValue.artists
+        }
+    }
 }
 
 public enum TabBarAction: BindableAction {
     case binding(_ action: BindingAction<EventState>)
     case artistListAction(ArtistListAction)
     case scheduleAction(ScheduleAction)
+    case exploreAction(ExploreAction)
 }
 
 public struct TabBarEnvironment {
