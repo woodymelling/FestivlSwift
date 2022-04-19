@@ -11,7 +11,7 @@ import Models
 import Services
 
 public struct ScheduleCardState: Equatable, Identifiable {
-    var set: AnyStageScheduleCardRepresentable
+    var set: ScheduleItem
     var stage: Stage
     let event: Event
 

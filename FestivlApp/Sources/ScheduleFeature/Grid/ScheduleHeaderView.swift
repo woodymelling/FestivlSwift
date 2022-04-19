@@ -38,7 +38,6 @@ struct ScheduleHeaderView: View {
                 Spacer()
             }
             .background(Color(uiColor: .systemBackground))
-            .padding(.bottom)
             .frame(maxWidth: .infinity)
             .shadow()
 

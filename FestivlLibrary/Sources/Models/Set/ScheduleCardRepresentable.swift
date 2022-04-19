@@ -11,7 +11,7 @@ import Utilities
 import SwiftUI
 
 
-public enum ScheduleCardType: Equatable {
+public enum ScheduleItemType: Equatable {
     case artistSet(ArtistID), groupSet([ArtistID])
 }
 
@@ -20,10 +20,10 @@ public protocol ScheduleCardRepresentable: Identifiable, Equatable {
     var endTime: Date { get }
     var title: String { get }
     var subtext: String? { get }
-    var type: ScheduleCardType { get }
+    var type: ScheduleItemType { get }
 }
 
-public protocol StageScheduleCardRepresentable: ScheduleCardRepresentable {
+public protocol ScheduleItemProtocol: ScheduleCardRepresentable {
     var stageID: String { get }
 }
 
@@ -34,7 +34,6 @@ public extension ScheduleCardRepresentable {
 
     /// Get the frame size for an artistSet in a specfic container
     func size(in containerSize: CGSize, stageCount: Int) -> CGSize {
-        print("CONTAINERSIZE: \(containerSize)")
         let setLengthInSeconds = endTime.timeIntervalSince(startTime)
         let height = secondsToY(Int(setLengthInSeconds), containerHeight: containerSize.height)
         let width = containerSize.width / CGFloat(stageCount)
@@ -60,13 +59,13 @@ public extension ScheduleCardRepresentable {
     }
 }
 
-public extension StageScheduleCardRepresentable {
+public extension ScheduleItem {
     func xPlacement(stageCount: Int, containerWidth: CGFloat, stages: IdentifiedArrayOf<Stage>) -> CGFloat {
         return containerWidth / CGFloat(stageCount) * CGFloat(stages.index(id: stageID)!)
     }
 }
 
-public struct AnyStageScheduleCardRepresentable: StageScheduleCardRepresentable {
+public struct ScheduleItem: ScheduleItemProtocol {
     public var stageID: StageID
     public var startTime: Date
     public var endTime: Date
@@ -74,9 +73,9 @@ public struct AnyStageScheduleCardRepresentable: StageScheduleCardRepresentable 
     public var subtext: String?
     public var id: String?
 
-    public var type: ScheduleCardType
+    public var type: ScheduleItemType
 
-    public init<T: StageScheduleCardRepresentable>(_ representable: T) where T.ID == String? {
+    public init<T: ScheduleItemProtocol>(_ representable: T) where T.ID == String? {
         self.stageID = representable.stageID
         self.startTime = representable.startTime
         self.endTime = representable.endTime
@@ -87,8 +86,8 @@ public struct AnyStageScheduleCardRepresentable: StageScheduleCardRepresentable 
     }
 }
 
-public extension StageScheduleCardRepresentable where Self.ID == String? {
-    func asAnyStageScheduleCardRepresentable() -> AnyStageScheduleCardRepresentable {
+public extension ScheduleItemProtocol where Self.ID == String? {
+    func asScheduleItem() -> ScheduleItem {
         return .init(self)
     }
 }

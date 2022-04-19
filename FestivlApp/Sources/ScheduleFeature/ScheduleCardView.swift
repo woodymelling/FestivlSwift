@@ -12,11 +12,13 @@ import Components
 import ComposableArchitecture
 
 struct ScheduleCardView: View {
-    var card: AnyStageScheduleCardRepresentable
+    var card: ScheduleItem
     var stageColor: Color
     var isSelected: Bool
 
-    init(_ card: AnyStageScheduleCardRepresentable, stages: IdentifiedArrayOf<Stage>, isSelected: Bool) {
+    @ScaledMetric var scale: CGFloat = 1
+
+    init(_ card: ScheduleItem, stages: IdentifiedArrayOf<Stage>, isSelected: Bool) {
         self.card = card
         self.stageColor = stages[id: card.stageID]!.color
         self.isSelected = isSelected
@@ -36,23 +38,25 @@ struct ScheduleCardView: View {
                     .opacity(0.25)
 
                 GeometryReader { geo in
-                    VStack(alignment: .leading) {
+                    Group {
 
-                        let hideArtistName = geo.size.height < 15
-                        let hideSetTime = geo.size.height < 30
-                        Text(card.title)
-                            .isHidden(hideArtistName, remove: hideArtistName)
+                        if geo.size.height < 31 * scale {
+                            HStack {
+                                Text(card.title)
+                                Text(FestivlFormatting.timeIntervalFormat(startTime: card.startTime, endTime: card.endTime))
+                                    .font(.caption)
+                            }
+                        } else {
 
-                        if let subtext = card.subtext {
-                            Text(subtext)
-                                .font(.caption)
+                            VStack(alignment: .leading) {
+                                Text(card.title)
+                                Text(FestivlFormatting.timeIntervalFormat(startTime: card.startTime, endTime: card.endTime))
+                                    .font(.caption)
+                            }
                         }
-
-                        Text(FestivlFormatting.timeIntervalFormat(startTime: card.startTime, endTime: card.endTime))
-                            .font(.caption)
-                            .isHidden(hideSetTime, remove: hideSetTime)
                     }
                     .foregroundColor(stageColor.isDarkColor ? .white : .black)
+
                 }
 
                 Spacer()
@@ -68,7 +72,7 @@ struct ScheduleCardView: View {
 
 struct ArtistSetCardView_Previews: PreviewProvider {
     static var previews: some View {
-        ScheduleCardView(ArtistSet.testValues()[0].asAnyStageScheduleCardRepresentable(), stages: Stage.testValues.asIdentifedArray, isSelected: false)
+        ScheduleCardView(ArtistSet.testValues()[0].asScheduleItem(), stages: Stage.testValues.asIdentifedArray, isSelected: false)
             .frame(width: 300, height: 100)
             .previewLayout(.sizeThatFits)
             .previewAllColorModes()

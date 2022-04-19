@@ -82,12 +82,12 @@ struct ManagerCardsContainerView: View {
 
 
 /// Get the frame size for an artistSet in a specfic container
-private func sizeForSet<T: StageScheduleCardRepresentable>(
+private func sizeForSet<T: ScheduleItem>(
     _ set: T,
     containerSize: CGSize,
     stageCount: Int
 ) -> CGSize {
-    if let set = set as? AnyStageScheduleCardRepresentable {
+    if let set = set as? ScheduleItem {
         print("GROUP SET", set.type)
     }
     let width = containerSize.width / CGFloat(stageCount) - 1
@@ -101,7 +101,7 @@ private func sizeForSet<T: StageScheduleCardRepresentable>(
 }
 
 /// Get the X placement for set in a container of a specifc width
-func xPlacementForSet<T: StageScheduleCardRepresentable>(
+func xPlacementForSet<T: ScheduleItem>(
     _ set: T,
     containerWidth: CGFloat,
     stages: IdentifiedArrayOf<Stage>
@@ -110,7 +110,7 @@ func xPlacementForSet<T: StageScheduleCardRepresentable>(
 }
 
 /// Get the y placement for a set in a container of a specific height
-func yPlacementForSet<T: StageScheduleCardRepresentable>(
+func yPlacementForSet<T: ScheduleItem>(
     _ set: T,
     containerHeight: CGFloat,
     dayStartsAtNoon: Bool

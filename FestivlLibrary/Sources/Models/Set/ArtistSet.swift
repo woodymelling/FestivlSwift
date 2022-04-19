@@ -37,7 +37,7 @@ public struct ArtistSet: Identifiable, Codable, Equatable {
     }
 }
 
-extension ArtistSet: StageScheduleCardRepresentable {
+extension ArtistSet: ScheduleItemProtocol {
     public var title: String {
         artistName
     }
@@ -46,7 +46,7 @@ extension ArtistSet: StageScheduleCardRepresentable {
         nil
     }
 
-    public var type: ScheduleCardType {
+    public var type: ScheduleItemType {
         .artistSet(artistID)
     }
 }

@@ -27,7 +27,13 @@ public extension View {
                     ),
                     then: thenView
                 )
+                .onAppear {
+                    print("Appearing")
+                }
             }
+        }
+        .onAppear {
+            print("Appearing")
         }
 
     }

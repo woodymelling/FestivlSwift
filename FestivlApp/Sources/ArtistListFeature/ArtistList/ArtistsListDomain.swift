@@ -27,6 +27,10 @@ public struct ArtistListState: Equatable {
     
     @BindableState public var searchText: String = ""
 
+    var filteredArtistStates: IdentifiedArrayOf<ArtistPageState> {
+        artistStates.filterForSearchTerm(searchText)
+    }
+
     public init(
         event: Event,
         artists: IdentifiedArrayOf<Artist>,
@@ -43,15 +47,7 @@ public struct ArtistListState: Equatable {
             ArtistPageState(
                 artist: artist,
                 event: event,
-                sets: schedule.values.flatMap { $0.filter {
-                    switch $0.type {
-                    case .artistSet(let artistID):
-                        return artistID == artist.id
-
-                    case .groupSet(let artistIDs):
-                        return artistIDs.contains(artist.id ?? "")
-                    }
-                }}.asIdentifedArray,
+                setsForArtist: schedule.scheduleItemsForArtist(artist: artist),
                 stages: stages
             )
         })

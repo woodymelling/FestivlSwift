@@ -12,13 +12,21 @@ import Components
 import IdentifiedCollections
 
 
-struct ArtistRow: View {
+public struct ArtistRow: View {
+    public init(artist: Artist, event: Event, stages: IdentifiedArrayOf<Stage>, sets: IdentifiedArrayOf<ScheduleItem>) {
+        self.artist = artist
+        self.event = event
+        self.stages = stages
+        self.sets = sets
+    }
+
+
     var artist: Artist
     var event: Event
     var stages: IdentifiedArrayOf<Stage>
-    var sets: IdentifiedArrayOf<AnyStageScheduleCardRepresentable>
+    var sets: IdentifiedArrayOf<ScheduleItem>
 
-    var body: some View {
+    public var body: some View {
         HStack(spacing: 10) {
 
             Group {

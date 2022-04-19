@@ -14,7 +14,8 @@ import Utilities
 import SwiftUI
 import Kingfisher
 import ArtistPageFeature
-
+import GroupSetDetailFeature
+import ScheduleFeature
 
 public struct EventState: Equatable {
     var event: Event
@@ -32,8 +33,11 @@ public struct EventState: Equatable {
     var scheduleSelectedStage: Stage = .testData
     var scheduleZoomAmount: CGFloat = 1
     var scheduleSelectedDate: Date
-    var scheduleCardToDisplay: AnyStageScheduleCardRepresentable?
+    var scheduleCardToDisplay: ScheduleItem?
     var scheduleSelectedArtistState: ArtistPageState?
+    var selectedGroupSetState: GroupSetDetailState?
+    var deviceOrientation: DeviceOrientation = .portrait
+    var currentTime: Date = Date()
 
     var eventLoaded: Bool {
         return loadedArtists && loadedStages && loadedArtistSets
@@ -52,6 +56,7 @@ public struct EventState: Equatable {
     var loadedArtists = false
     var loadedStages = false
     var loadedArtistSets = false
+    var hasRunSetup = false
 
     public init(event: Event) {
         self.event = event
@@ -74,8 +79,6 @@ public enum EventAction {
     case finishedLoadingStageImages
 
     case artistSetsPublisherUpdate((artistSets: IdentifiedArrayOf<ArtistSet>, groupSets: IdentifiedArrayOf<GroupSet>))
-
-
     case tabBarAction(TabBarAction)
 }
 
@@ -96,7 +99,7 @@ public struct EventEnvironment {
     }
 }
 
-extension StageScheduleCardRepresentable {
+extension ScheduleItemProtocol {
     func scheduleKey(dayStartsAtNoon: Bool) -> SchedulePageIdentifier {
         .init(date: startTime.startOfDay(dayStartsAtNoon: dayStartsAtNoon), stageID: stageID)
     }
@@ -124,7 +127,7 @@ public let eventReducer = Reducer.combine(
             )
             .eraseToEffect()
 
-        // MARK: Artists Loading
+            // MARK: Artists Loading
         case .artistsPublisherUpdate(let artists):
             state.artists = artists
             return Effect(value: .preLoadArtistImages)
@@ -139,7 +142,7 @@ public let eventReducer = Reducer.combine(
             state.loadedArtists = true
             return Effect(value: .setUpWhenDataLoaded)
 
-        // MARK: Stages Loading
+            // MARK: Stages Loading
         case .stagesPublisherUpdate(let stages):
             state.stages = stages
             if !state.loadedStages {
@@ -157,20 +160,19 @@ public let eventReducer = Reducer.combine(
             state.loadedStages = true
             return Effect(value: .setUpWhenDataLoaded)
 
-
         case .artistSetsPublisherUpdate(let scheduleData):
 
             for artistSet in scheduleData.artistSets {
                 state.schedule.insert(
                     for: artistSet.scheduleKey(dayStartsAtNoon: state.event.dayStartsAtNoon),
-                    value: artistSet.asAnyStageScheduleCardRepresentable()
+                    value: artistSet.asScheduleItem()
                 )
             }
 
             for groupSet in scheduleData.groupSets {
                 state.schedule.insert(
                     for: groupSet.scheduleKey(dayStartsAtNoon: state.event.dayStartsAtNoon),
-                    value: groupSet.asAnyStageScheduleCardRepresentable()
+                    value: groupSet.asScheduleItem()
                 )
             }
 
@@ -181,7 +183,9 @@ public let eventReducer = Reducer.combine(
             return .none
 
         case .setUpWhenDataLoaded:
-            guard state.eventLoaded else { return .none }
+            guard state.eventLoaded && !state.hasRunSetup else { return .none }
+
+            state.hasRunSetup = true
 
             let selectedDate: Date
 
@@ -216,7 +220,7 @@ public let eventReducer = Reducer.combine(
     )
 
 )
-//    .debug()
+    .debug()
 
 func preloadArtistImages(artists: IdentifiedArrayOf<Artist>) -> Effect<EventAction, Never> {
     return .asyncTask {
@@ -231,3 +235,5 @@ func preloadStageImages(stages: IdentifiedArrayOf<Stage>) -> Effect<EventAction,
         return .finishedLoadingStageImages
     }
 }
+
+

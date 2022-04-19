@@ -67,7 +67,7 @@ struct ScheduleDropDelegate: DropDelegate {
 
                 let newTime = droppedTime - (artistSet.setLength / 2)
 
-                viewStore.send(.didMoveScheduleCard(artistSet.asAnyStageScheduleCardRepresentable(), newStage: droppedStage, newTime: newTime))
+                viewStore.send(.didMoveScheduleCard(artistSet.asScheduleItem(), newStage: droppedStage, newTime: newTime))
 
             case GroupSet.typeString:
                 guard let groupSet = viewStore.groupSets[id: id] else {
@@ -77,7 +77,7 @@ struct ScheduleDropDelegate: DropDelegate {
 
                 let newTime = droppedTime - (groupSet.setLength / 2)
 
-                viewStore.send(.didMoveScheduleCard(groupSet.asAnyStageScheduleCardRepresentable(), newStage: droppedStage, newTime: newTime))
+                viewStore.send(.didMoveScheduleCard(groupSet.asScheduleItem(), newStage: droppedStage, newTime: newTime))
 
             case Artist.typeString:
 
@@ -106,7 +106,7 @@ extension ArtistSet: DraggableItem {}
 extension Artist: DraggableItem {}
 extension GroupSet: DraggableItem {}
 
-extension AnyStageScheduleCardRepresentable: DraggableItem {
+extension ScheduleItem: DraggableItem {
     var typeString: String {
         switch self.type {
         case .groupSet:

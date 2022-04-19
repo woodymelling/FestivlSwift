@@ -10,11 +10,16 @@ import Models
 import Components
 import ComposableArchitecture
 
-struct SetView: View {
-    var set: AnyStageScheduleCardRepresentable
+public struct SetView: View {
+    public init(set: ScheduleItem, stages: IdentifiedArrayOf<Stage>) {
+        self.set = set
+        self.stages = stages
+    }
+
+    var set: ScheduleItem
     var stages: IdentifiedArrayOf<Stage>
 
-    var body: some View {
+    public var body: some View {
         
         ZStack {
             NavigationLink(destination: { EmptyView() }, label: { EmptyView() })
@@ -74,7 +79,7 @@ struct SetView: View {
 struct ArtistSetViewView_Previews: PreviewProvider {
     static var previews: some View {
         List {
-            SetView(set: ArtistSet.testData.asAnyStageScheduleCardRepresentable(), stages: IdentifiedArray(uniqueElements: Stage.testValues))
+            SetView(set: ArtistSet.testData.asScheduleItem(), stages: IdentifiedArray(uniqueElements: Stage.testValues))
         }
         .listStyle(.plain)
         .previewAllColorModes()

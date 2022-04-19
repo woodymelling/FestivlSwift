@@ -78,7 +78,7 @@ public struct ManagerScheduleState: Equatable {
                 guard let stage = stages[id: $0.stageID] else { return nil }
 
                 return ScheduleCardState(
-                    set: $0.asAnyStageScheduleCardRepresentable(),
+                    set: $0.asScheduleItem(),
                     stage: stage,
                     event: event
                 )
@@ -88,7 +88,7 @@ public struct ManagerScheduleState: Equatable {
                 guard let stage = stages[id: $0.stageID] else { return nil }
 
                 return ScheduleCardState(
-                    set: $0.asAnyStageScheduleCardRepresentable(),
+                    set: $0.asScheduleItem(),
                     stage: stage,
                     event: event
                 )
@@ -127,8 +127,8 @@ public enum ManagerScheduleAction: BindableAction {
 
     case addEditArtistSetButtonPressed
 
-    case didMoveScheduleCard(AnyStageScheduleCardRepresentable, newStage: Stage, newTime: Date)
-    case finishedSavingScheduleCardMove(AnyStageScheduleCardRepresentable)
+    case didMoveScheduleCard(ScheduleItem, newStage: Stage, newTime: Date)
+    case finishedSavingScheduleCardMove(ScheduleItem)
 
     case didDropArtist(Artist, stage: Stage, time: Date)
     case finishedSavingArtistDrop(ArtistSet)
@@ -274,7 +274,7 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
 
 
 private func updateArtistSet(
-    _ set: AnyStageScheduleCardRepresentable,
+    _ set: ScheduleItem,
     groupSets: IdentifiedArrayOf<GroupSet>,
     artistSets: IdentifiedArrayOf<ArtistSet>,
     newStage: Stage,
@@ -307,7 +307,7 @@ private func updateArtistSet(
                 print("Error updating group set:", error)
             }
 
-            return .finishedSavingScheduleCardMove(groupSet.asAnyStageScheduleCardRepresentable())
+            return .finishedSavingScheduleCardMove(groupSet.asScheduleItem())
         }
 
     case .artistSet:
@@ -327,7 +327,7 @@ private func updateArtistSet(
                 print("Error updating artist set:", error)
             }
 
-            return .finishedSavingScheduleCardMove(artistSet.asAnyStageScheduleCardRepresentable())
+            return .finishedSavingScheduleCardMove(artistSet.asScheduleItem())
         }
 
     }
@@ -383,7 +383,7 @@ private func deleteArtistSet(
 private func saveArtistSetDrag(
     groupSets: IdentifiedArrayOf<GroupSet>,
     artistSets: IdentifiedArrayOf<ArtistSet>,
-    set: AnyStageScheduleCardRepresentable,
+    set: ScheduleItem,
     eventID: EventID,
     environment: ManagerScheduleEnvironment
 ) -> Effect<ManagerScheduleAction, Never> {

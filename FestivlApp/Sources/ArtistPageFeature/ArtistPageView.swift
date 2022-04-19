@@ -74,7 +74,7 @@ struct ArtistPageView_Previews: PreviewProvider {
             NavigationView {
                 ArtistPageView(
                     store: .init(
-                        initialState: .init(artist: Artist.testValues[1], event: .testData, sets: [ArtistSet.testData.asAnyStageScheduleCardRepresentable()], stages: IdentifiedArrayOf(uniqueElements: [.testData])),
+                        initialState: .init(artist: Artist.testValues[1], event: .testData, setsForArtist: [ArtistSet.testData.asScheduleItem()], stages: IdentifiedArrayOf(uniqueElements: [.testData])),
                         reducer: artistPageReducer,
                         environment: .init()
                     )

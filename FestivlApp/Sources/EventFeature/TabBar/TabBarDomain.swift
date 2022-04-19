@@ -40,6 +40,7 @@ public extension EventState {
     var scheduleState: ScheduleState {
         get {
             .init(
+                artists: artists,
                 stages: stages,
                 schedule: schedule,
                 selectedStage: scheduleSelectedStage,
@@ -47,7 +48,10 @@ public extension EventState {
                 zoomAmount: scheduleZoomAmount,
                 selectedDate: scheduleSelectedDate,
                 cardToDisplay: scheduleCardToDisplay,
-                selectedArtistState: scheduleSelectedArtistState
+                selectedArtistState: scheduleSelectedArtistState,
+                selectedGroupSetState: selectedGroupSetState,
+                deviceOrientation: deviceOrientation,
+                currentTime: currentTime
             )
         }
 
@@ -56,6 +60,10 @@ public extension EventState {
             self.scheduleSelectedDate = newValue.selectedDate
             self.scheduleSelectedStage = newValue.selectedStage
             self.scheduleCardToDisplay = newValue.cardToDisplay
+            self.scheduleSelectedArtistState = newValue.selectedArtistState
+            self.selectedGroupSetState = newValue.selectedGroupSetState
+            self.deviceOrientation = newValue.deviceOrientation
+            self.currentTime = newValue.currentTime
         }
     }
 }
@@ -78,11 +86,6 @@ public let tabBarReducer = Reducer.combine(
         case .artistListAction(.artistDetail(_, .didTapArtistSet(let scheduleCard))):
             state.selectedTab = .schedule
             return Effect(value: .scheduleAction(.showAndHighlightCard(scheduleCard)))
-
-        case .scheduleAction(.didTapCard(let scheduleCard)):
-            state.selectedTab = .artists
-
-            return .none
 
         case .artistListAction, .scheduleAction:
             return .none

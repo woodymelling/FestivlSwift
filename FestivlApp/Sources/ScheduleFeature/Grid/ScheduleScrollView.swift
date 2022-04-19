@@ -10,48 +10,65 @@ import ComposableArchitecture
 import Utilities
 import Introspect
 import SimultaneouslyScrollView
+import Combine
 
 struct ScheduleScrollView: View {
     let store: Store<ScheduleState, ScheduleAction>
     let style: ScheduleStyle
-    let headerHeight: CGFloat
 
     @ObservedObject var scrollViewHandler: SingleStageAtOnceView.ViewModel
+
+    @ScaledMetric var scheduleHeight: CGFloat = 1000
 
     var body: some View {
         WithViewStore(store) { viewStore in
             
             ScrollViewReader { proxy in
                 ScrollView {
-                    Spacer()
-                        .frame(height: headerHeight)
-                    HStack {
-                        ScheduleHourLabelsView(dayStartsAtNoon: true)
-
+                    GeometryReader { geo in
                         ZStack {
 
-                            ScheduleGridView()
-                            CardContainerView(style: style, store: store)
+
+                            HStack {
+                                ScheduleHourLabelsView(
+                                    dayStartsAtNoon: viewStore.event.dayStartsAtNoon,
+                                    currentTime: viewStore.currentTime, shouldHideTime: viewStore.shouldShowTimeIndicator
+                                )
+
+                                ZStack {
+
+                                    ScheduleGridView()
+                                    CardContainerView(style: style, store: store)
+
+                                }
+                            }
+
+                            if viewStore.shouldShowTimeIndicator {
+                                TimeIndicatorView(currentTime: viewStore.currentTime)
+                                    .position(x: geo.size.width / 2, y: viewStore.currentTime.toY(containerHeight: geo.size.height, dayStartsAtNoon: viewStore.event.dayStartsAtNoon))
+                            }
 
                         }
+
+
                     }
-                    .frame(height: 1000 * viewStore.zoomAmount)
+                    .frame(height: scheduleHeight)
+                    .coordinateSpace(name: "ScheduleTimeline")
+
+
                 }
                 .onChange(of: viewStore.cardToDisplay, perform: { cardToDisplay in
                     withAnimation {
-                        proxy.scrollTo(cardToDisplay?.id)
+                        proxy.scrollTo(cardToDisplay?.id, anchor: .top)
                     }
 
                 })
+
                 .introspectScrollView { scrollView in
                     scrollViewHandler.scrollViewHandler.register(scrollView: scrollView)
                 }
-                .gesture(
-                    MagnificationGesture()
-                        .onChanged { value in
-                            viewStore.send(.zoomed(value.magnitude))
-                        }
-                )
+
+
 
             }
         }
@@ -59,8 +76,10 @@ struct ScheduleScrollView: View {
     }
 }
 
+var scrollViewCancellables = Set<AnyCancellable>()
+
 struct ScheduleScrollView_Previews: PreviewProvider {
     static var previews: some View {
-        ScheduleScrollView(store: .testStore, style: .allStages, headerHeight: 0, scrollViewHandler: .init())
+        ScheduleScrollView(store: .testStore, style: .allStages, scrollViewHandler: .init())
     }
 }

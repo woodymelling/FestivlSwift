@@ -14,7 +14,7 @@ struct CardContainerView: View {
     var style: ScheduleStyle
     let store: Store<ScheduleState, ScheduleAction>
 
-    func artistSets(for viewStore: ViewStore<ScheduleState, ScheduleAction>) -> IdentifiedArrayOf<AnyStageScheduleCardRepresentable> {
+    func artistSets(for viewStore: ViewStore<ScheduleState, ScheduleAction>) -> IdentifiedArrayOf<ScheduleItem> {
 
         switch style {
         case .singleStage(let stage):
@@ -38,32 +38,39 @@ struct CardContainerView: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             GeometryReader { geo in
-                let stageCount = style == .allStages ? viewStore.stages.count : 1
+                ZStack {
+                    let stageCount = style == .allStages ? viewStore.stages.count : 1
 
-                ForEach(artistSets(for: viewStore)) { artistSet in
+                    ForEach(artistSets(for: viewStore)) { scheduleItem in
 
-                    let size = artistSet.size(in: geo.size, stageCount: stageCount)
-                    // Placement works by center of the view, move it to the top left
-                    let offset = CGSize(width: size.width / 2, height: size.height / 2)
+                        let size = scheduleItem.size(in: geo.size, stageCount: stageCount)
+                        // Placement works by center of the view, move it to the top left
+                        let offset = CGSize(width: size.width / 2, height: size.height / 2)
 
-                    let xPosition = style == .allStages ?  artistSet.xPlacement(
-                        stageCount: stageCount,
-                        containerWidth: geo.size.width,
-                        stages: viewStore.stages
-                    ) : 0
-                    
-                    ScheduleCardView(
-                        artistSet,
-                        stages: viewStore.stages,
-                        isSelected: viewStore.cardToDisplay == artistSet
-                    )
+                        let xPosition = style == .allStages ?  scheduleItem.xPlacement(
+                            stageCount: stageCount,
+                            containerWidth: geo.size.width,
+                            stages: viewStore.stages
+                        ) : 0
+
+                        ScheduleCardView(
+                            scheduleItem,
+                            stages: viewStore.stages,
+                            isSelected: viewStore.cardToDisplay == scheduleItem
+                        )
                         .frame(size: size)
-//                        .fixedSize()
+                        //                        .fixedSize()
                         .position(
                             x: xPosition + offset.width,
-                            y: artistSet.yPlacement(dayStartsAtNoon: viewStore.event.dayStartsAtNoon, containerHeight: geo.size.height) + offset.height
+                            y: scheduleItem.yPlacement(dayStartsAtNoon: viewStore.event.dayStartsAtNoon, containerHeight: geo.size.height) + offset.height
                         )
-                        .id(artistSet.id)
+                        .id(scheduleItem.id)
+                        .onTapGesture {
+                            print("Tapped")
+                            viewStore.send(.didTapCard(scheduleItem))
+                        }
+
+                    }
 
                 }
             }

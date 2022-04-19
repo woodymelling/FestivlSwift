@@ -7,13 +7,37 @@
 
 import SwiftUI
 import ComposableArchitecture
+import Models
+import Components
+import Utilities
 
 struct AllStagesAtOnceView: View {
     let store: Store<ScheduleState, ScheduleAction>
 
     var body: some View {
         WithViewStore(store) { viewStore in
-            ScheduleScrollView(store: store, style: .allStages, headerHeight: 0, scrollViewHandler: .init())
+            ScheduleScrollView(store: store, style: .allStages, scrollViewHandler: .init())
+                .toolbar(content: {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        StagesIndicatorView(stages: viewStore.stages)
+                    }
+                })
+        }
+    }
+}
+
+struct StagesIndicatorView: View {
+    var stages: IdentifiedArrayOf<Stage>
+    var body: some View {
+        HStack {
+            ForEach(stages) { stage in
+                CachedAsyncImage(url: stage.iconImageURL, renderingMode: .template, placeholder: {
+                    ProgressView()
+                })
+                .foregroundColor(stage.color)
+                .frame(square: 50)
+
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ import ComposableArchitecture
 import Models
 import Services
 import ArtistPageFeature
+import iOSComponents
 
 public struct ArtistListView: View {
     let store: Store<ArtistListState, ArtistListAction>
@@ -29,7 +30,7 @@ public struct ArtistListView: View {
 
                         List {
                             ForEachStore(
-                                self.store.scope(state: \.artistStates, action: ArtistListAction.artistDetail)
+                                self.store.scope(state: \.filteredArtistStates, action: ArtistListAction.artistDetail)
                             ) { artistStore in
                                 WithViewStore(artistStore) { artistViewStore in
                                     
@@ -52,6 +53,7 @@ public struct ArtistListView: View {
                 }
                 .navigationTitle("Artists")
             }
+            .navigationViewStyle(.stack)
         }
     }
 }

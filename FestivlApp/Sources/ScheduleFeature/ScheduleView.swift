@@ -8,6 +8,8 @@
 import SwiftUI
 import ComposableArchitecture
 import Models
+import ArtistPageFeature
+import GroupSetDetailFeature
 
 enum ScheduleStyle: Equatable {
     case singleStage(Stage)
@@ -16,7 +18,7 @@ enum ScheduleStyle: Equatable {
 
 public struct ScheduleView: View {
     let store: Store<ScheduleState, ScheduleAction>
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @State var showing: Bool = false
 
     public init(store: Store<ScheduleState, ScheduleAction>) {
         self.store = store
@@ -26,12 +28,29 @@ public struct ScheduleView: View {
         WithViewStore(store) { viewStore in
             NavigationView {
                 Group {
-                    if horizontalSizeClass == .compact {
+                    switch viewStore.deviceOrientation {
+                    case .portrait:
                         SingleStageAtOnceView(store: store)
-                    } else {
+                    case .landscape:
                         AllStagesAtOnceView(store: store)
                     }
                 }
+                .sheet(
+                    scoping: store,
+                    state: \.$selectedArtistState,
+                    action: ScheduleAction.artistPageAction,
+                    then: { artistStore in
+                        NavigationView {
+                            ArtistPageView(store: artistStore)
+                        }
+                    }
+                )
+                .sheet(
+                    scoping: store,
+                    state: \.$selectedGroupSetState,
+                    action: ScheduleAction.groupSetDetailAction,
+                    then: GroupSetDetailView.init
+                )
                 .toolbar {
                     ToolbarItem(placement: .principal, content: {
                         Menu {
@@ -54,30 +73,24 @@ public struct ScheduleView: View {
                     })
                 }
                 .navigationBarTitleDisplayMode(.inline)
+
             }
             .navigationViewStyle(.stack)
+            .onAppear {
+                viewStore.send(.subscribeToDataPublishers)
+            }
         }
+
+
     }
 }
 
 struct ScheduleView_Previews: PreviewProvider {
     static var previews: some View {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
-            let time = Event.testData.festivalDates[0]
+            //            let time = Event.testData.festivalDates[0]
             ScheduleView(
-                store: .init(
-                    initialState: .init(
-                        stages: Stage.testValues.asIdentifedArray,
-                        schedule: .init(),
-                        selectedStage: Stage.testValues[0],
-                        event: .testData,
-                        selectedDate: time,
-                        cardToDisplay: nil,
-                        selectedArtistState: nil
-                    ),
-                    reducer: scheduleReducer,
-                    environment: .init()
-                )
+                store: .testStore
             )
             .preferredColorScheme($0)
         }

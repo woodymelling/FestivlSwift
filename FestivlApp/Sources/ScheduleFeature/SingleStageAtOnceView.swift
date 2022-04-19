@@ -24,18 +24,17 @@ public struct SingleStageAtOnceView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-
             ZStack(alignment: .top) {
 
-
-                TabView(selection: viewStore.binding(\.$selectedStage).animation(.easeInOut(duration: 0.1))) {
+                TabView(selection: viewStore.binding(\.$selectedStage)) {
                     ForEach(viewStore.stages) { stage in
-                        ScheduleScrollView(store: store, style: .singleStage(stage), headerHeight: headerHeight, scrollViewHandler: scrollViewModel)
+                        ScheduleScrollView(store: store, style: .singleStage(stage), scrollViewHandler: scrollViewModel)
                             .tag(stage)
                     }
 
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
+                .padding(.top, headerHeight)
 
                 ScheduleHeaderView(stages: viewStore.stages, selectedStage: viewStore.binding(\.$selectedStage).animation(.easeInOut(duration: 0.1)))
                     .background(GeometryReader { geometry in
@@ -44,8 +43,6 @@ public struct SingleStageAtOnceView: View {
                             value: geometry.size.height
                         )
                     })
-
-
             }
             .onPreferenceChange(HeaderHeightPreferenceKey.self, perform: {
                 headerHeight = $0
@@ -78,13 +75,17 @@ struct SingleStageAtOnceView_Previews: PreviewProvider {
         SingleStageAtOnceView(
             store: .init(
                 initialState: .init(
+                    artists: Artist.testValues.asIdentifedArray,
                     stages: Stage.testValues.asIdentifedArray,
                     schedule: .init(),
                     selectedStage: Stage.testValues[0],
                     event: .testData,
                     selectedDate: Event.testData.festivalDates[0],
                     cardToDisplay: nil,
-                    selectedArtistState: nil
+                    selectedArtistState: nil,
+                    selectedGroupSetState: nil,
+                    deviceOrientation: .portrait,
+                    currentTime: Date()
                 ),
                 reducer: scheduleReducer,
                 environment: .init()
