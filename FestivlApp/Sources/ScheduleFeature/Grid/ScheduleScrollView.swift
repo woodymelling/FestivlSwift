@@ -34,25 +34,35 @@ struct ScheduleScrollView: View {
                                     dayStartsAtNoon: viewStore.event.dayStartsAtNoon,
                                     currentTime: viewStore.currentTime, shouldHideTime: viewStore.shouldShowTimeIndicator
                                 )
-                                .frame(height: scheduleHeight)
+                                .frame(height: scheduleHeight * viewStore.zoomAmount)
 
                                 ZStack {
 
                                     ScheduleGridView()
-                                        .frame(height: scheduleHeight)
+                                        .frame(height: scheduleHeight * viewStore.zoomAmount)
 
                                     CardContainerView(style: style, store: store)
-                                        .frame(height: scheduleHeight)
+                                        .frame(height: scheduleHeight * viewStore.zoomAmount)
 
                                 }
                             }
 
                             TimeIndicatorView(selectedDate: viewStore.selectedDate, dayStartsAtNoon: viewStore.event.dayStartsAtNoon)
-                                .frame(height: scheduleHeight)
+                                .frame(height: scheduleHeight * viewStore.zoomAmount)
                         }
                     }
-                    .frame(height: scheduleHeight)
                     .coordinateSpace(name: "ScheduleTimeline")
+                    .frame(height: scheduleHeight * viewStore.zoomAmount)
+                    .highPriorityGesture(
+                        MagnificationGesture(minimumScaleDelta: 0)
+                            .onChanged {
+                                viewStore.send(.zoomed($0.magnitude))
+
+                            }
+                            .onEnded { _ in
+                                viewStore.send(.finishedZooming)
+                            }
+                    )
                 }
                 .onChange(of: viewStore.cardToDisplay, perform: { cardToDisplay in
                     withAnimation {
@@ -63,10 +73,6 @@ struct ScheduleScrollView: View {
                 .introspectScrollView { scrollView in
                     scrollViewHandler.scrollViewHandler.register(scrollView: scrollView)
                 }
-                .gesture(MagnificationGesture()
-                    .onChanged(viewStore.send(.scrollViewDidZoom(<#T##UIScrollView#>))))
-
-
 
             }
         }

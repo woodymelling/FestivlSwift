@@ -32,6 +32,7 @@ public struct EventState: Equatable {
     // MARK: ScheduleState
     var scheduleSelectedStage: Stage = .testData
     var scheduleZoomAmount: CGFloat = 1
+    var scheduleLastScaleValue: CGFloat = 1
     var scheduleSelectedDate: Date
     var scheduleCardToDisplay: ScheduleItem?
     var scheduleSelectedArtistState: ArtistPageState?

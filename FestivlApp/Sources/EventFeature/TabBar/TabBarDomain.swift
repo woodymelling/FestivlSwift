@@ -45,6 +45,7 @@ public extension EventState {
                 selectedStage: scheduleSelectedStage,
                 event: event,
                 zoomAmount: scheduleZoomAmount,
+                lastScaleValue: scheduleLastScaleValue,
                 selectedDate: scheduleSelectedDate,
                 cardToDisplay: scheduleCardToDisplay,
                 selectedArtistState: scheduleSelectedArtistState,
@@ -56,6 +57,7 @@ public extension EventState {
 
         set {
             self.scheduleZoomAmount = newValue.zoomAmount
+            self.scheduleLastScaleValue = newValue.lastScaleValue
             self.scheduleSelectedDate = newValue.selectedDate
             self.scheduleSelectedStage = newValue.selectedStage
             self.scheduleCardToDisplay = newValue.cardToDisplay

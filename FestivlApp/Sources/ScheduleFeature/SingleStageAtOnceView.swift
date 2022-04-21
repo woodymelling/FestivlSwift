@@ -77,23 +77,7 @@ public struct SingleStageAtOnceView: View {
 struct SingleStageAtOnceView_Previews: PreviewProvider {
     static var previews: some View {
         SingleStageAtOnceView(
-            store: .init(
-                initialState: .init(
-                    artists: Artist.testValues.asIdentifedArray,
-                    stages: Stage.testValues.asIdentifedArray,
-                    schedule: .init(),
-                    selectedStage: Stage.testValues[0],
-                    event: .testData,
-                    selectedDate: Event.testData.festivalDates[0],
-                    cardToDisplay: nil,
-                    selectedArtistState: nil,
-                    selectedGroupSetState: nil,
-                    deviceOrientation: .portrait,
-                    currentTime: Date()
-                ),
-                reducer: scheduleReducer,
-                environment: .init()
-            )
+            store: .testStore
         )
         .previewAllColorModes()
 //        .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)

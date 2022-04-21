@@ -20,18 +20,21 @@ public struct ScheduleState: Equatable {
         schedule: Schedule,
         selectedStage: Stage,
         event: Event,
-        zoomAmount: CGFloat = 1,
+        zoomAmount: CGFloat,
+        lastScaleValue: CGFloat,
         selectedDate: Date,
         cardToDisplay: ScheduleItem?,
         selectedArtistState: ArtistPageState?,
         selectedGroupSetState: GroupSetDetailState?,
         deviceOrientation: DeviceOrientation,
         currentTime: Date
+
     ) {
         self.artists = artists
         self.stages = stages
         self.event = event
         self.zoomAmount = zoomAmount
+        self.lastScaleValue = lastScaleValue
         self.selectedStage = selectedStage
         self.selectedDate = selectedDate
         self.schedule = schedule
@@ -48,6 +51,7 @@ public struct ScheduleState: Equatable {
     public var event: Event
 
     public var zoomAmount: CGFloat = 1
+    public var lastScaleValue: CGFloat = 1
     @BindableState public var selectedStage: Stage
     public var selectedDate: Date
     public var deviceOrientation: DeviceOrientation
@@ -68,9 +72,11 @@ public struct ScheduleState: Equatable {
 }
 
 public enum ScheduleAction: BindableAction {
-    case zoomed(CGFloat)
     case binding(_ action: BindingAction<ScheduleState>)
     case selectedDate(Date)
+
+    case zoomed(CGFloat)
+    case finishedZooming
 
     case subscribeToDataPublishers
     case orientationPublisherUpdate(DeviceOrientation)
@@ -117,8 +123,14 @@ public let scheduleReducer = Reducer<ScheduleState, ScheduleAction, ScheduleEnvi
         case .binding:
             return .none
 
-        case .zoomed(let amount):
-            state.zoomAmount = amount
+        case .zoomed(let val):
+            let delta = val / state.lastScaleValue
+            state.lastScaleValue = val
+            state.zoomAmount = (state.zoomAmount * delta).bounded(min: 0.5, max: 3)
+            return .none
+
+        case .finishedZooming:
+            state.lastScaleValue = 1
             return .none
 
         case .selectedDate(let date):
@@ -220,6 +232,8 @@ extension Store where State == ScheduleState, Action == ScheduleAction {
                 schedule: .init(),
                 selectedStage: Stage.testValues[0],
                 event: .testData,
+                zoomAmount: 1,
+                lastScaleValue: 1,
                 selectedDate: time,
                 cardToDisplay: nil,
                 selectedArtistState: nil,
