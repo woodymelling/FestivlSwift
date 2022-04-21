@@ -126,14 +126,9 @@ public let scheduleReducer = Reducer<ScheduleState, ScheduleAction, ScheduleEnvi
             return .none
 
         case .subscribeToDataPublishers:
-            return Publishers.Merge(
-                DeviceOrientation.deviceOrientationPublisher().map {
-                    ScheduleAction.orientationPublisherUpdate($0)
-                },
-                environment.timePublisher.map {
-                    ScheduleAction.timePublisherUpdate($0)
-                }
-            )
+            return DeviceOrientation.deviceOrientationPublisher().map {
+                ScheduleAction.orientationPublisherUpdate($0)
+            }
             .eraseToEffect()
 
         case .orientationPublisherUpdate(let orientation):
@@ -141,7 +136,7 @@ public let scheduleReducer = Reducer<ScheduleState, ScheduleAction, ScheduleEnvi
             return .none
 
         case .timePublisherUpdate(let currentTime):
-            state.currentTime = currentTime
+//            state.currentTime = currentTime
             return .none
 
         case .showAndHighlightCard(let card):

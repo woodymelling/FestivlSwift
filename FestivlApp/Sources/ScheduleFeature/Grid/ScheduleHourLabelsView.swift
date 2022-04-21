@@ -74,10 +74,8 @@ private func shouldHideTimeLabel(for currentTime: Date, index: Int, dayStartsAtN
 
     if let hour = components.hour, let minute = components.minute {
         if adjustIndex == hour && minute < 20 {
-            print("FOUND: After")
             return true
         } else if adjustIndex == hour + 1 && minute > 40 {
-            print("FOUND: Before")
             return true
         } else {
             return false

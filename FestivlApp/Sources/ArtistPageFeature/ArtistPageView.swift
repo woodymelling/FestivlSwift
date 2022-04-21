@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import Models
+import Introspect
 
 public struct ArtistPageView: View {
     let store: Store<ArtistPageState, ArtistPageAction>
@@ -53,6 +54,7 @@ public struct ArtistPageView: View {
                     }
                 }
                 .listStyle(.plain)
+                .ignoresSafeArea(.all, edges: [.leading,.trailing,.top])
             }
             .toolbar {
                 ToolbarItem(placement: .primaryAction, content: {
@@ -63,6 +65,7 @@ public struct ArtistPageView: View {
                     })
                 })
             }
+            .clipped()
             .edgesIgnoringSafeArea(.top)
         }
     }

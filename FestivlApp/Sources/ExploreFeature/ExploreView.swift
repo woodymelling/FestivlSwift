@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import Utilities
 import Models
+import ArtistPageFeature
 
 public struct ExploreView: View {
     let store: Store<ExploreState, ExploreAction>
@@ -22,18 +23,45 @@ public struct ExploreView: View {
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-            VStack {
-                ExploreViewHosting(
-                    artists: viewStore.artists,
-                    stages: viewStore.stages,
-                    schedule: viewStore.schedule
-                )
+            NavigationView {
+                ZStack {
+                    NavigationLink(isActive: viewStore.binding(\.$selectedArtistPageState).isPresent(), destination: {
+                        IfLetStore(store.scope(state: \.selectedArtistPageState, action: {
+                            ExploreAction.artistPage(id: viewStore.selectedArtistPageState?.id, $0)
+                        }), then: ArtistPageView.init)
+                    }, label: { EmptyView() })
+
+                    ExploreViewHosting(
+                        artists: viewStore.artists,
+                        stages: viewStore.stages,
+                        schedule: viewStore.schedule,
+                        onSelectArtist: {
+                            viewStore.send(.didSelectArtist($0))
+                        }
+                    )
+                }
             }
-            .ignoresSafeArea()
         }
     }
 
 
+}
+
+extension Binding {
+    public func isPresent<Wrapped>() -> Binding<Bool>
+      where Value == Wrapped? {
+        .init(
+          get: {
+              self.wrappedValue != nil
+              
+          },
+          set: { isPresent, transaction in
+            if !isPresent {
+              self.transaction(transaction).wrappedValue = nil
+            }
+          }
+        )
+      }
 }
 
 
@@ -42,7 +70,7 @@ struct ExploreView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             ExploreView(
                 store: .init(
-                    initialState: .init(artists: Artist.testValues.asIdentifedArray, stages: Stage.testValues.asIdentifedArray, schedule: [:]),
+                    initialState: .init(artists: Artist.testValues.asIdentifedArray, event: .testData, stages: Stage.testValues.asIdentifedArray, schedule: [:], selectedArtistPageState: nil),
                     reducer: exploreReducer,
                     environment: .init()
                 )

@@ -41,6 +41,7 @@ public struct EventState: Equatable {
 
     // MARK: ExploreState
     var exploreArtists: IdentifiedArrayOf<Artist> = .init()
+    var exploreSelectedArtistState: ArtistPageState?
 
     var eventLoaded: Bool {
         return loadedArtists && loadedStages && loadedArtistSets

@@ -17,34 +17,44 @@ struct ExploreViewHosting: UIViewControllerRepresentable {
     var artists: IdentifiedArrayOf<Artist>
     var stages: IdentifiedArrayOf<Stage>
     var schedule: Schedule
+    var onSelectArtist: (Artist) -> Void
 
 
     typealias UIViewControllerType = ExploreViewController
 
     func makeUIViewController(context: Context) -> ExploreViewController {
-        ExploreViewController(exploreArtists: artists, stages: stages, schedule: schedule)
+        ExploreViewController(exploreArtists: artists, stages: stages, schedule: schedule, onSelectArtist: onSelectArtist)
     }
 
     func updateUIViewController(_ vc: ExploreViewController, context: Context) {
-        vc.exploreArtists = artists
-        vc.collectionView.reloadData()
+
+
+        // Only reload data if the data actually changes
+        if vc.exploreArtists != artists || vc.stages != stages || vc.schedule != schedule {
+            vc.exploreArtists = artists
+            vc.stages = stages
+            vc.schedule = schedule
+
+            vc.collectionView.reloadData()
+        }
+
     }
-
-
 }
 
 class ExploreViewController: UICollectionViewController {
     var exploreArtists: IdentifiedArrayOf<Artist>
     var stages: IdentifiedArrayOf<Stage>
     var schedule: Schedule
+    var onSelectArtist: (Artist) -> Void
 
     let layout = CollectionViewSlantedLayout()
 
-    init(exploreArtists: IdentifiedArrayOf<Artist>, stages: IdentifiedArrayOf<Stage>, schedule: Schedule) {
+    init(exploreArtists: IdentifiedArrayOf<Artist>, stages: IdentifiedArrayOf<Stage>, schedule: Schedule, onSelectArtist: @escaping (Artist) -> Void) {
 
         self.exploreArtists = exploreArtists
         self.stages = stages
         self.schedule = schedule
+        self.onSelectArtist = onSelectArtist
 
         super.init(collectionViewLayout: UICollectionViewLayout())
 
@@ -56,6 +66,8 @@ class ExploreViewController: UICollectionViewController {
 
         let refreshControl = UIRefreshControl()
         collectionView.refreshControl = refreshControl
+
+        self.setContentScrollView(self.collectionView)
 
 //        shuffleArtists()
     }
@@ -118,23 +130,20 @@ class ExploreViewController: UICollectionViewController {
 
             let angle = -tan(CGFloat(layout.slantingSize)/view.frame.width)
             cell.artistNameLabel.transform = CGAffineTransform(rotationAngle: angle)
-                    cell.stageIndicator.transform = CGAffineTransform(rotationAngle: angle)
-                }
+            cell.stageIndicator.transform = CGAffineTransform(rotationAngle: angle)
+        }
 
         return cell
     }
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let artist = exploreArtists[indexPath.row]
-//
-//        let vc = ArtistDetailViewController(for: artist)
-//        navigationController?.setNavigationBarHidden(false, animated: true)
-//        navigationController?.pushViewController(vc, animated: true)
+        onSelectArtist(exploreArtists[indexPath.row])
     }
 
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let collectionView = collectionView else {return}
         guard let visibleCells = collectionView.visibleCells as? [ArtistExploreCell] else {return}
+
         for parallaxCell in visibleCells {
             let yOffset = (collectionView.contentOffset.y - parallaxCell.frame.origin.y) / parallaxCell.imageHeight
             let xOffset = (collectionView.contentOffset.x - parallaxCell.frame.origin.x) / parallaxCell.imageWidth

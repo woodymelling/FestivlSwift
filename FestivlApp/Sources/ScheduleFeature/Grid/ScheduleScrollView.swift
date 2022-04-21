@@ -34,39 +34,37 @@ struct ScheduleScrollView: View {
                                     dayStartsAtNoon: viewStore.event.dayStartsAtNoon,
                                     currentTime: viewStore.currentTime, shouldHideTime: viewStore.shouldShowTimeIndicator
                                 )
+                                .frame(height: scheduleHeight)
 
                                 ZStack {
 
                                     ScheduleGridView()
+                                        .frame(height: scheduleHeight)
+
                                     CardContainerView(style: style, store: store)
+                                        .frame(height: scheduleHeight)
 
                                 }
                             }
 
-                            if viewStore.shouldShowTimeIndicator {
-                                TimeIndicatorView(currentTime: viewStore.currentTime)
-                                    .position(x: geo.size.width / 2, y: viewStore.currentTime.toY(containerHeight: geo.size.height, dayStartsAtNoon: viewStore.event.dayStartsAtNoon))
-                            }
-
+                            TimeIndicatorView(selectedDate: viewStore.selectedDate, dayStartsAtNoon: viewStore.event.dayStartsAtNoon)
+                                .frame(height: scheduleHeight)
                         }
-
-
                     }
                     .frame(height: scheduleHeight)
                     .coordinateSpace(name: "ScheduleTimeline")
-
-
                 }
                 .onChange(of: viewStore.cardToDisplay, perform: { cardToDisplay in
                     withAnimation {
-                        proxy.scrollTo(cardToDisplay?.id, anchor: .top)
+                        proxy.scrollTo(cardToDisplay?.id, anchor: .center)
                     }
 
                 })
-
                 .introspectScrollView { scrollView in
                     scrollViewHandler.scrollViewHandler.register(scrollView: scrollView)
                 }
+                .gesture(MagnificationGesture()
+                    .onChanged(viewStore.send(.scrollViewDidZoom(<#T##UIScrollView#>))))
 
 
 

@@ -43,14 +43,27 @@ public struct ArtistListState: Equatable {
         self.schedule = schedule
         self.searchText = searchText
 
+        // Set the artistStates and their sets in two passes so that it's O(A + S) instead of O(A*S)
         self.artistStates = IdentifiedArray(uniqueElements: artists.map { artist in
             ArtistPageState(
                 artist: artist,
                 event: event,
-                setsForArtist: schedule.scheduleItemsForArtist(artist: artist),
+                setsForArtist: .init(),
                 stages: stages
             )
         })
+
+        for scheduleItem in schedule.values.joined() {
+            switch scheduleItem.type {
+            case .artistSet(let artistID):
+                artistStates[id: artistID]?.sets.append(scheduleItem)
+
+            case .groupSet(let artistIDs):
+                artistIDs.forEach {
+                    artistStates[id: $0]?.sets.append(scheduleItem)
+                }
+            }
+        }
     }
 }
 

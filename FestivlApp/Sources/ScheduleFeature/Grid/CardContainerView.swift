@@ -58,15 +58,15 @@ struct CardContainerView: View {
                             stages: viewStore.stages,
                             isSelected: viewStore.cardToDisplay == scheduleItem
                         )
+                        .id(scheduleItem.id)
                         .frame(size: size)
                         //                        .fixedSize()
                         .position(
                             x: xPosition + offset.width,
                             y: scheduleItem.yPlacement(dayStartsAtNoon: viewStore.event.dayStartsAtNoon, containerHeight: geo.size.height) + offset.height
                         )
-                        .id(scheduleItem.id)
+
                         .onTapGesture {
-                            print("Tapped")
                             viewStore.send(.didTapCard(scheduleItem))
                         }
 

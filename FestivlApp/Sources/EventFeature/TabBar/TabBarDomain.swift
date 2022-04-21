@@ -32,8 +32,6 @@ public extension EventState {
         }
 
         set {
-            self.event = newValue.event
-            self.artists = IdentifiedArray(uniqueElements: newValue.artistStates.map { $0.artist })
             self.artistListSearchText = newValue.searchText
         }
     }
@@ -72,13 +70,16 @@ public extension EventState {
         get {
             .init(
                 artists: exploreArtists,
+                event: event,
                 stages: stages,
-                schedule: schedule
+                schedule: schedule,
+                selectedArtistPageState: exploreSelectedArtistState
             )
         }
 
         set {
             self.exploreArtists = newValue.artists
+            self.exploreSelectedArtistState = newValue.selectedArtistPageState
         }
     }
 }
@@ -99,11 +100,14 @@ public let tabBarReducer = Reducer.combine(
         switch action {
         case .binding:
             return .none
-        case .artistListAction(.artistDetail(_, .didTapArtistSet(let scheduleCard))):
+        case .artistListAction(.artistDetail(_, .didTapArtistSet(let scheduleCard))), .exploreAction(.artistPage(_, .didTapArtistSet(let scheduleCard))):
             state.selectedTab = .schedule
             return Effect(value: .scheduleAction(.showAndHighlightCard(scheduleCard)))
 
         case .artistListAction, .scheduleAction:
+            return .none
+
+        case .exploreAction:
             return .none
         }
     }
@@ -118,5 +122,11 @@ public let tabBarReducer = Reducer.combine(
     scheduleReducer.pullback(
         state: \EventState.scheduleState,
         action: /TabBarAction.scheduleAction,
-        environment: { _ in ScheduleEnvironment() })
+        environment: { _ in ScheduleEnvironment() }),
+
+    exploreReducer.pullback(
+        state: \EventState.exploreState,
+        action: /TabBarAction.exploreAction,
+        environment: { _ in .init()}
+    )
 )

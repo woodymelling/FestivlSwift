@@ -26,15 +26,19 @@ public struct SingleStageAtOnceView: View {
         WithViewStore(store) { viewStore in
             ZStack(alignment: .top) {
 
-                TabView(selection: viewStore.binding(\.$selectedStage)) {
-                    ForEach(viewStore.stages) { stage in
-                        ScheduleScrollView(store: store, style: .singleStage(stage), scrollViewHandler: scrollViewModel)
-                            .tag(stage)
-                    }
+                VStack {
+                    Spacer()
+                        .frame(height: headerHeight)
 
+                    TabView(selection: viewStore.binding(\.$selectedStage)) {
+                        ForEach(viewStore.stages) { stage in
+                            ScheduleScrollView(store: store, style: .singleStage(stage), scrollViewHandler: scrollViewModel)
+                                .tag(stage)
+                        }
+
+                    }
+                    .tabViewStyle(.page(indexDisplayMode: .never))
                 }
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .padding(.top, headerHeight)
 
                 ScheduleHeaderView(stages: viewStore.stages, selectedStage: viewStore.binding(\.$selectedStage).animation(.easeInOut(duration: 0.1)))
                     .background(GeometryReader { geometry in
