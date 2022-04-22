@@ -14,6 +14,7 @@ import AddEditStageFeature
 import AddEditArtistSetFeature
 import AddEditEventFeature
 import ManagerArtistsFeature
+import EventDataFeature
 
 public struct FestivlManagerEventState: Equatable {
     public var event: Event

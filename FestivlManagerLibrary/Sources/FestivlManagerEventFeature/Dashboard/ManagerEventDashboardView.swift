@@ -12,6 +12,7 @@ import ManagerArtistsFeature
 import StagesFeature
 import ManagerScheduleFeature
 import AddEditEventFeature
+import EventDataFeature
 
 public struct ManagerEventDashboardView: View {
     let store: Store<FestivlManagerEventState, ManagerEventDashboardAction>
@@ -83,6 +84,21 @@ struct Sidebar: View {
                     ) {
                         Label("Stages", systemImage: "mappin.and.ellipse")
                     }
+
+
+                }
+
+                NavigationLink(
+                    destination: EventDataView(
+                        store: store.scope(
+                            state: \FestivlManagerEventState.eventDataState,
+                            action: ManagerEventDashboardAction.eventDataAction
+                        )
+                    ),
+                    tag: SidebarPage.eventData,
+                    selection: viewStore.binding(\.$sidebarSelection)
+                ) {
+                    Label("Other Event Data", systemImage: "calendar.circle")
                 }
             }
             .listStyle(SidebarListStyle())

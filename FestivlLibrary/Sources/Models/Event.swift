@@ -18,7 +18,8 @@ public struct Event: Codable, Identifiable {
         startDate: Date,
         endDate: Date,
         dayStartsAtNoon: Bool,
-        imageURL: URL?
+        imageURL: URL?,
+        siteMapImageURL: URL?
     ) {
         self.id = id
         self.name = name
@@ -34,6 +35,7 @@ public struct Event: Codable, Identifiable {
     public var endDate: Date
     public var dayStartsAtNoon: Bool
     public var imageURL: URL?
+    public var siteMapImageURL: URL?
 
     public var festivalDates: [Date] {
         var dates: [Date] = []
@@ -64,7 +66,8 @@ public extension Event {
             startDate: Date(),
             endDate: Date(timeInterval: 100000, since: Date()),
             dayStartsAtNoon: true,
-            imageURL: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/festivl.appspot.com/o/userContent%2FB6CCE847-7E71-4AB7-9EE1-3414434EA17F.png?alt=media&token=87dda3ba-377f-48b3-bfbd-30bcc2dbbc6c")
+            imageURL: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/festivl.appspot.com/o/userContent%2FB6CCE847-7E71-4AB7-9EE1-3414434EA17F.png?alt=media&token=87dda3ba-377f-48b3-bfbd-30bcc2dbbc6c"),
+            siteMapImageURL: nil
         )
     }
 }

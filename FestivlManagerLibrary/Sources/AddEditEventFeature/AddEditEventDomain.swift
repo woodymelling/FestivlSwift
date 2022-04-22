@@ -131,7 +131,8 @@ public let addEditEventReducer = Reducer<AddEditEventState, AddEditEventAction, 
             startDate: state.startDate,
             endDate: state.endDate,
             dayStartsAtNoon: state.dayStartsAtNoon,
-            imageURL: nil
+            imageURL: nil,
+            siteMapImageURL: nil
         )
 
         return uploadEvent(

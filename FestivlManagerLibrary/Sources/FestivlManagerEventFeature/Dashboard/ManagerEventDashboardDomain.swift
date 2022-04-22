@@ -12,15 +12,16 @@ import CreateArtistFeature
 import StagesFeature
 import ManagerScheduleFeature
 import AddEditEventFeature
+import EventDataFeature
 
 public enum SidebarPage {
-    case artists, stages, schedule
+    case artists, stages, schedule, eventData
 
     var isThreeColumn: Bool {
         switch self {
         case .artists, .stages:
             return true
-        case .schedule:
+        case .schedule, .eventData:
             return false
         }
     }
@@ -94,6 +95,16 @@ extension FestivlManagerEventState {
             self.scheduleArtistSearchText = newValue.artistSearchText
         }
     }
+
+    var eventDataState: EventDataState {
+        get {
+            .init(event: event)
+        }
+
+        set {
+            self.event = newValue.event
+        }
+    }
 }
 
 public enum ManagerEventDashboardAction: BindableAction {
@@ -102,6 +113,7 @@ public enum ManagerEventDashboardAction: BindableAction {
     case stagesAction(StagesAction)
     case scheduleAction(ManagerScheduleAction)
     case editEventAction(AddEditEventAction)
+    case eventDataAction(EventDataAction)
 
     case editEvent
     case exitEvent
@@ -137,6 +149,12 @@ public let managerEventDashboardReducer = Reducer.combine(
         environment: { _ in .init() }
     ),
 
+    eventDataReducer.pullback(
+        state: \FestivlManagerEventState.eventDataState,
+        action: /ManagerEventDashboardAction.eventDataAction,
+        environment: { _ in .init() }
+    ),
+
     Reducer<FestivlManagerEventState, ManagerEventDashboardAction, ManagerEventDashboardEnvironment> { state, action, _ in
         switch action {
         case .binding:
@@ -152,7 +170,7 @@ public let managerEventDashboardReducer = Reducer.combine(
         case .editEventAction(.closeModal):
             state.editEventState = nil
             return .none
-        case .artistsAction, .stagesAction, .scheduleAction, .editEventAction:
+        case .artistsAction, .stagesAction, .scheduleAction, .editEventAction, .eventDataAction:
             return .none
         }
     }

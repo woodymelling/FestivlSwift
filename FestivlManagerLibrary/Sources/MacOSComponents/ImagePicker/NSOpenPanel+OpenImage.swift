@@ -8,7 +8,7 @@
 import Foundation
 import Cocoa
 
-extension NSOpenPanel {
+public extension NSOpenPanel {
 
     static func openImage(completion: @escaping (_ result: Result<NSImage, Error>) -> ()) {
         let panel = NSOpenPanel()

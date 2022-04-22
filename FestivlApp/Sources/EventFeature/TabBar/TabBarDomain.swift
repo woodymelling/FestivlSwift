@@ -12,10 +12,11 @@ import ArtistListFeature
 import ScheduleFeature
 import SwiftUI
 import ExploreFeature
+import MoreFeature
 
 
 public enum Tab {
-    case schedule, artists, explore, settings
+    case schedule, artists, explore, more
 }
 
 public extension EventState {
@@ -101,6 +102,16 @@ public extension EventState {
             self.favoriteArtists = newValue.favoriteArtists
         }
     }
+
+    var moreState: MoreState {
+        get {
+            .init(event: event)
+        }
+
+        set {
+            
+        }
+    }
 }
 
 extension Set {
@@ -118,6 +129,7 @@ public enum TabBarAction: BindableAction {
     case artistListAction(ArtistListAction)
     case scheduleAction(ScheduleAction)
     case exploreAction(ExploreAction)
+    case moreAction(MoreAction)
 }
 
 public struct TabBarEnvironment {
@@ -133,10 +145,7 @@ public let tabBarReducer = Reducer.combine(
             state.selectedTab = .schedule
             return Effect(value: .scheduleAction(.showAndHighlightCard(scheduleCard)))
 
-        case .artistListAction, .scheduleAction:
-            return .none
-
-        case .exploreAction:
+        case .artistListAction, .scheduleAction, .exploreAction, .moreAction:
             return .none
         }
     }

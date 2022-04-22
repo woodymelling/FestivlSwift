@@ -16,7 +16,8 @@ let package = Package(
         .library(name: "ScheduleFeature", targets: ["ScheduleFeature"]),
         .library(name: "ExploreFeature", targets: ["ExploreFeature"]),
         .library(name: "GroupSetDetailFeature", targets: ["GroupSetDetailFeature"]),
-        .library(name: "iOSComponents", targets: ["iOSComponents"])
+        .library(name: "iOSComponents", targets: ["iOSComponents"]),
+        .library(name: "MoreFeature", targets: ["MoreFeature"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -25,7 +26,8 @@ let package = Package(
         .package(url: "https://github.com/yacir/CollectionViewSlantedLayout", branch: "master"),
         .package(name: "FestivlLibrary", path: "../FestivlLibrary"),
         .package(name: "Introspect", url: "https://github.com/siteline/SwiftUI-Introspect.git", from: "0.0.0"),
-        .package(url: "https://github.com/stonko1994/SimultaneouslyScrollView", from: "1.0.0")
+        .package(url: "https://github.com/stonko1994/SimultaneouslyScrollView", from: "1.0.0"),
+        .package(url: "https://github.com/Jake-Short/swiftui-image-viewer.git", from: "2.3.1")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -45,7 +47,7 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "Utilities", package: "FestivlLibrary"),
-                .product(name: "Services", package: "FestivlLibrary")
+                .product(name: "Services", package: "FestivlLibrary"),
             ]
         ),
         .target(
@@ -57,6 +59,7 @@ let package = Package(
                 .target(name: "ArtistListFeature"),
                 .target(name: "ScheduleFeature"),
                 .target(name: "ExploreFeature"),
+                .target(name: "MoreFeature")
             ]
         ),
         .target(
@@ -125,6 +128,14 @@ let package = Package(
                 .product(name: "Utilities", package: "FestivlLibrary"),
                 .product(name: "Components", package: "FestivlLibrary"),
            ]
-        )
+        ),
+        .target(
+            name: "MoreFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Models", package: "FestivlLibrary"),
+                .product(name: "ImageViewer", package: "swiftui-image-viewer")
+            ]
+        ),
     ]
 )

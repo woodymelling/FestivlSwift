@@ -11,6 +11,7 @@ import ArtistListFeature
 import Models
 import ScheduleFeature
 import ExploreFeature
+import MoreFeature
 
 public struct TabBarView: View {
 
@@ -43,11 +44,11 @@ public struct TabBarView: View {
                     }
                     .tag(Tab.explore)
 
-                Text("Settings")
+                MoreView(store: store.scope(state: \.moreState, action: TabBarAction.moreAction))
                     .tabItem {
-                        Label("Settings", systemImage: "gear")
+                        Label("More", systemImage: "ellipsis")
                     }
-                    .tag(Tab.settings)
+                    .tag(Tab.more)
             }
         }
     }

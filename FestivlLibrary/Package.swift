@@ -14,7 +14,7 @@ let package = Package(
         .library(name: "Models", targets: ["Models"]),
         .library(name: "Utilities", targets: ["Utilities"]),
         .library(name: "Components", targets: ["Components"]),
-        .library(name: "SharedResources", targets: ["SharedResources"])
+        .library(name: "SharedResources", targets: ["SharedResources"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -63,6 +63,7 @@ let package = Package(
                 .copy("LinkIcons.xcassets")
             ]
         ),
+        
 
         // MARK: Tests
         .testTarget(name: "FestivlLibraryTests", dependencies: ["FestivlLibrary"]),

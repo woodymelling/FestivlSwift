@@ -61,6 +61,8 @@ public struct StagesIndicatorView: View {
     }
 }
 
+#if os(iOS)
+
 public class StageIndicatorUIView: UIView {
     var stages: [Stage] = []
 
@@ -124,6 +126,7 @@ public class StageIndicatorUIView: UIView {
     }
 
 }
+#endif
 
 struct StagesIndicatorView_Previews: PreviewProvider {
     static var previews: some View {
