@@ -15,16 +15,16 @@ struct CardContainerView: View {
     let store: Store<ScheduleState, ScheduleAction>
 
     func artistSets(for viewStore: ViewStore<ScheduleState, ScheduleAction>) -> IdentifiedArrayOf<ScheduleItem> {
-
+        let artistSets: IdentifiedArrayOf<ScheduleItem>
         switch style {
         case .singleStage(let stage):
-            return viewStore.schedule[.init(
+            artistSets = viewStore.schedule[.init(
                 date: viewStore.selectedDate,
                 stageID: stage.id!
             )] ?? .init()
 
         case .allStages:
-            return viewStore.schedule.keys.filter {
+            artistSets = viewStore.schedule.keys.filter {
                 $0.date == viewStore.selectedDate
             }
             .flatMap {
@@ -33,6 +33,16 @@ struct CardContainerView: View {
             .asIdentifedArray
 
         }
+
+        if viewStore.filteringFavorites {
+            return artistSets.filter {
+                $0.hasFavorite(favoritesList: viewStore.favoriteArtists)
+            }
+        } else {
+            return artistSets
+        }
+
+
     }
 
     var body: some View {
@@ -56,7 +66,8 @@ struct CardContainerView: View {
                         ScheduleCardView(
                             scheduleItem,
                             stages: viewStore.stages,
-                            isSelected: viewStore.cardToDisplay == scheduleItem
+                            isSelected: viewStore.cardToDisplay == scheduleItem,
+                            isFavorite: scheduleItem.hasFavorite(favoritesList: viewStore.favoriteArtists)
                         )
                         .id(scheduleItem.id)
                         .frame(size: size)

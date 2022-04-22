@@ -12,29 +12,42 @@ import CollectionViewSlantedLayout
 import SwiftUI
 import Utilities
 import ComposableArchitecture
+import ArtistPageFeature
 
 struct ExploreViewHosting: UIViewControllerRepresentable {
-    var artists: IdentifiedArrayOf<Artist>
+    var artists: IdentifiedArrayOf<ArtistPageState>
     var stages: IdentifiedArrayOf<Stage>
     var schedule: Schedule
-    var onSelectArtist: (Artist) -> Void
+    var onSelectArtist: (ArtistPageState) -> Void
+    var favoriteArtists: Set<ArtistID>
 
 
     typealias UIViewControllerType = ExploreViewController
 
     func makeUIViewController(context: Context) -> ExploreViewController {
-        ExploreViewController(exploreArtists: artists, stages: stages, schedule: schedule, onSelectArtist: onSelectArtist)
+        ExploreViewController(
+            exploreArtists: artists,
+            stages: stages,
+            schedule: schedule,
+            onSelectArtist: onSelectArtist,
+            favoriteArtists: favoriteArtists
+        )
     }
 
     func updateUIViewController(_ vc: ExploreViewController, context: Context) {
 
-
         // Only reload data if the data actually changes
-        if vc.exploreArtists != artists || vc.stages != stages || vc.schedule != schedule {
+        if vc.exploreArtists != artists ||
+            vc.stages != stages ||
+            vc.schedule != schedule ||
+            vc.favoriteArtists != favoriteArtists
+        {
             vc.exploreArtists = artists
             vc.stages = stages
             vc.schedule = schedule
+            vc.favoriteArtists = favoriteArtists
 
+            print(artists)
             vc.collectionView.reloadData()
         }
 
@@ -42,19 +55,27 @@ struct ExploreViewHosting: UIViewControllerRepresentable {
 }
 
 class ExploreViewController: UICollectionViewController {
-    var exploreArtists: IdentifiedArrayOf<Artist>
+    var exploreArtists: IdentifiedArrayOf<ArtistPageState>
     var stages: IdentifiedArrayOf<Stage>
     var schedule: Schedule
-    var onSelectArtist: (Artist) -> Void
+    var favoriteArtists: Set<ArtistID>
+    var onSelectArtist: (ArtistPageState) -> Void
 
     let layout = CollectionViewSlantedLayout()
 
-    init(exploreArtists: IdentifiedArrayOf<Artist>, stages: IdentifiedArrayOf<Stage>, schedule: Schedule, onSelectArtist: @escaping (Artist) -> Void) {
+    init(
+        exploreArtists: IdentifiedArrayOf<ArtistPageState>,
+        stages: IdentifiedArrayOf<Stage>,
+        schedule: Schedule,
+        onSelectArtist: @escaping (ArtistPageState) -> Void,
+        favoriteArtists: Set<ArtistID>
+    ) {
 
         self.exploreArtists = exploreArtists
         self.stages = stages
         self.schedule = schedule
         self.onSelectArtist = onSelectArtist
+        self.favoriteArtists = favoriteArtists
 
         super.init(collectionViewLayout: UICollectionViewLayout())
 
@@ -68,24 +89,7 @@ class ExploreViewController: UICollectionViewController {
         collectionView.refreshControl = refreshControl
 
         self.setContentScrollView(self.collectionView)
-
-//        shuffleArtists()
     }
-
-//    func shuffleArtists() {
-//        exploreArtists = exploreArtists.shuffled().sorted(by: {
-//            Double((($0.tier ?? 10) + 1)) * Double.random(in: 0...10)  <
-//                Double((($1.tier ?? 10) + 1)) * Double.random(in: 0...10)
-//        })
-//    }
-
-//    func loadData() {
-//        _ = artistService.getExploreArtists().done { artists in
-//            self.exploreArtists = artists
-//            self.shuffleArtists()
-//            self.collectionView.reloadData()
-//        }
-//    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -116,7 +120,7 @@ class ExploreViewController: UICollectionViewController {
 
         let cell: ArtistExploreCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArtistExploreCell", for: indexPath) as! ArtistExploreCell
 
-        let artist = exploreArtists[indexPath.row]
+        let artist = exploreArtists[indexPath.row].artist
         cell.initWithArtist(
             artist: artist,
             stages: schedule

@@ -71,6 +71,24 @@ public struct ScheduleView: View {
                             .foregroundColor(.primary)
                         }
                     })
+
+                    ToolbarItem {
+                        Menu(content: {
+                            Toggle(isOn: viewStore.binding(\.$filteringFavorites), label: {
+                                Label(
+                                    "Favorites",
+                                    systemImage:  viewStore.isFiltering ? "heart.fill" : "heart"
+                                )
+                            })
+                        }, label: {
+                            Label(
+                                "Filter",
+                                systemImage: viewStore.isFiltering ?
+                                    "line.3.horizontal.decrease.circle.fill" :
+                                    "line.3.horizontal.decrease.circle"
+                            )
+                        })
+                    }
                 }
                 .navigationBarTitleDisplayMode(.inline)
 

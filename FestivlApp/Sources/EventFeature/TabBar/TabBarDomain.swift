@@ -27,12 +27,14 @@ public extension EventState {
                 artists: artists,
                 stages: stages,
                 schedule: schedule,
-                searchText: artistListSearchText
+                searchText: artistListSearchText,
+                favoriteArtists: favoriteArtists
             )
         }
 
         set {
             self.artistListSearchText = newValue.searchText
+            self.favoriteArtists = Set(newValue.artistStates.filter { $0.isFavorite }.map { $0.artist.id! })
         }
     }
 
@@ -42,11 +44,13 @@ public extension EventState {
                 artists: artists,
                 stages: stages,
                 schedule: schedule,
-                selectedStage: scheduleSelectedStage,
                 event: event,
+                favoriteArtists: favoriteArtists,
+                selectedStage: scheduleSelectedStage,
+                selectedDate: scheduleSelectedDate,
+                filteringFavorites: scheduleFilteringFavorites,
                 zoomAmount: scheduleZoomAmount,
                 lastScaleValue: scheduleLastScaleValue,
-                selectedDate: scheduleSelectedDate,
                 cardToDisplay: scheduleCardToDisplay,
                 selectedArtistState: scheduleSelectedArtistState,
                 selectedGroupSetState: selectedGroupSetState,
@@ -65,6 +69,18 @@ public extension EventState {
             self.selectedGroupSetState = newValue.selectedGroupSetState
             self.deviceOrientation = newValue.deviceOrientation
             self.currentTime = newValue.currentTime
+            self.scheduleFilteringFavorites = newValue.filteringFavorites
+
+            if let selectedAristState = newValue.selectedArtistState {
+                favoriteArtists.insertOrRemove(
+                    element: selectedAristState.artist.id!,
+                    doesBelong: selectedAristState.isFavorite
+                )
+            }
+
+            selectedGroupSetState?.artistDetailStates.forEach {
+                favoriteArtists.insertOrRemove(element: $0.artist.id!, doesBelong: $0.isFavorite)
+            }
         }
     }
 
@@ -75,13 +91,24 @@ public extension EventState {
                 event: event,
                 stages: stages,
                 schedule: schedule,
-                selectedArtistPageState: exploreSelectedArtistState
+                selectedArtistPageState: exploreSelectedArtistState,
+                favoriteArtists: favoriteArtists
             )
         }
 
         set {
-            self.exploreArtists = newValue.artists
             self.exploreSelectedArtistState = newValue.selectedArtistPageState
+            self.favoriteArtists = newValue.favoriteArtists
+        }
+    }
+}
+
+extension Set {
+    mutating func insertOrRemove(element: Element, doesBelong: Bool) {
+        if doesBelong {
+            insert(element)
+        } else {
+            remove(element)
         }
     }
 }
@@ -113,7 +140,8 @@ public let tabBarReducer = Reducer.combine(
             return .none
         }
     }
-    .binding(),
+    .binding()
+    .debug(),
 
     artistListReducer.pullback(
         state: \EventState.artistListState,

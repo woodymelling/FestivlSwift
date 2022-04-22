@@ -18,21 +18,25 @@ public struct ScheduleState: Equatable {
         artists: IdentifiedArrayOf<Artist>,
         stages: IdentifiedArrayOf<Stage>,
         schedule: Schedule,
-        selectedStage: Stage,
         event: Event,
+
+        favoriteArtists: Set<ArtistID>,
+        selectedStage: Stage,
+        selectedDate: Date,
+        filteringFavorites: Bool,
         zoomAmount: CGFloat,
         lastScaleValue: CGFloat,
-        selectedDate: Date,
+
         cardToDisplay: ScheduleItem?,
         selectedArtistState: ArtistPageState?,
         selectedGroupSetState: GroupSetDetailState?,
         deviceOrientation: DeviceOrientation,
         currentTime: Date
-
     ) {
         self.artists = artists
         self.stages = stages
         self.event = event
+        self.favoriteArtists = favoriteArtists
         self.zoomAmount = zoomAmount
         self.lastScaleValue = lastScaleValue
         self.selectedStage = selectedStage
@@ -43,24 +47,32 @@ public struct ScheduleState: Equatable {
         self.selectedGroupSetState = selectedGroupSetState
         self.deviceOrientation = deviceOrientation
         self.currentTime = currentTime
+        self.filteringFavorites = filteringFavorites
     }
 
     public var schedule: Schedule
     public let artists: IdentifiedArrayOf<Artist>
     public let stages: IdentifiedArrayOf<Stage>
     public var event: Event
+    public var favoriteArtists: Set<ArtistID>
 
     public var zoomAmount: CGFloat = 1
     public var lastScaleValue: CGFloat = 1
     @BindableState public var selectedStage: Stage
     public var selectedDate: Date
     public var deviceOrientation: DeviceOrientation
+    @BindableState public var filteringFavorites: Bool
 
     public var cardToDisplay: ScheduleItem?
     @BindableState public var selectedArtistState: ArtistPageState?
     @BindableState public var selectedGroupSetState: GroupSetDetailState?
 
     public var currentTime: Date
+
+    var isFiltering: Bool {
+        // For future filters
+        return filteringFavorites
+    }
 
     var shouldShowTimeIndicator: Bool {
         if event.dayStartsAtNoon {
@@ -188,7 +200,8 @@ public let scheduleReducer = Reducer<ScheduleState, ScheduleAction, ScheduleEnvi
                     artist: artist,
                     event: state.event,
                     setsForArtist: state.schedule.scheduleItemsForArtist(artist: artist),
-                    stages: state.stages
+                    stages: state.stages,
+                    isFavorite: state.favoriteArtists.contains(artist.id!)
                 )
 
                 return .none
@@ -201,7 +214,8 @@ public let scheduleReducer = Reducer<ScheduleState, ScheduleAction, ScheduleEnvi
                     event: state.event,
                     schedule: state.schedule,
                     artists: state.artists,
-                    stages: state.stages
+                    stages: state.stages,
+                    favoriteArtists: state.favoriteArtists
                 )
 
                 return .none
@@ -230,11 +244,12 @@ extension Store where State == ScheduleState, Action == ScheduleAction {
                 artists: Artist.testValues.asIdentifedArray,
                 stages: Stage.testValues.asIdentifedArray,
                 schedule: .init(),
-                selectedStage: Stage.testValues[0],
                 event: .testData,
-                zoomAmount: 1,
-                lastScaleValue: 1,
+                favoriteArtists: .init(),
+                selectedStage: Stage.testValues[0],
                 selectedDate: time,
+                filteringFavorites: false, zoomAmount: 1,
+                lastScaleValue: 1,
                 cardToDisplay: nil,
                 selectedArtistState: nil,
                 selectedGroupSetState: nil,

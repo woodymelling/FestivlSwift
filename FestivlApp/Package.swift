@@ -102,7 +102,8 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "CollectionViewSlantedLayout", package: "CollectionViewSlantedLayout"),
                 .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Utilities", package: "FestivlLibrary")
+                .product(name: "Utilities", package: "FestivlLibrary"),
+                .target(name: "ArtistPageFeature")
             ]
         ),
         .target(

@@ -33,7 +33,6 @@ public struct ArtistPageView: View {
                                 stages: viewStore.stages
                             )
                         })
-
                     }
 
                     if let description = viewStore.artist.description {
@@ -56,19 +55,42 @@ public struct ArtistPageView: View {
                 .listStyle(.plain)
                 .ignoresSafeArea(.all, edges: [.leading,.trailing,.top])
             }
-            .toolbar {
-                ToolbarItem(placement: .primaryAction, content: {
-                    Button(action: {
-
-                    }, label: {
-                        Image(systemName: "heart")
-                    })
-                })
-            }
             .clipped()
             .edgesIgnoringSafeArea(.top)
+            .toolbar(content: { toolbar(viewStore: viewStore) })
         }
     }
+
+    @ToolbarContentBuilder
+    func toolbar(viewStore: ViewStore<ArtistPageState, ArtistPageAction>) -> some ToolbarContent {
+        ToolbarItem(placement: .primaryAction, content: {
+
+
+            Button(action: {
+                viewStore.send(ArtistPageAction.favoriteArtistButtonTapped)
+            }, label: {
+                Group {
+                    if viewStore.isFavorite {
+                        Label(title: {
+                            Text("Unfavorite Artist")
+                        }, icon: {
+                            Image(systemName: "heart.fill")
+                        })
+                        .labelStyle(.iconOnly)
+                    } else {
+                        Label(title: {
+                            Text("Favorite Artist")
+                        }, icon: {
+                            Image(systemName: "heart")
+                        })
+                        .labelStyle(.iconOnly)
+                    }
+                }
+
+            })
+        })
+    }
+
 }
 
 struct ArtistPageView_Previews: PreviewProvider {
@@ -77,7 +99,7 @@ struct ArtistPageView_Previews: PreviewProvider {
             NavigationView {
                 ArtistPageView(
                     store: .init(
-                        initialState: .init(artist: Artist.testValues[1], event: .testData, setsForArtist: [ArtistSet.testData.asScheduleItem()], stages: IdentifiedArrayOf(uniqueElements: [.testData])),
+                        initialState: .init(artist: Artist.testValues[1], event: .testData, setsForArtist: [ArtistSet.testData.asScheduleItem()], stages: IdentifiedArrayOf(uniqueElements: [.testData]), isFavorite: false),
                         reducer: artistPageReducer,
                         environment: .init()
                     )

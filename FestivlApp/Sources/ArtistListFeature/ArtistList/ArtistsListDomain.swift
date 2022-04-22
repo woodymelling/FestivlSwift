@@ -36,34 +36,21 @@ public struct ArtistListState: Equatable {
         artists: IdentifiedArrayOf<Artist>,
         stages: IdentifiedArrayOf<Stage>,
         schedule: Schedule,
-        searchText: String
+        searchText: String,
+        favoriteArtists: Set<ArtistID>
     ) {
         self.event = event
         self.stages = stages
         self.schedule = schedule
         self.searchText = searchText
 
-        // Set the artistStates and their sets in two passes so that it's O(A + S) instead of O(A*S)
-        self.artistStates = IdentifiedArray(uniqueElements: artists.map { artist in
-            ArtistPageState(
-                artist: artist,
-                event: event,
-                setsForArtist: .init(),
-                stages: stages
-            )
-        })
-
-        for scheduleItem in schedule.values.joined() {
-            switch scheduleItem.type {
-            case .artistSet(let artistID):
-                artistStates[id: artistID]?.sets.append(scheduleItem)
-
-            case .groupSet(let artistIDs):
-                artistIDs.forEach {
-                    artistStates[id: $0]?.sets.append(scheduleItem)
-                }
-            }
-        }
+        self.artistStates = ArtistPageState.fromArtistList(
+            artists,
+            schedule: schedule,
+            event: event,
+            stages: stages,
+            favoriteArtists: favoriteArtists
+        )
     }
 }
 
@@ -76,12 +63,22 @@ public struct ArtistListEnvironment {
     public init() {}
 }
 
-public let artistListReducer = Reducer<ArtistListState, ArtistListAction, ArtistListEnvironment> { state, action, environment in
-    switch action {
-    case .binding:
-        return .none
-    case .artistDetail:
-        return .none
+public let artistListReducer = Reducer<ArtistListState, ArtistListAction, ArtistListEnvironment>.combine(
+    artistPageReducer.forEach(
+        state: \ArtistListState.artistStates,
+        action: /ArtistListAction.artistDetail,
+        environment: { _ in .init() }
+    ),
+
+    Reducer<ArtistListState, ArtistListAction, ArtistListEnvironment> { state, action, environment in
+        switch action {
+        case .binding:
+            return .none
+        case .artistDetail:
+            return .none
+        }
     }
-}
-.binding()
+    .binding()
+)
+
+

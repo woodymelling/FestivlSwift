@@ -13,11 +13,12 @@ import IdentifiedCollections
 
 
 public struct ArtistRow: View {
-    public init(artist: Artist, event: Event, stages: IdentifiedArrayOf<Stage>, sets: IdentifiedArrayOf<ScheduleItem>) {
+    public init(artist: Artist, event: Event, stages: IdentifiedArrayOf<Stage>, sets: IdentifiedArrayOf<ScheduleItem>, isFavorite: Bool) {
         self.artist = artist
         self.event = event
         self.stages = stages
         self.sets = sets
+        self.isFavorite = isFavorite
     }
 
 
@@ -25,6 +26,7 @@ public struct ArtistRow: View {
     var event: Event
     var stages: IdentifiedArrayOf<Stage>
     var sets: IdentifiedArrayOf<ScheduleItem>
+    var isFavorite: Bool
 
     public var body: some View {
         HStack(spacing: 10) {
@@ -50,6 +52,17 @@ public struct ArtistRow: View {
                 .lineLimit(1)
 
             Spacer()
+
+            if isFavorite {
+                Image(systemName: "heart.fill")
+                    .resizable()
+                    .renderingMode(.template)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(square: 15)
+                    .foregroundColor(.accentColor)
+                    .padding(.trailing)
+            }
+
         }
     }
 

@@ -90,4 +90,15 @@ public extension ScheduleItemProtocol where Self.ID == String? {
     func asScheduleItem() -> ScheduleItem {
         return .init(self)
     }
+
+    func hasFavorite(favoritesList: Set<ArtistID>) -> Bool {
+        switch self.type {
+        case .artistSet(let id):
+            return favoritesList.contains(id)
+        case .groupSet(let artistIDs):
+            return artistIDs.contains {
+                favoritesList.contains($0)
+            }
+        }
+    }
 }

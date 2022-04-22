@@ -15,24 +15,42 @@ public struct GroupSetDetailState: Equatable, Identifiable {
         event: Event,
         schedule: Schedule,
         artists: IdentifiedArrayOf<Artist>,
-        stages: IdentifiedArrayOf<Stage>
+        stages: IdentifiedArrayOf<Stage>,
+        favoriteArtists: Set<ArtistID>
     ) {
         self.event = event
         self.schedule = schedule
         self.groupSet = groupSet
-
         self.stages = stages
 
         if case let .groupSet(artistIDs) = groupSet.type {
+
+
+            
             self.artistDetailStates = artistIDs
                 .compactMap { artists[id: $0] }
-                .map { ArtistPageState(
-                    artist: $0,
-                    event: event,
-                    setsForArtist: schedule.scheduleItemsForArtist(artist: $0),
-                    stages: stages)
+                .map {
+                    ArtistPageState(
+                        artist: $0,
+                        event: event,
+                        setsForArtist: [],
+                        stages: stages,
+                        isFavorite: favoriteArtists.contains($0.id!)
+                    )
                 }
                 .asIdentifedArray
+
+            for scheduleItem in schedule.values.joined() {
+                switch scheduleItem.type {
+                case .artistSet(let artistID):
+                    artistDetailStates[id: artistID]?.sets.append(scheduleItem)
+
+                case .groupSet(let artistIDs):
+                    artistIDs.forEach {
+                        artistDetailStates[id: $0]?.sets.append(scheduleItem)
+                    }
+                }
+            }
         } else {
             artistDetailStates = []
         }
@@ -69,7 +87,13 @@ public let groupSetDetailReducer = Reducer<GroupSetDetailState, GroupSetDetailAc
         return .none
     case .artistDetailAction(id: _, .didTapArtistSet(let item)):
         return Effect(value: .didTapScheduleItem(item))
+
+    case .artistDetailAction(id: let id, .favoriteArtistButtonTapped):
+        state.artistDetailStates[id: id]?.isFavorite.toggle()
+        return .none
     case .artistDetailAction:
         return .none
     }
+
 }
+    .debug()

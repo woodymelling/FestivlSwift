@@ -15,13 +15,15 @@ struct ScheduleCardView: View {
     var card: ScheduleItem
     var stageColor: Color
     var isSelected: Bool
+    var isFavorite: Bool
 
     @ScaledMetric var scale: CGFloat = 1
 
-    init(_ card: ScheduleItem, stages: IdentifiedArrayOf<Stage>, isSelected: Bool) {
+    init(_ card: ScheduleItem, stages: IdentifiedArrayOf<Stage>, isSelected: Bool, isFavorite: Bool) {
         self.card = card
         self.stageColor = stages[id: card.stageID]!.color
         self.isSelected = isSelected
+        self.isFavorite = isFavorite
     }
 
     var body: some View {
@@ -40,6 +42,7 @@ struct ScheduleCardView: View {
                 GeometryReader { geo in
                     Group {
 
+                        // Arrange horizontally if the card is too small
                         if geo.size.height < 31 * scale {
                             HStack {
                                 Text(card.title)
@@ -55,14 +58,24 @@ struct ScheduleCardView: View {
                             }
                         }
                     }
-                    .foregroundColor(stageColor.isDarkColor ? .white : .black)
+
 
                 }
 
                 Spacer()
+
+                if isFavorite {
+                    Image(systemName: "heart.fill")
+                        .resizable()
+                        .renderingMode(.template)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(square: 15)
+                        .padding(.trailing)
+                }
+
+
             }
-
-
+            .foregroundColor(stageColor.isDarkColor ? .white : .black)
         }
         .frame(maxWidth: .infinity)
         .background(stageColor)
@@ -72,7 +85,7 @@ struct ScheduleCardView: View {
 
 struct ArtistSetCardView_Previews: PreviewProvider {
     static var previews: some View {
-        ScheduleCardView(ArtistSet.testValues()[0].asScheduleItem(), stages: Stage.testValues.asIdentifedArray, isSelected: false)
+        ScheduleCardView(ArtistSet.testValues()[0].asScheduleItem(), stages: Stage.testValues.asIdentifedArray, isSelected: false, isFavorite: false)
             .frame(width: 300, height: 100)
             .previewLayout(.sizeThatFits)
             .previewAllColorModes()

@@ -23,6 +23,16 @@ public struct EventState: Equatable {
     var stages: IdentifiedArrayOf<Stage> = .init()
     var schedule: Schedule = .init()
 
+    @Storage(
+        key: "favoriteArtists",
+        defaultValue: [],
+        transformation: .init(
+            get: { Set($0) },
+            set: { Array($0) }
+        )
+    )
+    var favoriteArtists: Set<ArtistID>
+
     // MARK: TabBarState
     @BindableState var selectedTab: Tab = .schedule
 
@@ -34,6 +44,7 @@ public struct EventState: Equatable {
     var scheduleZoomAmount: CGFloat = 1
     var scheduleLastScaleValue: CGFloat = 1
     var scheduleSelectedDate: Date
+    var scheduleFilteringFavorites = false
     var scheduleCardToDisplay: ScheduleItem?
     var scheduleSelectedArtistState: ArtistPageState?
     var selectedGroupSetState: GroupSetDetailState?
@@ -62,6 +73,7 @@ public struct EventState: Equatable {
     var loadedStages = false
     var loadedArtistSets = false
     var hasRunSetup = false
+
 
     public init(event: Event) {
         self.event = event

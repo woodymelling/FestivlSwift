@@ -27,17 +27,18 @@ public struct ExploreView: View {
                 ZStack {
                     NavigationLink(isActive: viewStore.binding(\.$selectedArtistPageState).isPresent(), destination: {
                         IfLetStore(store.scope(state: \.selectedArtistPageState, action: {
-                            ExploreAction.artistPage(id: viewStore.selectedArtistPageState?.id, $0)
+                            ExploreAction.artistPage(id: viewStore.selectedArtistPageState?.id, action: $0)
                         }), then: ArtistPageView.init)
                     }, label: { EmptyView() })
 
                     ExploreViewHosting(
-                        artists: viewStore.artists,
+                        artists: viewStore.artistStates,
                         stages: viewStore.stages,
                         schedule: viewStore.schedule,
                         onSelectArtist: {
-                            viewStore.send(.didSelectArtist($0))
-                        }
+                            viewStore.send(.didSelectArtist($0.artist))
+                        },
+                        favoriteArtists: viewStore.favoriteArtists
                     )
                 }
             }
@@ -70,7 +71,7 @@ struct ExploreView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             ExploreView(
                 store: .init(
-                    initialState: .init(artists: Artist.testValues.asIdentifedArray, event: .testData, stages: Stage.testValues.asIdentifedArray, schedule: [:], selectedArtistPageState: nil),
+                    initialState: .init(artists: Artist.testValues.asIdentifedArray, event: .testData, stages: Stage.testValues.asIdentifedArray, schedule: [:], selectedArtistPageState: nil, favoriteArtists: .init()),
                     reducer: exploreReducer,
                     environment: .init()
                 )

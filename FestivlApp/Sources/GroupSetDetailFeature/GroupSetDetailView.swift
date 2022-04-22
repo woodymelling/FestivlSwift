@@ -51,7 +51,8 @@ public struct GroupSetDetailView: View {
                                             artist: artistViewStore.artist,
                                             event: artistViewStore.event,
                                             stages: artistViewStore.stages,
-                                            sets: artistViewStore.sets
+                                            sets: artistViewStore.sets,
+                                            isFavorite: artistViewStore.isFavorite
                                         )
                                     })
                                 }
@@ -83,7 +84,8 @@ struct GroupSetDetailView_Previews: PreviewProvider {
                             event: .testData,
                             schedule: .init(),
                             artists: Artist.testValues.asIdentifedArray,
-                            stages: Stage.testValues.asIdentifedArray
+                            stages: Stage.testValues.asIdentifedArray,
+                            favoriteArtists: .init()
                         ),
                         reducer: groupSetDetailReducer,
                         environment: .init()

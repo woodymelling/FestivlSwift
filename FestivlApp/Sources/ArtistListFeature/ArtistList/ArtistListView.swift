@@ -41,7 +41,8 @@ public struct ArtistListView: View {
                                             artist: artistViewStore.artist,
                                             event: artistViewStore.event,
                                             stages: artistViewStore.stages,
-                                            sets: artistViewStore.sets
+                                            sets: artistViewStore.sets,
+                                            isFavorite: artistViewStore.isFavorite
                                         )
                                     })
                                 }
@@ -67,7 +68,8 @@ struct ArtistListView_Previews: PreviewProvider {
                     artists: [],
                     stages: [],
                     schedule: .init(),
-                    searchText: ""
+                    searchText: "",
+                    favoriteArtists: .init()
                 ),
                 reducer: artistListReducer,
                 environment: .init()
