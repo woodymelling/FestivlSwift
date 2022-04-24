@@ -39,28 +39,34 @@ struct ArtistLinkView: View {
 
 //    var link: URL
     var linkType: LinkType
+    var onTap: () -> Void
 
     var body: some View {
-        HStack {
-            linkType.icon
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 30, height: 30)
-            Text(linkType.name)
-            Spacer()
-            NavigationLink.empty
-        }
+        Button(action: onTap, label: {
+            HStack {
+                linkType.icon
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 30, height: 30)
+                Text(linkType.name)
+                Spacer()
+                NavigationLink.empty
+            }
+        })
+
     }
 }
 
 struct ArtistLinkView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            ArtistLinkView(linkType: .website)
+            ArtistLinkView(linkType: .website) {
 
-            ArtistLinkView( linkType: .soundcloud)
+            }
 
-            ArtistLinkView( linkType: .spotify)
+            ArtistLinkView(linkType: .soundcloud) { }
+
+            ArtistLinkView(linkType: .spotify) { }
         }
         .previewAllColorModes()
         .previewLayout(.sizeThatFits)

@@ -17,6 +17,8 @@ public struct ArtistPageView: View {
         self.store = store
     }
 
+    @State var navigatingURL: URL?
+
     public var body: some View {
         WithViewStore(store) { viewStore in
 
@@ -40,16 +42,22 @@ public struct ArtistPageView: View {
 
                     }
 
-                    if viewStore.artist.soundcloudURL != nil {
-                        ArtistLinkView(linkType: .soundcloud)
+                    if let urlString = viewStore.artist.soundcloudURL, let url = URL(string: urlString) {
+                        ArtistLinkView(linkType: .soundcloud) {
+                            navigatingURL = url
+                        }
                     }
 
-                    if viewStore.artist.spotifyURL != nil {
-                        ArtistLinkView(linkType: .spotify)
+                    if let urlString = viewStore.artist.spotifyURL, let url = URL(string: urlString) {
+                        ArtistLinkView(linkType: .spotify) {
+                            navigatingURL = url
+                        }
                     }
 
-                    if viewStore.artist.websiteURL != nil {
-                        ArtistLinkView(linkType: .website)
+                    if let urlString = viewStore.artist.websiteURL, let url = URL(string: urlString) {
+                        ArtistLinkView(linkType: .website) {
+                            navigatingURL = url
+                        }
                     }
                 }
                 .listStyle(.plain)
@@ -59,6 +67,14 @@ public struct ArtistPageView: View {
             .edgesIgnoringSafeArea(.top)
             .toolbar(content: { toolbar(viewStore: viewStore) })
         }
+        .sheet(isPresented: $navigatingURL.isPresent(), content: {
+            if let navigatingURL = navigatingURL {
+                SafariView(url: navigatingURL)
+            } else {
+                EmptyView()
+            }
+
+        })
     }
 
     @ToolbarContentBuilder
@@ -90,6 +106,40 @@ public struct ArtistPageView: View {
             })
         })
     }
+
+}
+
+import SafariServices
+
+extension Binding {
+    public func isPresent<Wrapped>() -> Binding<Bool>
+      where Value == Wrapped? {
+        .init(
+          get: {
+              self.wrappedValue != nil
+
+          },
+          set: { isPresent, transaction in
+            if !isPresent {
+              self.transaction(transaction).wrappedValue = nil
+            }
+          }
+        )
+      }
+}
+
+struct SafariView: UIViewControllerRepresentable {
+
+    let url: URL
+
+    func makeUIViewController(context: UIViewControllerRepresentableContext<SafariView>) -> SFSafariViewController {
+        return SFSafariViewController(url: url)
+    }
+
+    func updateUIViewController(
+        _ uiViewController: SFSafariViewController,
+        context: UIViewControllerRepresentableContext<SafariView>
+    ) {}
 
 }
 
