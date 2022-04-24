@@ -26,7 +26,7 @@ public struct AppView: View {
                     state: \AppState.eventState,
                     action: AppAction.eventAction
                 ),
-                then: EventView.init(store:),
+                then: EventLoadingView.init(store:),
                 else: {
                     EventListView(
                         store: store.scope(

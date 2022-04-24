@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		20CB41172814F3EF00D4F860 /* WickedWoodsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20CB41162814F3EF00D4F860 /* WickedWoodsApp.swift */; };
+		20CB411B2814F3F000D4F860 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20CB411A2814F3F000D4F860 /* Assets.xcassets */; };
+		20CB411E2814F3F000D4F860 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20CB411D2814F3F000D4F860 /* Preview Assets.xcassets */; };
+		20CB41232814F41500D4F860 /* EventFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 20CB41222814F41500D4F860 /* EventFeature */; };
+		20CB41272814F42E00D4F860 /* ServiceCore in Frameworks */ = {isa = PBXBuildFile; productRef = 20CB41262814F42E00D4F860 /* ServiceCore */; };
+		20CB41292814F46A00D4F860 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 20CB41282814F46A00D4F860 /* GoogleService-Info.plist */; };
 		EF26A0B327D855CB00E10A71 /* FestivlManagerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF26A0B227D855CB00E10A71 /* FestivlManagerApp.swift */; };
 		EF26A0B727D855D100E10A71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF26A0B627D855D100E10A71 /* Assets.xcassets */; };
 		EF26A0BA27D855D100E10A71 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF26A0B927D855D100E10A71 /* Preview Assets.xcassets */; };
@@ -25,6 +31,11 @@
 /* Begin PBXFileReference section */
 		2046EC3E2814B7D700094617 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2067AB8E27F54B28001E85BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		20CB41142814F3EF00D4F860 /* WickedWoods.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WickedWoods.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		20CB41162814F3EF00D4F860 /* WickedWoodsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WickedWoodsApp.swift; sourceTree = "<group>"; };
+		20CB411A2814F3F000D4F860 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		20CB411D2814F3F000D4F860 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		20CB41282814F46A00D4F860 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EF26A0B027D855CB00E10A71 /* FestivlManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FestivlManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF26A0B227D855CB00E10A71 /* FestivlManagerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivlManagerApp.swift; sourceTree = "<group>"; };
 		EF26A0B627D855D100E10A71 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -42,6 +53,15 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		20CB41112814F3EF00D4F860 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				20CB41232814F41500D4F860 /* EventFeature in Frameworks */,
+				20CB41272814F42E00D4F860 /* ServiceCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF26A0AD27D855CB00E10A71 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -64,6 +84,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		20CB41152814F3EF00D4F860 /* WickedWoods */ = {
+			isa = PBXGroup;
+			children = (
+				20CB41282814F46A00D4F860 /* GoogleService-Info.plist */,
+				20CB41162814F3EF00D4F860 /* WickedWoodsApp.swift */,
+				20CB411A2814F3F000D4F860 /* Assets.xcassets */,
+				20CB411C2814F3F000D4F860 /* Preview Content */,
+			);
+			path = WickedWoods;
+			sourceTree = "<group>";
+		};
+		20CB411C2814F3F000D4F860 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				20CB411D2814F3F000D4F860 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		EF26A0B127D855CB00E10A71 /* FestivlManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -100,6 +139,7 @@
 				EF26A0C327D8660200E10A71 /* FestivlManagerLibrary */,
 				EF692E6A27B4CA48006F8E0D /* Festivl */,
 				EF26A0B127D855CB00E10A71 /* FestivlManager */,
+				20CB41152814F3EF00D4F860 /* WickedWoods */,
 				EF692E6927B4CA48006F8E0D /* Products */,
 				EF479E4C27B6108C0075D7E2 /* Frameworks */,
 			);
@@ -110,6 +150,7 @@
 			children = (
 				EF692E6827B4CA48006F8E0D /* Festivl.app */,
 				EF26A0B027D855CB00E10A71 /* FestivlManager.app */,
+				20CB41142814F3EF00D4F860 /* WickedWoods.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -137,6 +178,27 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		20CB41132814F3EF00D4F860 /* WickedWoods */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 20CB41212814F3F000D4F860 /* Build configuration list for PBXNativeTarget "WickedWoods" */;
+			buildPhases = (
+				20CB41102814F3EF00D4F860 /* Sources */,
+				20CB41112814F3EF00D4F860 /* Frameworks */,
+				20CB41122814F3EF00D4F860 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WickedWoods;
+			packageProductDependencies = (
+				20CB41222814F41500D4F860 /* EventFeature */,
+				20CB41262814F42E00D4F860 /* ServiceCore */,
+			);
+			productName = WickedWoods;
+			productReference = 20CB41142814F3EF00D4F860 /* WickedWoods.app */;
+			productType = "com.apple.product-type.application";
+		};
 		EF26A0AF27D855CB00E10A71 /* FestivlManager */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF26A0BE27D855D100E10A71 /* Build configuration list for PBXNativeTarget "FestivlManager" */;
@@ -187,9 +249,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1320;
+				LastSwiftUpdateCheck = 1330;
 				LastUpgradeCheck = 1330;
 				TargetAttributes = {
+					20CB41132814F3EF00D4F860 = {
+						CreatedOnToolsVersion = 13.3;
+					};
 					EF26A0AF27D855CB00E10A71 = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
@@ -215,11 +280,22 @@
 			targets = (
 				EF692E6727B4CA48006F8E0D /* Festivl */,
 				EF26A0AF27D855CB00E10A71 /* FestivlManager */,
+				20CB41132814F3EF00D4F860 /* WickedWoods */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		20CB41122814F3EF00D4F860 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				20CB411E2814F3F000D4F860 /* Preview Assets.xcassets in Resources */,
+				20CB411B2814F3F000D4F860 /* Assets.xcassets in Resources */,
+				20CB41292814F46A00D4F860 /* GoogleService-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF26A0AE27D855CB00E10A71 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -243,6 +319,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		20CB41102814F3EF00D4F860 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				20CB41172814F3EF00D4F860 /* WickedWoodsApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF26A0AC27D855CB00E10A71 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -262,6 +346,64 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		20CB411F2814F3F000D4F860 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"WickedWoods/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.woody.WickedWoods;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		20CB41202814F3F000D4F860 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"WickedWoods/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.woody.WickedWoods;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		EF26A0BC27D855D100E10A71 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -503,6 +645,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		20CB41212814F3F000D4F860 /* Build configuration list for PBXNativeTarget "WickedWoods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				20CB411F2814F3F000D4F860 /* Debug */,
+				20CB41202814F3F000D4F860 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EF26A0BE27D855D100E10A71 /* Build configuration list for PBXNativeTarget "FestivlManager" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -533,6 +684,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		20CB41222814F41500D4F860 /* EventFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EventFeature;
+		};
+		20CB41262814F42E00D4F860 /* ServiceCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ServiceCore;
+		};
 		EF26A0C127D8649300E10A71 /* FestivlAppFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FestivlAppFeature;

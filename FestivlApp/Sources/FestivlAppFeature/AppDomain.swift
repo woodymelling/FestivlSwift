@@ -11,7 +11,7 @@ import EventListFeature
 import EventFeature
 
 public struct AppState: Equatable {
-    var eventState: EventState?
+    var eventState: EventLoadingState?
     var isTestMode: Bool
 
     public var eventListState: EventListState
@@ -27,7 +27,7 @@ public struct AppState: Equatable {
 
 public enum AppAction {
     case eventListAction(EventListAction)
-    case eventAction(EventAction)
+    case eventAction(EventLoadingAction)
 }
 
 public struct AppEnvironment {
@@ -36,11 +36,10 @@ public struct AppEnvironment {
 
 public let appReducer = Reducer.combine (
 
-
     Reducer<AppState, AppAction, AppEnvironment> { state, action, _ in
         switch action {
         case .eventListAction(.selectedEvent(let event)):
-            state.eventState = .init(event: event, isTestMode: state.isTestMode)
+            state.eventState = .init(eventID: event.id!, isTestMode: state.isTestMode)
 
             return .none
         case .eventListAction:
@@ -50,12 +49,11 @@ public let appReducer = Reducer.combine (
         }
     },
 
-
-    eventReducer.optional().pullback(
+    eventLoadingReducer.optional().pullback(
         state: \AppState.eventState,
         action: /AppAction.eventAction,
         environment: { (_: AppEnvironment) in
-            EventEnvironment()
+            EventLoadingEnvironment()
         }
     ),
 
@@ -66,5 +64,6 @@ public let appReducer = Reducer.combine (
     )
 
 )
+    .debug()
 
 

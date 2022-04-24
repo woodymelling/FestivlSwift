@@ -15,6 +15,8 @@ import IdentifiedCollections
 public protocol EventListServiceProtocol: Service {
     func createEvent(_ event: Event) async throws -> Event
     func updateEvent(newData event: Event) async throws
+
+    func observeEvent(eventID: EventID) -> AnyPublisher<Event, FestivlError>
     func observeAllEvents() -> AnyPublisher<IdentifiedArrayOf<Event>, FestivlError>
 }
 
@@ -43,6 +45,10 @@ public class EventListService: EventListServiceProtocol {
         )
     }
 
+    public func observeEvent(eventID: EventID) -> AnyPublisher<Event, FestivlError> {
+        observeDocument(db.collection("events").document(eventID))
+    }
+
     public func observeAllEvents() -> AnyPublisher<IdentifiedArrayOf<Event>, FestivlError> {
         observeQuery(db.collection("events"))
     }
@@ -62,5 +68,9 @@ public struct EventListMockService: EventListServiceProtocol {
             .eraseToAnyPublisher()
     }
 
-
+    public func observeEvent(eventID: EventID) -> AnyPublisher<Event, FestivlError> {
+        Just(Event.testData)
+            .setFailureType(to: FestivlError.self)
+            .eraseToAnyPublisher()
+    }
 }
