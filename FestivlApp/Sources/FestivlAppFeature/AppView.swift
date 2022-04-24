@@ -46,7 +46,7 @@ struct AppView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             AppView(
                 store: .init(
-                    initialState: AppState(),
+                    initialState: AppState(isTestMode: true),
                     reducer: appReducer,
                     environment: .init()
                 )

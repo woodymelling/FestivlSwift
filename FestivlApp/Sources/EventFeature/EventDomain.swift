@@ -16,22 +16,30 @@ import Kingfisher
 import ArtistPageFeature
 import GroupSetDetailFeature
 import ScheduleFeature
+import ComposableUserNotifications
 
 public struct EventState: Equatable {
+
+    let isTestMode: Bool
+
     var event: Event
     var artists: IdentifiedArrayOf<Artist> = .init()
     var stages: IdentifiedArrayOf<Stage> = .init()
     var schedule: Schedule = .init()
 
-    @Storage(
-        key: "favoriteArtists",
-        defaultValue: [],
-        transformation: .init(
-            get: { Set($0) },
-            set: { Array($0) }
-        )
-    )
-    var favoriteArtists: Set<ArtistID>
+    //    @Storage(
+    //        key: "favoriteArtists",
+    //        defaultValue: [],
+    //        transformation: .init(
+    //            get: { Set($0) },
+    //            set: { Array($0) }
+    //        )
+    //    )
+    var favoriteArtists: Set<ArtistID> = [] {
+        didSet {
+            UserDefaults.standard.set(Array(favoriteArtists), forKey: "favoriteArtists")
+        }
+    }
 
     // MARK: TabBarState
     @BindableState var selectedTab: Tab = .schedule
@@ -55,6 +63,15 @@ public struct EventState: Equatable {
     var exploreArtists: IdentifiedArrayOf<Artist> = .init()
     var exploreSelectedArtistState: ArtistPageState?
 
+    // MARK: MoreState
+    @Storage(key: "notificationsEnabled", defaultValue: false)
+    var notificationsEnabled: Bool
+
+    @Storage(key: "notificationsTimeBeforeSet", defaultValue: 15)
+    var notificationTimeBeforeSet: Int
+
+    var notificatoinsShowingNavigateToSettingsAlert: Bool = false
+
     var eventLoaded: Bool {
         return loadedArtists && loadedStages && loadedArtistSets
     }
@@ -68,15 +85,14 @@ public struct EventState: Equatable {
         }
     }
 
-
     var loadedArtists = false
     var loadedStages = false
     var loadedArtistSets = false
     var hasRunSetup = false
 
-
-    public init(event: Event) {
+    public init(event: Event, isTestMode: Bool) {
         self.event = event
+        self.isTestMode = isTestMode
 
         self.scheduleSelectedDate = event.startDate.startOfDay(dayStartsAtNoon: event.dayStartsAtNoon)
     }
@@ -84,8 +100,12 @@ public struct EventState: Equatable {
 
 public enum EventAction {
 
-    case subscribeToDataPublishers
+    case onAppear
     case setUpWhenDataLoaded
+
+    case userNotification(UserNotificationClient.Action)
+
+    case favoriteArtistsPublisherUpdate(Set<ArtistID>)
 
     case artistsPublisherUpdate(IdentifiedArrayOf<Artist>)
     case preLoadArtistImages
@@ -104,6 +124,7 @@ public struct EventEnvironment {
     public var stageService: () -> StageServiceProtocol
     public var artistSetService: () -> ScheduleServiceProtocol
     public var currentDate: () -> Date = { Date.now }
+    var userNotificationClient: () -> UserNotificationClient = { UserNotificationClient.live }
 
     public init(
         artistService: @escaping () -> ArtistServiceProtocol = { ArtistService.shared },
@@ -125,24 +146,76 @@ extension ScheduleItemProtocol {
 public let eventReducer = Reducer.combine(
     Reducer<EventState, EventAction, EventEnvironment> { state, action, environment in
         switch action {
-        case .subscribeToDataPublishers:
-            return Publishers.Merge3(
-                environment.artistService()
-                    .artistsPublisher(eventID: state.event.id!)
-                    .eraseErrorToPrint(errorSource: "ArtistServicePublisher")
-                    .map { EventAction.artistsPublisherUpdate($0) },
+        case .onAppear:
+            return Effect.concatenate(
 
-                environment.stageService()
-                    .stagesPublisher(eventID: state.event.id!)
-                    .eraseErrorToPrint(errorSource: "StagesServicePublisher")
-                    .map { EventAction.stagesPublisherUpdate($0) },
+                Publishers.Merge5(
+                    environment.artistService()
+                        .artistsPublisher(eventID: state.event.id!)
+                        .eraseErrorToPrint(errorSource: "ArtistServicePublisher")
+                        .map { EventAction.artistsPublisherUpdate($0) },
 
-                environment.artistSetService()
-                    .schedulePublisher(eventID: state.event.id!)
-                    .eraseErrorToPrint(errorSource: "ArtistSetServicePublisher")
-                    .map { EventAction.artistSetsPublisherUpdate($0) }
+                    environment.stageService()
+                        .stagesPublisher(eventID: state.event.id!)
+                        .eraseErrorToPrint(errorSource: "StagesServicePublisher")
+                        .map { EventAction.stagesPublisherUpdate($0) },
+
+                    environment.artistSetService()
+                        .schedulePublisher(eventID: state.event.id!)
+                        .eraseErrorToPrint(errorSource: "ArtistSetServicePublisher")
+                        .map { EventAction.artistSetsPublisherUpdate($0) },
+
+                    UserDefaults.standard.publisher(for: \.favoriteArtists)
+                        .map {
+                            EventAction.favoriteArtistsPublisherUpdate(Set($0))
+                        },
+
+                    environment.userNotificationClient()
+                        .delegate()
+                        .map(EventAction.userNotification)
+                ).eraseToEffect()
+
             )
             .eraseToEffect()
+
+
+        case let .userNotification(.willPresentNotification(notification, completion)):
+            return .fireAndForget {
+                completion([.list, .banner, .sound])
+            }
+
+        case let .userNotification(.didReceiveResponse(response, completion)):
+
+
+            if case .user(let action) = response {
+                print("ACTIONIDENTIFIER", response.actionIdentifier)
+                switch response.actionIdentifier {
+                case "GO_TO_SET_ACTION", UNNotificationDefaultActionIdentifier:
+                    if let setID = action.notification.request.content.userInfo()["SET_ID"] as? String,
+                       let scheduleItem = state.schedule.itemFor(itemID: setID) {
+                        state.selectedTab = .schedule
+                        return .concatenate(
+                            Effect(value: .tabBarAction(.scheduleAction(.showAndHighlightCard(scheduleItem)))),
+                            .fireAndForget { completion() }
+                        )
+                    }
+                default:
+                    break
+                }
+            }
+            return .fireAndForget {
+                completion()
+            }
+
+        case .userNotification(.openSettingsForNotification):
+            return .none
+
+        case .favoriteArtistsPublisherUpdate(let favoriteArtists):
+            if state.favoriteArtists != favoriteArtists {
+                state.favoriteArtists = favoriteArtists
+            }
+
+            return Effect(value: .tabBarAction(.moreAction(.notificationsAction(.regenerateNotifications()))))
 
             // MARK: Artists Loading
         case .artistsPublisherUpdate(let artists):
@@ -260,3 +333,8 @@ func preloadStageImages(stages: IdentifiedArrayOf<Stage>) -> Effect<EventAction,
 }
 
 
+extension UserDefaults {
+    @objc dynamic var favoriteArtists: [ArtistID] {
+        return stringArray(forKey: "favoriteArtists") ?? []
+    }
+}

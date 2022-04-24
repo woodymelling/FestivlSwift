@@ -23,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2046EC3E2814B7D700094617 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2067AB8E27F54B28001E85BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		EF26A0B027D855CB00E10A71 /* FestivlManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FestivlManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF26A0B227D855CB00E10A71 /* FestivlManagerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivlManagerApp.swift; sourceTree = "<group>"; };
@@ -116,6 +117,7 @@
 		EF692E6A27B4CA48006F8E0D /* Festivl */ = {
 			isa = PBXGroup;
 			children = (
+				2046EC3E2814B7D700094617 /* Info.plist */,
 				EF479E4F27B629690075D7E2 /* GoogleService-Info.plist */,
 				EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */,
 				EF692E6F27B4CA49006F8E0D /* Assets.xcassets */,
@@ -449,6 +451,7 @@
 				DEVELOPMENT_TEAM = 7WL45K9C24;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Festivl/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -478,6 +481,7 @@
 				DEVELOPMENT_TEAM = 7WL45K9C24;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Festivl/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

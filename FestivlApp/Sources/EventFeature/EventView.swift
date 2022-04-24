@@ -17,6 +17,9 @@ public struct EventView: View {
         self.store = store
     }
 
+    @AppStorage("favoriteArtists") var favoriteArtists: Data = .init()
+
+
     public var body: some View {
         WithViewStore(store) { viewStore in
 
@@ -28,7 +31,10 @@ public struct EventView: View {
                 }
 
             }
-            .onAppear { viewStore.send(.subscribeToDataPublishers) }
+            .onAppear { viewStore.send(.onAppear) }
+            .onChange(of: viewStore.favoriteArtists, perform: { _ in
+                print("CHANGED FAVORITE ARTISTS")
+            })
         }
     }
 }
@@ -66,7 +72,7 @@ struct EventView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             EventView(
                 store: .init(
-                    initialState: .init(event: .testData),
+                    initialState: .init(event: .testData, isTestMode: true),
                     reducer: eventReducer,
                     environment: .init()
                 )

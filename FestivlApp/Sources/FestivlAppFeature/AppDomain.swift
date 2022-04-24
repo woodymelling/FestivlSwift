@@ -12,13 +12,16 @@ import EventFeature
 
 public struct AppState: Equatable {
     var eventState: EventState?
+    var isTestMode: Bool
 
     public var eventListState: EventListState
 
     public init(
-        eventListState: EventListState = .init()
+        eventListState: EventListState = .init(),
+        isTestMode: Bool
     ) {
         self.eventListState = eventListState
+        self.isTestMode = isTestMode
     }
 }
 
@@ -37,7 +40,7 @@ public let appReducer = Reducer.combine (
     Reducer<AppState, AppAction, AppEnvironment> { state, action, _ in
         switch action {
         case .eventListAction(.selectedEvent(let event)):
-            state.eventState = .init(event: event)
+            state.eventState = .init(event: event, isTestMode: state.isTestMode)
 
             return .none
         case .eventListAction:

@@ -18,6 +18,7 @@ let package = Package(
         .library(name: "GroupSetDetailFeature", targets: ["GroupSetDetailFeature"]),
         .library(name: "iOSComponents", targets: ["iOSComponents"]),
         .library(name: "MoreFeature", targets: ["MoreFeature"]),
+        .library(name: "NotificationsFeature", targets: ["NotificationsFeature"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -27,7 +28,8 @@ let package = Package(
         .package(name: "FestivlLibrary", path: "../FestivlLibrary"),
         .package(name: "Introspect", url: "https://github.com/siteline/SwiftUI-Introspect.git", from: "0.0.0"),
         .package(url: "https://github.com/stonko1994/SimultaneouslyScrollView", from: "1.0.0"),
-        .package(url: "https://github.com/Jake-Short/swiftui-image-viewer.git", from: "2.3.1")
+        .package(url: "https://github.com/Jake-Short/swiftui-image-viewer.git", from: "2.3.1"),
+        .package(url: "https://github.com/miiha/composable-user-notifications", from: "0.2.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -59,7 +61,8 @@ let package = Package(
                 .target(name: "ArtistListFeature"),
                 .target(name: "ScheduleFeature"),
                 .target(name: "ExploreFeature"),
-                .target(name: "MoreFeature")
+                .target(name: "MoreFeature"),
+                .product(name: "ComposableUserNotifications", package: "composable-user-notifications")
             ]
         ),
         .target(
@@ -134,8 +137,17 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "ImageViewer", package: "swiftui-image-viewer")
+                .product(name: "ImageViewer", package: "swiftui-image-viewer"),
+                .target(name: "NotificationsFeature")
             ]
         ),
+        .target(
+            name: "NotificationsFeature",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "Models", package: "FestivlLibrary")
+            ]
+        ),
+
     ]
 )

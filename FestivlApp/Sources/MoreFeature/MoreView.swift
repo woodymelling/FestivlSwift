@@ -7,6 +7,8 @@
 
 import SwiftUI
 import ComposableArchitecture
+import Models
+import NotificationsFeature
 
 public struct MoreView: View {
     let store: Store<MoreState, MoreAction>
@@ -19,16 +21,28 @@ public struct MoreView: View {
         WithViewStore(store) { viewStore in
             NavigationView {
                 List {
+                    NavigationLink {
+                        NotificationsView(
+                            store: store.scope(
+                                state: \.notificationsState,
+                                action: MoreAction.notificationsAction
+                            )
+                        )
+                    } label: {
+                        Label("Notifications", systemImage: "bell.badge.fill")
+                            .labelStyle(ColorfulIconLabelStyle(color: .red))
+                    }
+
+
                     if let imageURL = viewStore.event.siteMapImageURL {
                         NavigationLink(destination: {
                             SiteMapView(imageURL: imageURL)
 
                         }, label: {
-                            Label("Site Map", systemImage: "map")
+                            Label("Site Map", systemImage: "map.fill")
                                 .labelStyle(ColorfulIconLabelStyle(color: .purple))
                         })
                     }
-
                 }
                 .listStyle(.insetGrouped)
                 .navigationTitle("More")
@@ -101,7 +115,17 @@ struct MoreView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             MoreView(
                 store: .init(
-                    initialState: .init(event: .testData),
+                    initialState: .init(
+                        event: .testData,
+                        favoriteArtists: .init(),
+                        schedule: .init(),
+                        artists: Artist.testValues.asIdentifedArray,
+                        stages: Stage.testValues.asIdentifedArray,
+                        isTestMode: true,
+                        notificationsEnabled: false,
+                        notificationTimeBeforeSet: 5,
+                        showingNavigateToSettingsAlert: false
+                    ),
                     reducer: moreReducer,
                     environment: .init()
                 )

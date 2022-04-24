@@ -105,11 +105,23 @@ public extension EventState {
 
     var moreState: MoreState {
         get {
-            .init(event: event)
+            .init(
+                event: event,
+                favoriteArtists: favoriteArtists,
+                schedule: schedule,
+                artists: artists,
+                stages: stages,
+                isTestMode: isTestMode,
+                notificationsEnabled: notificationsEnabled,
+                notificationTimeBeforeSet: notificationTimeBeforeSet,
+                showingNavigateToSettingsAlert: notificatoinsShowingNavigateToSettingsAlert
+            )
         }
 
         set {
-            
+            self.notificationsEnabled = newValue.notificationsEnabled
+            self.notificationTimeBeforeSet = newValue.notificationTimeBeforeSet
+            self.notificatoinsShowingNavigateToSettingsAlert = newValue.showingNavigateToSettingsAlert
         }
     }
 }
@@ -167,5 +179,11 @@ public let tabBarReducer = Reducer.combine(
         state: \EventState.exploreState,
         action: /TabBarAction.exploreAction,
         environment: { _ in .init()}
+    ),
+
+    moreReducer.pullback(
+        state: \EventState.moreState,
+        action: /TabBarAction.moreAction,
+        environment: { _ in .init() }
     )
 )

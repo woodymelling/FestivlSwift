@@ -47,7 +47,11 @@ public struct Storage<T, StorageType> {
 
 public extension Storage where T == StorageType {
     init(key: String, defaultValue: T) {
-        self.init(key: key, defaultValue: defaultValue, transformation: .init(get: { $0 }, set: { $0 }))
+        self.init(
+            key: key,
+            defaultValue: defaultValue,
+            transformation: .init(get: { $0 }, set: { $0 })
+        )
     }
 }
 
