@@ -25,11 +25,8 @@ public struct EventDataView: View {
 
                         if let imageURL = viewStore.event.siteMapImageURL {
                             ZStack {
-                                AsyncImage(url: imageURL) { image in
-                                    image
-                                        .resizable()
-                                        .frame(height: 200)
-                                }
+                                
+                                AsyncImage(url: imageURL)
                                 Button(action: {
                                     viewStore.send(.didRemoveSiteMapImage)
                                 }, label: {

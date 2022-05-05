@@ -39,7 +39,7 @@ public struct ImagePicker: View {
         private var cancellables = Set<AnyCancellable>()
 
         fileprivate let frameSize: CGSize = .square(300)
-        fileprivate let destinationSize: CGSize = .square(1000)
+        fileprivate let destinationSize: CGSize = .square(500)
 
         init() {
 

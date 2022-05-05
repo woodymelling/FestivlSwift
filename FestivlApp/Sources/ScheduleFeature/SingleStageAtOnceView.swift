@@ -47,6 +47,7 @@ public struct SingleStageAtOnceView: View {
                             value: geometry.size.height
                         )
                     })
+
             }
             .onPreferenceChange(HeaderHeightPreferenceKey.self, perform: {
                 headerHeight = $0

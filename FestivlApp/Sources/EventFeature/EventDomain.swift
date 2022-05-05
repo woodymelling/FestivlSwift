@@ -27,14 +27,6 @@ public struct EventState: Equatable {
     var stages: IdentifiedArrayOf<Stage> = .init()
     var schedule: Schedule = .init()
 
-    //    @Storage(
-    //        key: "favoriteArtists",
-    //        defaultValue: [],
-    //        transformation: .init(
-    //            get: { Set($0) },
-    //            set: { Array($0) }
-    //        )
-    //    )
     var favoriteArtists: Set<ArtistID> = [] {
         didSet {
             UserDefaults.standard.set(Array(favoriteArtists), forKey: "favoriteArtists")

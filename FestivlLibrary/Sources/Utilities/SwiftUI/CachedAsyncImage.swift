@@ -50,6 +50,7 @@ public struct ImageCacher {
             let prefetcher = ImagePrefetcher(urls: urls) {
                 skippedResources, failedResources, completedResources in
                 print("These resources are prefetched: \(completedResources)")
+                print("These resource are skipped: \(skippedResources)")
                 continuation.resume()
             }
             prefetcher.start()

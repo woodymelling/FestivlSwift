@@ -19,9 +19,6 @@ struct ScheduleHeaderView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
 
-
-
-
             HStack {
 
                 ForEach(stages) { stage in
@@ -33,21 +30,31 @@ struct ScheduleHeaderView: View {
                             selectedStage = $0
                         }
                     )
-                    .shadow()
+
                 }
                 Spacer()
             }
             .background(Color(uiColor: .systemBackground))
             .frame(maxWidth: .infinity)
             .shadow()
-
         }
     }
 }
 
 private extension View {
     func shadow() -> some View {
-        self.shadow(color: Color(uiColor: .systemBackground), radius: 4, x: 0, y: 0)
+        self.modifier(FestivlShadowViewModifier())
+    }
+}
+
+struct FestivlShadowViewModifier: ViewModifier {
+    @Environment(\.colorScheme) var colorScheme
+    func body(content: Content) -> some View {
+        if colorScheme == .light {
+            content.shadow(radius: 3, x: 0, y:2)
+        } else {
+            content.shadow(color: Color.black, radius: 3, x: 0, y: 2)
+        }
     }
 }
 
@@ -76,6 +83,7 @@ struct ScheduleHeaderButton: View {
             if isSelected {
                 Circle()
                     .fill(stage.color)
+                    .shadow()
             }
         }
         .scaleEffect(press ? 0.8 : 1)
@@ -88,6 +96,7 @@ struct ScheduleHeaderButton: View {
 
             }
         )
+
     }
 }
 
