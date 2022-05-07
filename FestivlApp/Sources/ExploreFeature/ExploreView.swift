@@ -40,6 +40,8 @@ public struct ExploreView: View {
                         },
                         favoriteArtists: viewStore.favoriteArtists
                     )
+                    .navigationBarHidden(true)
+                    .ignoresSafeArea(SafeAreaRegions.all, edges: .all)
                 }
             }
         }

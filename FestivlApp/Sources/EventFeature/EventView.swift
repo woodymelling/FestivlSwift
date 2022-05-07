@@ -48,7 +48,7 @@ struct LoadingView: View {
     @State var timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
 
     var body: some View {
-        CachedAsyncImage(url: event.imageURL, placeholder: {
+        CachedAsyncImage(url: event.imageURL, renderingMode: .template, placeholder: {
             ProgressView()
         })
         .frame(square: 300)
