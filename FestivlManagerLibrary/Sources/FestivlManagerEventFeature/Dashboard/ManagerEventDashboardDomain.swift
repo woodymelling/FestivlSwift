@@ -79,8 +79,8 @@ extension FestivlManagerEventState {
                 zoomAmount: self.scheduleZoomAmount,
                 artists: self.artists,
                 stages: self.stages,
-                artistSets: self.artistSets,
-                groupSets: self.groupSets,
+                schedule: self.localSchedule,
+                liveSchedule: .init(artistSets: self.artistSets, groupSets: self.groupSets),
                 addEditArtistSetState: self.addEditArtistSetState,
                 artistSearchText: self.scheduleArtistSearchText
             )
@@ -90,8 +90,7 @@ extension FestivlManagerEventState {
             self.scheduleSelectedDate = newValue.selectedDate
             self.scheduleZoomAmount = newValue.zoomAmount
             self.addEditArtistSetState = newValue.addEditArtistSetState
-            self.artistSets = newValue.artistSets
-            self.groupSets = newValue.groupSets
+            self.localSchedule = newValue.schedule
             self.scheduleArtistSearchText = newValue.artistSearchText
         }
     }
@@ -146,7 +145,7 @@ public let managerEventDashboardReducer = Reducer.combine(
     managerScheduleReducer.pullback(
         state: \FestivlManagerEventState.scheduleState,
         action: /ManagerEventDashboardAction.scheduleAction,
-        environment: { _ in .init() }
+        environment: { _ in .init(artistSetService: { PublishableScheduleService.inMemoryStore }) }
     ),
 
     eventDataReducer.pullback(

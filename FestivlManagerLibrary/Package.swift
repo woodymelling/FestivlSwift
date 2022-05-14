@@ -135,6 +135,8 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "Components", package: "FestivlLibrary"),
+                .product(name: "Services", package: "FestivlLibrary"),
+                .product(name: "ServiceCore", package: "FestivlLibrary"),
                 .target(name: "MacOSComponents"),
                 .target(name: "AddEditArtistSetFeature")
             ]

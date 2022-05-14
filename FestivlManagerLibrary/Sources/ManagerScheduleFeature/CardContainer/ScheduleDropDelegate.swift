@@ -60,7 +60,7 @@ struct ScheduleDropDelegate: DropDelegate {
 
             switch type {
             case ArtistSet.typeString:
-                guard let artistSet = viewStore.artistSets[id: id] else {
+                guard let artistSet = viewStore.schedule.artistSets[id: id] else {
                     print("Failed to find artistSet with id:", id)
                     return
                 }
@@ -70,7 +70,7 @@ struct ScheduleDropDelegate: DropDelegate {
                 viewStore.send(.didMoveScheduleCard(artistSet.asScheduleItem(), newStage: droppedStage, newTime: newTime))
 
             case GroupSet.typeString:
-                guard let groupSet = viewStore.groupSets[id: id] else {
+                guard let groupSet = viewStore.schedule.groupSets[id: id] else {
                     print("Failed to find groupSet with id:", id)
                     return
                 }
@@ -120,6 +120,7 @@ extension ScheduleItem: DraggableItem {
 protocol DraggableItem: Identifiable where ID == String? {
     var typeString: String { get }
 }
+
 
 extension DraggableItem {
 

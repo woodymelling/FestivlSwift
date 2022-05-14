@@ -30,6 +30,9 @@ public struct ManagerScheduleView: View {
 
                 ManagerTimelineView(store: store)
             }
+            .onAppear {
+                viewStore.send(.onAppear)
+            }
             .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
                     if viewStore.loading {
@@ -42,13 +45,17 @@ public struct ManagerScheduleView: View {
                         Label("Add Artist Set", systemImage: "plus")
                             .labelStyle(.iconOnly)
                     })
+
+                    Button("Publish", action: {
+                        viewStore.send(.publishChanges)
+                    })
                 }
             }
             .sheet(item: viewStore.binding(\ManagerScheduleState.$addEditArtistSetState)) { _ in
                 IfLetStore(
                     store.scope(
                         state: \ManagerScheduleState.addEditArtistSetState,
-                        action: ManagerScheduleAction.addEditArtistSetAction,
+                        action: ManagerScheduleAction.addEditArtistSetAction
                     ),
                     then: AddEditArtistSetView.init
                 )

@@ -8,10 +8,11 @@
 import Foundation
 import FirebaseFirestoreSwift
 import SwiftUI
+import Utilities
 
 public typealias StageID = String
 
-public struct Stage: Codable, Identifiable, Hashable, Equatable {
+public struct Stage: Codable, SettableIdentifiable, Hashable, Equatable {
 
     @DocumentID public var id: StageID?
     public let name: String
