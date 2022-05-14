@@ -56,7 +56,10 @@ public extension EventState {
                 selectedArtistState: scheduleSelectedArtistState,
                 selectedGroupSetState: selectedGroupSetState,
                 deviceOrientation: deviceOrientation,
-                currentTime: currentTime
+                currentTime: currentTime,
+                hasShownTutorialElements: hasDisplayedTutorialElements,
+                showingLandscapeTutorial: showingLandscapeTutorial,
+                showingFilterTutorial: showingFilterTutorial
             )
         }
 
@@ -71,6 +74,9 @@ public extension EventState {
             self.deviceOrientation = newValue.deviceOrientation
             self.currentTime = newValue.currentTime
             self.scheduleFilteringFavorites = newValue.filteringFavorites
+            self.hasDisplayedTutorialElements = newValue.hasShownTutorialElements
+            self.showingLandscapeTutorial = newValue.showingLandscapeTutorial
+            self.showingFilterTutorial = newValue.showingFilterTutorial
 
             if let selectedAristState = newValue.selectedArtistState {
                 favoriteArtists.insertOrRemove(
@@ -114,14 +120,14 @@ public extension EventState {
                 isTestMode: isTestMode,
                 notificationsEnabled: notificationsEnabled,
                 notificationTimeBeforeSet: notificationTimeBeforeSet,
-                showingNavigateToSettingsAlert: notificatoinsShowingNavigateToSettingsAlert
+                showingNavigateToSettingsAlert: notificationsShowingNavigateToSettingsAlert
             )
         }
 
         set {
             self.notificationsEnabled = newValue.notificationsEnabled
             self.notificationTimeBeforeSet = newValue.notificationTimeBeforeSet
-            self.notificatoinsShowingNavigateToSettingsAlert = newValue.showingNavigateToSettingsAlert
+            self.notificationsShowingNavigateToSettingsAlert = newValue.showingNavigateToSettingsAlert
         }
     }
 }
@@ -161,8 +167,7 @@ public let tabBarReducer = Reducer.combine(
             return .none
         }
     }
-    .binding()
-    .debug(),
+    .binding(),
 
     artistListReducer.pullback(
         state: \EventState.artistListState,

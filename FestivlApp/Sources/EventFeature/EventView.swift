@@ -50,6 +50,7 @@ struct LoadingView: View {
     var body: some View {
         CachedAsyncImage(url: event.imageURL, renderingMode: .template, placeholder: {
             ProgressView()
+
         })
         .frame(square: 300)
         .rotationEffect(Angle(degrees: rotationAngle))

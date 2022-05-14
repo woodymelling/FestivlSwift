@@ -10,6 +10,8 @@ import ComposableArchitecture
 import Models
 import ArtistPageFeature
 import GroupSetDetailFeature
+import AlertToast
+import Utilities
 
 enum ScheduleStyle: Equatable {
     case singleStage(Stage)
@@ -18,11 +20,11 @@ enum ScheduleStyle: Equatable {
 
 public struct ScheduleView: View {
     let store: Store<ScheduleState, ScheduleAction>
-    @State var showing: Bool = false
 
     public init(store: Store<ScheduleState, ScheduleAction>) {
         self.store = store
     }
+    @State var showing: Bool = true
 
     public var body: some View {
         WithViewStore(store) { viewStore in
@@ -88,14 +90,47 @@ public struct ScheduleView: View {
                                     "line.3.horizontal.decrease.circle"
                             )
                         })
+                        .alwaysPopover(
+                            isPresented: viewStore.binding(\.$showingFilterTutorial),
+                            content: {
+                                Text(
+                                """
+                                Filter the schedule to only
+                                see your favorite artists
+                                """
+                                )
+                                .multilineTextAlignment(.center)
+                                .padding()
+                                .background(.regularMaterial)
+                            },
+                            duration: 5
+                        )
                     }
                 }
                 .navigationBarTitleDisplayMode(.inline)
-
+                .toast(
+                    isPresenting: viewStore.binding(\.$showingLandscapeTutorial),
+                    duration: 5,
+                    tapToDismiss: true,
+                    alert: {
+                        AlertToast(
+                            displayMode: .alert,
+                            type: .systemImage("arrow.counterclockwise", .primary),
+                            subTitle:
+                                """
+                                Rotate your phone to see
+                                all of the stages at once
+                                """
+                        )
+                    },
+                    completion: {
+                        viewStore.send(.landscapeTutorialHidden)
+                    }
+                )
             }
             .navigationViewStyle(.stack)
             .onAppear {
-                viewStore.send(.subscribeToDataPublishers)
+                viewStore.send(.onAppear, animation: .default)
             }
         }
 

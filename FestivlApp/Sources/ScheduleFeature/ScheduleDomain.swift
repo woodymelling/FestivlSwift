@@ -31,7 +31,11 @@ public struct ScheduleState: Equatable {
         selectedArtistState: ArtistPageState?,
         selectedGroupSetState: GroupSetDetailState?,
         deviceOrientation: DeviceOrientation,
-        currentTime: Date
+        currentTime: Date,
+
+        hasShownTutorialElements: Bool,
+        showingLandscapeTutorial: Bool,
+        showingFilterTutorial: Bool
     ) {
         self.artists = artists
         self.stages = stages
@@ -48,6 +52,9 @@ public struct ScheduleState: Equatable {
         self.deviceOrientation = deviceOrientation
         self.currentTime = currentTime
         self.filteringFavorites = filteringFavorites
+        self.hasShownTutorialElements = hasShownTutorialElements
+        self.showingLandscapeTutorial = showingLandscapeTutorial
+        self.showingFilterTutorial = showingFilterTutorial
     }
 
     public var schedule: Schedule
@@ -69,6 +76,10 @@ public struct ScheduleState: Equatable {
 
     public var currentTime: Date
 
+    public var hasShownTutorialElements: Bool
+    @BindableState public var showingLandscapeTutorial: Bool
+    @BindableState public var showingFilterTutorial: Bool
+
     var isFiltering: Bool {
         // For future filters
         return filteringFavorites
@@ -89,6 +100,12 @@ public enum ScheduleAction: BindableAction {
 
     case zoomed(CGFloat)
     case finishedZooming
+
+    case onAppear
+    case showTutorialElements
+    case landscapeTutorialHidden
+    case showFilterTutorial
+    case filterTutorialHidden
 
     case subscribeToDataPublishers
     case orientationPublisherUpdate(DeviceOrientation)
@@ -132,7 +149,35 @@ public let scheduleReducer = Reducer<ScheduleState, ScheduleAction, ScheduleEnvi
 
     Reducer { state, action, environment in
         switch action {
+
+
         case .binding:
+            return .none
+
+        case .onAppear:
+            return .concatenate(
+                Effect(value: .subscribeToDataPublishers),
+                Effect(value: .showTutorialElements).delay(for: 1, scheduler: DispatchQueue.main).eraseToEffect()
+            )
+
+
+        case .showTutorialElements:
+
+//            guard !state.hasShownTutorialElements else { return .none }
+
+            state.showingLandscapeTutorial = true
+            state.hasShownTutorialElements = true
+            return .none
+
+        case .landscapeTutorialHidden:
+            return Effect(value: .showFilterTutorial)
+
+        case .showFilterTutorial:
+            state.showingFilterTutorial = true
+            return Effect(value: .filterTutorialHidden).delay(for: 5, scheduler: DispatchQueue.main).eraseToEffect()
+
+        case .filterTutorialHidden:
+            state.showingFilterTutorial = false
             return .none
 
         case .zoomed(let val):
@@ -254,7 +299,10 @@ extension Store where State == ScheduleState, Action == ScheduleAction {
                 selectedArtistState: nil,
                 selectedGroupSetState: nil,
                 deviceOrientation: .portrait,
-                currentTime: Date()
+                currentTime: Date(),
+                hasShownTutorialElements: true,
+                showingLandscapeTutorial: false,
+                showingFilterTutorial: false
             ),
             reducer: scheduleReducer,
             environment: .init()

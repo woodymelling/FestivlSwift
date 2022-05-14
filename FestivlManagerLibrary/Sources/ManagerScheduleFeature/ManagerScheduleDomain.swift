@@ -154,7 +154,9 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
     addEditArtistSetReducer.optional().pullback(
         state: \ManagerScheduleState.addEditArtistSetState,
         action: /ManagerScheduleAction.addEditArtistSetAction,
-        environment: { _ in .init()}
+        environment: {
+            .init(artistSetService: $0.artistSetService)
+        }
     ),
 
     timelineHeaderReducer.pullback(

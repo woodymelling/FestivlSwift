@@ -29,7 +29,8 @@ let package = Package(
         .package(name: "Introspect", url: "https://github.com/siteline/SwiftUI-Introspect.git", from: "0.0.0"),
         .package(url: "https://github.com/stonko1994/SimultaneouslyScrollView", from: "1.0.0"),
         .package(url: "https://github.com/Jake-Short/swiftui-image-viewer.git", from: "2.3.1"),
-        .package(url: "https://github.com/miiha/composable-user-notifications", from: "0.2.0")
+        .package(url: "https://github.com/miiha/composable-user-notifications", from: "0.2.0"),
+        .package(url: "https://github.com/elai950/AlertToast", branch: "master"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -92,6 +93,8 @@ let package = Package(
             name: "ScheduleFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .product(name: "AlertToast", package: "AlertToast"),
+
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "Utilities", package: "FestivlLibrary"),
                 .product(name: "Components", package: "FestivlLibrary"),

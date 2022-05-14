@@ -33,7 +33,6 @@ public struct CachedAsyncImage<Content: View>: View {
                     placeholder()
                 }
                 .setProcessor(DownsamplingImageProcessor(size: geo.size))
-                .cacheOriginalImage()
                 #if os(iOS)
                 .scaleFactor(UIScreen.main.scale)
                 #endif

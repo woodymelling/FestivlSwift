@@ -51,6 +51,13 @@ public struct EventState: Equatable {
     var deviceOrientation: DeviceOrientation = .portrait
     var currentTime: Date = Date()
 
+
+
+    @Storage(key: "hasDisplayedTutorialElements", defaultValue: false)
+    var hasDisplayedTutorialElements: Bool
+    var showingLandscapeTutorial = false
+    var showingFilterTutorial = false
+
     // MARK: ExploreState
     var exploreArtists: IdentifiedArrayOf<Artist> = .init()
     var exploreSelectedArtistState: ArtistPageState?
@@ -62,7 +69,7 @@ public struct EventState: Equatable {
     @Storage(key: "notificationsTimeBeforeSet", defaultValue: 15)
     var notificationTimeBeforeSet: Int
 
-    var notificatoinsShowingNavigateToSettingsAlert: Bool = false
+    var notificationsShowingNavigateToSettingsAlert: Bool = false
 
     var eventLoaded: Bool {
         return loadedArtists && loadedStages && loadedArtistSets
@@ -217,8 +224,13 @@ public let eventReducer = Reducer.combine(
                 .filter { $0.imageURL != nil }
                 .shuffled()
                 .asIdentifedArray
-            
-            return Effect(value: .preLoadArtistImages)
+
+            state.loadedArtists = true
+
+            return .concatenate(
+                Effect(value: .preLoadArtistImages),
+                Effect(value: .setUpWhenDataLoaded)
+            )
 
         case .preLoadArtistImages:
 
@@ -227,7 +239,7 @@ public let eventReducer = Reducer.combine(
                 .eraseToEffect()
 
         case .finishedLoadingArtistImages:
-            state.loadedArtists = true
+
             return Effect(value: .setUpWhenDataLoaded)
 
             // MARK: Stages Loading
@@ -308,7 +320,7 @@ public let eventReducer = Reducer.combine(
     )
 
 )
-//    .debug()
+    .debug()
 
 func preloadArtistImages(artists: IdentifiedArrayOf<Artist>) -> Effect<EventAction, Never> {
     return .asyncTask {

@@ -48,7 +48,7 @@ public struct ManagerScheduleView: View {
                 IfLetStore(
                     store.scope(
                         state: \ManagerScheduleState.addEditArtistSetState,
-                        action: ManagerScheduleAction.addEditArtistSetAction
+                        action: ManagerScheduleAction.addEditArtistSetAction,
                     ),
                     then: AddEditArtistSetView.init
                 )
