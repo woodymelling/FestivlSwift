@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Models
+import Utilities
 
 public struct ArtistIcon: View {
 
@@ -16,14 +17,11 @@ public struct ArtistIcon: View {
 
     var artist: Artist
     public var body: some View {
-        AsyncImage(url: artist.imageURL) { image in
-            image
-                .resizable()
-        } placeholder: {
+        CachedAsyncImage(url: artist.imageURL, placeholder: {
             Image(systemName: "person.fill")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-        }
+        })
         
     }
 }

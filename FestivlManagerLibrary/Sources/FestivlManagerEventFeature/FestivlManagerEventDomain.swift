@@ -55,6 +55,7 @@ public struct FestivlManagerEventState: Equatable {
     var addEditArtistSetState: AddEditArtistSetState?
     var scheduleArtistSearchText = ""
     var localSchedule: ManagerSchedule = .init(artistSets: .init(), groupSets: .init())
+    var hasUnpublishedChanges = false
 
     var dashboardState: Self {
         get {

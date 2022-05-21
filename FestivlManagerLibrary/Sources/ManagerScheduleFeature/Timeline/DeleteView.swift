@@ -56,17 +56,28 @@ struct ScheduleDelegateDropDelegate: DropDelegate {
             let type = String(split[1])
             let id = String(split[2])
 
-            guard type == ArtistSet.typeString else {
+            switch type {
+            case ArtistSet.typeString:
+                guard let artistSet = viewStore.schedule.artistSets[id: id] else {
+                    print("Failed to find artistSet with id:", id)
+                    return
+                }
+
+                viewStore.send(.deleteArtistSet(artistSet))
+
+            case GroupSet.typeString:
+
+                guard let groupSet = viewStore.schedule.groupSets[id: id] else {
+                    print("Failed to find groupSet with id:", id)
+                    return
+                }
+
+                viewStore.send(.deleteGroupSet(groupSet))
+
+            default:
                 print("Wrong drop type")
                 return
             }
-
-            guard let artistSet = viewStore.schedule.artistSets[id: id] else {
-                print("Failed to find artistSet with id:", id)
-                return
-            }
-
-            viewStore.send(.deleteArtistSet(artistSet))
         }
 
         return true

@@ -22,6 +22,7 @@ public struct ManagerScheduleState: Equatable {
         stages: IdentifiedArrayOf<Stage>,
         schedule: ManagerSchedule,
         liveSchedule: ManagerSchedule,
+        hasUnpublishedChanges: Bool,
         addEditArtistSetState: AddEditArtistSetState?,
         artistSearchText: String
     ) {
@@ -32,6 +33,7 @@ public struct ManagerScheduleState: Equatable {
         self.stages = stages
         self.schedule = schedule
         self.liveSchedule = liveSchedule
+        self.hasUnpublishedChanges = hasUnpublishedChanges
         self.addEditArtistSetState = addEditArtistSetState
         self.artistSearchText = artistSearchText
     }
@@ -48,6 +50,7 @@ public struct ManagerScheduleState: Equatable {
     public var liveSchedule: ManagerSchedule
 
     public var loading: Bool = false
+    public var hasUnpublishedChanges: Bool
 
     @BindableState public var addEditArtistSetState: AddEditArtistSetState?
     
@@ -139,10 +142,14 @@ public enum ManagerScheduleAction: BindableAction {
     case deleteArtistSet(ArtistSet)
     case finishedDeletingArtistSet
 
+    case deleteGroupSet(GroupSet)
+    case finishedDeletingGroupSet
+
     case scheduleCard(id: ScheduleCardState.ID, action: ScheduleCardAction)
 
     case publishChanges
     case finishedPublishingChanges
+    case changesPublisherUpdate(Bool)
 }
 
 public struct ManagerScheduleEnvironment {
@@ -183,15 +190,30 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
             return .none
 
         case .onAppear:
-            return environment
-                .scheduleService()
-                .schedulePublisher(eventID: state.event.id!)
-                .map {
-                    ManagerScheduleAction.scheduleUpdate(.init(artistSets: $0.0, groupSets: $0.1))
-                }
-                .eraseErrorToPrint(errorSource: "Schedule error")
-                .receive(on: DispatchQueue.main)
-                .eraseToEffect()
+            return .merge(
+                environment
+                    .scheduleService()
+                    .schedulePublisher(eventID: state.event.id!)
+                    .map {
+                        ManagerScheduleAction.scheduleUpdate(.init(artistSets: $0.0, groupSets: $0.1))
+                    }
+                    .eraseErrorToPrint(errorSource: "Schedule error")
+                    .receive(on: DispatchQueue.main)
+                    .eraseToEffect(),
+
+                environment
+                    .scheduleService()
+                    .hasChangesPublisher
+                    .map {
+                        ManagerScheduleAction.changesPublisherUpdate($0)
+                    }
+                    .receive(on: DispatchQueue.main)
+                    .eraseToEffect()
+            )
+
+        case .changesPublisherUpdate(let hasChanges):
+            state.hasUnpublishedChanges = hasChanges
+            return .none
 
         case .scheduleUpdate(let newSchedule):
             state.schedule = newSchedule
@@ -235,12 +257,16 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
             return .none
 
         case .deleteArtistSet(let artistSet):
-
             return deleteArtistSet(artistSet, eventID: state.event.id!, environment: environment)
 
-        case .finishedSavingScheduleCardMove, .finishedSavingArtistDrop, .finishedDeletingArtistSet:
+        case .deleteGroupSet(let groupSet):
+            return deleteGroupSet(groupSet, eventID: state.event.id!, environment: environment)
+
+        case .finishedSavingScheduleCardMove, .finishedSavingArtistDrop, .finishedDeletingArtistSet, .finishedDeletingGroupSet:
             state.loading = false
             return .none
+
+            
 
         case .scheduleCard(id: let id, action: .didTap):
 
@@ -413,6 +439,22 @@ private func deleteArtistSet(
     .receive(on: DispatchQueue.main)
     .map { _ in
         ManagerScheduleAction.finishedDeletingArtistSet
+    }
+    .eraseToEffect()
+}
+
+private func deleteGroupSet(
+    _ groupSet: GroupSet,
+    eventID: String,
+    environment: ManagerScheduleEnvironment
+) -> Effect<ManagerScheduleAction, Never> {
+    return Effect.asyncTask {
+        try await environment.scheduleService()
+            .deleteGroupSet(groupSet, eventID: eventID, batch: nil)
+    }
+    .receive(on: DispatchQueue.main)
+    .map { _ in
+        ManagerScheduleAction.finishedDeletingGroupSet
     }
     .eraseToEffect()
 }

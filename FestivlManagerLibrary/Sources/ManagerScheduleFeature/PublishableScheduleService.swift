@@ -15,7 +15,7 @@ import Firebase
 
 public protocol PublishableScheduleServiceProtocol: ScheduleServiceProtocol {
     func publishChanges(eventID: EventID) async throws -> Void
-
+    var hasChangesPublisher: AnyPublisher<Bool, Never> { get }
 }
 
 public struct ManagerSchedule: Equatable {
@@ -107,7 +107,8 @@ private enum Change {
             var groupSet = groupSet
             groupSet.id = changedID
 
-            try await scheduleService.updateGroupSet(groupSet, eventID: eventID, batch: batch)
+            try await scheduleService.deleteGroupSet(groupSet, eventID: eventID, batch: batch)
+
             return groupSet.id
         }
     }
@@ -121,15 +122,7 @@ public class PublishableScheduleService: PublishableScheduleServiceProtocol {
     }
 
     @Published public var schedule: ManagerSchedule
-
-
-
-
-    private var changes: [String: [Change]] = [:] {
-        didSet {
-            print("LocalStoreChanges:", changes)
-        }
-    }
+    @Published private var changes: [String: [Change]] = [:]
 
     private func makeChange(_ change: Change) {
         changes[change.setID, default: []]
@@ -214,6 +207,14 @@ public class PublishableScheduleService: PublishableScheduleServiceProtocol {
                 ($0.artistSets, $0.groupSets)
             }
             .setFailureType(to: FestivlError.self)
+            .eraseToAnyPublisher()
+    }
+
+    public var hasChangesPublisher: AnyPublisher<Bool, Never> {
+        return $changes
+            .map {
+                return !$0.isEmpty
+            }
             .eraseToAnyPublisher()
     }
 }

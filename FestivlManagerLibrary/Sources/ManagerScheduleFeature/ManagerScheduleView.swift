@@ -46,6 +46,12 @@ public struct ManagerScheduleView: View {
                             .labelStyle(.iconOnly)
                     })
 
+                    if viewStore.hasUnpublishedChanges {
+                        Label("Unpublished Changes", systemImage: "exclamationmark.triangle.fill")
+                            .foregroundColor(.red)
+                            .labelStyle(.titleAndIcon)
+                    }
+                  
                     Button("Publish", action: {
                         viewStore.send(.publishChanges)
                     })

@@ -81,6 +81,7 @@ extension FestivlManagerEventState {
                 stages: self.stages,
                 schedule: self.localSchedule,
                 liveSchedule: .init(artistSets: self.artistSets, groupSets: self.groupSets),
+                hasUnpublishedChanges: self.hasUnpublishedChanges,
                 addEditArtistSetState: self.addEditArtistSetState,
                 artistSearchText: self.scheduleArtistSearchText
             )
@@ -92,6 +93,7 @@ extension FestivlManagerEventState {
             self.addEditArtistSetState = newValue.addEditArtistSetState
             self.localSchedule = newValue.schedule
             self.scheduleArtistSearchText = newValue.artistSearchText
+            self.hasUnpublishedChanges = newValue.hasUnpublishedChanges
         }
     }
 
