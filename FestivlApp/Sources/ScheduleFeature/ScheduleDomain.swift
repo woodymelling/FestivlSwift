@@ -163,7 +163,7 @@ public let scheduleReducer = Reducer<ScheduleState, ScheduleAction, ScheduleEnvi
 
         case .showTutorialElements:
 
-//            guard !state.hasShownTutorialElements else { return .none }
+            guard !state.hasShownTutorialElements else { return .none }
 
             state.showingLandscapeTutorial = true
             state.hasShownTutorialElements = true
