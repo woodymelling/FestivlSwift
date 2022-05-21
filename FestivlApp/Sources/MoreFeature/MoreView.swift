@@ -43,6 +43,24 @@ public struct MoreView: View {
                                 .labelStyle(ColorfulIconLabelStyle(color: .purple))
                         })
                     }
+
+                    if let contactNumbers = viewStore.event.contactNumbers {
+                        NavigationLink(destination: {
+
+                        }, label: {
+                            Label("Contact Information", systemImage: "phone")
+                                .labelStyle(ColorfulIconLabelStyle(color: .blue))
+                        })
+                    }
+
+                    if let address = viewStore.event.address {
+                        NavigationLink(destination: {
+
+                        }, label: {
+                            Label("Address", systemImage: "mappin")
+                                .labelStyle(ColorfulIconLabelStyle(color: .blue))
+                        })
+                    }
                 }
                 .listStyle(.insetGrouped)
                 .navigationTitle("More")

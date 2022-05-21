@@ -57,6 +57,13 @@ public struct FestivlManagerEventState: Equatable {
     var localSchedule: ManagerSchedule = .init(artistSets: .init(), groupSets: .init())
     var hasUnpublishedChanges = false
 
+    // EventDataState:
+    var contactNumbers: IdentifiedArrayOf<ContactNumber>
+    var contactNumberText: String = ""
+    var contactNumberDescriptionText: String = ""
+    var eventDataAddress: String
+    var eventDataTimeZone: String
+
     var dashboardState: Self {
         get {
             return self
@@ -69,6 +76,9 @@ public struct FestivlManagerEventState: Equatable {
     public init(event: Event) {
         self.event = event
         self.scheduleSelectedDate = event.festivalDates.first!.startOfDay(dayStartsAtNoon: event.dayStartsAtNoon)
+        self.contactNumbers = event.contactNumbers ?? .init()
+        self.eventDataAddress = event.address ?? ""
+        self.eventDataTimeZone = event.timeZone ?? ""
     }
 }
 

@@ -10,17 +10,46 @@ import Models
 import AppKit
 import Services
 
+
+
 public struct EventDataState: Equatable {
-    public init(event: Event) {
+    public init(
+        event: Event,
+        contactNumbers: IdentifiedArrayOf<ContactNumber>,
+        contactNumberText: String,
+        contactNumberDescriptionText: String,
+        addressText: String,
+        timeZone: String
+    ) {
         self.event = event
+        self.contactNumbers = contactNumbers
+        self.contactNumberText = contactNumberText
+        self.contactNumberDescriptionText = contactNumberDescriptionText
+        self.address = addressText
+        self.timeZone = timeZone
+
     }
+
+    public var contactNumbers: IdentifiedArrayOf<ContactNumber> = []
+
+    @BindableState public var contactNumberText: String
+    @BindableState public var contactNumberDescriptionText: String
+    @BindableState public var address: String = ""
+    @BindableState public var timeZone: String = ""
+
 
     public let event: Event
 }
 
-public enum EventDataAction {
+public enum EventDataAction: BindableAction {
+
+    case binding(_ action: BindingAction<EventDataState>)
     case didSelectSiteMapImage(NSImage)
     case didRemoveSiteMapImage
+
+    case didTapSaveContactNumber
+    case didTapSaveData
+    
 
     case finishedUpdatingEvent
     case uploadedImage(URL)
@@ -45,6 +74,10 @@ public struct EventDataEnvironment {
 
 public let eventDataReducer = Reducer<EventDataState, EventDataAction, EventDataEnvironment> { state, action, environment in
     switch action {
+
+    case .binding:
+        return .none
+        
     case .didSelectSiteMapImage(let image):
         return uploadImage(image, environment: environment)
 
@@ -53,6 +86,23 @@ public let eventDataReducer = Reducer<EventDataState, EventDataAction, EventData
 
         event.siteMapImageURL = nil
         return updateEvent(event: event, environment: environment)
+
+    case .didTapSaveContactNumber:
+        state.contactNumbers.append(.init(phoneNumber: state.contactNumberText, description: state.contactNumberDescriptionText))
+        state.contactNumberText = ""
+        state.contactNumberDescriptionText = ""
+
+        return .none
+
+    case .didTapSaveData:
+        var event = state.event
+
+        event.address = state.address
+        event.contactNumbers = state.contactNumbers
+        event.timeZone = state.timeZone
+
+        return updateEvent(event: event, environment: environment)
+
 
     case .finishedUpdatingEvent:
         return .none
@@ -63,8 +113,10 @@ public let eventDataReducer = Reducer<EventDataState, EventDataAction, EventData
         event.siteMapImageURL = url
 
         return updateEvent(event: event, environment: environment)
+
     }
 }
+.binding()
 
 private func uploadImage(_ image: NSImage, environment: EventDataEnvironment) -> Effect<EventDataAction, Never> {
     return Effect.asyncTask {

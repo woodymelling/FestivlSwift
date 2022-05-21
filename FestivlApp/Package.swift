@@ -31,6 +31,8 @@ let package = Package(
         .package(url: "https://github.com/Jake-Short/swiftui-image-viewer.git", from: "2.3.1"),
         .package(url: "https://github.com/miiha/composable-user-notifications", from: "0.2.0"),
         .package(url: "https://github.com/elai950/AlertToast", branch: "master"),
+        .package(name: "Popovers", url: "https://github.com/aheze/Popovers", from: "1.3.2")
+
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -94,6 +96,7 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "AlertToast", package: "AlertToast"),
+                .product(name: "Popovers", package: "Popovers"),
 
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "Utilities", package: "FestivlLibrary"),

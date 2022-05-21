@@ -99,11 +99,23 @@ extension FestivlManagerEventState {
 
     var eventDataState: EventDataState {
         get {
-            .init(event: event)
+            .init(
+                event: event,
+                contactNumbers: contactNumbers,
+                contactNumberText: contactNumberText,
+                contactNumberDescriptionText: contactNumberDescriptionText,
+                addressText: self.eventDataAddress,
+                timeZone: self.eventDataTimeZone
+            )
         }
 
         set {
             self.event = newValue.event
+            self.contactNumbers = newValue.contactNumbers
+            self.contactNumberText = newValue.contactNumberText
+            self.contactNumberDescriptionText = newValue.contactNumberDescriptionText
+            self.eventDataAddress = newValue.address
+            self.eventDataTimeZone = newValue.timeZone
         }
     }
 }

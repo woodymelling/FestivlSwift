@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import MacOSComponents
 
+
 public struct EventDataView: View {
     let store: Store<EventDataState, EventDataAction>
 
@@ -25,8 +26,18 @@ public struct EventDataView: View {
 
                         if let imageURL = viewStore.event.siteMapImageURL {
                             ZStack {
-                                
-                                AsyncImage(url: imageURL)
+                                AsyncImage(
+                                    url: imageURL
+//                                    content: { image in
+//
+//                                        image
+//                                            .resizable()
+//                                            .aspectRatio(contentMode: .fit)
+//                                            .frame(width: 200, height: 200)
+//                                    },
+//                                    placeholder: { }
+                                )
+
                                 Button(action: {
                                     viewStore.send(.didRemoveSiteMapImage)
                                 }, label: {
@@ -51,6 +62,67 @@ public struct EventDataView: View {
                         .buttonStyle(.borderedProminent)
                     }
 
+                    Divider()
+
+                    Section(header: Text("Contact Numbers").font(.headline)) {
+
+                        ForEach(viewStore.contactNumbers, content: { number in
+                            HStack {
+
+                                Text(number.description)
+
+
+                                Text(number.phoneNumber)
+
+                                Spacer()
+                                Button {
+
+                                } label: {
+                                    Label("Remove", systemImage: "trash")
+                                }
+
+                            }
+                            .textFieldStyle(.roundedBorder)
+                        })
+
+
+                        VStack {
+                            TextField("Description", text: viewStore.binding(\.$contactNumberDescriptionText))
+                            TextField("Phone Number", text: viewStore.binding(\.$contactNumberText))
+
+                        }
+
+                        Button("Save", action: {
+                            viewStore.send(.didTapSaveContactNumber)
+                        })
+                    }
+
+                    Divider()
+
+                    Section(header: Text("Location").font(.headline)) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Address")
+                                TextEditor(text: viewStore.binding(\.$address))
+                                    .frame(height: 100)
+                            }
+                        }
+
+
+                        Picker("Time Zone", selection: viewStore.binding(\.$timeZone), content: {
+                            ForEach(TimeZone.knownTimeZoneIdentifiers, id: \.self) { tz in
+                                if let timeZone = TimeZone(identifier: tz) {
+                                    Text(timeZone.identifier)
+                                }
+                            }
+                        })
+                    }
+
+                    Spacer()
+                    Button("Save all data") {
+                        viewStore.send(.didTapSaveData)
+                    }
+
                 }
             }
 
@@ -64,7 +136,7 @@ struct EventDataView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             EventDataView(
                 store: .init(
-                    initialState: .init(event: .testData),
+                    initialState: .init(event: .testData, contactNumbers: .init(), contactNumberText: "", contactNumberDescriptionText: "", addressText: "", timeZone: ""),
                     reducer: eventDataReducer,
                     environment: .init()
                 )

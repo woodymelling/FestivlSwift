@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseFirestoreSwift
 import Utilities
+import ComposableArchitecture
 
 public typealias EventID = String
 
@@ -19,7 +20,10 @@ public struct Event: Codable, SettableIdentifiable {
         endDate: Date,
         dayStartsAtNoon: Bool,
         imageURL: URL?,
-        siteMapImageURL: URL?
+        siteMapImageURL: URL?,
+        contactNumbers: IdentifiedArrayOf<ContactNumber>,
+        address: String,
+        timeZone: String
     ) {
         self.id = id
         self.name = name
@@ -27,6 +31,9 @@ public struct Event: Codable, SettableIdentifiable {
         self.endDate = endDate
         self.dayStartsAtNoon = dayStartsAtNoon
         self.imageURL = imageURL
+        self.contactNumbers = contactNumbers
+        self.address = address
+        self.timeZone = timeZone
     }
 
     @DocumentID public var id: EventID?
@@ -36,6 +43,9 @@ public struct Event: Codable, SettableIdentifiable {
     public var dayStartsAtNoon: Bool
     public var imageURL: URL?
     public var siteMapImageURL: URL?
+    public var contactNumbers: IdentifiedArrayOf<ContactNumber>?
+    public var address: String?
+    public var timeZone: String?
 
     public var festivalDates: [Date] {
         var dates: [Date] = []
@@ -67,8 +77,23 @@ public extension Event {
             endDate: Date(timeInterval: 100000, since: Date()),
             dayStartsAtNoon: true,
             imageURL: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/festivl.appspot.com/o/userContent%2FB6CCE847-7E71-4AB7-9EE1-3414434EA17F.png?alt=media&token=87dda3ba-377f-48b3-bfbd-30bcc2dbbc6c"),
-            siteMapImageURL: nil
+            siteMapImageURL: nil,
+            contactNumbers: .init(),
+            address: "",
+            timeZone: ""
         )
+    }
+}
+
+
+public struct ContactNumber: Identifiable, Equatable, Codable {
+    @DocumentID public var id: String?
+    public var phoneNumber: String
+    public var description: String
+
+    public init(phoneNumber: String, description: String) {
+        self.phoneNumber = phoneNumber
+        self.description = description
     }
 }
 
