@@ -10,6 +10,7 @@ import Utilities
 import Foundation
 import ComposableArchitecture
 import SwiftUI
+import ServiceCore
 
 public struct ArtistSet: SettableIdentifiable, Codable, Equatable {
 

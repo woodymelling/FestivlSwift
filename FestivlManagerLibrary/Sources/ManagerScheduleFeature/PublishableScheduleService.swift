@@ -108,6 +108,7 @@ private enum Change {
             groupSet.id = changedID
 
             try await scheduleService.deleteGroupSet(groupSet, eventID: eventID, batch: batch)
+
             return groupSet.id
         }
     }
@@ -121,10 +122,6 @@ public class PublishableScheduleService: PublishableScheduleServiceProtocol {
     }
 
     @Published public var schedule: ManagerSchedule
-
-
-
-
     @Published private var changes: [String: [Change]] = [:]
 
     private func makeChange(_ change: Change) {

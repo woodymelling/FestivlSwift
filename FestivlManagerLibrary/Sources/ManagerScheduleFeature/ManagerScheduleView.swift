@@ -51,7 +51,7 @@ public struct ManagerScheduleView: View {
                             .foregroundColor(.red)
                             .labelStyle(.titleAndIcon)
                     }
-
+                  
                     Button("Publish", action: {
                         viewStore.send(.publishChanges)
                     })

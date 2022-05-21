@@ -262,6 +262,8 @@ public let eventReducer = Reducer.combine(
 
         case .artistSetsPublisherUpdate(let scheduleData):
 
+            state.schedule = .init()
+
             for artistSet in scheduleData.artistSets {
                 state.schedule.insert(
                     for: artistSet.scheduleKey(dayStartsAtNoon: state.event.dayStartsAtNoon),
@@ -320,7 +322,7 @@ public let eventReducer = Reducer.combine(
     )
 
 )
-    .debug()
+//    .debug()
 
 func preloadArtistImages(artists: IdentifiedArrayOf<Artist>) -> Effect<EventAction, Never> {
     return .asyncTask {
