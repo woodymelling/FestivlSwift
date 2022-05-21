@@ -15,6 +15,7 @@ import AddEditArtistSetFeature
 import AddEditEventFeature
 import ManagerArtistsFeature
 import EventDataFeature
+import ManagerScheduleFeature
 
 public struct FestivlManagerEventState: Equatable {
     public var event: Event
@@ -53,8 +54,8 @@ public struct FestivlManagerEventState: Equatable {
     var scheduleZoomAmount: CGFloat = 1
     var addEditArtistSetState: AddEditArtistSetState?
     var scheduleArtistSearchText = ""
-
-    
+    var localSchedule: ManagerSchedule = .init(artistSets: .init(), groupSets: .init())
+    var hasUnpublishedChanges = false
 
     var dashboardState: Self {
         get {
@@ -143,6 +144,9 @@ public let festivlManagerEventReducer = Reducer.combine(
             state.artistSets = sets.artistSets
             state.groupSets = sets.groupSets
             state.loadedArtistSets = true
+
+            PublishableScheduleService.inMemoryStore.schedule = .init(artistSets: sets.0, groupSets: sets.1)
+            
 
             return .none
 

@@ -7,11 +7,12 @@
 
 import Foundation
 import FirebaseFirestoreSwift
+import Utilities
 
 public typealias ArtistID = String
 
 
-public struct Artist: Codable, Identifiable, Hashable {
+public struct Artist: Codable, SettableIdentifiable, Hashable {
     public init(
         id: ArtistID? = nil,
         name: String,

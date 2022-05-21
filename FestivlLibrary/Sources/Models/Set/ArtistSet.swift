@@ -11,7 +11,7 @@ import Foundation
 import ComposableArchitecture
 import SwiftUI
 
-public struct ArtistSet: Identifiable, Codable, Equatable {
+public struct ArtistSet: SettableIdentifiable, Codable, Equatable {
 
     @DocumentID public var id: String?
     public var artistID: ArtistID

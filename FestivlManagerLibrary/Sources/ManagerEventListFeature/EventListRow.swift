@@ -7,25 +7,18 @@
 
 import SwiftUI
 import Models
+import Utilities
 
 struct EventListRow: View {
     var event: Event
     var body: some View {
         HStack {
-            AsyncImage(url: event.imageURL) { imagePhase in
-                switch imagePhase {
-                case let .success(image):
-                    image.resizable()
-                case .empty, .failure:
-                    Image(systemName: "music.note.house")
-                        .resizable()
-                        .renderingMode(.template)
-                        .foregroundColor(.primary)
-                @unknown default:
-                    EmptyView()
-                }
-
-            }
+            CachedAsyncImage(url: event.imageURL, placeholder: {
+                Image(systemName: "music.note.house")
+                    .resizable()
+                    .renderingMode(.template)
+                    .foregroundColor(.primary)
+            })
             .frame(width: 75, height: 75)
 
             VStack(alignment: .leading) {

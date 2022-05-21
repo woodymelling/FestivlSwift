@@ -17,10 +17,23 @@ import IdentifiedCollections
 public protocol Service { }
 
 public extension Service {
-    @discardableResult func createDocument<T: Encodable>(reference: CollectionReference, data: T) async throws -> DocumentReference {
+    
+    @discardableResult func createDocument<T: Encodable & SettableIdentifiable, Wrapped>(reference: CollectionReference, data: T, batch: WriteBatch? = nil) async throws -> DocumentReference where T.ID == Wrapped? {
+        var mutableData = data
+        mutableData.id = nil
+
         return try await withUnsafeThrowingContinuation { continuation in
             do {
-                let document = try reference.addDocument(from: data)
+                let document: DocumentReference
+                if let batch = batch {
+
+                    let documentReference = reference.document(UUID().uuidString)
+                    try batch.setData(from: mutableData, forDocument: documentReference)
+                    document = documentReference
+                } else {
+
+                    document = try reference.addDocument(from: mutableData)
+                }
                 continuation.resume(returning: document)
             } catch {
                 continuation.resume(throwing: error)
@@ -29,10 +42,15 @@ public extension Service {
         }
     }
 
-    func updateDocument<T: Encodable>(documentReference: DocumentReference, data: T) async throws {
+    func updateDocument<T: Encodable>(documentReference: DocumentReference, data: T, batch: WriteBatch? = nil) async throws {
         return try await withUnsafeThrowingContinuation { continuation in
             do {
-                try documentReference.setData(from: data)
+                if let batch = batch {
+                    try batch.setData(from: data, forDocument: documentReference)
+                } else {
+                    try documentReference.setData(from: data)
+                }
+
                 continuation.resume()
             } catch {
                 continuation.resume(throwing: error)
@@ -40,9 +58,15 @@ public extension Service {
         }
     }
 
-    func deleteDocument(documentReference: DocumentReference) async throws {
+    func deleteDocument(documentReference: DocumentReference, batch: WriteBatch? = nil) async throws {
         return try await withUnsafeThrowingContinuation { continuation in
-            documentReference.delete()
+
+            if let batch = batch {
+                batch.deleteDocument(documentReference)
+            } else {
+
+                documentReference.delete()
+            }
             continuation.resume()
         }
     }

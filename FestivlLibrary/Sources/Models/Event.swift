@@ -11,7 +11,7 @@ import Utilities
 
 public typealias EventID = String
 
-public struct Event: Codable, Identifiable {
+public struct Event: Codable, SettableIdentifiable {
     public init(
         id: EventID?,
         name: String,
