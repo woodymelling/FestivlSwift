@@ -248,13 +248,15 @@ private func saveArtistSet(
             artistSet = try await environment.artistSetService()
                 .createArtistSet(
                     artistSet,
-                    eventID: state.event.id!
+                    eventID: state.event.id!,
+                    batch: nil
                 )
         case .editArtistSet(let orignalSet):
             artistSet.id = orignalSet.id
             try await environment.artistSetService().updateArtistSet(
                 artistSet,
-                eventID: state.event.id!
+                eventID: state.event.id!,
+                batch: nil
             )
         case .editGroupSet:
             // Delete old artistSet, upload new group set
@@ -305,11 +307,11 @@ private func saveGroupSet(
         do {
             switch state.mode {
             case .create:
-                groupSet = try await environment.artistSetService().createGroupSet(groupSet, eventID: state.event.id!)
+                groupSet = try await environment.artistSetService().createGroupSet(groupSet, eventID: state.event.id!, batch: nil)
 
             case .editGroupSet(let originalGroupSet):
                 groupSet.id = originalGroupSet.id
-                try await environment.artistSetService().updateGroupSet(groupSet, eventID: state.event.id!)
+                try await environment.artistSetService().updateGroupSet(groupSet, eventID: state.event.id!, batch: nil)
 
             case .editArtistSet:
                 // Delete the old artistSet, create new GroupSet

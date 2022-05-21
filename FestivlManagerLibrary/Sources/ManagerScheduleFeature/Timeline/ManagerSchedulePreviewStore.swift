@@ -21,13 +21,14 @@ extension Store where State == ManagerScheduleState, Action == ManagerScheduleAc
                 zoomAmount: 1,
                 artists: Artist.testValues.asIdentifedArray,
                 stages: Stage.testValues.asIdentifedArray,
-                artistSets: ArtistSet.testValues(startTime: startTime).asIdentifedArray,
-                groupSets: .init(),
+                schedule: .init(artistSets: ArtistSet.testValues(startTime: startTime).asIdentifedArray, groupSets: .init()),
+                liveSchedule: .init(artistSets: ArtistSet.testValues(startTime: startTime).asIdentifedArray, groupSets: .init()),
                 addEditArtistSetState: nil,
                 artistSearchText: ""
             ),
             reducer: managerScheduleReducer,
-            environment: .init()
+            environment: .init(artistSetService: { PublishableScheduleService(schedule: .init(artistSets: .init(), groupSets: .init())) })
+
         )
     }
 }

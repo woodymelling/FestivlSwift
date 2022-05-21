@@ -61,7 +61,7 @@ struct ScheduleDelegateDropDelegate: DropDelegate {
                 return
             }
 
-            guard let artistSet = viewStore.artistSets[id: id] else {
+            guard let artistSet = viewStore.schedule.artistSets[id: id] else {
                 print("Failed to find artistSet with id:", id)
                 return
             }
