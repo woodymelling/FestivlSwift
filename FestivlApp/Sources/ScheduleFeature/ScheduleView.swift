@@ -12,6 +12,8 @@ import ArtistPageFeature
 import GroupSetDetailFeature
 import AlertToast
 import Utilities
+import Popovers
+import Components
 
 enum ScheduleStyle: Equatable {
     case singleStage(Stage)
@@ -60,12 +62,12 @@ public struct ScheduleView: View {
                                 Button(action: {
                                     viewStore.send(.selectedDate(date), animation: .default)
                                 }, label: {
-                                    Text(date.formatted(.dateTime.weekday(.wide)))
+                                    Text(FestivlFormatting.weekdayFormat(for: viewStore.selectedDate))
                                 })
                             })
                         } label: {
                             HStack {
-                                Text(viewStore.selectedDate.formatted(.dateTime.weekday(.wide)))
+                                Text(FestivlFormatting.weekdayFormat(for: viewStore.selectedDate))
                                     .font(.title2)
                                 Image(systemName: "chevron.down")
 
@@ -89,22 +91,18 @@ public struct ScheduleView: View {
                                     "line.3.horizontal.decrease.circle.fill" :
                                     "line.3.horizontal.decrease.circle"
                             )
+                            .if(viewStore.showingFilterTutorial, transform: {
+                                $0.colorMultiply(.gray)
+                            })
                         })
-                        .alwaysPopover(
-                            isPresented: viewStore.binding(\.$showingFilterTutorial),
-                            content: {
-                                Text(
-                                """
-                                Filter the schedule to only
-                                see your favorite artists
-                                """
-                                )
-                                .multilineTextAlignment(.center)
-                                .padding()
-                                .background(.regularMaterial)
-                            },
-                            duration: 5
-                        )
+                        .popover(present: viewStore.binding(\.$showingFilterTutorial), attributes: { $0.dismissal.mode = .tapOutside }) {
+                            ArrowPopover(arrowSide: .top(.mostClockwise)) {
+                                Text("Filter the schedule to only see your favorite artists")
+                            }
+                            .onTapGesture {
+                                viewStore.send(.binding(.set(\.$showingFilterTutorial, false)))
+                            }
+                        }
                     }
                 }
                 .navigationBarTitleDisplayMode(.inline)
@@ -133,8 +131,6 @@ public struct ScheduleView: View {
                 viewStore.send(.onAppear, animation: .default)
             }
         }
-
-
     }
 }
 
