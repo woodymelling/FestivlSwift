@@ -10,10 +10,14 @@ import SwiftUI
 
 public extension Date {
     func startOfDay(dayStartsAtNoon: Bool) -> Date {
+
+        var calendar = Calendar.current
+        calendar.timeZone = NSTimeZone.default
+
         if dayStartsAtNoon {
-            return Calendar.current.startOfDay(for: self - 12.hours) + 12.hours
+            return calendar.startOfDay(for: self - 12.hours) + 12.hours
         } else {
-            return Calendar.current.startOfDay(for: self)
+            return calendar.startOfDay(for: self)
         }
     }
 
@@ -42,7 +46,9 @@ public extension Date {
 public extension Date {
     func toY(containerHeight: CGFloat, dayStartsAtNoon: Bool) -> CGFloat {
 
-        let calendar = Calendar.autoupdatingCurrent
+        var calendar = Calendar.autoupdatingCurrent
+        calendar.timeZone = NSTimeZone.default
+        
 
         var hoursIntoTheDay = calendar.component(.hour, from: self)
         let minutesIntoTheHour = calendar.component(.minute, from: self)

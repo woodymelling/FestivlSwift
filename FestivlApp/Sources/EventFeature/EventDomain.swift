@@ -93,6 +93,10 @@ public struct EventState: Equatable {
         self.event = event
         self.isTestMode = isTestMode
 
+        if let timeZone = event.timeZone, let timeZone = TimeZone(identifier: timeZone) {
+            NSTimeZone.default = timeZone
+        }
+
         self.scheduleSelectedDate = event.startDate.startOfDay(dayStartsAtNoon: event.dayStartsAtNoon)
     }
 }

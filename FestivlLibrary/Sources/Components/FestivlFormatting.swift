@@ -9,23 +9,35 @@ import Foundation
 
 public enum FestivlFormatting {
     public static func weekdayFormat(for date: Date) -> String {
-        return date.formatted(.dateTime.weekday(.wide))
+        var timeFormat = Date.FormatStyle.dateTime.weekday(.wide)
+        timeFormat.timeZone = NSTimeZone.default
+
+        return date.formatted(timeFormat)
     }
 
     public static func weekdayWithDatesFormat(for date: Date) -> String {
-        return date.formatted(.dateTime.weekday(.wide).day().month())
+        var timeFormat = Date.FormatStyle.dateTime.weekday(.wide).day().month()
+        timeFormat.timeZone = NSTimeZone.default
+
+        return date.formatted(timeFormat)
     }
 
 
     public static func timeIntervalFormat(startTime: Date, endTime: Date) -> String {
 
-        let timeFormat = Date.FormatStyle.dateTime.hour().minute()
+        var timeFormat = Date.FormatStyle.dateTime.hour().minute()
+        timeFormat.timeZone = NSTimeZone.default
+
         return "\(startTime.formatted(timeFormat)) - \(endTime.formatted(timeFormat))"
     }
 
     public static func timeOfDayFormat(for date: Date) -> String {
+
+        var calendar = Calendar.current
+        calendar.timeZone = NSTimeZone.default
+
         var date = date
-        let hour = Calendar.current.component(.hour, from: date)
+        let hour = calendar.component(.hour, from: date)
 
         let timeOfDay: String
 
@@ -35,7 +47,7 @@ public enum FestivlFormatting {
             timeOfDay = "Night"
             // If we're in the early saturday AM, people feel like it's actually friday night still,
             // so show the date as the day before to reduce confusion (I think, this should probably be tested)
-            date = Calendar.current.date(byAdding: .day, value: -1, to: date)!
+            date = calendar.date(byAdding: .day, value: -1, to: date)!
         } else if hour > 6 && hour < 12 {
             timeOfDay = "Morning"
         } else if hour > 12 &&  hour < 17 {
@@ -49,3 +61,6 @@ public enum FestivlFormatting {
         return "\(FestivlFormatting.weekdayFormat(for: date)) \(timeOfDay)"
     }
 }
+
+
+
