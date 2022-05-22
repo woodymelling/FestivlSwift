@@ -51,8 +51,7 @@ struct ArrowPopover<Content: View>: View {
                         arrowSide: arrowSide ?? context.attributes.position.getArrowPosition(),
                         cornerRadius: cornerRadius
                     )
-//                    .fill(.regularMaterial)
-
+                    .fill(.regularMaterial)
                 )
         }
     }
