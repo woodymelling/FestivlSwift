@@ -33,6 +33,7 @@ public struct ManagerArtistsView: View {
                     .frame(height: 20)
 
                 TextField("Search...", text: viewStore.binding(\.$searchText))
+                    .textFieldStyle(.roundedBorder)
                 
                 ForEach(viewStore.artists.filterForSearchTerm(viewStore.searchText)) { artist in
                     NavigationLink(

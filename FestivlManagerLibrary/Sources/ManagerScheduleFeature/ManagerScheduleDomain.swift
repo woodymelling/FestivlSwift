@@ -61,10 +61,21 @@ public struct ManagerScheduleState: Equatable {
 
     var headerState: TimelineHeaderState {
         get {
-            .init(
+
+            var festivalDates = Set(event.festivalDates)
+
+            for artistSet in liveSchedule.artistSets {
+                festivalDates.insert(artistSet.startTime.startOfDay(dayStartsAtNoon: event.dayStartsAtNoon))
+            }
+
+            for groupSet in liveSchedule.groupSets {
+                festivalDates.insert(groupSet.startTime.startOfDay(dayStartsAtNoon: event.dayStartsAtNoon))
+            }
+
+            return .init(
                 selectedDate: selectedDate,
                 stages: stages,
-                festivalDates: event.festivalDates
+                festivalDates: Array(festivalDates).sorted()
             )
         }
 

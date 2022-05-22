@@ -62,7 +62,7 @@ public struct ScheduleView: View {
                                 Button(action: {
                                     viewStore.send(.selectedDate(date), animation: .default)
                                 }, label: {
-                                    Text(FestivlFormatting.weekdayFormat(for: viewStore.selectedDate))
+                                    Text(FestivlFormatting.weekdayFormat(for: date))
                                 })
                             })
                         } label: {

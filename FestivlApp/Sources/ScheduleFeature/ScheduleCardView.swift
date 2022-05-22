@@ -46,6 +46,7 @@ struct ScheduleCardView: View {
                         if geo.size.height < 31 * scale {
                             HStack {
                                 Text(card.title)
+                                    .font(.caption)
                                 Text(FestivlFormatting.timeIntervalFormat(startTime: card.startTime, endTime: card.endTime))
                                     .font(.caption)
                             }
@@ -55,6 +56,11 @@ struct ScheduleCardView: View {
                                 Text(card.title)
                                 Text(FestivlFormatting.timeIntervalFormat(startTime: card.startTime, endTime: card.endTime))
                                     .font(.caption)
+
+                                if let subtext = card.subtext {
+                                    Text(subtext)
+                                        .font(.caption2)
+                                }
                             }
                         }
                     }
