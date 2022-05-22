@@ -18,25 +18,32 @@ public struct EventDataState: Equatable {
         contactNumbers: IdentifiedArrayOf<ContactNumber>,
         contactNumberText: String,
         contactNumberDescriptionText: String,
+        contactNumberTitleText: String,
         addressText: String,
+        latitudeText: String,
+        longitudeText: String,
         timeZone: String
     ) {
         self.event = event
         self.contactNumbers = contactNumbers
         self.contactNumberText = contactNumberText
         self.contactNumberDescriptionText = contactNumberDescriptionText
+        self.contactNumberTitleText = contactNumberTitleText
         self.address = addressText
+        self.latitude = latitudeText
+        self.longitude = longitudeText
         self.timeZone = timeZone
-
     }
 
     public var contactNumbers: IdentifiedArrayOf<ContactNumber> = []
 
     @BindableState public var contactNumberText: String
     @BindableState public var contactNumberDescriptionText: String
+    @BindableState public var contactNumberTitleText: String
     @BindableState public var address: String = ""
+    @BindableState public var latitude: String
+    @BindableState public var longitude: String
     @BindableState public var timeZone: String = ""
-
 
     public let event: Event
 }
@@ -49,7 +56,7 @@ public enum EventDataAction: BindableAction {
 
     case didTapSaveContactNumber
     case didTapSaveData
-    
+    case didTapDeleteContactNumber(String)
 
     case finishedUpdatingEvent
     case uploadedImage(URL)
@@ -88,10 +95,20 @@ public let eventDataReducer = Reducer<EventDataState, EventDataAction, EventData
         return updateEvent(event: event, environment: environment)
 
     case .didTapSaveContactNumber:
-        state.contactNumbers.append(.init(phoneNumber: state.contactNumberText, description: state.contactNumberDescriptionText))
+        state.contactNumbers.append(.init(
+            title: state.contactNumberTitleText,
+            phoneNumber: state.contactNumberText,
+            description: state.contactNumberDescriptionText
+        ))
+            
         state.contactNumberText = ""
         state.contactNumberDescriptionText = ""
+        state.contactNumberTitleText = ""
 
+        return .none
+
+    case .didTapDeleteContactNumber(let id):
+        state.contactNumbers.remove(id: id)
         return .none
 
     case .didTapSaveData:
@@ -100,6 +117,8 @@ public let eventDataReducer = Reducer<EventDataState, EventDataAction, EventData
         event.address = state.address
         event.contactNumbers = state.contactNumbers
         event.timeZone = state.timeZone
+        event.latitude = state.latitude
+        event.longitude = state.longitude
 
         return updateEvent(event: event, environment: environment)
 

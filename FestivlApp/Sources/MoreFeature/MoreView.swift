@@ -44,21 +44,25 @@ public struct MoreView: View {
                         })
                     }
 
-                    if let contactNumbers = viewStore.event.contactNumbers {
+                    if let contactNumbers = viewStore.event.contactNumbers, !contactNumbers.isEmpty {
                         NavigationLink(destination: {
-
+                            ContactInfoView(contactNumbers: contactNumbers)
                         }, label: {
-                            Label("Contact Information", systemImage: "phone")
+                            Label("Contact Information", systemImage: "phone.fill")
                                 .labelStyle(ColorfulIconLabelStyle(color: .blue))
                         })
                     }
 
-                    if let address = viewStore.event.address {
+                    if let address = viewStore.event.address, !address.isEmpty {
                         NavigationLink(destination: {
-
+                            AddressView(
+                                address: address,
+                                latitude: viewStore.event.latitude ?? "",
+                                longitude: viewStore.event.longitude ?? ""
+                            )
                         }, label: {
                             Label("Address", systemImage: "mappin")
-                                .labelStyle(ColorfulIconLabelStyle(color: .blue))
+                                .labelStyle(ColorfulIconLabelStyle(color: .green))
                         })
                     }
                 }

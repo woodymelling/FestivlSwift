@@ -61,8 +61,11 @@ public struct FestivlManagerEventState: Equatable {
     var contactNumbers: IdentifiedArrayOf<ContactNumber>
     var contactNumberText: String = ""
     var contactNumberDescriptionText: String = ""
+    var contactNumberTitleText: String = ""
     var eventDataAddress: String
     var eventDataTimeZone: String
+    var latitudeText: String
+    var longitudeText: String
 
     var dashboardState: Self {
         get {
@@ -79,6 +82,8 @@ public struct FestivlManagerEventState: Equatable {
         self.contactNumbers = event.contactNumbers ?? .init()
         self.eventDataAddress = event.address ?? ""
         self.eventDataTimeZone = event.timeZone ?? ""
+        self.latitudeText = event.latitude ?? ""
+        self.longitudeText = event.longitude ?? ""
     }
 }
 

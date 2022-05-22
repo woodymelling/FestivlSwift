@@ -68,28 +68,29 @@ public struct EventDataView: View {
 
                         ForEach(viewStore.contactNumbers, content: { number in
                             HStack {
+                                VStack(alignment: .leading) {
 
-                                Text(number.description)
+                                    HStack {
 
+                                        Text(number.title)
 
-                                Text(number.phoneNumber)
-
-                                Spacer()
+                                        Text(number.phoneNumber)
+                                    }
+                                    Text(number.description)
+                                }
                                 Button {
-
+                                    viewStore.send(.didTapDeleteContactNumber(number.id))
                                 } label: {
                                     Label("Remove", systemImage: "trash")
                                 }
-
                             }
                             .textFieldStyle(.roundedBorder)
                         })
 
-
                         VStack {
-                            TextField("Description", text: viewStore.binding(\.$contactNumberDescriptionText))
+                            TextField("Title", text: viewStore.binding(\.$contactNumberTitleText))
                             TextField("Phone Number", text: viewStore.binding(\.$contactNumberText))
-
+                            TextField("Description", text: viewStore.binding(\.$contactNumberDescriptionText))
                         }
 
                         Button("Save", action: {
@@ -108,6 +109,10 @@ public struct EventDataView: View {
                             }
                         }
 
+                        VStack(alignment: .leading) {
+                            TextField("Latitude", text: viewStore.binding(\.$latitude))
+                            TextField("Longitude", text: viewStore.binding(\.$longitude))
+                        }
 
                         Picker("Time Zone", selection: viewStore.binding(\.$timeZone), content: {
                             ForEach(TimeZone.knownTimeZoneIdentifiers, id: \.self) { tz in
@@ -136,7 +141,17 @@ struct EventDataView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             EventDataView(
                 store: .init(
-                    initialState: .init(event: .testData, contactNumbers: .init(), contactNumberText: "", contactNumberDescriptionText: "", addressText: "", timeZone: ""),
+                    initialState: .init(
+                        event: .testData,
+                        contactNumbers: .init(),
+                        contactNumberText: "",
+                        contactNumberDescriptionText: "",
+                        contactNumberTitleText: "",
+                        addressText: "",
+                        latitudeText: "",
+                        longitudeText: "",
+                        timeZone: ""
+                    ),
                     reducer: eventDataReducer,
                     environment: .init()
                 )

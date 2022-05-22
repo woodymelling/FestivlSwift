@@ -104,7 +104,10 @@ extension FestivlManagerEventState {
                 contactNumbers: contactNumbers,
                 contactNumberText: contactNumberText,
                 contactNumberDescriptionText: contactNumberDescriptionText,
+                contactNumberTitleText: contactNumberTitleText,
                 addressText: self.eventDataAddress,
+                latitudeText: self.latitudeText,
+                longitudeText: self.longitudeText,
                 timeZone: self.eventDataTimeZone
             )
         }
@@ -114,7 +117,10 @@ extension FestivlManagerEventState {
             self.contactNumbers = newValue.contactNumbers
             self.contactNumberText = newValue.contactNumberText
             self.contactNumberDescriptionText = newValue.contactNumberDescriptionText
+            self.contactNumberTitleText = newValue.contactNumberTitleText
             self.eventDataAddress = newValue.address
+            self.latitudeText = newValue.latitude
+            self.longitudeText = newValue.longitude
             self.eventDataTimeZone = newValue.timeZone
         }
     }

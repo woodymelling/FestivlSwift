@@ -23,6 +23,8 @@ public struct Event: Codable, SettableIdentifiable {
         siteMapImageURL: URL?,
         contactNumbers: IdentifiedArrayOf<ContactNumber>,
         address: String,
+        latitude: String,
+        longitude: String,
         timeZone: String
     ) {
         self.id = id
@@ -45,6 +47,8 @@ public struct Event: Codable, SettableIdentifiable {
     public var siteMapImageURL: URL?
     public var contactNumbers: IdentifiedArrayOf<ContactNumber>?
     public var address: String?
+    public var latitude: String?
+    public var longitude: String?
     public var timeZone: String?
 
     public var festivalDates: [Date] {
@@ -80,6 +84,8 @@ public extension Event {
             siteMapImageURL: nil,
             contactNumbers: .init(),
             address: "",
+            latitude: "",
+            longitude: "",
             timeZone: ""
         )
     }
@@ -87,11 +93,13 @@ public extension Event {
 
 
 public struct ContactNumber: Identifiable, Equatable, Codable {
-    @DocumentID public var id: String?
+    public var id: String = UUID().uuidString
     public var phoneNumber: String
+    public var title: String
     public var description: String
 
-    public init(phoneNumber: String, description: String) {
+    public init(title: String, phoneNumber: String, description: String) {
+        self.title = title
         self.phoneNumber = phoneNumber
         self.description = description
     }

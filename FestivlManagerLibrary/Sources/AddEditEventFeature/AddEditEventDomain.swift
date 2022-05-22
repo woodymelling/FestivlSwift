@@ -139,6 +139,8 @@ public let addEditEventReducer = Reducer<AddEditEventState, AddEditEventAction, 
             siteMapImageURL: originalEvent?.siteMapImageURL,
             contactNumbers: originalEvent?.contactNumbers ?? .init(),
             address: originalEvent?.address ?? "",
+            latitude: originalEvent?.latitude ?? "",
+            longitude: originalEvent?.longitude ?? "",
             timeZone: originalEvent?.timeZone ?? ""
         )
 
