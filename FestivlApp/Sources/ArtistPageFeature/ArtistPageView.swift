@@ -37,9 +37,8 @@ public struct ArtistPageView: View {
                         })
                     }
 
-                    if let description = viewStore.artist.description {
+                    if let description = viewStore.artist.description, !description.isEmpty {
                         Text(description)
-
                     }
 
                     if let urlString = viewStore.artist.soundcloudURL, let url = URL(string: urlString) {

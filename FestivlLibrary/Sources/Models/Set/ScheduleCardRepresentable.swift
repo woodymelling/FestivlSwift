@@ -54,8 +54,11 @@ public extension ScheduleCardRepresentable {
         } else {
             setStartTime = startTime
         }
+        
+        var calendar = Calendar.current
+        calendar.timeZone = NSTimeZone.default
 
-        return Calendar.current.isDate(selectedDate, inSameDayAs: setStartTime)
+        return  calendar.isDate(selectedDate, inSameDayAs: setStartTime)
     }
 }
 

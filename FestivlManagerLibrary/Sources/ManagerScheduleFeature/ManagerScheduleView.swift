@@ -55,6 +55,10 @@ public struct ManagerScheduleView: View {
                     Button("Publish", action: {
                         viewStore.send(.publishChanges)
                     })
+                    
+                    Button("Adjust TimeZones", action: {
+                        viewStore.send(.adjustTimeZone)
+                    })
                 }
             }
             .sheet(item: viewStore.binding(\ManagerScheduleState.$addEditArtistSetState)) { _ in

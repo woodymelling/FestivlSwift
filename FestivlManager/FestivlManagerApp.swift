@@ -9,12 +9,14 @@ import SwiftUI
 import ServiceCore
 import FestivlManagerAppFeature
 import MacOSComponents
+import FirebaseFirestore
 
 @main
 struct FestivlManagerApp: App {
 
     init() {
-        FirebaseServices.initialize()
+        FirebaseServices.initialize(enablePersistance: false)
+            
         
     }
 

@@ -161,6 +161,7 @@ public enum ManagerScheduleAction: BindableAction {
     case publishChanges
     case finishedPublishingChanges
     case changesPublisherUpdate(Bool)
+    case adjustTimeZone
 }
 
 public struct ManagerScheduleEnvironment {
@@ -333,7 +334,12 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
 
             let state = state
             return .task {
-                try! await environment.scheduleService().publishChanges(eventID: state.event.id!)
+                do {
+                    try await environment.scheduleService().publishChanges(eventID: state.event.id!)
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
+                
                 return .finishedPublishingChanges
             }
             .receive(on: DispatchQueue.main)
@@ -342,6 +348,26 @@ public let managerScheduleReducer = Reducer<ManagerScheduleState, ManagerSchedul
         case .finishedPublishingChanges:
             return .none
 
+        case .adjustTimeZone:
+            
+            var effects: [Effect<ManagerScheduleAction, Never>] = []
+            
+            for scheduleItem in state.scheduleCardStates {
+                
+                effects.append (
+                    updateArtistSet(
+                        scheduleItem.set,
+                        groupSets: state.schedule.groupSets,
+                        artistSets: state.schedule.artistSets,
+                        newStage: scheduleItem.stage,
+                        newTime: scheduleItem.set.startTime + 1.hours,
+                        eventID: state.event.id!,
+                        environment: environment
+                    )
+                )
+            }
+            
+            return .concatenate(effects)
         }
     }
     .binding()

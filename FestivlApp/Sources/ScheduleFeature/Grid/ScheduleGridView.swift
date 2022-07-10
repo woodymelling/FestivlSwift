@@ -10,15 +10,14 @@ import Utilities
 
 struct ScheduleGridView: View {
     var body: some View {
-        SingleAxisGeometryReader(axis: .vertical) { height in
-            let hourSpacing = height / 24
+        GeometryReader { proxy in
+            let hourSpacing = proxy.size.height / 24
 
             ForEach(0..<24) { index in
 
                 let lineHeight = hourSpacing * CGFloat(index)
 
                 ZStack {
-
                     Path { path in
                         path.move(
                             to: CGPoint(

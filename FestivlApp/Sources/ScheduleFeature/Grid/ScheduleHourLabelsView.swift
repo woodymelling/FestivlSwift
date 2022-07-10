@@ -54,7 +54,6 @@ struct ScheduleHourLabelsView: View {
                         .monospacedDigit()
                         .foregroundColor(.secondary)
                         .frame(height: hourSpacing, alignment: .center)
-                        .isHidden(shouldHideTime && shouldHideTimeLabel(for: currentTime, index: index, dayStartsAtNoon: dayStartsAtNoon))
                 }
             }
             .offset(y: -hourSpacing / 2 - 2) // Make it match the lines
@@ -65,27 +64,6 @@ struct ScheduleHourLabelsView: View {
 
     }
 }
-
-
-private func shouldHideTimeLabel(for currentTime: Date, index: Int, dayStartsAtNoon: Bool) -> Bool {
-    let components = Calendar.current.dateComponents([.hour, .minute], from: currentTime)
-
-    let adjustIndex = dayStartsAtNoon ? (index + 12) % 24 : index
-    
-
-    if let hour = components.hour, let minute = components.minute {
-        if adjustIndex == hour && minute < 20 {
-            return true
-        } else if adjustIndex == hour + 1 && minute > 40 {
-            return true
-        } else {
-            return false
-        }
-    } else {
-        return false
-    }
-}
-
 
 struct ScheduleHourLinesView_Previews: PreviewProvider {
     static var previews: some View {

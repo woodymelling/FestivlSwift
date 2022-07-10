@@ -24,7 +24,10 @@ struct ScheduleHourLabelsView: View {
         case 12:
             return "noon"
         default:
-            return Calendar.current.date(from: DateComponents(hour: index))!
+            
+//            var calendar = Calendar.autoupdatingCurrent
+//            calendar.timeZone = NSTimeZone.default
+            return Calendar.current.date(from: DateComponents(timeZone: NSTimeZone.system, hour: index))!
                 .formatted(
                     .dateTime.hour(.defaultDigits(amPM: .abbreviated))
                 )

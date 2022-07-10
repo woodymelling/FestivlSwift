@@ -36,13 +36,16 @@ public struct TabBarView: View {
                         Label("Artists", systemImage: "person.3")
                     }
                     .tag(Tab.artists)
+                
+                if !viewStore.exploreArtists.isEmpty {
+                    ExploreView(store: store.scope(state: \.exploreState, action: TabBarAction.exploreAction))
+                        .tabItem {
+                            // TODO: Get better icon
+                            Label("Explore", systemImage: "barometer")
+                        }
+                        .tag(Tab.explore)
+                }
 
-                ExploreView(store: store.scope(state: \.exploreState, action: TabBarAction.exploreAction))
-                    .tabItem {
-                        // TODO: Get better icon
-                        Label("Explore", systemImage: "barometer")
-                    }
-                    .tag(Tab.explore)
 
                 MoreView(store: store.scope(state: \.moreState, action: TabBarAction.moreAction))
                     .tabItem {

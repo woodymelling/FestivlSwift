@@ -51,8 +51,6 @@ public struct EventState: Equatable {
     var deviceOrientation: DeviceOrientation = .portrait
     var currentTime: Date = Date()
 
-
-
     @Storage(key: "hasDisplayedTutorialElements", defaultValue: false)
     var hasDisplayedTutorialElements: Bool
     var showingLandscapeTutorial = false
@@ -228,6 +226,8 @@ public let eventReducer = Reducer.combine(
                 .filter { $0.imageURL != nil }
                 .shuffled()
                 .asIdentifedArray
+            
+            
 
             state.loadedArtists = true
 

@@ -30,7 +30,8 @@ extension Date {
     }
 
     func atTimeOfDate(_ secondDate: Date) -> Date {
-        let calendar = Calendar.autoupdatingCurrent
+        var calendar = Calendar.autoupdatingCurrent
+        calendar.timeZone = NSTimeZone.default
         let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: secondDate)
 
         return self.atTime(
@@ -41,7 +42,8 @@ extension Date {
     }
 
     public func atTime(hour: Int = 0, minute: Int = 0, seconds: Int = 0) -> Date {
-        let calendar = Calendar.autoupdatingCurrent
+        var calendar = Calendar.autoupdatingCurrent
+        calendar.timeZone = NSTimeZone.default
         var components = calendar.dateComponents([.day, .month, .year], from: self)
 
         components.hour = hour
@@ -226,7 +228,8 @@ private func saveArtistSet(
     }
 
     func setTime(for time: Date) -> Date {
-        let calendar = Calendar.current
+        var calendar = Calendar.current
+        calendar.timeZone = NSTimeZone.default
         return calendar.date(
             byAdding: calendar.dateComponents([.hour, .minute], from: time),
             to: calendar.startOfDay(for: state.selectedDate)
@@ -288,7 +291,8 @@ private func saveGroupSet(
     }
 
     func setTime(for time: Date) -> Date {
-        let calendar = Calendar.current
+        var calendar = Calendar.current
+        calendar.timeZone = NSTimeZone.default
         return calendar.date(
             byAdding: calendar.dateComponents([.hour, .minute], from: time),
             to: calendar.startOfDay(for: state.selectedDate)

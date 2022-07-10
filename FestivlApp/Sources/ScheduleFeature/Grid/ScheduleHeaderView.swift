@@ -66,7 +66,7 @@ struct ScheduleHeaderButton: View {
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
-        CachedAsyncImage(url: stage.iconImageURL, renderingMode: .template, placeholder: {
+        CachedAsyncImage(url: stage.iconImageURL, renderingMode: .template, contentMode: .fill, placeholder: {
             Text(stage.symbol)
                 .font(.largeTitle)
                 .padding(20)
@@ -78,7 +78,6 @@ struct ScheduleHeaderButton: View {
                 $0.foregroundColor(stage.color)
             }
         })
-        .frame(square: 60)
         .background {
             if isSelected {
                 Circle()
@@ -86,6 +85,8 @@ struct ScheduleHeaderButton: View {
                     .shadow()
             }
         }
+        .frame(idealWidth: 60, idealHeight: 60)
+        .frame(maxWidth: 60, maxHeight: 60)
         .scaleEffect(press ? 0.8 : 1)
         .pressAndReleaseAction(
             pressing: $press,

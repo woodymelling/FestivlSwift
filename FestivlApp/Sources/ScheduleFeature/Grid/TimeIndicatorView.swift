@@ -9,9 +9,7 @@ import SwiftUI
 
 struct TimeIndicatorEnvironment: Equatable {
     var currentTime: Date
-
 }
-
 
 struct TimeIndicatorView: View {
     var selectedDate: Date
@@ -37,11 +35,25 @@ struct TimeIndicatorView: View {
     }
 
     @ScaledMetric var textWidth: CGFloat = 50
+    @ScaledMetric var gradientHeight: CGFloat = 30
     var body: some View {
         TimelineView(.periodic(from: .now, by: 1)) { context in
             GeometryReader { geo in
                 if shouldShowTimeIndicator(context.date) {
                     ZStack(alignment: .leading) {
+                        
+                        // Gradient behind the current time text so that it doesn't overlap with the grid time text
+                        Rectangle()
+                            .fill(
+                                LinearGradient(
+                                    colors: [.clear, Color(uiColor: .systemBackground), Color(uiColor: .systemBackground), .clear],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                            .frame(width: textWidth, height: gradientHeight)
+                        
+                        // Current time text
                         Text(
                             context.date
                                 .formatted(
@@ -54,11 +66,15 @@ struct TimeIndicatorView: View {
                         .font(.caption)
                         .frame(width: textWidth)
 
+
+                        // Circle indicator
                         Circle()
                             .fill(Color.accentColor)
                             .frame(square: 5)
                             .offset(x: textWidth, y: 0)
-
+                        
+                        
+                        // Line going across the schedule
                         Rectangle()
                             .fill(Color.accentColor)
                             .frame(height: 1)

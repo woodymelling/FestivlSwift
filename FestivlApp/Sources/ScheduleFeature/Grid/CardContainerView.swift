@@ -57,7 +57,7 @@ struct CardContainerView: View {
                         // Placement works by center of the view, move it to the top left
                         let offset = CGSize(width: size.width / 2, height: size.height / 2)
 
-                        let xPosition = style == .allStages ?  scheduleItem.xPlacement(
+                        let xPosition = style == .allStages ? scheduleItem.xPlacement(
                             stageCount: stageCount,
                             containerWidth: geo.size.width,
                             stages: viewStore.stages

@@ -12,16 +12,19 @@ public struct CachedAsyncImage<Content: View>: View {
     public init(
         url: URL?,
         renderingMode: Image.TemplateRenderingMode = .original,
+        contentMode: SwiftUI.ContentMode = .fill,
         @ViewBuilder placeholder: @escaping () -> Content
     ) {
         self.url = url
         self.renderingMode = renderingMode
+        self.contentMode = contentMode
         self.placeholder = placeholder
     }
 
 
     var url: URL?
     var renderingMode: Image.TemplateRenderingMode
+    var contentMode: SwiftUI.ContentMode
     @ViewBuilder var placeholder: () -> Content
 
     public var body: some View {
@@ -36,7 +39,7 @@ public struct CachedAsyncImage<Content: View>: View {
                 #if os(iOS)
                 .scaleFactor(UIScreen.main.scale)
                 #endif
-                .aspectRatio(contentMode: .fill)
+                .aspectRatio(contentMode: contentMode)
         }
 
     }

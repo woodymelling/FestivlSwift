@@ -129,7 +129,8 @@ func dateToY(
     dayStartsAtNoon: Bool
 ) -> CGFloat {
 
-    let calendar = Calendar.autoupdatingCurrent
+    var calendar = Calendar.autoupdatingCurrent
+    calendar.timeZone = NSTimeZone.default
 
     var hoursIntoTheDay = calendar.component(.hour, from: date)
     let minutesIntoTheHour = calendar.component(.minute, from: date)
