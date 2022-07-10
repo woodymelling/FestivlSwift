@@ -42,7 +42,7 @@ struct EventLoadingView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             EventLoadingView(
                 store: .init(
-                    initialState: .init(eventID: Event.testData.id!, isTestMode: true),
+                    initialState: .init(eventID: Event.testData.id!, isTestMode: true, isEventSpecificApplication: false),
                     reducer: eventLoadingReducer,
                     environment: .init()
                 )

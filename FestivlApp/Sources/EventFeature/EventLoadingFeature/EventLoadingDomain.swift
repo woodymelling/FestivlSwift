@@ -11,9 +11,9 @@ import Services
 
 public extension Store where State == EventLoadingState, Action == EventLoadingAction {
 
-    static func live(eventID: EventID, testMode: Bool = false) -> Store<EventLoadingState, EventLoadingAction> {
+    static func live(eventID: EventID, testMode: Bool = false, isEventSpecificApplication: Bool) -> Store<EventLoadingState, EventLoadingAction> {
         .init(
-            initialState: .init(eventID: eventID, isTestMode: testMode),
+            initialState: .init(eventID: eventID, isTestMode: testMode, isEventSpecificApplication: isEventSpecificApplication),
             reducer: eventLoadingReducer,
             environment: .init()
         )
@@ -23,12 +23,14 @@ public extension Store where State == EventLoadingState, Action == EventLoadingA
 public struct EventLoadingState: Equatable {
 
     var eventID: EventID
-    var isTestMode: Bool
+    let isTestMode: Bool
+    let isEventSpecificApplication: Bool
     var eventState: EventState?
 
-    public init(eventID: EventID, isTestMode: Bool) {
+    public init(eventID: EventID, isTestMode: Bool, isEventSpecificApplication: Bool) {
         self.eventID = eventID
         self.isTestMode = isTestMode
+        self.isEventSpecificApplication = isEventSpecificApplication
     }
 }
 
@@ -67,7 +69,11 @@ public let eventLoadingReducer = Reducer<EventLoadingState, EventLoadingAction, 
                 .eraseToEffect()
 
         case .eventPublisherUpdate(let event):
-            var eventState = state.eventState ?? .init(event: event, isTestMode: state.isTestMode)
+            var eventState = state.eventState ?? .init(
+                event: event,
+                isTestMode: state.isTestMode,
+                isEventSpecificApplication: state.isEventSpecificApplication
+            )
             eventState.event = event
             state.eventState = eventState
             return .none

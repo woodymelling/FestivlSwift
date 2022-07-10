@@ -21,85 +21,66 @@ public struct MoreView: View {
         WithViewStore(store) { viewStore in
             NavigationView {
                 List {
-                    NavigationLink {
-                        NotificationsView(
-                            store: store.scope(
-                                state: \.notificationsState,
-                                action: MoreAction.notificationsAction
+                    Group { // Added for some weird compiler type-checking issue
+                        NavigationLink {
+                            NotificationsView(
+                                store: store.scope(
+                                    state: \.notificationsState,
+                                    action: MoreAction.notificationsAction
+                                )
                             )
-                        )
-                    } label: {
-                        Label("Notifications", systemImage: "bell.badge.fill")
-                            .labelStyle(ColorfulIconLabelStyle(color: .red))
+                        } label: {
+                            Label("Notifications", systemImage: "bell.badge.fill")
+                                .labelStyle(ColorfulIconLabelStyle(color: .red))
+                        }
+                        
+                        
+                        if let imageURL = viewStore.event.siteMapImageURL {
+                            NavigationLink(destination: {
+                                SiteMapView(imageURL: imageURL)
+                                
+                            }, label: {
+                                Label("Site Map", systemImage: "map.fill")
+                                    .labelStyle(ColorfulIconLabelStyle(color: .purple))
+                            })
+                        }
+                        
+                        if let contactNumbers = viewStore.event.contactNumbers, !contactNumbers.isEmpty {
+                            NavigationLink(destination: {
+                                ContactInfoView(contactNumbers: contactNumbers)
+                            }, label: {
+                                Label("Contact Information", systemImage: "phone.fill")
+                                    .labelStyle(ColorfulIconLabelStyle(color: .blue))
+                            })
+                        }
+                        if let address = viewStore.event.address, !address.isEmpty {
+                            NavigationLink(destination: {
+                                AddressView(
+                                    address: address,
+                                    latitude: viewStore.event.latitude ?? "",
+                                    longitude: viewStore.event.longitude ?? ""
+                                )
+                            }, label: {
+                                Label("Address", systemImage: "mappin")
+                                    .labelStyle(ColorfulIconLabelStyle(color: .green))
+                            })
+                        }
                     }
 
-
-                    if let imageURL = viewStore.event.siteMapImageURL {
-                        NavigationLink(destination: {
-                            SiteMapView(imageURL: imageURL)
-
-                        }, label: {
-                            Label("Site Map", systemImage: "map.fill")
-                                .labelStyle(ColorfulIconLabelStyle(color: .purple))
-                        })
+                    
+                    if !viewStore.isEventSpecificApplication {
+                        Section {
+                            Button("Exit \(viewStore.event.name)", action: {
+                                viewStore.send(.didExitEvent, animation: .default)
+                            })
+                        }
                     }
-
-                    if let contactNumbers = viewStore.event.contactNumbers, !contactNumbers.isEmpty {
-                        NavigationLink(destination: {
-                            ContactInfoView(contactNumbers: contactNumbers)
-                        }, label: {
-                            Label("Contact Information", systemImage: "phone.fill")
-                                .labelStyle(ColorfulIconLabelStyle(color: .blue))
-                        })
-                    }
-
-                    if let address = viewStore.event.address, !address.isEmpty {
-                        NavigationLink(destination: {
-                            AddressView(
-                                address: address,
-                                latitude: viewStore.event.latitude ?? "",
-                                longitude: viewStore.event.longitude ?? ""
-                            )
-                        }, label: {
-                            Label("Address", systemImage: "mappin")
-                                .labelStyle(ColorfulIconLabelStyle(color: .green))
-                        })
-                    }
+                    
                 }
                 .listStyle(.insetGrouped)
                 .navigationTitle("More")
             }
         }
-    }
-}
-
-struct ColoredIconView: View {
-
-    let imageName: String
-    let foregroundColor: Color
-    let backgroundColor: Color
-    @State private var frameSize: CGSize = CGSize(width: 30, height: 30)
-    @State private var cornerRadius: CGFloat = 5
-
-    var body: some View {
-        Image(systemName: imageName)
-            .overlay(
-                GeometryReader { proxy in
-                    Color.clear
-                        .preference(key: SFSymbolKey.self, value: max(proxy.size.width, proxy.size.height))
-                }
-            )
-            .onPreferenceChange(SFSymbolKey.self) {
-                let size = $0 * 1.05
-                frameSize = CGSize(width:size, height: size)
-                cornerRadius = $0 / 6.4
-            }
-            .frame(width: frameSize.width, height: frameSize.height)
-            .foregroundColor(foregroundColor)
-            .background(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(backgroundColor)
-            )
     }
 }
 
@@ -146,7 +127,8 @@ struct MoreView_Previews: PreviewProvider {
                         isTestMode: true,
                         notificationsEnabled: false,
                         notificationTimeBeforeSet: 5,
-                        showingNavigateToSettingsAlert: false
+                        showingNavigateToSettingsAlert: false,
+                        isEventSpecificApplication: true
                     ),
                     reducer: moreReducer,
                     environment: .init()

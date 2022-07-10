@@ -22,8 +22,6 @@ public struct GroupSetDetailView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-
-
                 List {
                     Section {
                         Button(action: {
@@ -52,7 +50,8 @@ public struct GroupSetDetailView: View {
                                             event: artistViewStore.event,
                                             stages: artistViewStore.stages,
                                             sets: artistViewStore.sets,
-                                            isFavorite: artistViewStore.isFavorite
+                                            isFavorite: artistViewStore.isFavorite,
+                                            showArtistImage: viewStore.showArtistImages
                                         )
                                     })
                                 }
@@ -85,7 +84,8 @@ struct GroupSetDetailView_Previews: PreviewProvider {
                             schedule: .init(),
                             artists: Artist.testValues.asIdentifedArray,
                             stages: Stage.testValues.asIdentifedArray,
-                            favoriteArtists: .init()
+                            favoriteArtists: .init(),
+                            showArtistImages: true
                         ),
                         reducer: groupSetDetailReducer,
                         environment: .init()

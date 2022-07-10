@@ -81,8 +81,9 @@ struct ScheduleCardView: View {
 
 
             }
-            .foregroundColor(stageColor.isDarkColor ? .white : .black)
+            .foregroundColor(.white)
         }
+        .clipped()
         .frame(maxWidth: .infinity)
         .background(stageColor)
         .border(.white, width: isSelected ? 1 : 0 )

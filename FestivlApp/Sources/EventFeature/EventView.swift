@@ -73,7 +73,7 @@ struct EventView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             EventView(
                 store: .init(
-                    initialState: .init(event: .testData, isTestMode: true),
+                    initialState: .init(event: .testData, isTestMode: true, isEventSpecificApplication: false),
                     reducer: eventReducer,
                     environment: .init()
                 )

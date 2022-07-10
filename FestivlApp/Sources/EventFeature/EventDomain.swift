@@ -21,6 +21,7 @@ import ComposableUserNotifications
 public struct EventState: Equatable {
 
     let isTestMode: Bool
+    let isEventSpecificApplication: Bool
 
     var event: Event
     var artists: IdentifiedArrayOf<Artist> = .init()
@@ -87,9 +88,10 @@ public struct EventState: Equatable {
     var loadedArtistSets = false
     var hasRunSetup = false
 
-    public init(event: Event, isTestMode: Bool) {
+    public init(event: Event, isTestMode: Bool, isEventSpecificApplication: Bool) {
         self.event = event
         self.isTestMode = isTestMode
+        self.isEventSpecificApplication = isEventSpecificApplication
 
         if let timeZone = event.timeZone, let timeZone = TimeZone(identifier: timeZone) {
             NSTimeZone.default = timeZone

@@ -16,12 +16,14 @@ public struct GroupSetDetailState: Equatable, Identifiable {
         schedule: Schedule,
         artists: IdentifiedArrayOf<Artist>,
         stages: IdentifiedArrayOf<Stage>,
-        favoriteArtists: Set<ArtistID>
+        favoriteArtists: Set<ArtistID>,
+        showArtistImages: Bool
     ) {
         self.event = event
         self.schedule = schedule
         self.groupSet = groupSet
         self.stages = stages
+        self.showArtistImages = showArtistImages
 
         if case let .groupSet(artistIDs) = groupSet.type {
 
@@ -69,6 +71,7 @@ public struct GroupSetDetailState: Equatable, Identifiable {
     }
 
     public var artistDetailStates: IdentifiedArrayOf<ArtistPageState>
+    public var showArtistImages: Bool
 }
 
 public enum GroupSetDetailAction {

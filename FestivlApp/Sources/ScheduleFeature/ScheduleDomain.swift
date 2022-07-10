@@ -35,7 +35,8 @@ public struct ScheduleState: Equatable {
 
         hasShownTutorialElements: Bool,
         showingLandscapeTutorial: Bool,
-        showingFilterTutorial: Bool
+        showingFilterTutorial: Bool,
+        showArtistImages: Bool
     ) {
         self.artists = artists
         self.stages = stages
@@ -55,6 +56,7 @@ public struct ScheduleState: Equatable {
         self.hasShownTutorialElements = hasShownTutorialElements
         self.showingLandscapeTutorial = showingLandscapeTutorial
         self.showingFilterTutorial = showingFilterTutorial
+        self.showArtistImages = showArtistImages
     }
 
     public var schedule: Schedule
@@ -79,6 +81,8 @@ public struct ScheduleState: Equatable {
     public var hasShownTutorialElements: Bool
     @BindableState public var showingLandscapeTutorial: Bool
     @BindableState public var showingFilterTutorial: Bool
+    
+    var showArtistImages: Bool
 
     var isFiltering: Bool {
         // For future filters
@@ -260,7 +264,8 @@ public let scheduleReducer = Reducer<ScheduleState, ScheduleAction, ScheduleEnvi
                     schedule: state.schedule,
                     artists: state.artists,
                     stages: state.stages,
-                    favoriteArtists: state.favoriteArtists
+                    favoriteArtists: state.favoriteArtists,
+                    showArtistImages: state.showArtistImages
                 )
 
                 return .none
@@ -302,7 +307,8 @@ extension Store where State == ScheduleState, Action == ScheduleAction {
                 currentTime: Date(),
                 hasShownTutorialElements: true,
                 showingLandscapeTutorial: false,
-                showingFilterTutorial: false
+                showingFilterTutorial: false,
+                showArtistImages: true
             ),
             reducer: scheduleReducer,
             environment: .init()

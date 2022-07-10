@@ -9,10 +9,13 @@ import ComposableArchitecture
 import Models
 import EventListFeature
 import EventFeature
+import Utilities
 
 public struct AppState: Equatable {
     var eventState: EventLoadingState?
     var isTestMode: Bool
+    
+    @Storage(key: "savedEventID", defaultValue: "") var savedEventID: String
 
     public var eventListState: EventListState
 
@@ -22,6 +25,9 @@ public struct AppState: Equatable {
     ) {
         self.eventListState = eventListState
         self.isTestMode = isTestMode
+        if !savedEventID.isEmpty {
+            eventState = .init(eventID: savedEventID, isTestMode: isTestMode, isEventSpecificApplication: false)
+        }
     }
 }
 
@@ -39,11 +45,18 @@ public let appReducer = Reducer.combine (
     Reducer<AppState, AppAction, AppEnvironment> { state, action, _ in
         switch action {
         case .eventListAction(.selectedEvent(let event)):
-            state.eventState = .init(eventID: event.id!, isTestMode: state.isTestMode)
+            state.savedEventID = event.id!
+            state.eventState = .init(eventID: event.id!, isTestMode: state.isTestMode, isEventSpecificApplication: false)
 
             return .none
         case .eventListAction:
             return .none
+            
+        case .eventAction(.eventAction(.tabBarAction(.moreAction(.didExitEvent)))):
+            state.eventState = nil
+            state.savedEventID = ""
+            return .none
+            
         case .eventAction:
             return .none
         }
@@ -64,6 +77,6 @@ public let appReducer = Reducer.combine (
     )
 
 )
-    .debug()
+.debug()
 
 

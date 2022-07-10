@@ -24,6 +24,7 @@ public struct ArtistListState: Equatable {
     public var artistStates: IdentifiedArrayOf<ArtistPageState>
     public var schedule: Schedule
     public var stages: IdentifiedArrayOf<Stage>
+    var showArtistImages: Bool
     
     @BindableState public var searchText: String = ""
 
@@ -37,12 +38,14 @@ public struct ArtistListState: Equatable {
         stages: IdentifiedArrayOf<Stage>,
         schedule: Schedule,
         searchText: String,
-        favoriteArtists: Set<ArtistID>
+        favoriteArtists: Set<ArtistID>,
+        showArtistImages: Bool
     ) {
         self.event = event
         self.stages = stages
         self.schedule = schedule
         self.searchText = searchText
+        self.showArtistImages = showArtistImages
 
         self.artistStates = ArtistPageState.fromArtistList(
             artists,

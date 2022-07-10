@@ -17,6 +17,7 @@ public struct MoreState: Equatable {
     let artists: IdentifiedArrayOf<Artist>
     let stages: IdentifiedArrayOf<Stage>
     let isTestMode: Bool
+    let isEventSpecificApplication: Bool
 
     public var notificationsEnabled: Bool
     public var notificationTimeBeforeSet: Int
@@ -31,7 +32,8 @@ public struct MoreState: Equatable {
         isTestMode: Bool,
         notificationsEnabled: Bool,
         notificationTimeBeforeSet: Int,
-        showingNavigateToSettingsAlert: Bool
+        showingNavigateToSettingsAlert: Bool,
+        isEventSpecificApplication: Bool
     ) {
         self.event = event
         self.favoriteArtists = favoriteArtists
@@ -42,6 +44,7 @@ public struct MoreState: Equatable {
         self.notificationsEnabled = notificationsEnabled
         self.notificationTimeBeforeSet = notificationTimeBeforeSet
         self.showingNavigateToSettingsAlert = showingNavigateToSettingsAlert
+        self.isEventSpecificApplication = isEventSpecificApplication
     }
 
     var notificationsState: NotificationsState {
@@ -68,6 +71,7 @@ public struct MoreState: Equatable {
 
 public enum MoreAction {
     case notificationsAction(NotificationsAction)
+    case didExitEvent
 }
 
 public struct MoreEnvironment {

@@ -29,7 +29,8 @@ public extension EventState {
                 stages: stages,
                 schedule: schedule,
                 searchText: artistListSearchText,
-                favoriteArtists: favoriteArtists
+                favoriteArtists: favoriteArtists,
+                showArtistImages: !exploreArtists.isEmpty
             )
         }
 
@@ -59,7 +60,8 @@ public extension EventState {
                 currentTime: currentTime,
                 hasShownTutorialElements: hasDisplayedTutorialElements,
                 showingLandscapeTutorial: showingLandscapeTutorial,
-                showingFilterTutorial: showingFilterTutorial
+                showingFilterTutorial: showingFilterTutorial,
+                showArtistImages: !exploreArtists.isEmpty
             )
         }
 
@@ -120,7 +122,8 @@ public extension EventState {
                 isTestMode: isTestMode,
                 notificationsEnabled: notificationsEnabled,
                 notificationTimeBeforeSet: notificationTimeBeforeSet,
-                showingNavigateToSettingsAlert: notificationsShowingNavigateToSettingsAlert
+                showingNavigateToSettingsAlert: notificationsShowingNavigateToSettingsAlert,
+                isEventSpecificApplication: isEventSpecificApplication
             )
         }
 
