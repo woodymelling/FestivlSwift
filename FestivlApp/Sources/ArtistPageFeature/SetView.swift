@@ -24,6 +24,7 @@ public struct SetView: View {
         ZStack {
             NavigationLink(destination: { EmptyView() }, label: { EmptyView() })
 
+            // TODO: Row Spacing Signleton FestivlTheme
             HStack(spacing: 10) {
                 let stage = stages[id: set.stageID]!
 
@@ -64,9 +65,6 @@ public struct SetView: View {
                         .foregroundColor(.secondary)
                     }
                 }
-
-
-
 
                 Spacer()
             }

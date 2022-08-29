@@ -65,7 +65,7 @@ extension Stage {
                 name: "The Fractal Forest",
                 symbol: "F",
                 colorString: "#3D8E53",
-                iconImageURL: nil,
+                iconImageURL: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/festivl.appspot.com/o/userContent%2F0545133C-90A6-4A64-99F9-EA563A8E976E.png?alt=media&token=35509f1f-a977-47d2-bd76-2d3898d0e465"),
                 sortIndex: 1
             ),
 
@@ -74,7 +74,7 @@ extension Stage {
                 name: "The Village",
                 symbol: "V",
                 colorString: "#2FCAD3",
-                iconImageURL: nil,
+                iconImageURL: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/festivl.appspot.com/o/userContent%2F96A24076-86EB-4327-BC13-26B3A8B1B769.png?alt=media&token=cb596866-35e6-4e39-a018-004b7338d7e8"),
                 sortIndex: 2
             ),
 
@@ -83,7 +83,7 @@ extension Stage {
                 name: "The Pagoda",
                 symbol: "P",
                 colorString: "#AE1790",
-                iconImageURL: nil,
+                iconImageURL: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/festivl.appspot.com/o/userContent%2F980B90FE-4868-4E65-B0B8-045A54BEFBD2.png?alt=media&token=91037e7e-5702-424d-a4f5-f0c78c5c9fde"),
                 sortIndex: 3
             )
         ]

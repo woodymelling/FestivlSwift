@@ -18,7 +18,7 @@ public protocol PublishableScheduleServiceProtocol: ScheduleServiceProtocol {
     var hasChangesPublisher: AnyPublisher<Bool, Never> { get }
 }
 
-public struct ManagerSchedule: Equatable {
+public struct ManagerSchedule: Equatable, Codable {
     public init(artistSets: IdentifiedArrayOf<ArtistSet>, groupSets: IdentifiedArrayOf<GroupSet>) {
         self.artistSets = artistSets
         self.groupSets = groupSets

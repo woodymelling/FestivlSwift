@@ -34,6 +34,7 @@ public enum ManagerArtistDetailAction: BindableAction {
     case artistDeletionSucceeded
 }
 
+
 public struct ManagerArtistDetailEnvironment {
     var openURL: (URL) -> Bool
     var artistService: () -> ArtistServiceProtocol
@@ -47,7 +48,11 @@ public struct ManagerArtistDetailEnvironment {
     }
 }
 
-public let managerArtistDetailReducer = Reducer<ManagerArtistDetailState, ManagerArtistDetailAction, ManagerArtistDetailEnvironment> { state, action, environment in
+public let managerArtistDetailReducer = Reducer<
+    ManagerArtistDetailState,
+    ManagerArtistDetailAction,
+    ManagerArtistDetailEnvironment
+> { state, action, environment in
     switch action {
     case .binding:
         return .none

@@ -33,7 +33,8 @@ public struct EventListView: View {
                         ProgressView()
                     } else {
                         List {
-                            ForEach(viewStore.events.filterForSearchTerm(viewStore.searchText)) { event in
+                            ForEach(viewStore.events.filter { viewStore.isTestMode || !($0.isTestEvent ?? false)}.filterForSearchTerm(viewStore.searchText)) { event in
+                                
                                 Button(action: { viewStore.send(.selectedEvent(event))
 
                                 }, label: {
@@ -62,7 +63,7 @@ struct EventListView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             EventListView(
                 store: .init(
-                    initialState: .init(),
+                    initialState: .init(isTestMode: true),
                     reducer: eventListReducer,
                     environment: .init(
                         eventListService: {

@@ -13,12 +13,10 @@ struct EventListRow: View {
     var event: Event
     var body: some View {
         HStack {
-            CachedAsyncImage(url: event.imageURL, placeholder: {
-                Image(systemName: "music.note.house")
-                    .resizable()
-                    .renderingMode(.template)
-                    .foregroundColor(.primary)
+            CachedAsyncImage(url: event.imageURL, renderingMode: .template, placeholder: {
+                EmptyView()
             })
+            .foregroundColor(.blue)
             .frame(width: 75, height: 75)
 
             VStack(alignment: .leading) {

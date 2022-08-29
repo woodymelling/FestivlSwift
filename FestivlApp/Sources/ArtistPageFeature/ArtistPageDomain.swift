@@ -10,7 +10,7 @@ import Models
 import IdentifiedCollections
 import Utilities
 
-public struct ArtistPageState: Equatable, Identifiable  {
+public struct ArtistPageState: Equatable, Identifiable {
     public var artist: Artist
     public var event: Event
     public var sets: IdentifiedArrayOf<ScheduleItem>

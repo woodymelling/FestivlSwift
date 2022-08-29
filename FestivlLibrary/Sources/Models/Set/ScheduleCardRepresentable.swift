@@ -11,7 +11,7 @@ import Utilities
 import SwiftUI
 
 
-public enum ScheduleItemType: Equatable {
+public enum ScheduleItemType: Equatable, Codable {
     case artistSet(ArtistID), groupSet([ArtistID])
 }
 
@@ -68,7 +68,7 @@ public extension ScheduleItem {
     }
 }
 
-public struct ScheduleItem: ScheduleItemProtocol {
+public struct ScheduleItem: ScheduleItemProtocol, SimpleSetConvertible, Codable {
     public var stageID: StageID
     public var startTime: Date
     public var endTime: Date

@@ -22,7 +22,8 @@ public struct EventDataState: Equatable {
         addressText: String,
         latitudeText: String,
         longitudeText: String,
-        timeZone: String
+        timeZone: String,
+        isTestEvent: Bool
     ) {
         self.event = event
         self.contactNumbers = contactNumbers
@@ -33,6 +34,7 @@ public struct EventDataState: Equatable {
         self.latitude = latitudeText
         self.longitude = longitudeText
         self.timeZone = timeZone
+        self.isTestEvent = isTestEvent
     }
 
     public var contactNumbers: IdentifiedArrayOf<ContactNumber> = []
@@ -44,6 +46,7 @@ public struct EventDataState: Equatable {
     @BindableState public var latitude: String
     @BindableState public var longitude: String
     @BindableState public var timeZone: String = ""
+    @BindableState public var isTestEvent: Bool = false
 
     public let event: Event
 }
@@ -119,6 +122,7 @@ public let eventDataReducer = Reducer<EventDataState, EventDataAction, EventData
         event.timeZone = state.timeZone
         event.latitude = state.latitude
         event.longitude = state.longitude
+        event.isTestEvent = state.isTestEvent
 
         return updateEvent(event: event, environment: environment)
 

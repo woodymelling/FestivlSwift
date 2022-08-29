@@ -108,7 +108,8 @@ extension FestivlManagerEventState {
                 addressText: self.eventDataAddress,
                 latitudeText: self.latitudeText,
                 longitudeText: self.longitudeText,
-                timeZone: self.eventDataTimeZone
+                timeZone: self.eventDataTimeZone,
+                isTestEvent: self.isTestEvent
             )
         }
 
@@ -122,6 +123,7 @@ extension FestivlManagerEventState {
             self.latitudeText = newValue.latitude
             self.longitudeText = newValue.longitude
             self.eventDataTimeZone = newValue.timeZone
+            self.isTestEvent = newValue.isTestEvent
         }
     }
 }

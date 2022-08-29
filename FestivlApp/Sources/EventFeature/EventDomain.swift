@@ -315,6 +315,8 @@ public let eventReducer = Reducer.combine(
 
             // TODO: What happens if there are no stages yet? Is that important
             state.scheduleSelectedStage = selectedStage ?? state.stages.first!
+            
+            UserDefaults.saveScheduleForWidget(schedule: state.schedule, stages: state.stages, festivalName: state.event.name)
 
             return .none
         }
@@ -349,4 +351,26 @@ extension UserDefaults {
     @objc dynamic var favoriteArtists: [ArtistID] {
         return stringArray(forKey: "favoriteArtists") ?? []
     }
+    
+    static func saveScheduleForWidget(
+        schedule: Schedule,
+        stages: IdentifiedArrayOf<Stage>,
+        festivalName: String
+    ) {
+//        
+//        let sets: [SimpleSet] = schedule.values.flatMap {
+//            $0.compactMap {
+//                $0.asSimpleSet(stages: stages)
+//            }
+//        }
+        
+        UserDefaults(suiteName: "group.Festivl")?.set(festivalName, forKey: "activeFestivalName")
+        
+        if let data = try? JSONEncoder().encode(schedule) {
+            UserDefaults(suiteName: "group.Festivl")?.set(data, forKey: "activeFestivalSchedule")
+        }
+        
+    }
 }
+
+

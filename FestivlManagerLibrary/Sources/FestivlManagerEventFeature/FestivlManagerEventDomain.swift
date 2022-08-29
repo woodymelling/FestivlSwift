@@ -66,6 +66,7 @@ public struct FestivlManagerEventState: Equatable {
     var eventDataTimeZone: String
     var latitudeText: String
     var longitudeText: String
+    var isTestEvent: Bool
 
     var dashboardState: Self {
         get {
@@ -84,6 +85,7 @@ public struct FestivlManagerEventState: Equatable {
         self.eventDataTimeZone = event.timeZone ?? ""
         self.latitudeText = event.latitude ?? ""
         self.longitudeText = event.longitude ?? ""
+        self.isTestEvent = event.isTestEvent ?? false
     }
 }
 
@@ -171,5 +173,3 @@ public let festivlManagerEventReducer = Reducer.combine(
     }
 )
 //.debug()
-
-

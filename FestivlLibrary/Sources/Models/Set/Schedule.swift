@@ -49,7 +49,7 @@ extension Schedule {
 
 }
 
-public struct SchedulePageIdentifier: Hashable {
+public struct SchedulePageIdentifier: Hashable, Codable {
     public init(date: Date, stageID: StageID) {
         self.date = date
         self.stageID = stageID

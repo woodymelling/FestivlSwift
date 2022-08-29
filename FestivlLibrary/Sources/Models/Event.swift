@@ -50,6 +50,7 @@ public struct Event: Codable, SettableIdentifiable {
     public var latitude: String?
     public var longitude: String?
     public var timeZone: String?
+    public var isTestEvent: Bool?
 
     public var festivalDates: [Date] {
         var dates: [Date] = []

@@ -21,7 +21,7 @@ struct FestivlApp: App {
         WindowGroup {
             AppView(
                 store: .init(
-                    initialState: .init(isTestMode: true),
+                    initialState: .init(isTestMode: false),
                     reducer: appReducer,
                     environment: .init()
                 )

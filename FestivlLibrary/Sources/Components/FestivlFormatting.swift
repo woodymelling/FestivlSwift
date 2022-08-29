@@ -45,6 +45,7 @@ public enum FestivlFormatting {
 
         if hour < 6 {
             timeOfDay = "Night"
+            
             // If we're in the early saturday AM, people feel like it's actually friday night still,
             // so show the date as the day before to reduce confusion (I think, this should probably be tested)
             date = calendar.date(byAdding: .day, value: -1, to: date)!

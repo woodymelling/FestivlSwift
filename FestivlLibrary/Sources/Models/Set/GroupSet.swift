@@ -12,7 +12,7 @@ import Foundation
 import ComposableArchitecture
 import SwiftUI
 
-public struct GroupSet: SettableIdentifiable, Codable, Equatable {
+public struct GroupSet: SettableIdentifiable, Codable, Equatable, SimpleSetConvertible {
 
     public init(
         name: String,

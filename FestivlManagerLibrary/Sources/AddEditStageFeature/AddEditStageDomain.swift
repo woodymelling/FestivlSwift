@@ -148,6 +148,8 @@ public let addEditStageReducer = Reducer<AddEditStageState, AddEditStageAction, 
 
     case .saveButtonPressed:
         state.loading = true
+        
+        
 
         var stage = Stage(
             name: state.name,

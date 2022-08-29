@@ -18,7 +18,13 @@ struct WickedWoodsApp: App {
     
     var body: some Scene {
         WindowGroup {
-            EventLoadingView(store: .live(eventID: "jS1o9Y8HFBhwOaaZmsZB", testMode: false))
+            EventLoadingView(
+                store: .live(
+                    eventID: "jS1o9Y8HFBhwOaaZmsZB",
+                    testMode: false,
+                    isEventSpecificApplication: true
+                )
+            )
         }
     }
 }

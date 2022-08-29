@@ -124,6 +124,11 @@ public struct EventDataView: View {
                     }
 
                     Spacer()
+                    
+                    Toggle(isOn: viewStore.binding(\.$isTestEvent), label: {
+                        Text("Is Test Event")
+                    })
+                    
                     Button("Save all data") {
                         viewStore.send(.didTapSaveData)
                     }
@@ -150,7 +155,8 @@ struct EventDataView_Previews: PreviewProvider {
                         addressText: "",
                         latitudeText: "",
                         longitudeText: "",
-                        timeZone: ""
+                        timeZone: "",
+                        isTestEvent: false
                     ),
                     reducer: eventDataReducer,
                     environment: .init()

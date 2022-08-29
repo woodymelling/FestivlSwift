@@ -20,10 +20,10 @@ public struct AppState: Equatable {
     public var eventListState: EventListState
 
     public init(
-        eventListState: EventListState = .init(),
+        eventListState: EventListState? = nil,
         isTestMode: Bool
     ) {
-        self.eventListState = eventListState
+        self.eventListState = eventListState ?? .init(isTestMode: isTestMode)
         self.isTestMode = isTestMode
         if !savedEventID.isEmpty {
             eventState = .init(eventID: savedEventID, isTestMode: isTestMode, isEventSpecificApplication: false)

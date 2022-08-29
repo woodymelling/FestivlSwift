@@ -13,9 +13,11 @@ import Combine
 public struct EventListState: Equatable {
     public var events: IdentifiedArrayOf<Event> = []
     @BindableState var searchText = ""
+    public var isTestMode: Bool
     
-    public init(events: IdentifiedArrayOf<Event> = []) {
+    public init(events: IdentifiedArrayOf<Event> = [], isTestMode: Bool) {
         self.events = events
+        self.isTestMode = isTestMode
     }
 }
 
