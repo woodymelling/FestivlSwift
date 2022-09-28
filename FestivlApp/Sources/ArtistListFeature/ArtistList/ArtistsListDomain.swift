@@ -18,70 +18,64 @@ extension Artist: Searchable {
     }
 }
 
-public struct ArtistListState: Equatable {
-
-    public var event: Event
-    public var artistStates: IdentifiedArrayOf<ArtistPageState>
-    public var schedule: Schedule
-    public var stages: IdentifiedArrayOf<Stage>
-    var showArtistImages: Bool
-    
-    @BindableState public var searchText: String = ""
-
-    var filteredArtistStates: IdentifiedArrayOf<ArtistPageState> {
-        artistStates.filterForSearchTerm(searchText)
-    }
-
-    public init(
-        event: Event,
-        artists: IdentifiedArrayOf<Artist>,
-        stages: IdentifiedArrayOf<Stage>,
-        schedule: Schedule,
-        searchText: String,
-        favoriteArtists: Set<ArtistID>,
-        showArtistImages: Bool
-    ) {
-        self.event = event
-        self.stages = stages
-        self.schedule = schedule
-        self.searchText = searchText
-        self.showArtistImages = showArtistImages
-
-        self.artistStates = ArtistPageState.fromArtistList(
-            artists,
-            schedule: schedule,
-            event: event,
-            stages: stages,
-            favoriteArtists: favoriteArtists
-        )
-    }
-}
-
-public enum ArtistListAction: BindableAction {
-    case binding(_ action: BindingAction<ArtistListState>)
-    case artistDetail(id: Artist.ID, action: ArtistPageAction)
-}
-
-public struct ArtistListEnvironment {
+public struct ArtistListFeature: ReducerProtocol {
     public init() {}
-}
+    
+    public struct State: Equatable {
 
-public let artistListReducer = Reducer<ArtistListState, ArtistListAction, ArtistListEnvironment>.combine(
-    artistPageReducer.forEach(
-        state: \ArtistListState.artistStates,
-        action: /ArtistListAction.artistDetail,
-        environment: { _ in .init() }
-    ),
+        public var event: Event
+        public var artistStates: IdentifiedArrayOf<ArtistPage.State>
+        public var schedule: Schedule
+        public var stages: IdentifiedArrayOf<Stage>
+        var showArtistImages: Bool
+        
+        @BindableState public var searchText: String = ""
 
-    Reducer<ArtistListState, ArtistListAction, ArtistListEnvironment> { state, action, environment in
-        switch action {
-        case .binding:
-            return .none
-        case .artistDetail:
-            return .none
+        var filteredArtistStates: IdentifiedArrayOf<ArtistPage.State> {
+            artistStates.filterForSearchTerm(searchText)
+        }
+
+        public init(
+            event: Event,
+            artists: IdentifiedArrayOf<Artist>,
+            stages: IdentifiedArrayOf<Stage>,
+            schedule: Schedule,
+            searchText: String,
+            favoriteArtists: Set<ArtistID>,
+            showArtistImages: Bool
+        ) {
+            self.event = event
+            self.stages = stages
+            self.schedule = schedule
+            self.searchText = searchText
+            self.showArtistImages = showArtistImages
+
+            self.artistStates = ArtistPage.State.fromArtistList(
+                artists,
+                schedule: schedule,
+                event: event,
+                stages: stages,
+                favoriteArtists: favoriteArtists
+            )
         }
     }
-    .binding()
-)
 
-
+    public enum Action: BindableAction {
+        case binding(_ action: BindingAction<State>)
+        case artistDetail(id: Artist.ID, action: ArtistPage.Action)
+    }
+    
+    public var body: some ReducerProtocol<State, Action> {
+        BindingReducer()
+        
+        Reduce { state, action in
+            switch action {
+            case .binding, .artistDetail:
+                return .none
+            }
+        }
+        .forEach(\.artistStates, action: /Action.artistDetail) {
+            ArtistPage()
+        }
+    }
+}

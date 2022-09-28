@@ -47,8 +47,8 @@ public struct EventState: Equatable {
     var scheduleSelectedDate: Date
     var scheduleFilteringFavorites = false
     var scheduleCardToDisplay: ScheduleItem?
-    var scheduleSelectedArtistState: ArtistPageState?
-    var selectedGroupSetState: GroupSetDetailState?
+    var scheduleSelectedArtistState: ArtistPage.State?
+    var selectedGroupSetState: GroupSetDetail.State?
     var deviceOrientation: DeviceOrientation = .portrait
     var currentTime: Date = Date()
 
@@ -59,7 +59,7 @@ public struct EventState: Equatable {
 
     // MARK: ExploreState
     var exploreArtists: IdentifiedArrayOf<Artist> = .init()
-    var exploreSelectedArtistState: ArtistPageState?
+    var exploreSelectedArtistState: ArtistPage.State?
 
     // MARK: MoreState
     @Storage(key: "notificationsEnabled", defaultValue: false)
@@ -119,7 +119,7 @@ public enum EventAction {
     case finishedLoadingStageImages
 
     case artistSetsPublisherUpdate((artistSets: IdentifiedArrayOf<ArtistSet>, groupSets: IdentifiedArrayOf<GroupSet>))
-    case tabBarAction(TabBarAction)
+    case tabBarAction(TabBar.Action)
 }
 
 public struct EventEnvironment {
@@ -322,11 +322,13 @@ public let eventReducer = Reducer.combine(
         }
     },
 
-
-    tabBarReducer.pullback(
+    AnyReducer {
+        TabBar()
+    }
+    .pullback(
         state: \.self,
         action: /EventAction.tabBarAction,
-        environment: { _ in TabBarEnvironment() }
+        environment: { $0 }
     )
 
 )
@@ -357,12 +359,6 @@ extension UserDefaults {
         stages: IdentifiedArrayOf<Stage>,
         festivalName: String
     ) {
-//        
-//        let sets: [SimpleSet] = schedule.values.flatMap {
-//            $0.compactMap {
-//                $0.asSimpleSet(stages: stages)
-//            }
-//        }
         
         UserDefaults(suiteName: "group.Festivl")?.set(festivalName, forKey: "activeFestivalName")
         

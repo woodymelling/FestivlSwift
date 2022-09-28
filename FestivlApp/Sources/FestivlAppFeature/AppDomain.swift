@@ -41,7 +41,6 @@ public struct AppEnvironment {
 }
 
 public let appReducer = Reducer.combine (
-
     Reducer<AppState, AppAction, AppEnvironment> { state, action, _ in
         switch action {
         case .eventListAction(.selectedEvent(let event)):

@@ -11,9 +11,9 @@ import Models
 import NotificationsFeature
 
 public struct MoreView: View {
-    let store: Store<MoreState, MoreAction>
+    let store: StoreOf<MoreFeature>
 
-    public init(store: Store<MoreState, MoreAction>) {
+    public init(store: StoreOf<MoreFeature>) {
         self.store = store
     }
 
@@ -26,7 +26,7 @@ public struct MoreView: View {
                             NotificationsView(
                                 store: store.scope(
                                     state: \.notificationsState,
-                                    action: MoreAction.notificationsAction
+                                    action: MoreFeature.Action.notificationsAction
                                 )
                             )
                         } label: {
@@ -130,8 +130,7 @@ struct MoreView_Previews: PreviewProvider {
                         showingNavigateToSettingsAlert: false,
                         isEventSpecificApplication: true
                     ),
-                    reducer: moreReducer,
-                    environment: .init()
+                    reducer: MoreFeature()
                 )
             )
             .preferredColorScheme($0)

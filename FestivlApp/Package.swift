@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -23,10 +23,10 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.33.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "protocol-beta"),
         .package(url: "https://github.com/yacir/CollectionViewSlantedLayout", branch: "master"),
         .package(name: "FestivlLibrary", path: "../FestivlLibrary"),
-        .package(name: "Introspect", url: "https://github.com/siteline/SwiftUI-Introspect.git", from: "0.0.0"),
+        .package(url: "https://github.com/siteline/SwiftUI-Introspect.git", from: "0.0.0"),
         .package(url: "https://github.com/stonko1994/SimultaneouslyScrollView", from: "1.0.0"),
         .package(url: "https://github.com/Jake-Short/swiftui-image-viewer.git", from: "2.3.1"),
         .package(url: "https://github.com/miiha/composable-user-notifications", from: "0.2.0"),
@@ -100,7 +100,7 @@ let package = Package(
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "Utilities", package: "FestivlLibrary"),
                 .product(name: "Components", package: "FestivlLibrary"),
-                .product(name: "Introspect", package: "Introspect"),
+                .product(name: "Introspect", package: "SwiftUI-Introspect"),
                 .product(name: "SimultaneouslyScrollView", package: "SimultaneouslyScrollView"),
                 .target(name: "ArtistPageFeature"),
                 .target(name: "GroupSetDetailFeature")
@@ -153,7 +153,8 @@ let package = Package(
             name: "NotificationsFeature",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "Models", package: "FestivlLibrary")
+                .product(name: "Models", package: "FestivlLibrary"),
+                .product(name: "FestivlDependencies", package: "FestivlLibrary")
             ]
         ),
 

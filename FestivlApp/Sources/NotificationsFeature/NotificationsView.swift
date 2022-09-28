@@ -10,9 +10,9 @@ import ComposableArchitecture
 import Models
 
 public struct NotificationsView: View {
-    let store: Store<NotificationsState, NotificationsAction>
+    let store: StoreOf<NotificationsFeature>
 
-    public init(store: Store<NotificationsState, NotificationsAction>) {
+    public init(store: StoreOf<NotificationsFeature>) {
         self.store = store
     }
 
@@ -91,9 +91,10 @@ struct NotificationsView_Previews: PreviewProvider {
                             stages: Stage.testValues.asIdentifedArray,
                             isTestMode: true,
                             notificationsEnabled: false,
-                            notificationTimeBeforeSet: 15, showingNavigateToSettingsAlert: false),
-                        reducer: notificationsReducer,
-                        environment: .init()
+                            notificationTimeBeforeSet: 15,
+                            showingNavigateToSettingsAlert: false
+                        ),
+                        reducer: NotificationsFeature()
                     )
                 )
             }

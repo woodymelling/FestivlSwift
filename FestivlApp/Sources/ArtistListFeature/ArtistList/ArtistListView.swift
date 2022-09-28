@@ -13,9 +13,9 @@ import ArtistPageFeature
 import iOSComponents
 
 public struct ArtistListView: View {
-    let store: Store<ArtistListState, ArtistListAction>
+    let store: StoreOf<ArtistListFeature>
 
-    public init(store: Store<ArtistListState, ArtistListAction>) {
+    public init(store: StoreOf<ArtistListFeature>) {
         self.store = store
     }
 
@@ -30,7 +30,7 @@ public struct ArtistListView: View {
 
                         List {
                             ForEachStore(
-                                self.store.scope(state: \.filteredArtistStates, action: ArtistListAction.artistDetail)
+                                self.store.scope(state: \.filteredArtistStates, action: ArtistListFeature.Action.artistDetail)
                             ) { artistStore in
                                 WithViewStore(artistStore) { artistViewStore in
                                     
@@ -64,7 +64,7 @@ struct ArtistListView_Previews: PreviewProvider {
     static var previews: some View {
         ArtistListView(
             store: .init(
-                initialState: ArtistListState(
+                initialState: .init(
                     event: .testData,
                     artists: [],
                     stages: [],
@@ -73,11 +73,10 @@ struct ArtistListView_Previews: PreviewProvider {
                     favoriteArtists: .init(),
                     showArtistImages: true
                 ),
-                reducer: artistListReducer,
-                environment: .init()
+                reducer: ArtistListFeature()
             )
         )
-            .previewAllColorModes()
+        .previewAllColorModes()
 
     }
 }

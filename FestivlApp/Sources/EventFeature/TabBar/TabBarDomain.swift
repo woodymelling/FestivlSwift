@@ -21,7 +21,7 @@ public enum Tab {
 
 public extension EventState {
     
-    var artistListState: ArtistListState {
+    var artistListState: ArtistListFeature.State {
         get {
             .init(
                 event: event,
@@ -40,7 +40,7 @@ public extension EventState {
         }
     }
 
-    var scheduleState: ScheduleState {
+    var scheduleState: ScheduleFeature.State {
         get {
             .init(
                 artists: artists,
@@ -93,7 +93,7 @@ public extension EventState {
         }
     }
 
-    var exploreState: ExploreState {
+    var exploreState: ExploreFeature.State {
         get {
             .init(
                 artists: exploreArtists,
@@ -111,7 +111,7 @@ public extension EventState {
         }
     }
 
-    var moreState: MoreState {
+    var moreState: MoreFeature.State {
         get {
             .init(
                 event: event,
@@ -145,53 +145,48 @@ extension Set {
     }
 }
 
-public enum TabBarAction: BindableAction {
-    case binding(_ action: BindingAction<EventState>)
-    case artistListAction(ArtistListAction)
-    case scheduleAction(ScheduleAction)
-    case exploreAction(ExploreAction)
-    case moreAction(MoreAction)
-}
-
-public struct TabBarEnvironment {
-    public init() { }
-}
-
-public let tabBarReducer = Reducer.combine(
-    Reducer<EventState, TabBarAction, TabBarEnvironment> { state, action, _ in
-        switch action {
-        case .binding:
-            return .none
-        case .artistListAction(.artistDetail(_, .didTapArtistSet(let scheduleCard))), .exploreAction(.artistPage(_, .didTapArtistSet(let scheduleCard))):
-            state.selectedTab = .schedule
-            return Effect(value: .scheduleAction(.showAndHighlightCard(scheduleCard)))
-
-        case .artistListAction, .scheduleAction, .exploreAction, .moreAction:
-            return .none
-        }
+public struct TabBar: ReducerProtocol {
+    public typealias State = EventState
+    
+    public enum Action: BindableAction {
+        case binding(_ action: BindingAction<EventState>)
+        case artistListAction(ArtistListFeature.Action)
+        case scheduleAction(ScheduleFeature.Action)
+        case exploreAction(ExploreFeature.Action)
+        case moreAction(MoreFeature.Action)
     }
-    .binding(),
+    
+    public var body: some ReducerProtocol<State, Action> {
+        BindingReducer()
+        
+        Reduce { state, action in
+            switch action {
+            case .binding:
+                return .none
+            case .artistListAction(.artistDetail(_, .didTapArtistSet(let scheduleCard))), .exploreAction(.artistPage(_, .didTapArtistSet(let scheduleCard))):
+                state.selectedTab = .schedule
+                return Effect(value: .scheduleAction(.showAndHighlightCard(scheduleCard)))
 
-    artistListReducer.pullback(
-        state: \EventState.artistListState,
-        action: /TabBarAction.artistListAction,
-        environment: { (_: TabBarEnvironment) in ArtistListEnvironment() }
-    ),
-
-    scheduleReducer.pullback(
-        state: \EventState.scheduleState,
-        action: /TabBarAction.scheduleAction,
-        environment: { _ in ScheduleEnvironment() }),
-
-    exploreReducer.pullback(
-        state: \EventState.exploreState,
-        action: /TabBarAction.exploreAction,
-        environment: { _ in .init()}
-    ),
-
-    moreReducer.pullback(
-        state: \EventState.moreState,
-        action: /TabBarAction.moreAction,
-        environment: { _ in .init() }
-    )
-)
+            case .artistListAction, .scheduleAction, .exploreAction, .moreAction:
+                return .none
+            }
+        }
+        
+        Scope(state: \.artistListState, action: /Action.artistListAction) {
+            ArtistListFeature()
+        }
+        
+        Scope(state: \.scheduleState, action: /Action.scheduleAction) {
+            ScheduleFeature()
+        }
+        
+        Scope(state: \.exploreState, action: /Action.exploreAction) {
+            ExploreFeature()
+        }
+        
+        Scope(state: \.moreState, action: /Action.moreAction) {
+            MoreFeature()
+        }
+        
+    }
+}

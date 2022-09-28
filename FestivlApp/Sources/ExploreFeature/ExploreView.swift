@@ -12,9 +12,9 @@ import Models
 import ArtistPageFeature
 
 public struct ExploreView: View {
-    let store: Store<ExploreState, ExploreAction>
+    let store: StoreOf<ExploreFeature>
 
-    public init(store: Store<ExploreState, ExploreAction>) {
+    public init(store: StoreOf<ExploreFeature>) {
         self.store = store
     }
 
@@ -27,7 +27,7 @@ public struct ExploreView: View {
                 ZStack {
                     NavigationLink(isActive: viewStore.binding(\.$selectedArtistPageState).isPresent(), destination: {
                         IfLetStore(store.scope(state: \.selectedArtistPageState, action: {
-                            ExploreAction.artistPage(id: viewStore.selectedArtistPageState?.id, action: $0)
+                            ExploreFeature.Action.artistPage(id: viewStore.selectedArtistPageState?.id, action: $0)
                         }), then: ArtistPageView.init)
                     }, label: { EmptyView() })
 
@@ -73,9 +73,15 @@ struct ExploreView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             ExploreView(
                 store: .init(
-                    initialState: .init(artists: Artist.testValues.asIdentifedArray, event: .testData, stages: Stage.testValues.asIdentifedArray, schedule: [:], selectedArtistPageState: nil, favoriteArtists: .init()),
-                    reducer: exploreReducer,
-                    environment: .init()
+                    initialState: .init(
+                        artists: Artist.testValues.asIdentifedArray,
+                        event: .testData,
+                        stages: Stage.testValues.asIdentifedArray,
+                        schedule: [:],
+                        selectedArtistPageState: nil,
+                        favoriteArtists: .init()
+                    ),
+                    reducer: ExploreFeature()
                 )
             )
             .preferredColorScheme($0)

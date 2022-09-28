@@ -12,9 +12,9 @@ import Models
 struct CardContainerView: View {
 
     var style: ScheduleStyle
-    let store: Store<ScheduleState, ScheduleAction>
+    let store: StoreOf<ScheduleFeature>
 
-    func artistSets(for viewStore: ViewStore<ScheduleState, ScheduleAction>) -> IdentifiedArrayOf<ScheduleItem> {
+    func artistSets(for viewStore: ViewStoreOf<ScheduleFeature>) -> IdentifiedArrayOf<ScheduleItem> {
         let artistSets: IdentifiedArrayOf<ScheduleItem>
         switch style {
         case .singleStage(let stage):

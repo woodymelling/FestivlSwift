@@ -13,9 +13,9 @@ import Components
 import iOSComponents
 
 public struct GroupSetDetailView: View {
-    let store: Store<GroupSetDetailState, GroupSetDetailAction>
+    let store: StoreOf<GroupSetDetail>
 
-    public init(store: Store<GroupSetDetailState, GroupSetDetailAction>) {
+    public init(store: StoreOf<GroupSetDetail>) {
         self.store = store
     }
 
@@ -37,11 +37,10 @@ public struct GroupSetDetailView: View {
                             ForEachStore(
                                 self.store.scope(
                                     state: \.artistDetailStates,
-                                    action: GroupSetDetailAction.artistDetailAction
+                                    action: GroupSetDetail.Action.artistDetailAction
                                 )
                             ) { artistStore in
                                 WithViewStore(artistStore) { artistViewStore in
-
                                     NavigationLink(destination: {
                                         ArtistPageView(store: artistStore)
                                     }, label: {
@@ -87,8 +86,7 @@ struct GroupSetDetailView_Previews: PreviewProvider {
                             favoriteArtists: .init(),
                             showArtistImages: true
                         ),
-                        reducer: groupSetDetailReducer,
-                        environment: .init()
+                        reducer: GroupSetDetail()
                     )
                 )
             }

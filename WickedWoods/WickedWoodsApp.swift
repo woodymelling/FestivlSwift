@@ -20,7 +20,7 @@ struct WickedWoodsApp: App {
         WindowGroup {
             EventLoadingView(
                 store: .live(
-                    eventID: "jS1o9Y8HFBhwOaaZmsZB",
+                    eventID: "uxKxjEQe1RDi5AzB9zZI",
                     testMode: false,
                     isEventSpecificApplication: true
                 )

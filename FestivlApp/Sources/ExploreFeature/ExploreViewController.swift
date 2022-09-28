@@ -15,10 +15,10 @@ import ComposableArchitecture
 import ArtistPageFeature
 
 struct ExploreViewHosting: UIViewControllerRepresentable {
-    var artists: IdentifiedArrayOf<ArtistPageState>
+    var artists: IdentifiedArrayOf<ArtistPage.State>
     var stages: IdentifiedArrayOf<Stage>
     var schedule: Schedule
-    var onSelectArtist: (ArtistPageState) -> Void
+    var onSelectArtist: (ArtistPage.State) -> Void
     var favoriteArtists: Set<ArtistID>
 
 
@@ -55,19 +55,19 @@ struct ExploreViewHosting: UIViewControllerRepresentable {
 }
 
 class ExploreViewController: UICollectionViewController {
-    var exploreArtists: IdentifiedArrayOf<ArtistPageState>
+    var exploreArtists: IdentifiedArrayOf<ArtistPage.State>
     var stages: IdentifiedArrayOf<Stage>
     var schedule: Schedule
     var favoriteArtists: Set<ArtistID>
-    var onSelectArtist: (ArtistPageState) -> Void
+    var onSelectArtist: (ArtistPage.State) -> Void
 
     let layout = CollectionViewSlantedLayout()
 
     init(
-        exploreArtists: IdentifiedArrayOf<ArtistPageState>,
+        exploreArtists: IdentifiedArrayOf<ArtistPage.State>,
         stages: IdentifiedArrayOf<Stage>,
         schedule: Schedule,
-        onSelectArtist: @escaping (ArtistPageState) -> Void,
+        onSelectArtist: @escaping (ArtistPage.State) -> Void,
         favoriteArtists: Set<ArtistID>
     ) {
 

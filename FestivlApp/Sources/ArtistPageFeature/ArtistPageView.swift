@@ -11,9 +11,9 @@ import Models
 import Introspect
 
 public struct ArtistPageView: View {
-    let store: Store<ArtistPageState, ArtistPageAction>
+    let store: StoreOf<ArtistPage>
 
-    public init(store: Store<ArtistPageState, ArtistPageAction>) {
+    public init(store: StoreOf<ArtistPage>) {
         self.store = store
     }
 
@@ -77,12 +77,10 @@ public struct ArtistPageView: View {
     }
 
     @ToolbarContentBuilder
-    func toolbar(viewStore: ViewStore<ArtistPageState, ArtistPageAction>) -> some ToolbarContent {
+    func toolbar(viewStore: ViewStore<ArtistPage.State, ArtistPage.Action>) -> some ToolbarContent {
         ToolbarItem(placement: .primaryAction, content: {
-
-
             Button(action: {
-                viewStore.send(ArtistPageAction.favoriteArtistButtonTapped)
+                viewStore.send(ArtistPage.Action.favoriteArtistButtonTapped)
             }, label: {
                 Group {
                     if viewStore.isFavorite {
@@ -147,10 +145,20 @@ struct ArtistPageView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             NavigationView {
                 ArtistPageView(
+//                    store: .init(
+//                        initialState: .init(artist: Artist.testValues[1], event: .testData, setsForArtist: [ArtistSet.testData.asScheduleItem()], stages: IdentifiedArrayOf(uniqueElements: [.testData]), isFavorite: false),
+//                        reducer: artistPageReducer,
+//                        environment: .init()
+//                    )
+                    
                     store: .init(
-                        initialState: .init(artist: Artist.testValues[1], event: .testData, setsForArtist: [ArtistSet.testData.asScheduleItem()], stages: IdentifiedArrayOf(uniqueElements: [.testData]), isFavorite: false),
-                        reducer: artistPageReducer,
-                        environment: .init()
+                        initialState: .init(
+                            artist: Artist.testValues[1],
+                            event: .testData,
+                            setsForArtist: [ArtistSet.testData.asScheduleItem()],
+                            stages: IdentifiedArrayOf(uniqueElements: [.testData]),
+                            isFavorite: false),
+                        reducer: ArtistPage()
                     )
                 )
                 

@@ -15,9 +15,9 @@ import MoreFeature
 
 public struct TabBarView: View {
 
-    let store: Store<EventState, TabBarAction>
+    let store: StoreOf<TabBar>
 
-    public init(store: Store<EventState, TabBarAction>) {
+    public init(store: StoreOf<TabBar>) {
         self.store = store
     }
 
@@ -25,20 +25,20 @@ public struct TabBarView: View {
         WithViewStore(store) { viewStore in
             TabView(selection: viewStore.binding(\.$selectedTab)) {
 
-                ScheduleView(store: store.scope(state: \.scheduleState, action: TabBarAction.scheduleAction))
+                ScheduleView(store: store.scope(state: \.scheduleState, action: TabBar.Action.scheduleAction))
                     .tabItem {
                         Label("Schedule", systemImage: "calendar")
                     }
                     .tag(Tab.schedule)
 
-                ArtistListView(store: store.scope(state: \.artistListState, action: TabBarAction.artistListAction))
+                ArtistListView(store: store.scope(state: \.artistListState, action: TabBar.Action.artistListAction))
                     .tabItem {
                         Label("Artists", systemImage: "person.3")
                     }
                     .tag(Tab.artists)
                 
                 if !viewStore.exploreArtists.isEmpty {
-                    ExploreView(store: store.scope(state: \.exploreState, action: TabBarAction.exploreAction))
+                    ExploreView(store: store.scope(state: \.exploreState, action: TabBar.Action.exploreAction))
                         .tabItem {
                             // TODO: Get better icon
                             Label("Explore", systemImage: "barometer")
@@ -47,7 +47,7 @@ public struct TabBarView: View {
                 }
 
 
-                MoreView(store: store.scope(state: \.moreState, action: TabBarAction.moreAction))
+                MoreView(store: store.scope(state: \.moreState, action: TabBar.Action.moreAction))
                     .tabItem {
                         Label("More", systemImage: "ellipsis")
                     }

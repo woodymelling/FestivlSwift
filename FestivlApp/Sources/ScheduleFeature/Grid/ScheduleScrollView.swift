@@ -13,7 +13,7 @@ import SimultaneouslyScrollView
 import Combine
 
 struct ScheduleScrollView: View {
-    let store: Store<ScheduleState, ScheduleAction>
+    let store: StoreOf<ScheduleFeature>
     let style: ScheduleStyle
 
     @ObservedObject var scrollViewHandler: SingleStageAtOnceView.ViewModel

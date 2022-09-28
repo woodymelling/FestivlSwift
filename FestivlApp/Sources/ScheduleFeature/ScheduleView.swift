@@ -21,9 +21,9 @@ enum ScheduleStyle: Equatable {
 }
 
 public struct ScheduleView: View {
-    let store: Store<ScheduleState, ScheduleAction>
+    let store: StoreOf<ScheduleFeature>
 
-    public init(store: Store<ScheduleState, ScheduleAction>) {
+    public init(store: StoreOf<ScheduleFeature>) {
         self.store = store
     }
     @State var showing: Bool = true
@@ -42,7 +42,7 @@ public struct ScheduleView: View {
                 .sheet(
                     scoping: store,
                     state: \.$selectedArtistState,
-                    action: ScheduleAction.artistPageAction,
+                    action: ScheduleFeature.Action.artistPageAction,
                     then: { artistStore in
                         NavigationView {
                             ArtistPageView(store: artistStore)
@@ -52,7 +52,7 @@ public struct ScheduleView: View {
                 .sheet(
                     scoping: store,
                     state: \.$selectedGroupSetState,
-                    action: ScheduleAction.groupSetDetailAction,
+                    action: ScheduleFeature.Action.groupSetDetailAction,
                     then: GroupSetDetailView.init
                 )
                 .toolbar {
