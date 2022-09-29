@@ -19,7 +19,7 @@ public enum Tab {
     case schedule, artists, explore, more
 }
 
-public extension EventState {
+public extension EventFeature.State {
     
     var artistListState: ArtistListFeature.State {
         get {
@@ -146,10 +146,10 @@ extension Set {
 }
 
 public struct TabBar: ReducerProtocol {
-    public typealias State = EventState
+    public typealias State = EventFeature.State
     
     public enum Action: BindableAction {
-        case binding(_ action: BindingAction<EventState>)
+        case binding(_ action: BindingAction<EventFeature.State>)
         case artistListAction(ArtistListFeature.Action)
         case scheduleAction(ScheduleFeature.Action)
         case exploreAction(ExploreFeature.Action)

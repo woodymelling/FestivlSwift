@@ -20,11 +20,7 @@ struct FestivlApp: App {
     var body: some Scene {
         WindowGroup {
             AppView(
-                store: .init(
-                    initialState: .init(isTestMode: false),
-                    reducer: appReducer,
-                    environment: .init()
-                )
+                store: .init(initialState: .init(isTestMode: false), reducer: AppFeature())
             )
         }
     }

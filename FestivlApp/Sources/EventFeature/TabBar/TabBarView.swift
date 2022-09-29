@@ -56,26 +56,3 @@ public struct TabBarView: View {
         }
     }
 }
-//
-//struct TabBarView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        TabBarView(
-//            store: .init(
-//                initialState: .init(
-//                    event: .testData,
-//                    artists: Artist.testValues.asIdentifedArray,
-//                    stages: Stage.testValues.asIdentifedArray,
-//                    artistSets: ArtistSet.testValues().asIdentifedArray,
-//                    selectedTab: .schedule,
-//                    artistsListSearchText: "",
-//                    scheduleSelectedStage: Stage.testValues[0],
-//                    scheduleZoomAmount: 1,
-//                    scheduleSelectedDate: Event.testData.startDate,
-//                    scheduleScrollAmount: .zero
-//                ),
-//                reducer: tabBarReducer,
-//                environment: TabBarEnvironment()
-//            )
-//        )
-//    }
-//}

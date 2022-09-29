@@ -265,22 +265,6 @@ public struct ScheduleFeature: ReducerProtocol {
     }
 }
 
-
-
-
-public struct ScheduleEnvironment {
-    var currentDate: () -> Date
-    var timePublisher: AnyPublisher<Date, Never>
-
-    public init(
-        currentDate: @escaping () -> Date = Date.init,
-        timePublisher: AnyPublisher<Date, Never> = Timer.publish(every: 1.seconds, on: RunLoop.main, in: .common).autoconnect().eraseToAnyPublisher()
-    ) {
-        self.currentDate = currentDate
-        self.timePublisher = timePublisher
-    }
-}
-
 extension Store where State == ScheduleFeature.State, Action == ScheduleFeature.Action {
     static var testStore: StoreOf<ScheduleFeature> {
         let time = Event.testData.festivalDates[0]

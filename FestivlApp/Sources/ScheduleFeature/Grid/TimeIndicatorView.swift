@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-struct TimeIndicatorEnvironment: Equatable {
-    var currentTime: Date
-}
-
 struct TimeIndicatorView: View {
     var selectedDate: Date
     var dayStartsAtNoon: Bool

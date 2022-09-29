@@ -11,9 +11,9 @@ import Models
 import Utilities
 
 public struct EventView: View {
-    let store: Store<EventState, EventAction>
+    let store: StoreOf<EventFeature>
 
-    public init(store: Store<EventState, EventAction>) {
+    public init(store: StoreOf<EventFeature>) {
         self.store = store
     }
 
@@ -25,7 +25,7 @@ public struct EventView: View {
 
             Group {
                 if viewStore.eventLoaded {
-                    TabBarView(store: store.scope(state: \.tabBarState, action: EventAction.tabBarAction))
+                    TabBarView(store: store.scope(state: \.tabBarState, action: EventFeature.Action.tabBarAction))
                 } else {
                     LoadingView(event: viewStore.event)
                 }
@@ -74,8 +74,7 @@ struct EventView_Previews: PreviewProvider {
             EventView(
                 store: .init(
                     initialState: .init(event: .testData, isTestMode: true, isEventSpecificApplication: false),
-                    reducer: eventReducer,
-                    environment: .init()
+                    reducer: EventFeature()
                 )
             )
             .preferredColorScheme($0)

@@ -145,12 +145,6 @@ struct ArtistPageView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             NavigationView {
                 ArtistPageView(
-//                    store: .init(
-//                        initialState: .init(artist: Artist.testValues[1], event: .testData, setsForArtist: [ArtistSet.testData.asScheduleItem()], stages: IdentifiedArrayOf(uniqueElements: [.testData]), isFavorite: false),
-//                        reducer: artistPageReducer,
-//                        environment: .init()
-//                    )
-                    
                     store: .init(
                         initialState: .init(
                             artist: Artist.testValues[1],

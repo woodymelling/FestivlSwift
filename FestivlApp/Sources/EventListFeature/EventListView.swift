@@ -19,9 +19,9 @@ extension Event: Searchable {
 
 
 public struct EventListView: View {
-    let store: Store<EventListState, EventListAction>
+    let store: StoreOf<EventList>
 
-    public init(store: Store<EventListState, EventListAction>) {
+    public init(store: StoreOf<EventList>) {
         self.store = store
     }
 
@@ -64,12 +64,7 @@ struct EventListView_Previews: PreviewProvider {
             EventListView(
                 store: .init(
                     initialState: .init(isTestMode: true),
-                    reducer: eventListReducer,
-                    environment: .init(
-                        eventListService: {
-                            EventListMockService()
-                        }
-                    )
+                    reducer: EventList()
                 )
             )
             .preferredColorScheme($0)

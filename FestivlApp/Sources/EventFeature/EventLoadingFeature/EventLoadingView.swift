@@ -10,9 +10,9 @@ import ComposableArchitecture
 import Models
 
 public struct EventLoadingView: View {
-    let store: Store<EventLoadingState, EventLoadingAction>
+    let store: StoreOf<EventLoading>
 
-    public init(store: Store<EventLoadingState, EventLoadingAction>) {
+    public init(store: StoreOf<EventLoading>) {
         self.store = store
     }
 
@@ -22,7 +22,7 @@ public struct EventLoadingView: View {
             IfLetStore(
                 store.scope(
                     state: \.eventState,
-                    action: EventLoadingAction.eventAction
+                    action: EventLoading.Action.eventAction
                 ),
                 then: EventView.init(store:),
                 else: {
@@ -43,8 +43,7 @@ struct EventLoadingView_Previews: PreviewProvider {
             EventLoadingView(
                 store: .init(
                     initialState: .init(eventID: Event.testData.id!, isTestMode: true, isEventSpecificApplication: false),
-                    reducer: eventLoadingReducer,
-                    environment: .init()
+                    reducer: EventLoading()
                 )
             )
             .preferredColorScheme($0)
