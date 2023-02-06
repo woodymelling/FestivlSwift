@@ -10,7 +10,6 @@ import Utilities
 
 struct ScheduleHourLabelsView: View {
     var dayStartsAtNoon: Bool
-    var currentTime: Date
     var shouldHideTime: Bool
 
     // Cache if expensive
@@ -68,10 +67,10 @@ struct ScheduleHourLabelsView: View {
 struct ScheduleHourLinesView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            ScheduleHourLabelsView(dayStartsAtNoon: false, currentTime: Date(), shouldHideTime: true)
+            ScheduleHourLabelsView(dayStartsAtNoon: false, shouldHideTime: true)
                 .previewDisplayName("Day starts at midnight")
 
-            ScheduleHourLabelsView(dayStartsAtNoon: true, currentTime: Date(), shouldHideTime: true)
+            ScheduleHourLabelsView(dayStartsAtNoon: true, shouldHideTime: true)
                 .previewDisplayName("Day starts at noon")
         }
         .previewAllColorModes()

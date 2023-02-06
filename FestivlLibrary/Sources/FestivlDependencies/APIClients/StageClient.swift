@@ -13,6 +13,10 @@ import Dependencies
 import Combine
 
 public struct StageClient {
+    public init(getStages: @escaping (Event.ID) -> DataStream<IdentifiedArrayOf<Stage>>) {
+        self.getStages = getStages
+    }
+    
     public var getStages: (Event.ID) -> DataStream<IdentifiedArrayOf<Stage>>
 }
 
@@ -22,7 +26,7 @@ public enum StageClientKey: TestDependencyKey {
     )
     
     public static var previewValue = StageClient(
-        getStages: { _ in Just(Stage.testValues.asIdentifedArray).eraseToAnyPublisher() }
+        getStages: { _ in Just(Stage.testValues.asIdentifedArray).eraseToDataStream() }
     )
 }
 

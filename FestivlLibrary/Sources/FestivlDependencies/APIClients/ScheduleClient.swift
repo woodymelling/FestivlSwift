@@ -13,6 +13,10 @@ import Dependencies
 import Combine
 
 public struct ScheduleClient {
+    public init(getSchedule: @escaping (Event.ID) -> DataStream<Schedule>) {
+        self.getSchedule = getSchedule
+    }
+    
     public var getSchedule: (Event.ID) -> DataStream<Schedule>
 }
 
@@ -22,7 +26,7 @@ public enum ScheduleClientKey: TestDependencyKey {
     )
     
     public static var previewValue = ScheduleClient(
-        getSchedule: { _ in Just(Schedule(scheduleItems: ScheduleItem.testValues())).eraseToAnyPublisher() }
+        getSchedule: { _ in Just(Schedule(scheduleItems: ScheduleItem.testValues(), dayStartsAtNoon: true)).eraseToDataStream() }
     )
 }
 

@@ -13,11 +13,16 @@ import ScheduleFeature
 import ExploreFeature
 import MoreFeature
 
+
+public enum Tab {
+    case schedule, artists, explore, more
+}
+
 public struct TabBarView: View {
 
-    let store: StoreOf<TabBar>
+    let store: StoreOf<EventFeature>
 
-    public init(store: StoreOf<TabBar>) {
+    public init(store: StoreOf<EventFeature>) {
         self.store = store
     }
 
@@ -25,29 +30,27 @@ public struct TabBarView: View {
         WithViewStore(store) { viewStore in
             TabView(selection: viewStore.binding(\.$selectedTab)) {
 
-                ScheduleView(store: store.scope(state: \.scheduleState, action: TabBar.Action.scheduleAction))
+                ScheduleLoadingView(store: store.scope(state: \.scheduleState, action: EventFeature.Action.scheduleAction))
                     .tabItem {
                         Label("Schedule", systemImage: "calendar")
                     }
                     .tag(Tab.schedule)
 
-                ArtistListView(store: store.scope(state: \.artistListState, action: TabBar.Action.artistListAction))
+                ArtistListView(store: store.scope(state: \.artistListState, action: EventFeature.Action.artistListAction))
                     .tabItem {
                         Label("Artists", systemImage: "person.3")
                     }
                     .tag(Tab.artists)
                 
-                if !viewStore.exploreArtists.isEmpty {
-                    ExploreView(store: store.scope(state: \.exploreState, action: TabBar.Action.exploreAction))
-                        .tabItem {
-                            // TODO: Get better icon
-                            Label("Explore", systemImage: "barometer")
-                        }
-                        .tag(Tab.explore)
-                }
+                ExploreView(store: store.scope(state: \.exploreState, action: EventFeature.Action.exploreAction))
+                    .tabItem {
+                        // TODO: Get better icon
+                        Label("Explore", systemImage: "barometer")
+                    }
+                    .tag(Tab.explore)
 
 
-                MoreView(store: store.scope(state: \.moreState, action: TabBar.Action.moreAction))
+                MoreView(store: store.scope(state: \.moreState, action: EventFeature.Action.moreAction))
                     .tabItem {
                         Label("More", systemImage: "ellipsis")
                     }

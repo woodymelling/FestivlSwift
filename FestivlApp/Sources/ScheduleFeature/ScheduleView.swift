@@ -14,10 +14,30 @@ import AlertToast
 import Utilities
 import Popovers
 import Components
+import ComposableArchitectureUtilities
 
 enum ScheduleStyle: Equatable {
     case singleStage(Stage)
     case allStages
+}
+
+public struct ScheduleLoadingView: View {
+    let store: StoreOf<ScheduleLoadingFeature>
+    
+    public init(store: StoreOf<ScheduleLoadingFeature>) {
+        self.store = store
+    }
+    
+    public var body: some View {
+        WithViewStore(store) { viewStore in
+            IfLetStore(store.scope(state: \.scheduleState, action: ScheduleLoadingFeature.Action.scheduleAction)) { store in
+                ScheduleView(store: store)
+            } else: {
+                ProgressView()
+            }
+            .task { await viewStore.send(.task).finish() }
+        }
+    }
 }
 
 public struct ScheduleView: View {
@@ -59,11 +79,11 @@ public struct ScheduleView: View {
                     ToolbarItem(placement: .principal, content: {
                         Menu {
                             ForEach(viewStore.event.festivalDates, id: \.self, content: { date in
-                                Button(action: {
+                                Button {
                                     viewStore.send(.selectedDate(date), animation: .default)
-                                }, label: {
+                                } label: {
                                     Text(FestivlFormatting.weekdayFormat(for: date))
-                                })
+                                }
                             })
                         } label: {
                             HStack {
@@ -122,27 +142,20 @@ public struct ScheduleView: View {
                         )
                     },
                     completion: {
-                        viewStore.send(.landscapeTutorialHidden)
+                        viewStore.send(.hideLandscapeTutorial)
                     }
                 )
             }
             .navigationViewStyle(.stack)
-            .onAppear {
-                viewStore.send(.onAppear, animation: .default)
-            }
+            .task { await viewStore.send(.task).finish() }
         }
     }
 }
 
+
 struct ScheduleView_Previews: PreviewProvider {
     static var previews: some View {
-        ForEach(ColorScheme.allCases.reversed(), id: \.self) {
-            //            let time = Event.testData.festivalDates[0]
-            ScheduleView(
-                store: .testStore
-            )
-            .preferredColorScheme($0)
-        }
+        ScheduleLoadingView(store: .init(initialState: .init(), reducer: ScheduleLoadingFeature()))
     }
 }
 

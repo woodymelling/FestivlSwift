@@ -8,44 +8,44 @@
 import SwiftUI
 import ComposableArchitecture
 import Models
-import NotificationsFeature
+//import NotificationsFeature
 
 public struct MoreView: View {
     let store: StoreOf<MoreFeature>
-
+    
     public init(store: StoreOf<MoreFeature>) {
         self.store = store
     }
-
+    
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-                List {
-                    Group { // Added for some weird compiler type-checking issue
-                        NavigationLink {
-                            NotificationsView(
-                                store: store.scope(
-                                    state: \.notificationsState,
-                                    action: MoreFeature.Action.notificationsAction
-                                )
-                            )
-                        } label: {
-                            Label("Notifications", systemImage: "bell.badge.fill")
-                                .labelStyle(ColorfulIconLabelStyle(color: .red))
-                        }
+                if let eventData = viewStore.eventData {
+                    List {
+                        
+                        //                        NavigationLink {
+                        //                            NotificationsView(
+                        //                                store: store.scope(
+                        //                                    state: \.notificationsState,
+                        //                                    action: MoreFeature.Action.notificationsAction
+                        //                                )
+                        //                            )
+                        //                        } label: {
+                        //                            Label("Notifications", systemImage: "bell.badge.fill")
+                        //                                .labelStyle(ColorfulIconLabelStyle(color: .red))
+                        //                        }
                         
                         
-                        if let imageURL = viewStore.event.siteMapImageURL {
-                            NavigationLink(destination: {
+                        if let imageURL = eventData.event.siteMapImageURL {
+                            NavigationLink {
                                 SiteMapView(imageURL: imageURL)
-                                
-                            }, label: {
+                            } label: {
                                 Label("Site Map", systemImage: "map.fill")
                                     .labelStyle(ColorfulIconLabelStyle(color: .purple))
-                            })
+                            }
                         }
                         
-                        if let contactNumbers = viewStore.event.contactNumbers, !contactNumbers.isEmpty {
+                        if let contactNumbers = eventData.event.contactNumbers, !contactNumbers.isEmpty {
                             NavigationLink(destination: {
                                 ContactInfoView(contactNumbers: contactNumbers)
                             }, label: {
@@ -53,40 +53,45 @@ public struct MoreView: View {
                                     .labelStyle(ColorfulIconLabelStyle(color: .blue))
                             })
                         }
-                        if let address = viewStore.event.address, !address.isEmpty {
+                        
+                        if let address = eventData.event.address, !address.isEmpty {
                             NavigationLink(destination: {
                                 AddressView(
                                     address: address,
-                                    latitude: viewStore.event.latitude ?? "",
-                                    longitude: viewStore.event.longitude ?? ""
+                                    latitude: eventData.event.latitude ?? "",
+                                    longitude: eventData.event.longitude ?? ""
                                 )
                             }, label: {
                                 Label("Address", systemImage: "mappin")
                                     .labelStyle(ColorfulIconLabelStyle(color: .green))
                             })
                         }
-                    }
-
-                    
-                    if !viewStore.isEventSpecificApplication {
-                        Section {
-                            Button("Exit \(viewStore.event.name)", action: {
-                                viewStore.send(.didExitEvent, animation: .default)
-                            })
+                        
+                        if !viewStore.isEventSpecificApplication {
+                            Section {
+                                Button {
+                                    viewStore.send(.didExitEvent, animation: .default)
+                                } label: {
+                                    Text("Exit \(viewStore.eventData?.event.name ?? "")")
+                                }
+                            }
                         }
+                        
                     }
-                    
+                    .listStyle(.insetGrouped)
+                    .navigationTitle("More")
+                } else {
+                    ProgressView()
                 }
-                .listStyle(.insetGrouped)
-                .navigationTitle("More")
             }
+            .task { await viewStore.send(.task).finish() }
         }
     }
 }
 
 struct ColorfulIconLabelStyle: LabelStyle {
     var color: Color
-
+    
     func makeBody(configuration: Configuration) -> some View {
         Label {
             configuration.title
@@ -118,18 +123,7 @@ struct MoreView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             MoreView(
                 store: .init(
-                    initialState: .init(
-                        event: .testData,
-                        favoriteArtists: .init(),
-                        schedule: .init(),
-                        artists: Artist.testValues.asIdentifedArray,
-                        stages: Stage.testValues.asIdentifedArray,
-                        isTestMode: true,
-                        notificationsEnabled: false,
-                        notificationTimeBeforeSet: 5,
-                        showingNavigateToSettingsAlert: false,
-                        isEventSpecificApplication: true
-                    ),
+                    initialState: .init(),
                     reducer: MoreFeature()
                 )
             )

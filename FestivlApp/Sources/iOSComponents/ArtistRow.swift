@@ -10,10 +10,11 @@ import Models
 import Utilities
 import Components
 import IdentifiedCollections
+import FestivlDependencies
 
 
 public struct ArtistRow: View {
-    public init(artist: Artist, event: Event, stages: IdentifiedArrayOf<Stage>, sets: IdentifiedArrayOf<ScheduleItem>, isFavorite: Bool, showArtistImage: Bool) {
+    public init(artist: Artist, event: Event, stages: IdentifiedArrayOf<Stage>, sets: Set<ScheduleItem>, isFavorite: Bool, showArtistImage: Bool) {
         self.artist = artist
         self.event = event
         self.stages = stages
@@ -23,12 +24,12 @@ public struct ArtistRow: View {
     }
 
 
-    var artist: Artist
-    var event: Event
-    var stages: IdentifiedArrayOf<Stage>
-    var sets: IdentifiedArrayOf<ScheduleItem>
-    var isFavorite: Bool
-    var showArtistImage: Bool
+    let artist: Artist
+    let event: Event
+    let stages: IdentifiedArrayOf<Stage>
+    let sets: Set<ScheduleItem>
+    let isFavorite: Bool
+    let showArtistImage: Bool
 
     public var body: some View {
         HStack(spacing: 10) {

@@ -42,8 +42,8 @@ struct StagesIndicatorView: View {
     }
 }
 
-struct AllStagesAtOnceView_Previews: PreviewProvider {
-    static var previews: some View {
-        AllStagesAtOnceView(store: .testStore)
-    }
-}
+//struct AllStagesAtOnceView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        AllStagesAtOnceView(store: .testStore)
+//    }
+//}

@@ -7,16 +7,15 @@
 
 import SwiftUI
 import ComposableArchitecture
-import Services
 import Models
 import Utilities
+import Components
 
 extension Event: Searchable {
     public var searchTerms: [String] {
         return [name]
     }
 }
-
 
 public struct EventListView: View {
     let store: StoreOf<EventList>
@@ -28,31 +27,22 @@ public struct EventListView: View {
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-                Group {
-                    if viewStore.events.isEmpty {
-                        ProgressView()
-                    } else {
-                        List {
-                            ForEach(viewStore.events.filter { viewStore.isTestMode || !($0.isTestEvent ?? false)}.filterForSearchTerm(viewStore.searchText)) { event in
-                                
-                                Button(action: { viewStore.send(.selectedEvent(event))
-
-                                }, label: {
-                                    EventRowView(event: event)
-                                })
-                            }
-                        }
-                        .listStyle(.plain)
-                        .searchable(text: viewStore.binding(\.$searchText))
+                SimpleSearchableList(
+                    data: viewStore.eventsWithTestMode,
+                    searchText: viewStore.binding(\.$searchText),
+                    isLoading: viewStore.isLoading
+                ) { event in
+                    Button {
+                        viewStore.send(.selectedEvent(event))
+                    } label: {
+                        EventRowView(event: event)
                     }
                 }
+                .listStyle(.plain)
                 .navigationTitle("Events")
             }
-            #if os(iOS)
-            .navigationViewStyle(.stack)
-            #endif
-            .onAppear {
-                viewStore.send(.subscribeToEvents)
+            .task {
+                await viewStore.send(.task).finish()
             }
         }
     }
@@ -60,14 +50,11 @@ public struct EventListView: View {
 
 struct EventListView_Previews: PreviewProvider {
     static var previews: some View {
-        ForEach(ColorScheme.allCases.reversed(), id: \.self) {
-            EventListView(
-                store: .init(
-                    initialState: .init(isTestMode: true),
-                    reducer: EventList()
-                )
+        EventListView(
+            store: .init(
+                initialState: .init(),
+                reducer: EventList()
             )
-            .preferredColorScheme($0)
-        }
+        )
     }
 }

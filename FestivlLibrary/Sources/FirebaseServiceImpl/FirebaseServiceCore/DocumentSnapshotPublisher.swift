@@ -7,6 +7,7 @@
 
 import Combine
 import Firebase
+import FestivlDependencies
 
 extension Publishers {
     struct DocumentSnapshotPublisher: Publisher {

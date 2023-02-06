@@ -8,10 +8,8 @@
 import Foundation
 import Combine
 import Firebase
+import FestivlDependencies
 
-public enum FestivlError: Error {
-    case `default`(description: String)
-}
 
 extension Publishers {
     struct QuerySnapshotPublisher: Publisher {

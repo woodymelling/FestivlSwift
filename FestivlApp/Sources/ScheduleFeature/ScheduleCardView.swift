@@ -92,9 +92,14 @@ struct ScheduleCardView: View {
 
 struct ArtistSetCardView_Previews: PreviewProvider {
     static var previews: some View {
-        ScheduleCardView(ArtistSet.testValues()[0].asScheduleItem(), stages: Stage.testValues.asIdentifedArray, isSelected: false, isFavorite: false)
-            .frame(width: 300, height: 100)
-            .previewLayout(.sizeThatFits)
-            .previewAllColorModes()
+        
+        ScheduleCardView(
+            .testValues().first!,
+            stages: Stage.testValues.asIdentifedArray,
+            isSelected: false,
+            isFavorite: false
+        )
+        .frame(width: 300, height: 100)
+        .previewLayout(.sizeThatFits)
     }
 }

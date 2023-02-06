@@ -13,6 +13,11 @@ import Dependencies
 import Combine
 
 public struct EventClient {
+    public init(getEvents: @escaping () -> DataStream<IdentifiedArrayOf<Event>>, getEvent: @escaping (Event.ID) -> DataStream<Event>) {
+        self.getEvents = getEvents
+        self.getEvent = getEvent
+    }
+    
     public var getEvents: () -> DataStream<IdentifiedArrayOf<Event>>
     public var getEvent: (Event.ID) -> DataStream<Event>
 }
@@ -24,8 +29,8 @@ public enum EventClientKey: TestDependencyKey {
     )
     
     public static var previewValue = EventClient(
-        getEvents: { Just(Event.testValues).eraseToAnyPublisher() },
-        getEvent: { _ in Just(.testData).eraseToAnyPublisher() }
+        getEvents: { Just(Event.testValues).eraseToDataStream() },
+        getEvent: { _ in Just(.testData).eraseToDataStream() }
     )
 }
 

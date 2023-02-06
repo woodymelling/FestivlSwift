@@ -6,8 +6,9 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
+import FirebaseServiceImpl
 import EventFeature
-import ServiceCore
 
 @main
 struct WickedWoodsApp: App {
@@ -18,11 +19,11 @@ struct WickedWoodsApp: App {
     
     var body: some Scene {
         WindowGroup {
-            EventLoadingView(
-                store: .live(
-                    eventID: "uxKxjEQe1RDi5AzB9zZI",
-                    testMode: false,
-                    isEventSpecificApplication: true
+            EventView(
+                store: Store(
+                    initialState: .init(),
+                    reducer: EventFeature()
+                        .dependency(\.eventID, "uxKxjEQe1RDi5AzB9zZI")
                 )
             )
         }

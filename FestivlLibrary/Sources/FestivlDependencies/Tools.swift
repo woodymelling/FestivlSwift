@@ -6,13 +6,17 @@
 //
 
 import Foundation
+import Combine
 
-public typealias DataStream<T> = AsyncThrowingStream<T, any Error>
 
-extension DataStream {
-    static func yield(_ value: Element) -> DataStream<Element> {
-        AsyncThrowingStream<Element, any Error> { continuation in
-            continuation.yield(value)
-        }
+public enum FestivlError: Error {
+    case `default`(description: String)
+}
+
+public typealias DataStream<T> = AnyPublisher<T, FestivlError>
+
+extension Publisher where Failure == Never {
+    func eraseToDataStream() -> DataStream<Output> {
+        self.setFailureType(to: FestivlError.self).eraseToAnyPublisher()
     }
 }

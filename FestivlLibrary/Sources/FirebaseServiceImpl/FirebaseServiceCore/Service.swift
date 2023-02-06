@@ -13,6 +13,7 @@ import Firebase
 import FirebaseFirestoreSwift
 import Utilities
 import IdentifiedCollections
+import FestivlDependencies
 
 public protocol Service {
     

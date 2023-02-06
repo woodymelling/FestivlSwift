@@ -14,35 +14,21 @@ struct CardContainerView: View {
     var style: ScheduleStyle
     let store: StoreOf<ScheduleFeature>
 
-    func artistSets(for viewStore: ViewStoreOf<ScheduleFeature>) -> IdentifiedArrayOf<ScheduleItem> {
-        let artistSets: IdentifiedArrayOf<ScheduleItem>
+    func artistSets(for viewStore: ViewStoreOf<ScheduleFeature>) -> [ScheduleItem] {
         switch style {
         case .singleStage(let stage):
-            artistSets = viewStore.schedule[.init(
-                date: viewStore.selectedDate,
-                stageID: stage.id!
-            )] ?? .init()
+            
+            let pageIdentifier = Schedule.PageKey(date: viewStore.selectedDate, stageID: stage.id)
+            return Array(viewStore.schedule[schedulePage: pageIdentifier])
 
         case .allStages:
-            artistSets = viewStore.schedule.keys.filter {
-                $0.date == viewStore.selectedDate
-            }
-            .flatMap {
-                viewStore.schedule[$0] ?? .init()
-            }
-            .asIdentifedArray
-
+            
+            return Array(viewStore.stages
+                .map { Schedule.PageKey(date: viewStore.selectedDate, stageID: $0.id) }
+                .reduce(Set<ScheduleItem>()) { partialResult, pageIdentifier in
+                    partialResult.union(viewStore.schedule[schedulePage: pageIdentifier])
+                })
         }
-
-        if viewStore.filteringFavorites {
-            return artistSets.filter {
-                $0.hasFavorite(favoritesList: viewStore.favoriteArtists)
-            }
-        } else {
-            return artistSets
-        }
-
-
     }
 
     var body: some View {
@@ -67,8 +53,14 @@ struct CardContainerView: View {
                             scheduleItem,
                             stages: viewStore.stages,
                             isSelected: viewStore.cardToDisplay == scheduleItem,
-                            isFavorite: scheduleItem.hasFavorite(favoritesList: viewStore.favoriteArtists)
+                            isFavorite: ScheduleFeature.isFavorited(
+                                scheduleItem,
+                                favorites: viewStore.userFavorites
+                            )
                         )
+                        .onTapGesture {
+                            viewStore.send(.didTapCard(scheduleItem))
+                        }
                         .id(scheduleItem.id)
                         .frame(size: size)
                         //                        .fixedSize()
@@ -76,11 +68,6 @@ struct CardContainerView: View {
                             x: xPosition + offset.width,
                             y: scheduleItem.yPlacement(dayStartsAtNoon: viewStore.event.dayStartsAtNoon, containerHeight: geo.size.height) + offset.height
                         )
-
-                        .onTapGesture {
-                            viewStore.send(.didTapCard(scheduleItem))
-                        }
-
                     }
 
                 }
@@ -93,8 +80,8 @@ struct CardContainerView: View {
 
 }
 
-struct CardContainerView_Previews: PreviewProvider {
-    static var previews: some View {
-        CardContainerView(style: .singleStage(.testValues[0]), store: .testStore)
-    }
-}
+//struct CardContainerView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        CardContainerView(style: .singleStage(.testValues[0]), store: .testStore)
+//    }
+//}

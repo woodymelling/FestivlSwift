@@ -1,60 +1,36 @@
+////
+////  File.swift
+////  
+////
+////  Created by Woodrow Melling on 4/10/22.
+////
 //
-//  File.swift
-//  
+//import Foundation
+//import Foundation
+//import SwiftUI
 //
-//  Created by Woodrow Melling on 4/10/22.
+//public struct GroupSet: Codable, Equatable {
+//    public init(
+//        name: String,
+//        artists: [Artist],
+//        stageID: Stage.ID,
+//        startTime: Date,
+//        endTime: Date
+//    ) {
+//        self.name = name
+//        self.artistIDs = artists.map(\.id)
+//        self.artistNames = artists.map(\.name)
+//        self.stageID = stageID
+//        self.startTime = startTime
+//        self.endTime = endTime
+//    }
+//    
+//    public var id: String?
 //
-
-import Foundation
-import FirebaseFirestoreSwift
-import Utilities
-import Foundation
-import ComposableArchitecture
-import SwiftUI
-
-public struct GroupSet: SettableIdentifiable, Codable, Equatable, SimpleSetConvertible {
-
-    public init(
-        name: String,
-        artists: [Artist],
-        stageID: StageID,
-        startTime: Date,
-        endTime: Date
-    ) {
-        self.name = name
-        self.artistIDs = artists.compactMap(\.id)
-        self.artistNames = artists.map(\.name)
-        self.stageID = stageID
-        self.startTime = startTime
-        self.endTime = endTime
-    }
-    
-    @DocumentID public var id: String?
-
-    public var name: String
-    public var artistIDs: [ArtistID]
-    public var artistNames: [String]
-    public var stageID: StageID
-    public var startTime: Date
-    public var endTime: Date
-}
-
-extension GroupSet: ScheduleItemProtocol {
-    public var title: String {
-        return name
-    }
-
-    public var subtext: String? {
-        if artistNames.allSatisfy({ title.contains($0) }) {
-            return nil
-        } else {
-            return artistNames.joined(separator: ", ")
-        }
-    }
-
-    public var type: ScheduleItemType {
-        .groupSet(artistIDs)
-    }
-}
-
-
+//    public var name: String
+//    public var artistIDs: [Artist.ID]
+//    public var artistNames: [String]
+//    public var stageID: Stage.ID
+//    public var startTime: Date
+//    public var endTime: Date
+//}

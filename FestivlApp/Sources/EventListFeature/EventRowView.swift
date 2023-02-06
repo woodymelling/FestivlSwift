@@ -8,26 +8,26 @@
 import SwiftUI
 import Utilities
 import Models
+import Components
 
 struct EventRowView: View {
     var event: Event
 
-    var defaultImage: Image {
-        Image(systemName: "calendar.circle.fill")
-            .resizable()
-    }
-
     var eventDateString: String {
-        return " \(event.startDate.formatted(.dateTime.month().day().year())) - \(event.endDate.formatted(.dateTime.month().day().year()))"
+        return " \(event.startDate.date.formatted(.dateTime.month().day().year())) - \(event.endDate.date.formatted(.dateTime.month().day().year()))"
     }
 
     var body: some View {
         ZStack {
             NavigationLink(destination: { EmptyView() }, label: { EmptyView() })
             HStack(spacing: 10) {
-                CachedAsyncImage(url: event.imageURL, placeholder: {
-                    defaultImage
-                })
+                CachedAsyncImage(
+                    url: event.imageURL,
+                    placeholder: {
+                        Image(systemName: "calendar.circle.fill")
+                            .resizable()
+                    }
+                )
                 .frame(width: 60, height: 60)
 
                 VStack(alignment: .leading) {
@@ -46,10 +46,10 @@ struct EventRowView: View {
 struct EventRowView_Previews: PreviewProvider {
     static var previews: some View {
         List {
+            
             EventRowView(event: Event.testData)
 
         }
         .listStyle(.plain)
-        .previewAllColorModes()
     }
 }

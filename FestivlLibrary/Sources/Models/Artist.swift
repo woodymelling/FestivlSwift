@@ -6,15 +6,11 @@
 //
 
 import Foundation
-import FirebaseFirestoreSwift
-import Utilities
+import Tagged
 
-public typealias ArtistID = String
-
-
-public struct Artist: Codable, SettableIdentifiable, Hashable {
+public struct Artist: Codable, Hashable, Identifiable {
     public init(
-        id: ArtistID? = nil,
+        id: Artist.ID,
         name: String,
         description: String? = nil,
         tier: Int? = nil,
@@ -33,7 +29,7 @@ public struct Artist: Codable, SettableIdentifiable, Hashable {
         self.spotifyURL = spotifyURL
     }
 
-    @DocumentID public var id: ArtistID?
+    public var id: Tagged<Artist, String>
     public var name: String
     public var description: String?
     public var tier: Int?
@@ -42,12 +38,6 @@ public struct Artist: Codable, SettableIdentifiable, Hashable {
     public var websiteURL: String?
     public var spotifyURL: String?
 
-}
-
-extension Artist: Equatable {
-    public static func == (lhs: Artist, rhs: Artist) -> Bool {
-        return lhs._id == rhs._id
-    }
 }
 
 extension Artist {

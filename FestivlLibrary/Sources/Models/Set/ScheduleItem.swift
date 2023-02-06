@@ -11,9 +11,85 @@ import IdentifiedCollections
 import Utilities
 import Tagged
 
-public enum ScheduleItemType: Equatable, Codable {
-    case artistSet(Artist.ID), groupSet([Artist.ID])
+
+public struct ScheduleItem: Identifiable, Codable, Hashable {
+    public init(
+        id: Tagged<ScheduleItem, String>,
+        stageID: Stage.ID,
+        startTime: Date,
+        endTime: Date,
+        title: String,
+        subtext: String? = nil,
+        type: ItemType
+    ) {
+        self.stageID = stageID
+        self.startTime = startTime
+        self.endTime = endTime
+        self.title = title
+        self.subtext = subtext
+        self.id = id
+        self.type = type
+    }
+    
+    public var id: Tagged<Self, String>
+    public var stageID: Stage.ID
+    public var startTime: Date
+    public var endTime: Date
+    public var title: String
+    public var subtext: String?
+
+    public var type: ItemType
+    
+    public enum ItemType: Equatable, Codable {
+        case artistSet(Artist.ID), groupSet([Artist.ID])
+    }
+    
+    public func schedulePageIdentifier(dayStartsAtNoon: Bool) -> Schedule.PageKey {
+        let dateForScheduleItem: CalendarDate
+        
+        if dayStartsAtNoon {
+            dateForScheduleItem = CalendarDate(date: startTime - 12.hours)
+        } else {
+            dateForScheduleItem = CalendarDate(date: startTime)
+        }
+        
+        return .init(date: dateForScheduleItem, stageID: stageID)
+    }
 }
+
+public extension ScheduleItem {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
+extension ScheduleItem {
+    
+    public static func testValues(
+        artists: [Artist] = Artist.testValues,
+        stages: [Stage] = Stage.testValues,
+        count: Int = 10,
+        setLengthMinutes: Int = 60,
+        startTime: Date = Calendar.current.date(from: DateComponents(hour: 13))!
+    ) ->  Set<ScheduleItem> {
+        Set((0...count).map {
+            let artist = artists[wrapped: $0]
+            
+            let startTime = Calendar.current.date(byAdding: .minute, value: setLengthMinutes * $0, to: startTime)!
+            let endTime = Calendar.current.date(byAdding: .minute, value: setLengthMinutes, to: startTime)!
+            
+            return ScheduleItem(
+                id: .init(String($0)),
+                stageID: stages[wrapped: $0].id,
+                startTime: startTime,
+                endTime: endTime,
+                title: artist.name,
+                type: .artistSet(artist.id)
+            )
+        })
+    }
+}
+
 
 public extension ScheduleItem {
     func xPlacement(stageCount: Int, containerWidth: CGFloat, stages: IdentifiedArrayOf<Stage>) -> CGFloat {
@@ -53,67 +129,3 @@ public extension ScheduleItem {
         return  calendar.isDate(selectedDate, inSameDayAs: setStartTime)
     }
 }
-
-public struct ScheduleItem: SimpleSetConvertible, Codable, Hashable {
-    public init(
-        id: Tagged<ScheduleItem, String>,
-        stageID: Stage.ID,
-        startTime: Date,
-        endTime: Date,
-        title: String,
-        subtext: String? = nil,
-        type: ScheduleItemType
-    ) {
-        self.stageID = stageID
-        self.startTime = startTime
-        self.endTime = endTime
-        self.title = title
-        self.subtext = subtext
-        self.id = id
-        self.type = type
-    }
-    
-    public var id: Tagged<Self, String>
-    public var stageID: Stage.ID
-    public var startTime: Date
-    public var endTime: Date
-    public var title: String
-    public var subtext: String?
-
-    public var type: ScheduleItemType
-
-}
-
-public extension ScheduleItem {
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-}
-
-extension ScheduleItem {
-    
-    public static func testValues(
-        artists: [Artist] = Artist.testValues,
-        stages: [Stage] = Stage.testValues,
-        count: Int = 10,
-        setLengthMinutes: Int = 60,
-        startTime: Date = Calendar.current.date(from: DateComponents(hour: 13))!
-    ) ->  Set<ScheduleItem> {
-        Set((0...count).map {
-            let artist = artists[wrapped: $0]
-            
-            let startTime = Calendar.current.date(byAdding: .minute, value: setLengthMinutes * $0, to: startTime)!
-            let endTime = Calendar.current.date(byAdding: .minute, value: setLengthMinutes, to: startTime)!
-            
-            return ScheduleItem(
-                id: .init(String($0)),
-                artistID: artist.id,
-                artistName: artist.name,
-                stageID: stages[wrapped: $0].id,
-                startTime: startTime,
-                endTime: endTime
-            )
-        })
-    }
-}
-

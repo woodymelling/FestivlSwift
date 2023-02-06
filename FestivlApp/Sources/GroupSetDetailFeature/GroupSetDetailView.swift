@@ -23,16 +23,18 @@ public struct GroupSetDetailView: View {
         WithViewStore(store) { viewStore in
             NavigationView {
                 List {
-                    Section {
-                        Button(action: {
-                            viewStore.send(.didTapScheduleItem(viewStore.groupSet))
-                        }, label: {
-                            SetView(set: viewStore.groupSet.asScheduleItem(), stages: viewStore.stages)
-                        })
-
-                    }
-
-                    if case .groupSet = viewStore.groupSet.type {
+                    if let event = viewStore.event,
+                       let stages = viewStore.stages,
+                       let schedule = viewStore.schedule {
+                        Section {
+                            Button(action: {
+                                viewStore.send(.didTapScheduleItem(viewStore.groupSet))
+                            }, label: {
+                                SetView(set: viewStore.groupSet, stages: viewStore.stages)
+                            })
+                            
+                        }
+                        
                         Section("Artists") {
                             ForEachStore(
                                 self.store.scope(
@@ -45,54 +47,24 @@ public struct GroupSetDetailView: View {
                                         ArtistPageView(store: artistStore)
                                     }, label: {
                                         ArtistRow(
-                                            artist: artistViewStore.artist,
-                                            event: artistViewStore.event,
-                                            stages: artistViewStore.stages,
-                                            sets: artistViewStore.sets,
-                                            isFavorite: artistViewStore.isFavorite,
-                                            showArtistImage: viewStore.showArtistImages
+                                            artist: artistViewStore.artist!,
+                                            event: event,
+                                            stages: stages,
+                                            sets: schedule[artistID: artistViewStore.artist!.id],
+                                            isFavorite: false,
+                                            showArtistImage: false
                                         )
                                     })
                                 }
                             }
                         }
+                        
                     }
                 }
                 .listStyle(.plain)
                 .navigationTitle(viewStore.groupSet.title)
+                .task { await viewStore.send(.task).finish() }
             }
-        }
-    }
-}
-
-struct GroupSetDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        ForEach(ColorScheme.allCases.reversed(), id: \.self) {
-            NavigationView {
-                GroupSetDetailView(
-                    store: .init(
-                        initialState: .init(
-                            groupSet: ScheduleItem(GroupSet(
-                                name: "Test Group Set",
-                                artists: Artist.testValues,
-                                stageID: Stage.testData.id!,
-                                startTime: Date(),
-                                endTime: Date() + 1.hours
-                            )),
-                            event: .testData,
-                            schedule: .init(),
-                            artists: Artist.testValues.asIdentifedArray,
-                            stages: Stage.testValues.asIdentifedArray,
-                            favoriteArtists: .init(),
-                            showArtistImages: true
-                        ),
-                        reducer: GroupSetDetail()
-                    )
-                )
-            }
-            
-
-            .preferredColorScheme($0)
         }
     }
 }

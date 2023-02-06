@@ -49,7 +49,7 @@ public struct NotificationsView: View {
                 if viewStore.isTestMode {
                     Section("Testing") {
                         Button("Send notifications now", action: {
-                            viewStore.send(.regenerateNotifications(sendNow: true))
+//                            viewStore.send(.regenerateNotifications(sendNow: true))
                         })
                     }
                 }
@@ -78,27 +78,27 @@ public struct NotificationsView: View {
     }
 }
 
-struct NotificationsView_Previews: PreviewProvider {
-    static var previews: some View {
-        ForEach(ColorScheme.allCases.reversed(), id: \.self) {
-            NavigationView {
-                NotificationsView(
-                    store: .init(
-                        initialState: .init(
-                            favoriteArtists: .init(),
-                            schedule: .init(),
-                            artists: Artist.testValues.asIdentifedArray,
-                            stages: Stage.testValues.asIdentifedArray,
-                            isTestMode: true,
-                            notificationsEnabled: false,
-                            notificationTimeBeforeSet: 15,
-                            showingNavigateToSettingsAlert: false
-                        ),
-                        reducer: NotificationsFeature()
-                    )
-                )
-            }
-            .preferredColorScheme($0)
-        }
-    }
-}
+//struct NotificationsView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ForEach(ColorScheme.allCases.reversed(), id: \.self) {
+//            NavigationView {
+//                NotificationsView(
+//                    store: .init(
+//                        initialState: .init(
+//                            favoriteArtists: .init(),
+//                            schedule: .init(),
+//                            artists: Artist.testValues.asIdentifedArray,
+//                            stages: Stage.testValues.asIdentifedArray,
+//                            isTestMode: true,
+//                            notificationsEnabled: false,
+//                            notificationTimeBeforeSet: 15,
+//                            showingNavigateToSettingsAlert: false
+//                        ),
+//                        reducer: NotificationsFeature()
+//                    )
+//                )
+//            }
+//            .preferredColorScheme($0)
+//        }
+//    }
+//}

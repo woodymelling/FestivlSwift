@@ -75,13 +75,13 @@ public struct SingleStageAtOnceView: View {
 
 
 
-struct SingleStageAtOnceView_Previews: PreviewProvider {
-    static var previews: some View {
-        SingleStageAtOnceView(
-            store: .testStore
-        )
-        .previewAllColorModes()
-//        .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
-    }
-
-}
+//struct SingleStageAtOnceView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SingleStageAtOnceView(
+//            store: .testStore
+//        )
+//        .previewAllColorModes()
+////        .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
+//    }
+//
+//}

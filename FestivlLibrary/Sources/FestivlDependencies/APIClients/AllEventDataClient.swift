@@ -13,6 +13,18 @@ import XCTestDynamicOverlay
 import Combine
 
 public struct EventData: Equatable {
+    public init(
+        event: Event,
+        stages: IdentifiedArrayOf<Stage>,
+        artists: IdentifiedArrayOf<Artist>,
+        schedule: Schedule
+    ) {
+        self.event = event
+        self.stages = stages
+        self.artists = artists
+        self.schedule = schedule
+    }
+    
     public var event: Event
     public var stages: IdentifiedArrayOf<Stage>
     public var artists: IdentifiedArrayOf<Artist>
@@ -20,6 +32,10 @@ public struct EventData: Equatable {
 }
 
 public struct AllEventDataClient {
+    public init(getData: @escaping (Event.ID) -> DataStream<EventData>) {
+        self.getData = getData
+    }
+    
     public var getData: (Event.ID) -> DataStream<EventData>
 }
 

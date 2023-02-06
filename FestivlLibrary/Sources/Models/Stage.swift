@@ -6,23 +6,21 @@
 //
 
 import Foundation
-import FirebaseFirestoreSwift
 import SwiftUI
+import Tagged
 import Utilities
 
-public typealias StageID = String
+public struct Stage: Codable, Hashable, Equatable, Identifiable {
 
-public struct Stage: Codable, SettableIdentifiable, Hashable, Equatable {
-
-    @DocumentID public var id: StageID?
+    public var id: Tagged<Stage, String>
     public let name: String
     public let symbol: String
-    public let colorString: String
+    private let colorString: String
     public var iconImageURL: URL?
     public var sortIndex: Int
 
     public init(
-        id: StageID? = nil,
+        id: Stage.ID,
         name: String,
         symbol: String,
         colorString: String,

@@ -8,7 +8,3 @@
 import Foundation
 import Utilities
 
-public enum StoredEventID {
-    @Storage(key: "savedEventID", defaultValue: nil)
-    public static var savedEventID: String?
-}

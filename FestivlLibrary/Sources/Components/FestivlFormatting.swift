@@ -6,8 +6,13 @@
 //
 
 import Foundation
+import Utilities
 
 public enum FestivlFormatting {
+    
+    public static func weekdayFormat(for day: CalendarDate) -> String {
+        return weekdayFormat(for: day.date)
+    }
     public static func weekdayFormat(for date: Date) -> String {
         var timeFormat = Date.FormatStyle.dateTime.weekday(.wide)
         timeFormat.timeZone = NSTimeZone.default

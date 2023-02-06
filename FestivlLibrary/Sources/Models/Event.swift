@@ -6,26 +6,25 @@
 //
 
 import Foundation
-import FirebaseFirestoreSwift
+import Tagged
+import IdentifiedCollections
 import Utilities
-import ComposableArchitecture
 
-public typealias EventID = String
-
-public struct Event: Codable, SettableIdentifiable {
+public struct Event: Codable, Identifiable, Equatable {
     public init(
-        id: EventID?,
+        id: Tagged<Event, String>,
         name: String,
-        startDate: Date,
-        endDate: Date,
+        startDate: CalendarDate,
+        endDate: CalendarDate,
         dayStartsAtNoon: Bool,
-        imageURL: URL?,
-        siteMapImageURL: URL?,
-        contactNumbers: IdentifiedArrayOf<ContactNumber>,
-        address: String,
-        latitude: String,
-        longitude: String,
-        timeZone: String
+        imageURL: URL? = nil,
+        siteMapImageURL: URL? = nil,
+        contactNumbers: IdentifiedArrayOf<ContactNumber>? = nil,
+        address: String? = nil,
+        latitude: String? = nil,
+        longitude: String? = nil,
+        timeZone: String,
+        isTestEvent: Bool
     ) {
         self.id = id
         self.name = name
@@ -33,15 +32,21 @@ public struct Event: Codable, SettableIdentifiable {
         self.endDate = endDate
         self.dayStartsAtNoon = dayStartsAtNoon
         self.imageURL = imageURL
+        self.siteMapImageURL = siteMapImageURL
         self.contactNumbers = contactNumbers
         self.address = address
+        self.latitude = latitude
+        self.longitude = longitude
         self.timeZone = timeZone
+        self.isTestEvent = isTestEvent
     }
+    
 
-    @DocumentID public var id: EventID?
+
+    public var id: Tagged<Event, String>
     public var name: String
-    public var startDate: Date
-    public var endDate: Date
+    public var startDate: CalendarDate
+    public var endDate: CalendarDate
     public var dayStartsAtNoon: Bool
     public var imageURL: URL?
     public var siteMapImageURL: URL?
@@ -49,16 +54,16 @@ public struct Event: Codable, SettableIdentifiable {
     public var address: String?
     public var latitude: String?
     public var longitude: String?
-    public var timeZone: String?
-    public var isTestEvent: Bool?
+    public var timeZone: String
+    public var isTestEvent: Bool
 
-    public var festivalDates: [Date] {
-        var dates: [Date] = []
-        var cur = startDate.startOfDay(dayStartsAtNoon: dayStartsAtNoon)
-        let end = endDate.startOfDay(dayStartsAtNoon: dayStartsAtNoon)
+    public var festivalDates: [CalendarDate] {
+        var dates: [CalendarDate] = []
+        var cur = startDate
+        let end = endDate
         repeat {
             dates.append(cur)
-            cur += 1.days
+            cur.day += 1
 
         } while (cur <= end)
 
@@ -67,27 +72,58 @@ public struct Event: Codable, SettableIdentifiable {
     }
 }
 
-extension Event: Equatable {
-    public static func == (lhs: Event, rhs: Event) -> Bool {
-        return lhs._id == rhs._id
-    }
-}
-
 public extension Event {
     static var testData: Event {
         Event(
-            id: UUID().uuidString,
-            name: "Testival",
-            startDate: Date(),
-            endDate: Date(timeInterval: 100000, since: Date()),
+            id: "0",
+            name: "Wicked Woods (September 2022)",
+            startDate: CalendarDate(year: 2022, month: 9, day: 8),
+            endDate: CalendarDate(year: 2022, month: 9, day: 11),
             dayStartsAtNoon: true,
-            imageURL: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/festivl.appspot.com/o/userContent%2FB6CCE847-7E71-4AB7-9EE1-3414434EA17F.png?alt=media&token=87dda3ba-377f-48b3-bfbd-30bcc2dbbc6c"),
-            siteMapImageURL: nil,
+            imageURL: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/festivl.appspot.com/o/userContent%2FEE6A4163-01DE-4DF4-A9B7-1AC0D8BE6EAA.png?alt=media&token=4b9951c7-bcc6-405a-ba4c-aa90ab35a98d"),
+            siteMapImageURL: URL(string: "https://secureservercdn.net/198.71.233.71/88d.74e.myftpupload.com/wp-content/uploads/2022/02/Map_web_version-1244-2.png?time=1662323120"),
             contactNumbers: .init(),
-            address: "",
-            latitude: "",
-            longitude: "",
-            timeZone: ""
+            address: "3901 Kootenay Hwy, Fairmont Hot Springs, BC V0B 1L1, Canada",
+            latitude: "50.36651951040857",
+            longitude: "-115.86954803065706",
+            timeZone: "America/Denver",
+            isTestEvent: false
+        )
+    }
+    
+    static var testValues: IdentifiedArrayOf<Event> {
+        IdentifiedArray(arrayLiteral:
+            Event(
+                id: "0",
+                name: "Wicked Woods (September 2022)",
+                startDate: CalendarDate(year: 2022, month: 9, day: 8),
+                endDate: CalendarDate(year: 2022, month: 9, day: 11),
+                dayStartsAtNoon: true,
+                imageURL: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/festivl.appspot.com/o/userContent%2FEE6A4163-01DE-4DF4-A9B7-1AC0D8BE6EAA.png?alt=media&token=4b9951c7-bcc6-405a-ba4c-aa90ab35a98d"),
+                siteMapImageURL: URL(string: "https://secureservercdn.net/198.71.233.71/88d.74e.myftpupload.com/wp-content/uploads/2022/02/Map_web_version-1244-2.png?time=1662323120"),
+                contactNumbers: .init(),
+                address: "3901 Kootenay Hwy, Fairmont Hot Springs, BC V0B 1L1, Canada",
+                latitude: "50.36651951040857",
+                longitude: "-115.86954803065706",
+                timeZone: "America/Denver",
+                isTestEvent: false
+            ),
+            Event(
+                id: "1",
+                name: "Wicked Woods (Spring 2022)",
+                startDate: CalendarDate(year: 2022, month: 5, day: 26),
+                endDate: CalendarDate(year: 2022, month: 5, day: 28),
+                dayStartsAtNoon: true,
+                imageURL: URL(string: "https://firebasestorage.googleapis.com:443/v0/b/festivl.appspot.com/o/userContent%2FDAA28B1F-8634-49ED-B740-435A751FAAC6.png?alt=media&token=3359edfa-99c5-4b8e-bb39-417f6ce0cfe4"),
+                siteMapImageURL: URL(string: "https://secureservercdn.net/198.71.233.71/88d.74e.myftpupload.com/wp-content/uploads/2022/02/Map_web_version-1244-2.png?time=1662323120"),
+                contactNumbers: .init(),
+                address: "3901 Kootenay Hwy, Fairmont Hot Springs, BC V0B 1L1, Canada",
+                latitude: "50.36651951040857",
+                longitude: "-115.86954803065706",
+                timeZone: "America/Denver",
+                isTestEvent: false
+            ),
+            .testData
         )
     }
 }

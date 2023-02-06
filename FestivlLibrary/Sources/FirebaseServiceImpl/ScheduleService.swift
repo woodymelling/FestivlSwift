@@ -5,146 +5,103 @@
 //  Created by Woody on 2/13/22.
 //
 
-import Foundation
-
-import Foundation
-import Combine
-import ServiceCore
 import Models
-import IdentifiedCollections
+import FirebaseFirestoreSwift
+import FirebaseFirestore
+import FestivlDependencies
+import Dependencies
+import Combine
 
-public protocol ScheduleServiceProtocol: Service {
-    func createArtistSet(_ set: ArtistSet, eventID: String, batch: WriteBatch?) async throws -> ArtistSet
-    func updateArtistSet(_ set: ArtistSet, eventID: String, batch: WriteBatch?) async throws
-    func deleteArtistSet(_ set: ArtistSet, eventID: String, batch: WriteBatch?) async throws
+public struct FirebaseArtistSetDTO: Codable {
 
-    func createGroupSet(_ set: GroupSet, eventID: String, batch: WriteBatch?) async throws -> GroupSet
-    func updateGroupSet(_ set: GroupSet, eventID: String, batch: WriteBatch?) async throws
-    func deleteGroupSet(_ set: GroupSet, eventID: String, batch: WriteBatch?) async throws
-
-    func schedulePublisher(eventID: String) -> AnyPublisher<(IdentifiedArrayOf<ArtistSet>, IdentifiedArrayOf<GroupSet>), FestivlError>
+    @DocumentID var id: String?
+    var artistID: String
+    var artistName: String
+    var stageID: String
+    var startTime: Date
+    var endTime: Date
+    
+    static var asScheduleItem: (Self) -> ScheduleItem = {
+        ScheduleItem(
+            id: .init($0.id ?? ""),
+            stageID: .init($0.stageID),
+            startTime: $0.startTime,
+            endTime: $0.endTime,
+            title: $0.artistName,
+            type: .artistSet(.init($0.artistID))
+        )
+    }
 }
 
-public extension ScheduleServiceProtocol {
-//    func createArtistSet(_ set: ArtistSet, eventID: String, batch: WriteBatch? = nil ) async throws -> ArtistSet {
-//        try await self.createArtistSet(set, eventID: eventID, batch: batch)
-//    }
-//
-//    func updateArtistSet(_ set: ArtistSet, eventID: String, batch: WriteBatch? = nil) async throws {
-//        try await self.updateArtistSet(set, eventID: eventID, batch: batch)
-//    }
-//
-//    func deleteArtistSet(_ set: ArtistSet, eventID: String, batch: WriteBatch? = nil) async throws {
-//        try await self.deleteArtistSet(set, eventID: eventID, batch: batch)
-//    }
-//
-//    func createGroupSet(_ set: GroupSet, eventID: String, batch: WriteBatch? = nil) async throws -> GroupSet {
-//        try await self.createGroupSet(set, eventID: eventID, batch: batch)
-//    }
-//
-//    func updateGroupSet(_ set: GroupSet, eventID: String, batch: WriteBatch? = nil) async throws {
-//        try await self.updateGroupSet(set, eventID: eventID, batch: batch)
-//    }
-//
-//    func deleteGroupSet(_ set: GroupSet, eventID: String, batch: WriteBatch? = nil) async throws {
-//        try await self.deleteGroupSet(set, eventID: eventID, batch: batch)
-//    }
-
+public struct FirebaseGroupSetDTO: Codable {
+    @DocumentID var id: String?
+    
+    var name: String
+    var artistIDs: [String]
+    var artistNames: [String]
+    var stageID: String
+    var startTime: Date
+    var endTime: Date
+    
+    static var asScheduleItem: (Self) -> ScheduleItem = {
+        ScheduleItem(
+            id: .init($0.id ?? ""),
+            stageID: .init($0.stageID),
+            startTime: $0.startTime,
+            endTime: $0.endTime,
+            title: $0.name,
+            type: .groupSet($0.artistIDs.map { .init($0) })
+        )
+    }
 }
 
-public class ScheduleService: ScheduleServiceProtocol {
-    private let db = Firestore.firestore()
-    public static var shared = ScheduleService()
+private class ScheduleService {
+    static var shared: ScheduleService = .init()
 
-    public func getBatch() -> WriteBatch {
-        return db.batch()
-    }
-
-    // MARK: Refs
-    private func getArtistSetRef(eventID: String) -> CollectionReference {
-        db.collection("events")
-            .document(eventID)
-            .collection("artist_sets")
-    }
-
-    private func getGroupSetRef(eventID: String) -> CollectionReference {
-        db.collection("events")
-            .document(eventID)
-            .collection("group_sets")
-    }
-
-    // MARK: ArtistSet
-    public func createArtistSet(_ set: ArtistSet, eventID: String, batch: WriteBatch? = nil) async throws -> ArtistSet {
-        let document = try await createDocument(
-            reference: getArtistSetRef(eventID: eventID),
-            data: set,
-            batch: batch
+    @Published var schedule: Schedule = .init(scheduleItems: [], dayStartsAtNoon: false)
+    
+    var cancellable: (Event.ID, AnyCancellable)?
+    
+    
+    func getSchedulePublisher(eventID: Event.ID) -> DataStream<Schedule> {
+        if let cancellable, cancellable.0 == eventID {
+            return $schedule.setFailureType(to: FestivlError.self).eraseToAnyPublisher()
+        }
+        
+        let artistSetsPublisher = FirebaseService.observeQuery(
+            db.collection("events").document(eventID.rawValue).collection("artist_sets"),
+            mapping: FirebaseArtistSetDTO.asScheduleItem
         )
-
-        var set = set
-        set.id = document.documentID
-        return set
-    }
-
-    public func updateArtistSet(_ set: ArtistSet, eventID: String, batch: WriteBatch? = nil) async throws {
-        try await updateDocument(
-            documentReference: getArtistSetRef(eventID: eventID).document(set.ensureIDExists()),
-            data: set,
-            batch: batch
+        
+        let groupSetsPublisher = FirebaseService.observeQuery(
+            db.collection("events").document(eventID.rawValue).collection("group_sets"),
+            mapping: FirebaseGroupSetDTO.asScheduleItem
         )
-    }
-
-    public func deleteArtistSet(_ set: ArtistSet, eventID: String, batch: WriteBatch? = nil) async throws {
-        try await deleteDocument(
-            documentReference: getArtistSetRef(eventID: eventID).document(set.ensureIDExists()),
-            batch: batch
+        
+        let eventPublisher = FirebaseService.observeDocument(
+            db.collection("events").document(eventID.rawValue),
+            mapping: EventDTO.asEvent
         )
+        
+        cancellable = (eventID, Publishers.CombineLatest3(artistSetsPublisher, groupSetsPublisher, eventPublisher)
+            .map { artistSets, groupSets, event in
+                Schedule(scheduleItems: Set(artistSets + groupSets), dayStartsAtNoon: event.dayStartsAtNoon)
+            }
+            .sink { _ in } receiveValue: {
+                self.schedule = $0
+            }
+       )
+            
+        return $schedule.setFailureType(to: FestivlError.self).eraseToAnyPublisher()
     }
-
-    public func artistSetPublisher(eventID: String) -> AnyPublisher<IdentifiedArrayOf<ArtistSet>, FestivlError> {
-        observeQuery(getArtistSetRef(eventID: eventID))
-    }
-
-    public func schedulePublisher(eventID: String) -> AnyPublisher<(IdentifiedArrayOf<ArtistSet>, IdentifiedArrayOf<GroupSet>), FestivlError> {
-
-        let artistSetPublisher: AnyPublisher<IdentifiedArrayOf<ArtistSet>, FestivlError> = observeQuery(
-            getArtistSetRef(eventID: eventID)
-        )
-
-        let groupSetPublisher: AnyPublisher<IdentifiedArrayOf<GroupSet>, FestivlError> = observeQuery(
-            getGroupSetRef(eventID: eventID)
-        )
+    
+}
 
 
-        return Publishers.CombineLatest(
-            artistSetPublisher,
-            groupSetPublisher
-        )
-        .eraseToAnyPublisher()
-    }
-
-    // MARK: GroupSet
-    public func createGroupSet(_ set: GroupSet, eventID: String, batch: WriteBatch? = nil) async throws -> GroupSet {
-        let document = try await createDocument(
-            reference: getGroupSetRef(eventID: eventID),
-            data: set,
-            batch: batch
-        )
-
-        var set = set
-        set.id = document.documentID
-        return set
-    }
-
-    public func updateGroupSet(_ set: GroupSet, eventID: String, batch: WriteBatch? = nil) async throws {
-        try await updateDocument(
-            documentReference: getGroupSetRef(eventID: eventID).document(set.ensureIDExists()),
-            data: set,
-            batch: batch
-        )
-    }
-
-    public func deleteGroupSet(_ set: GroupSet, eventID: String, batch: WriteBatch? = nil) async throws {
-        try await deleteDocument(documentReference: getGroupSetRef(eventID: eventID).document(set.ensureIDExists()))
-    }
+extension ScheduleClientKey: DependencyKey {
+    public static var liveValue = ScheduleClient(
+        getSchedule: { eventID in
+            ScheduleService.shared.getSchedulePublisher(eventID: eventID)
+        }
+    )
 }

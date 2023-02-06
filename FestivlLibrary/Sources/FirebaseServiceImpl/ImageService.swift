@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FestivlDependencies
 
 #if os(iOS)
     import UIKit
@@ -17,7 +18,6 @@ import Foundation
 
 import FirebaseStorage
 import FirebaseStorageSwift
-import ServiceCore
 
 public protocol ImageServiceProtocol {
     func uploadImage(_ image: Image, fileName: String) async throws -> URL

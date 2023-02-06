@@ -7,7 +7,7 @@
 
 import ComposableArchitecture
 import Models
-import Clients
+import FestivlDependencies
 import Combine
 
 public struct EventList: ReducerProtocol {
@@ -16,13 +16,26 @@ public struct EventList: ReducerProtocol {
     @Dependency(\.eventClient.getEvents) var getEvents
     
     public struct State: Equatable {
-        public var events: IdentifiedArrayOf<Event> = []
-        @BindableState var searchText = ""
-        public var isTestMode: Bool
+        public init() {}
         
-        public init(events: IdentifiedArrayOf<Event> = [], isTestMode: Bool) {
-            self.events = events
-            self.isTestMode = isTestMode
+        var events: IdentifiedArrayOf<Event> = []
+        
+        @BindableState var searchText = ""
+
+        var isLoading: Bool = true
+        
+        var currentEnvironment = {
+            @Dependency(\.currentEnvironment) var currentEnvironment
+            return currentEnvironment
+        }()
+        
+        var eventsWithTestMode: IdentifiedArrayOf<Event> {
+            switch currentEnvironment {
+            case .live:
+                return events.filter { !$0.isTestEvent }
+            case .test:
+                return events
+            }
         }
     }
 
@@ -40,13 +53,14 @@ public struct EventList: ReducerProtocol {
         Reduce { state, action in
             switch action {
             case .eventUpdate(let events):
+                state.isLoading = false
                 state.events = events
+                
                 return .none
                 
             case .task:
-                 
                 return .run { send in
-                    for try await events in getEvents() {
+                    for try await events in getEvents().values {
                         await send(.eventUpdate(events))
                     }
                     
@@ -63,3 +77,5 @@ public struct EventList: ReducerProtocol {
         
     }
 }
+
+
