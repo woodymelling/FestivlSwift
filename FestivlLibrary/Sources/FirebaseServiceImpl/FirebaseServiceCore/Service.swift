@@ -14,9 +14,19 @@ import FirebaseFirestoreSwift
 import Utilities
 import IdentifiedCollections
 
-public protocol Service { }
+public protocol Service {
+    
+}
+
+
+extension Service {
+    var storedEventID: String {
+        UserDefaults.standard.string(forKey: "storedEventID") ?? ""
+    }
+}
 
 public extension Service {
+ 
     
     @discardableResult func createDocument<T: Encodable & SettableIdentifiable, Wrapped>(reference: CollectionReference, data: T, batch: WriteBatch? = nil) async throws -> DocumentReference where T.ID == Wrapped? {
         var mutableData = data
@@ -114,13 +124,4 @@ public extension Service {
     }
 }
 
-public enum FestivlError: Error {
-    case `default`(description: String? = nil)
 
-    var errorDescription: String? {
-        switch self {
-        case let .default(description):
-            return description ?? "Something went wrong"
-        }
-    }
-}

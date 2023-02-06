@@ -9,6 +9,10 @@ import Foundation
 import Combine
 import Firebase
 
+public enum FestivlError: Error {
+    case `default`(description: String)
+}
+
 extension Publishers {
     struct QuerySnapshotPublisher: Publisher {
         typealias Output = QuerySnapshot

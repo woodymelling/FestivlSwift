@@ -8,8 +8,6 @@
 import Foundation
 
 import Foundation
-import FirebaseFirestoreSwift
-import Firebase
 import Combine
 import ServiceCore
 import Models

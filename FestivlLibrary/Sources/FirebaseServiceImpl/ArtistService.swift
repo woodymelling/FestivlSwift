@@ -6,12 +6,12 @@
 //
 
 import Foundation
-import FirebaseFirestoreSwift
-import Firebase
 import Combine
 import ServiceCore
 import Models
 import IdentifiedCollections
+import ComposableArchitecture
+import Utilities
 
 public protocol ArtistServiceProtocol: Service {
     func createArtist(artist: Artist, eventID: String) async throws -> Artist
@@ -115,3 +115,34 @@ public struct ArtistMockService: ArtistServiceProtocol {
 }
 
 
+public struct ArtistClient {
+    public var getArtists: (EventID) -> FestivlAsyncSequence<IdentifiedArrayOf<Artist>,  FestivlError>
+    public var getArtist: (Artist, EventID) throws -> FestivlAsyncSequence<Artist, FestivlError>
+}
+
+public extension ArtistClient {
+    static var live = ArtistClient(
+        getArtists: { ArtistService.shared.artistsPublisher(eventID: $0).values } ,
+        getArtist: { try ArtistService.shared.watchArtist(artist: $0, eventID: $1).values }
+    )
+    
+    static var test = ArtistClient(
+        getArtists: { ArtistMockService().artistsPublisher(eventID: $0).values },
+        getArtist: { try ArtistMockService().watchArtist(artist: $0, eventID: $1).values }
+    )
+}
+
+public enum ArtistClientKey: DependencyKey {
+    public static var liveValue = ArtistClient.live
+    public static var previewValue = ArtistClient.test
+    public static var testValue = ArtistClient.test
+}
+
+public extension DependencyValues {
+    var artistsClient: ArtistClient {
+        get { self[ArtistClientKey.self] }
+        set { self[ArtistClientKey.self] = newValue }
+    }
+}
+
+public typealias FestivlAsyncSequence<Value, ErrorType: Error> = AsyncThrowingPublisher<AnyPublisher<Value, ErrorType>>

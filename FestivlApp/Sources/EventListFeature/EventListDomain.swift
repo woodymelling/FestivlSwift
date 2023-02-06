@@ -7,14 +7,13 @@
 
 import ComposableArchitecture
 import Models
-import Services
+import Clients
 import Combine
 
 public struct EventList: ReducerProtocol {
     public init() {}
     
-    var eventListService: () -> EventListServiceProtocol = { EventListService.shared }
-    
+    @Dependency(\.eventClient.getEvents) var getEvents
     
     public struct State: Equatable {
         public var events: IdentifiedArrayOf<Event> = []
@@ -28,8 +27,8 @@ public struct EventList: ReducerProtocol {
     }
 
     public enum Action: BindableAction {
-        case firebaseUpdate(IdentifiedArrayOf<Event>)
-        case subscribeToEvents
+        case eventUpdate(IdentifiedArrayOf<Event>)
+        case task
         case selectedEvent(Event)
         
         case binding(_ action: BindingAction<State>)
@@ -40,17 +39,21 @@ public struct EventList: ReducerProtocol {
         
         Reduce { state, action in
             switch action {
-            case .firebaseUpdate(let events):
+            case .eventUpdate(let events):
                 state.events = events
                 return .none
-            case .subscribeToEvents:
-                return eventListService()
-                    .observeAllEvents()
-                    .eraseErrorToPrint(errorSource: "EventListPublisher")
-                    .map {
-                        .firebaseUpdate($0)
+                
+            case .task:
+                 
+                return .run { send in
+                    for try await events in getEvents() {
+                        await send(.eventUpdate(events))
                     }
-                    .eraseToEffect()
+                    
+                } catch: { error, _ in
+                    print("Event List Publisher failure: \(error)")
+                }
+
             case .binding:
                 return .none
             case .selectedEvent:

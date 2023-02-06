@@ -11,6 +11,7 @@ import Firebase
 import ServiceCore
 import Models
 import IdentifiedCollections
+import ComposableArchitecture
 
 public protocol EventListServiceProtocol: Service {
     func createEvent(_ event: Event) async throws -> Event
@@ -72,5 +73,36 @@ public struct EventListMockService: EventListServiceProtocol {
         Just(Event.testData)
             .setFailureType(to: FestivlError.self)
             .eraseToAnyPublisher()
+    }
+}
+
+
+public struct EventClient {
+    public var getEvents: () -> FestivlAsyncSequence<IdentifiedArrayOf<Event>, FestivlError>
+    public var getEvent: (EventID) -> FestivlAsyncSequence<Event, FestivlError>
+}
+
+public extension EventClient {
+    static var live = EventClient(
+        getEvents: { EventListService.shared.observeAllEvents().values },
+        getEvent: { EventListService.shared.observeEvent(eventID: $0).values }
+        
+    )
+    
+    static var test = EventClient(
+        getEvents: { EventListMockService().observeAllEvents().values },
+        getEvent: { EventListMockService().observeEvent(eventID: $0).values }
+    )
+}
+
+public enum EventClientKey: TestDependencyKey {
+    public static var previewValue = EventClient.test
+    public static var testValue = EventClient.test
+}
+
+public extension DependencyValues {
+    var eventClient: EventClient {
+        get { self[EventClientKey.self] }
+        set { self[EventClientKey.self] = newValue }
     }
 }
