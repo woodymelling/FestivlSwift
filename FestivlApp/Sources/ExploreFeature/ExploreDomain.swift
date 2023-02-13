@@ -26,7 +26,7 @@ public struct ExploreFeature: ReducerProtocol {
         public var schedule: Schedule?
         public var stages: IdentifiedArrayOf<Stage>?
         
-        @BindableState var selectedArtistPageState: ArtistPage.State?
+        @BindingState var selectedArtistPageState: ArtistPage.State?
         
         var isLoading: Bool = false
         

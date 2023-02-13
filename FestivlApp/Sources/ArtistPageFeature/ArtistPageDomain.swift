@@ -49,7 +49,7 @@ public struct ArtistPage: ReducerProtocol {
         case favoriteArtistButtonTapped
     }
     
-    public func reduce(into state: inout State, action: Action) -> Effect<Action, Never> {
+    public func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
         switch action {
         case .didTapScheduleItem:
             return .none

@@ -12,7 +12,7 @@ import ComposableArchitecture
 public extension View {
     func sheet<State, LocalState, Action, LocalAction, IfContent> (
         scoping store: Store<State, Action>,
-        state keyPath: WritableKeyPath<State, BindableState<LocalState?>>,
+        state keyPath: WritableKeyPath<State, BindingState<LocalState?>>,
         action fromLocalAction: @escaping (LocalAction) -> Action,
         then thenView: @escaping (Store<LocalState, LocalAction>) -> IfContent
     ) -> some View

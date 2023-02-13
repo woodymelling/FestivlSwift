@@ -18,18 +18,26 @@ public struct NotificationsFeature: ReducerProtocol {
     @Dependency(\.userNotificationCenter) var notificationCenter
     @Dependency(\.currentEnvironment) var currentEnvironment
     
+    
     public struct State: Equatable {
-        @BindableState public var notificationsEnabled: Bool
-        @BindableState public var notificationTimeBeforeSet: Int
+        public init() {}
+        
+        @BindingState public var notificationsEnabled: Bool = false
+        @BindingState public var notificationTimeBeforeSet: Int = 0
 
-        @BindableState public var showingNavigateToSettingsAlert: Bool
+        @BindingState public var showingNavigateToSettingsAlert: Bool = false
+     
+        var currentEnvironment: FestivlEnvironment = .live
     }
     
     public enum Action: BindableAction {
         case binding(_ action: BindingAction<State>)
-        case registerForNotifications
         case notifictationsPermitted
         case notificationsDenied
+        
+        case didTapSendNotificationsButton
+        
+        case task
     }
     
     public var body: some ReducerProtocol<State, Action> {
@@ -37,6 +45,12 @@ public struct NotificationsFeature: ReducerProtocol {
         
         Reduce { state, action in
             switch action {
+            case .task:
+                userFavoritesClient.registerNotificationCategories()
+                state.currentEnvironment = currentEnvironment
+                state.notificationsEnabled = userFavoritesClient.notificationsEnabled
+                state.notificationTimeBeforeSet = userFavoritesClient.beforeSetNotificationTime
+                
             case .binding(\.$notificationsEnabled):
                 if state.notificationsEnabled {
                     return .task {
@@ -60,9 +74,6 @@ public struct NotificationsFeature: ReducerProtocol {
             case .binding:
                 return .none
 
-            case .registerForNotifications:
-                userFavoritesClient.registerNotificationCategories()
-                return .none
 
             case .notificationsDenied:
                 state.showingNavigateToSettingsAlert = true
@@ -73,6 +84,9 @@ public struct NotificationsFeature: ReducerProtocol {
 
             case .notifictationsPermitted:
                 userFavoritesClient.updateNotificationSettings(true, state.notificationTimeBeforeSet)
+                
+            case .didTapSendNotificationsButton:
+                userFavoritesClient.sendNotificationsNow()
             }
             
             return .none

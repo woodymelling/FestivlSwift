@@ -28,6 +28,8 @@ public struct UserFavoritesClient {
     
     public var notificationsEnabled: Bool
     public var beforeSetNotificationTime: Int
+    
+    public var sendNotificationsNow: () -> Void
 }
 
 // MARK: DependencyKey
@@ -39,7 +41,8 @@ public enum UserFavoritesClientKey: DependencyKey {
         updateNotificationSettings: UserFavoritesStore.shared.updateNotificationSettings(notificationsEnabled:beforeSetNotificationTime:),
         registerNotificationCategories: UNUserNotificationCenter.registerNotificationCategories,
         notificationsEnabled: UserFavoritesStore.shared.notificationsEnabled,
-        beforeSetNotificationTime: UserFavoritesStore.shared.beforeSetNotificationTime
+        beforeSetNotificationTime: UserFavoritesStore.shared.beforeSetNotificationTime,
+        sendNotificationsNow: { UserFavoritesStore.shared.regenerateNotifications(sendNow: true) }
     )
     
     public static var testValue: UserFavoritesClient = .init(
@@ -49,7 +52,8 @@ public enum UserFavoritesClientKey: DependencyKey {
         updateNotificationSettings: unimplemented("UserFavoritesClient.updateNotificationsSettings"),
         registerNotificationCategories: unimplemented("UserFavoritesclient.registerNotificationCategories"),
         notificationsEnabled: true,
-        beforeSetNotificationTime: 5
+        beforeSetNotificationTime: 5,
+        sendNotificationsNow: unimplemented("UserFavoritesclient.sendNotificationsNow")
     )
     
     public static var previewValue: UserFavoritesClient = .init(
@@ -59,7 +63,8 @@ public enum UserFavoritesClientKey: DependencyKey {
         updateNotificationSettings: UserFavoritesStore.shared.updateNotificationSettings,
         registerNotificationCategories: {},
         notificationsEnabled: UserFavoritesPreviewStore.shared.notificationsEnabled,
-        beforeSetNotificationTime: UserFavoritesPreviewStore.shared.beforeSetNotificationTime
+        beforeSetNotificationTime: UserFavoritesPreviewStore.shared.beforeSetNotificationTime,
+        sendNotificationsNow: {}
     )
 }
 
@@ -127,17 +132,17 @@ private class UserFavoritesStore {
         self.regenerateNotifications()
     }
     
-    private func regenerateNotifications() {
+    func regenerateNotifications(sendNow: Bool = false) {
         UNUserNotificationCenter.current().regenerateArtistSetNotifications(
             notificationsEnabled: notificationsEnabled,
             favoriteArtists: userFavorites,
             artists: artists,
             stages: stages,
             schedule: schedule,
+            sendNow: sendNow,
             minutesTilSet: beforeSetNotificationTime
         )
     }
-    
 }
 
 // MARK: User Notification Generation
@@ -168,6 +173,8 @@ extension UNUserNotificationCenter {
     ) {
         self.removeAllPendingNotificationRequests()
         guard notificationsEnabled else { return }
+        
+        
 
         favoriteArtists
             .flatMap {
@@ -196,7 +203,7 @@ extension UNUserNotificationCenter {
 
         content.sound = UNNotificationSound.default
         content.categoryIdentifier = "UPCOMING_SET"
-        content.userInfo = ["SET_ID": set.id as Any, "TIME_TIL_SET": minutesTilSet as Any]
+        content.userInfo = ["SET_ID": set.id.rawValue, "TIME_TIL_SET": minutesTilSet as Any]
 
         let trigger: UNNotificationTrigger
 
@@ -217,7 +224,6 @@ extension UNUserNotificationCenter {
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
 
         self.add(request)
-
     }
 }
 

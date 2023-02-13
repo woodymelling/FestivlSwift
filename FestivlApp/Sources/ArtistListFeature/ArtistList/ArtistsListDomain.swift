@@ -34,7 +34,7 @@ public struct ArtistListFeature: ReducerProtocol {
         
         var showArtistImages: Bool = false
         
-        @BindableState public var searchText: String = ""
+        @BindingState public var searchText: String = ""
         
         var isLoading: Bool = false
         

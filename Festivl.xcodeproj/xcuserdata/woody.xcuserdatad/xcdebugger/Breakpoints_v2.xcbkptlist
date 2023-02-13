@@ -112,7 +112,103 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "46"
             endingLineNumber = "46"
-            landmarkName = "getTimeline(in:completion:)"
+            landmarkName = "unknown"
+            landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F7BCF4E7-E874-4BE7-A021-90587CDBDFA5"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FestivlLibrary/Sources/FestivlDependencies/APIClients/UserFavoritesClient.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "193"
+            endingLineNumber = "193"
+            landmarkName = "createNotificationForSet(_:stage:minutesTilSet:runNotificationNow:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8267FCD0-1459-4823-9B2E-C6901B5E3EAC"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FestivlLibrary/Sources/FestivlDependencies/APIClients/UserFavoritesClient.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "184"
+            endingLineNumber = "184"
+            landmarkName = "regenerateArtistSetNotifications(notificationsEnabled:favoriteArtists:artists:stages:schedule:sendNow:minutesTilSet:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "8267FCD0-1459-4823-9B2E-C6901B5E3EAC - 7a796d5853491a3d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (Models.ScheduleItem) -&gt; () in __C.UNUserNotificationCenter.regenerateArtistSetNotifications(notificationsEnabled: Swift.Bool, favoriteArtists: Swift.Set&lt;Tagged.Tagged&lt;Models.Artist, Swift.String&gt;&gt;, artists: IdentifiedCollections.IdentifiedArray&lt;Tagged.Tagged&lt;Models.Artist, Swift.String&gt;, Models.Artist&gt;, stages: IdentifiedCollections.IdentifiedArray&lt;Tagged.Tagged&lt;Models.Stage, Swift.String&gt;, Models.Stage&gt;, schedule: Models.Schedule, sendNow: Swift.Bool, minutesTilSet: Swift.Int) -&gt; ()"
+                  moduleName = "Festivl"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/woody/Developer/Festivl/iOS/Festivl/FestivlLibrary/Sources/FestivlDependencies/APIClients/UserFavoritesClient.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184"
+                  offsetFromSymbolStart = "232">
+               </Location>
+               <Location
+                  uuid = "8267FCD0-1459-4823-9B2E-C6901B5E3EAC - 7a796d5853491a3d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (Models.ScheduleItem) -&gt; () in __C.UNUserNotificationCenter.regenerateArtistSetNotifications(notificationsEnabled: Swift.Bool, favoriteArtists: Swift.Set&lt;Tagged.Tagged&lt;Models.Artist, Swift.String&gt;&gt;, artists: IdentifiedCollections.IdentifiedArray&lt;Tagged.Tagged&lt;Models.Artist, Swift.String&gt;, Models.Artist&gt;, stages: IdentifiedCollections.IdentifiedArray&lt;Tagged.Tagged&lt;Models.Stage, Swift.String&gt;, Models.Stage&gt;, schedule: Models.Schedule, sendNow: Swift.Bool, minutesTilSet: Swift.Int) -&gt; ()"
+                  moduleName = "Festivl"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/woody/Developer/Festivl/iOS/Festivl/FestivlLibrary/Sources/FestivlDependencies/APIClients/UserFavoritesClient.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "184"
+                  endingLineNumber = "184"
+                  offsetFromSymbolStart = "384">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "AA36784F-DB64-48CD-95B7-055DF78AC89D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FestivlLibrary/Sources/FestivlDependencies/APIClients/UserFavoritesClient.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "181"
+            endingLineNumber = "181"
+            landmarkName = "regenerateArtistSetNotifications(notificationsEnabled:favoriteArtists:artists:stages:schedule:sendNow:minutesTilSet:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "804FD108-4730-42CD-9753-02072BD2CA77"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FestivlLibrary/Sources/FestivlDependencies/APIClients/UserFavoritesClient.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "185"
+            endingLineNumber = "185"
+            landmarkName = "regenerateArtistSetNotifications(notificationsEnabled:favoriteArtists:artists:stages:schedule:sendNow:minutesTilSet:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -23,13 +23,13 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "protocol-beta"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "0.50.2"),
         .package(url: "https://github.com/yacir/CollectionViewSlantedLayout", branch: "master"),
         .package(name: "FestivlLibrary", path: "../FestivlLibrary"),
         .package(url: "https://github.com/siteline/SwiftUI-Introspect.git", from: "0.0.0"),
         .package(url: "https://github.com/stonko1994/SimultaneouslyScrollView", from: "1.0.0"),
         .package(url: "https://github.com/Jake-Short/swiftui-image-viewer.git", from: "2.3.1"),
-        .package(url: "https://github.com/miiha/composable-user-notifications", from: "0.2.0"),
+        .package(url: "https://github.com/miiha/composable-user-notifications", from: "0.5.0"),
         .package(url: "https://github.com/elai950/AlertToast", branch: "master"),
         .package(url: "https://github.com/aheze/Popovers", from: "1.3.2")
     ],
@@ -148,7 +148,8 @@ let package = Package(
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "ImageViewer", package: "swiftui-image-viewer"),
                 .product(name: "Components", package: "FestivlLibrary"),
-                .product(name: "FestivlDependencies", package: "FestivlLibrary")
+                .product(name: "FestivlDependencies", package: "FestivlLibrary"),
+                .target(name: "NotificationsFeature")
             ],
             resources: [
                 .copy("Media.xcassets")

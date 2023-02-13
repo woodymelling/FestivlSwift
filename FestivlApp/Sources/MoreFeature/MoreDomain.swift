@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import Models
 import FestivlDependencies
+import NotificationsFeature
 
 public struct MoreFeature: ReducerProtocol {
     public init() {}
@@ -22,6 +23,8 @@ public struct MoreFeature: ReducerProtocol {
         
         var eventData: EventData?
         var isEventSpecificApplication: Bool = true
+        
+        var notificationsState: NotificationsFeature.State = .init()
     }
     
     public enum Action {
@@ -29,6 +32,8 @@ public struct MoreFeature: ReducerProtocol {
         case task
         
         case dataLoaded(EventData)
+        
+        case notificationsAction(NotificationsFeature.Action)
     }
     
     public var body: some ReducerProtocol<MoreFeature.State, MoreFeature.Action> {
@@ -51,7 +56,14 @@ public struct MoreFeature: ReducerProtocol {
                 state.eventData = data
                 
                 return .none
+                
+            case .notificationsAction:
+                return .none
             }
+        }
+        
+        Scope(state: \.notificationsState, action: /Action.notificationsAction) {
+            NotificationsFeature()
         }
     }
 }

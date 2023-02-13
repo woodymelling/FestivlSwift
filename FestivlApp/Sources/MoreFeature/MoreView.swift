@@ -8,7 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import Models
-//import NotificationsFeature
+import NotificationsFeature
 
 public struct MoreView: View {
     let store: StoreOf<MoreFeature>
@@ -23,17 +23,17 @@ public struct MoreView: View {
                 if let eventData = viewStore.eventData {
                     List {
                         
-                        //                        NavigationLink {
-                        //                            NotificationsView(
-                        //                                store: store.scope(
-                        //                                    state: \.notificationsState,
-                        //                                    action: MoreFeature.Action.notificationsAction
-                        //                                )
-                        //                            )
-                        //                        } label: {
-                        //                            Label("Notifications", systemImage: "bell.badge.fill")
-                        //                                .labelStyle(ColorfulIconLabelStyle(color: .red))
-                        //                        }
+                        NavigationLink {
+                            NotificationsView(
+                                store: store.scope(
+                                    state: \.notificationsState,
+                                    action: MoreFeature.Action.notificationsAction
+                                )
+                            )
+                        } label: {
+                            Label("Notifications", systemImage: "bell.badge.fill")
+                                .labelStyle(ColorfulIconLabelStyle(color: .red))
+                        }
                         
                         
                         if let imageURL = eventData.event.siteMapImageURL {

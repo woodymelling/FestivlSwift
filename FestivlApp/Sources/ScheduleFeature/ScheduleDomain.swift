@@ -56,10 +56,13 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
                 
                 guard !eventData.schedule.isEmpty else { return .none }
                 
+                userFavoritesClient.updateScheduleData(eventData.schedule, eventData.artists, eventData.stages)
+                
                 let selectedDate: CalendarDate
                 let selectedStage: Stage
                 let event = eventData.event
                 
+                // This check chooses the correct date for when the app is opened
                 if let currentlySelectedDate = state.scheduleState?.selectedDate {
                     selectedDate = currentlySelectedDate
                 } else if CalendarDate.today.isWithin(rhs: event.startDate, lhs: event.endDate) { // TODO: Get from reducer
@@ -68,6 +71,7 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
                     selectedDate = event.startDate
                 }
                 
+                // This check chooses the correct stage for when the app is opened
                 if let currentlySelectedStage = state.scheduleState?.selectedStage {
                     selectedStage = currentlySelectedStage
                 } else if let firstStageWithItems = firstStageWithItems(
@@ -123,22 +127,22 @@ public struct ScheduleFeature: ReducerProtocol {
         public var event: Event
         var userFavorites: UserFavorites
         
-        @BindableState public var selectedStage: Stage
+        @BindingState public var selectedStage: Stage
         public var selectedDate: CalendarDate
         
         public var zoomAmount: CGFloat = 1
         public var lastScaleValue: CGFloat = 1
         
         public var deviceOrientation: DeviceOrientation = .portrait
-        @BindableState public var filteringFavorites: Bool = false
+        @BindingState public var filteringFavorites: Bool = false
 
         public var cardToDisplay: ScheduleItem?
-        @BindableState public var selectedArtistState: ArtistPage.State?
-        @BindableState public var selectedGroupSetState: GroupSetDetail.State?
+        @BindingState public var selectedArtistState: ArtistPage.State?
+        @BindingState public var selectedGroupSetState: GroupSetDetail.State?
 
         public var hasShownTutorialElements: Bool = true
-        @BindableState public var showingLandscapeTutorial: Bool = false
-        @BindableState public var showingFilterTutorial: Bool = false
+        @BindingState public var showingLandscapeTutorial: Bool = false
+        @BindingState public var showingFilterTutorial: Bool = false
         
 
         var isFiltering: Bool {
@@ -196,10 +200,15 @@ public struct ScheduleFeature: ReducerProtocol {
                 return .none
 
             case .task:
-                return .concatenate(
-                    Effect(value: .subscribeToDataPublishers),
-                    Effect(value: .showTutorialElements).delay(for: 1, scheduler: DispatchQueue.main).eraseToEffect()
-                )
+                return .run { send in
+                    await send(.subscribeToDataPublishers)
+                    
+                    try await Task.sleep(nanoseconds: NSEC_PER_SEC)
+                    
+                    await send(.showTutorialElements)
+                    
+                }
+
 
             case .showTutorialElements:
 
@@ -209,10 +218,10 @@ public struct ScheduleFeature: ReducerProtocol {
                 state.hasShownTutorialElements = true
                 
                 return .run { send in
-                    try await Task.sleep(nanoseconds: 5_000_000_000)
+                    try await Task.sleep(nanoseconds: 5 * NSEC_PER_SEC)
                     await send(.hideLandscapeTutorial)
                     await send(.showFilterTutorial)
-                    try await Task.sleep(nanoseconds: 5_000_000_000)
+                    try await Task.sleep(nanoseconds: 5 * NSEC_PER_SEC)
                     await send(.hideFilterTutorial)
                 }
 
@@ -306,11 +315,11 @@ public struct ScheduleFeature: ReducerProtocol {
                 
             case .artistPageAction(.didTapScheduleItem(let scheduleItem)):
                 state.selectedArtistState = nil
-                return Effect(value: .showAndHighlightCard(scheduleItem))
+                return .task { .showAndHighlightCard(scheduleItem) }
 
             case .groupSetDetailAction(.didTapScheduleItem(let scheduleItem)):
                 state.selectedGroupSetState = nil
-                return Effect(value: .showAndHighlightCard(scheduleItem))
+                return .task { .showAndHighlightCard(scheduleItem) }
                 
             case .artistPageAction, .groupSetDetailAction:
                 return .none

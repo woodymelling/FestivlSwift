@@ -10,7 +10,7 @@ import Models
 import Utilities
 import Components
 import IdentifiedCollections
-import FestivlDependencies
+//import FestivlDependencies
 
 
 public struct ArtistRow: View {
