@@ -50,6 +50,7 @@ public struct FirebaseGroupSetDTO: Codable {
             startTime: $0.startTime,
             endTime: $0.endTime,
             title: $0.name,
+            subtext: $0.artistNames.joined(separator: ", "),
             type: .groupSet($0.artistIDs.map { .init($0) })
         )
     }
@@ -58,7 +59,7 @@ public struct FirebaseGroupSetDTO: Codable {
 private class ScheduleService {
     static var shared: ScheduleService = .init()
 
-    @Published var schedule: Schedule = .init(scheduleItems: [], dayStartsAtNoon: false)
+    @Published var schedule: Schedule = .init(scheduleItems: [], dayStartsAtNoon: false, timeZone: NSTimeZone.default)
     
     var cancellable: (Event.ID, AnyCancellable)?
     
@@ -85,7 +86,11 @@ private class ScheduleService {
         
         cancellable = (eventID, Publishers.CombineLatest3(artistSetsPublisher, groupSetsPublisher, eventPublisher)
             .map { artistSets, groupSets, event in
-                Schedule(scheduleItems: Set(artistSets + groupSets), dayStartsAtNoon: event.dayStartsAtNoon)
+                Schedule(
+                    scheduleItems: Set(artistSets + groupSets),
+                    dayStartsAtNoon: event.dayStartsAtNoon,
+                    timeZone: event.timeZone
+                )
             }
             .sink { _ in } receiveValue: {
                 self.schedule = $0

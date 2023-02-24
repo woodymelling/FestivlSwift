@@ -54,7 +54,6 @@ public struct AppFeature: ReducerProtocol {
             EventFeature()
         }
        
-        
         Scope(state: \.eventListState, action: /Action.eventListAction) {
             EventList()
         }

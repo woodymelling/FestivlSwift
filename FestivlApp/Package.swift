@@ -3,6 +3,14 @@
 
 import PackageDescription
 
+extension Target.Dependency {
+    static let composableArchitecture = product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+    
+    static let models = product(name: "Models", package: "FestivlLibrary")
+    static let utlities = product(name: "Utilities", package: "FestivlLibrary")
+    static let dependencies = product(name: "FestivlDependencies", package: "FestivlLibrary")
+}
+
 let package = Package(
     name: "FestivlApp",
     platforms: [.iOS(.v15)],
@@ -39,29 +47,32 @@ let package = Package(
         .target(
             name: "FestivlAppFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .composableArchitecture,
+                .models,
+                
                 .target(name: "EventListFeature"),
                 .product(name: "FirebaseServiceImpl", package: "FestivlLibrary"),
-                .product(name: "Models", package: "FestivlLibrary"),
                 .target(name: "EventFeature"),
             ]
         ),
         .target(
             name: "EventListFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Utilities", package: "FestivlLibrary"),
-                .product(name: "FestivlDependencies", package: "FestivlLibrary"),
+                .composableArchitecture,
+                .models,
+                .utlities,
+                .dependencies,
+                
                 .product(name: "Components", package: "FestivlLibrary")
             ]
         ),
         .target(
             name: "EventFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "FestivlDependencies", package: "FestivlLibrary"),
+                .composableArchitecture,
+                .models,
+                .dependencies,
+                
                 .target(name: "ArtistListFeature"),
                 .target(name: "ScheduleFeature"),
                 .target(name: "ExploreFeature"),
@@ -72,11 +83,12 @@ let package = Package(
         .target(
             name: "ArtistListFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .composableArchitecture,
+                .models,
+                .utlities,
+                .dependencies,
+                
                 .target(name: "ArtistPageFeature"),
-                .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Utilities", package: "FestivlLibrary"),
-                .product(name: "FestivlDependencies", package: "FestivlLibrary"),
                 .product(name: "Components", package: "FestivlLibrary"),
                 .target(name: "iOSComponents"),
             ]
@@ -84,9 +96,10 @@ let package = Package(
         .target(
             name: "ArtistPageFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Utilities", package: "FestivlLibrary"),
+                .composableArchitecture,
+                .models,
+                .utlities,
+                
                 .product(name: "Components", package: "FestivlLibrary"),
                 .product(name: "SharedResources", package: "FestivlLibrary"),
                 .product(name: "FestivlDependencies", package: "FestivlLibrary")
@@ -96,37 +109,40 @@ let package = Package(
         .target(
             name: "ScheduleFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .composableArchitecture,
+                .models,
+                .utlities,
+                
+                .target(name: "ArtistPageFeature"),
+                .target(name: "GroupSetDetailFeature"),
+                
                 .product(name: "AlertToast", package: "AlertToast"),
                 .product(name: "Popovers", package: "Popovers"),
-
-                .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Utilities", package: "FestivlLibrary"),
                 .product(name: "Components", package: "FestivlLibrary"),
                 .product(name: "ComposableArchitectureUtilities", package: "FestivlLibrary"),
                 .product(name: "Introspect", package: "SwiftUI-Introspect"),
-                .product(name: "SimultaneouslyScrollView", package: "SimultaneouslyScrollView"),
-                .target(name: "ArtistPageFeature"),
-                .target(name: "GroupSetDetailFeature")
+                .product(name: "SimultaneouslyScrollView", package: "SimultaneouslyScrollView")
             ]
 
         ),
         .target(
             name: "ExploreFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+                .composableArchitecture,
+                .models,
+                .utlities,
+                
                 .product(name: "CollectionViewSlantedLayout", package: "CollectionViewSlantedLayout"),
-                .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Utilities", package: "FestivlLibrary"),
                 .target(name: "ArtistPageFeature")
             ]
         ),
         .target(
             name: "GroupSetDetailFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Utilities", package: "FestivlLibrary"),
+                .composableArchitecture,
+                .models,
+                .utlities,
+                
                 .product(name: "Components", package: "FestivlLibrary"),
                 .target(name: "ArtistPageFeature"),
                 .target(name: "iOSComponents")
@@ -135,20 +151,22 @@ let package = Package(
         .target(
             name: "iOSComponents",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Utilities", package: "FestivlLibrary"),
+                .composableArchitecture,
+                .models,
+                .utlities,
+                
                 .product(name: "Components", package: "FestivlLibrary"),
            ]
         ),
         .target(
             name: "MoreFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "Models", package: "FestivlLibrary"),
+                .composableArchitecture,
+                .models,
+                .dependencies,
+                
                 .product(name: "ImageViewer", package: "swiftui-image-viewer"),
                 .product(name: "Components", package: "FestivlLibrary"),
-                .product(name: "FestivlDependencies", package: "FestivlLibrary"),
                 .target(name: "NotificationsFeature")
             ],
             resources: [
@@ -158,8 +176,9 @@ let package = Package(
         .target(
             name: "NotificationsFeature",
             dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "Models", package: "FestivlLibrary"),
+                .composableArchitecture,
+                .models,
+                
                 .product(name: "FestivlDependencies", package: "FestivlLibrary")
             ]
         ),

@@ -23,7 +23,7 @@ public struct Event: Codable, Identifiable, Equatable {
         address: String? = nil,
         latitude: String? = nil,
         longitude: String? = nil,
-        timeZone: String,
+        timeZone: TimeZone,
         isTestEvent: Bool
     ) {
         self.id = id
@@ -54,13 +54,13 @@ public struct Event: Codable, Identifiable, Equatable {
     public var address: String?
     public var latitude: String?
     public var longitude: String?
-    public var timeZone: String
+    public var timeZone: TimeZone
     public var isTestEvent: Bool
 
     public var festivalDates: [CalendarDate] {
         var dates: [CalendarDate] = []
         var cur = startDate
-        let end = endDate
+        let end = dayStartsAtNoon ? endDate.adding(days: -1) : endDate
         repeat {
             dates.append(cur)
             cur.day += 1
@@ -86,7 +86,7 @@ public extension Event {
             address: "3901 Kootenay Hwy, Fairmont Hot Springs, BC V0B 1L1, Canada",
             latitude: "50.36651951040857",
             longitude: "-115.86954803065706",
-            timeZone: "America/Denver",
+            timeZone: TimeZone(identifier: "America/Denver")!,
             isTestEvent: false
         )
     }
@@ -105,7 +105,7 @@ public extension Event {
                 address: "3901 Kootenay Hwy, Fairmont Hot Springs, BC V0B 1L1, Canada",
                 latitude: "50.36651951040857",
                 longitude: "-115.86954803065706",
-                timeZone: "America/Denver",
+                timeZone: TimeZone(identifier: "America/Denver")!,
                 isTestEvent: false
             ),
             Event(
@@ -120,7 +120,7 @@ public extension Event {
                 address: "3901 Kootenay Hwy, Fairmont Hot Springs, BC V0B 1L1, Canada",
                 latitude: "50.36651951040857",
                 longitude: "-115.86954803065706",
-                timeZone: "America/Denver",
+                timeZone: TimeZone(identifier: "America/Denver")!,
                 isTestEvent: false
             ),
             .testData

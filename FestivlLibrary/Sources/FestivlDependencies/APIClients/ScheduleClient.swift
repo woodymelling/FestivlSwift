@@ -26,7 +26,7 @@ public enum ScheduleClientKey: TestDependencyKey {
     )
     
     public static var previewValue = ScheduleClient(
-        getSchedule: { _ in Just(Schedule(scheduleItems: ScheduleItem.testValues(), dayStartsAtNoon: true)).eraseToDataStream() }
+        getSchedule: { _ in Just(Schedule(scheduleItems: ScheduleItem.testValues(), dayStartsAtNoon: true, timeZone: NSTimeZone.default)).eraseToDataStream() }
     )
 }
 

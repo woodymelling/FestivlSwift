@@ -19,15 +19,30 @@ struct CardContainerView: View {
         case .singleStage(let stage):
             
             let pageIdentifier = Schedule.PageKey(date: viewStore.selectedDate, stageID: stage.id)
-            return Array(viewStore.schedule[schedulePage: pageIdentifier])
+            return viewStore.schedule[schedulePage: pageIdentifier].filter {
+                if viewStore.isFiltering {
+                    return $0.isIncludedInFavorites(userFavorites: viewStore.userFavorites)
+                } else {
+                    return true
+                }
+            }
 
         case .allStages:
             
-            return Array(viewStore.stages
-                .map { Schedule.PageKey(date: viewStore.selectedDate, stageID: $0.id) }
-                .reduce(Set<ScheduleItem>()) { partialResult, pageIdentifier in
-                    partialResult.union(viewStore.schedule[schedulePage: pageIdentifier])
-                })
+            return Array(
+                viewStore.stages
+                    .map { Schedule.PageKey(date: viewStore.selectedDate, stageID: $0.id) }
+                    .reduce(Set<ScheduleItem>()) { partialResult, pageIdentifier in
+                        partialResult.union(viewStore.schedule[schedulePage: pageIdentifier])
+                    }
+                    .filter {
+                        if viewStore.isFiltering {
+                            return $0.isIncludedInFavorites(userFavorites: viewStore.userFavorites)
+                        } else {
+                            return true
+                        }
+                    }
+            )
         }
     }
 

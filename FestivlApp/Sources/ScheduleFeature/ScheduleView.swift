@@ -29,7 +29,7 @@ public struct ScheduleLoadingView: View {
     }
     
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: Blank.init) { viewStore in
             IfLetStore(store.scope(state: \.scheduleState, action: ScheduleLoadingFeature.Action.scheduleAction)) { store in
                 ScheduleView(store: store)
             } else: {
@@ -76,7 +76,7 @@ public struct ScheduleView: View {
                     then: GroupSetDetailView.init
                 )
                 .toolbar {
-                    ToolbarItem(placement: .principal, content: {
+                    ToolbarItem(placement: .principal) {
                         Menu {
                             ForEach(viewStore.event.festivalDates, id: \.self, content: { date in
                                 Button {
@@ -94,17 +94,17 @@ public struct ScheduleView: View {
                             }
                             .foregroundColor(.primary)
                         }
-                    })
+                    }
 
                     ToolbarItem {
-                        Menu(content: {
+                        Menu {
                             Toggle(isOn: viewStore.binding(\.$filteringFavorites), label: {
                                 Label(
                                     "Favorites",
                                     systemImage:  viewStore.isFiltering ? "heart.fill" : "heart"
                                 )
                             })
-                        }, label: {
+                        } label: {
                             Label(
                                 "Filter",
                                 systemImage: viewStore.isFiltering ?
@@ -114,7 +114,7 @@ public struct ScheduleView: View {
                             .if(viewStore.showingFilterTutorial, transform: {
                                 $0.colorMultiply(.gray)
                             })
-                        })
+                        }
                         .popover(present: viewStore.binding(\.$showingFilterTutorial), attributes: { $0.dismissal.mode = .tapOutside }) {
                             ArrowPopover(arrowSide: .top(.mostClockwise)) {
                                 Text("Filter the schedule to only see your favorite artists")

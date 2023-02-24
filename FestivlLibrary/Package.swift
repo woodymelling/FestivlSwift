@@ -3,6 +3,10 @@
 
 import PackageDescription
 
+extension Target.Dependency {
+    static var models: Self = "Models"
+}
+
 let package = Package(
     name: "FestivlLibrary",
     platforms: [.iOS(.v15), .macOS(.v12)],
@@ -45,7 +49,7 @@ let package = Package(
             .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
         ]),
         .target(name: "Components", dependencies: [
-            .target(name: "Models"),
+            .models,
             .target(name: "Utilities"),
             .product(name: "Kingfisher", package: "Kingfisher")
         ]),
@@ -68,7 +72,7 @@ let package = Package(
         .target(
             name: "FestivlDependencies",
             dependencies: [
-                .target(name: "Models"),
+                .models,
                 .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
                 .product(name: "Dependencies", package: "swift-composable-architecture"),
                 .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")

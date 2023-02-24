@@ -43,7 +43,7 @@ struct EventDTO: Codable {
             address: $0.address ?? "",
             latitude: $0.latitude ?? "",
             longitude: $0.longitude ?? "",
-            timeZone: $0.timeZone ?? "", // TODO replace with default timeZone
+            timeZone: TimeZone(identifier: $0.timeZone ?? "") ?? NSTimeZone.default, // TODO replace with default timeZone
             isTestEvent: $0.isTestEvent ?? false
         )
     }
@@ -57,6 +57,7 @@ extension EventClientKey: DependencyKey {
         },
         getEvent: {
             FirebaseService.observeDocument(db.collection("events").document($0.rawValue), mapping: EventDTO.asEvent)
+            .eraseToAnyPublisher()
         }
     )
 }

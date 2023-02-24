@@ -91,7 +91,7 @@ private class UserFavoritesStore {
     
     var publisher: CurrentValueSubject<UserFavorites, Never> = .init(.init())
     
-    var schedule = Schedule(scheduleItems: .init(), dayStartsAtNoon: false)
+    var schedule = Schedule(scheduleItems: .init(), dayStartsAtNoon: false, timeZone: NSTimeZone.default)
     var artists: IdentifiedArrayOf<Artist> = []
     var stages: IdentifiedArrayOf<Stage> = []
     
@@ -258,4 +258,19 @@ private class UserFavoritesPreviewStore {
     }
     
     
+}
+
+
+public extension ScheduleItem {
+    func isIncludedInFavorites(userFavorites: UserFavorites) -> Bool {
+        switch self.type {
+        case .artistSet(let artistID):
+            return userFavorites.contains(artistID)
+            
+        case .groupSet(let artistIDs):
+            return artistIDs.contains { artistID in
+                userFavorites.contains(artistID)
+            }
+        }
+    }
 }

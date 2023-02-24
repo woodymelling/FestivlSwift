@@ -194,7 +194,7 @@ public struct ScheduleFeature: ReducerProtocol {
     public var body: some ReducerProtocol<State, Action> {
         BindingReducer()
         
-        Reduce { state, action in
+        Reduce<State, Action> { state, action in
             switch action {
             case .binding:
                 return .none
@@ -263,7 +263,10 @@ public struct ScheduleFeature: ReducerProtocol {
 
             case .showAndHighlightCard(let card):
                 
-                let schedulePage = card.schedulePageIdentifier(dayStartsAtNoon: state.event.dayStartsAtNoon)
+                state.selectedGroupSetState = nil
+                state.selectedArtistState = nil
+                
+                let schedulePage = card.schedulePageIdentifier(dayStartsAtNoon: state.event.dayStartsAtNoon, timeZone: state.event.timeZone)
                 
                 if let stage = state.stages[id: schedulePage.stageID] {
                     state.selectedStage = stage

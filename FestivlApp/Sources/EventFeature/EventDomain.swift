@@ -29,7 +29,7 @@ public struct EventFeature: ReducerProtocol {
     @Dependency(\.userNotifications) var userNotifications
     
     public struct State: Equatable {
-        @BindingState var selectedTab: Tab = .schedule
+        var selectedTab: Tab = .schedule
         
         var scheduleState: ScheduleLoadingFeature.State = .init()
         var artistListState: ArtistListFeature.State = .init()
@@ -42,10 +42,10 @@ public struct EventFeature: ReducerProtocol {
         public init() {}
     }
     
-    public enum Action: BindableAction {
-        case binding(_ action: BindingAction<EventFeature.State>)
-        
+    public enum Action {
         case task
+        
+        case didSelectTab(Tab)
         
         case subscribeToEventData
         case subscribeToNotificationsDelegate
@@ -60,8 +60,6 @@ public struct EventFeature: ReducerProtocol {
     }
     
     public var body: some ReducerProtocol<State, Action> {
-        BindingReducer()
-        
         Reduce<State, Action> { state, action in
             switch action {
             case .task:
@@ -70,6 +68,10 @@ public struct EventFeature: ReducerProtocol {
                     await send(.subscribeToEventData)
                     await send(.subscribeToNotificationsDelegate)
                 }
+                
+            case .didSelectTab(let tab):
+                state.selectedTab = tab
+                return .none
                 
             case .subscribeToNotificationsDelegate:
                 return .run { send in
@@ -86,7 +88,7 @@ public struct EventFeature: ReducerProtocol {
                 }
 
             case .artistListAction(.artistDetail(_, .didTapScheduleItem(let scheduleItem))),
-                 .exploreAction(.artistDetail(_, .didTapScheduleItem(let scheduleItem))):
+                    .exploreAction(.artistDetail(_, .didTapScheduleItem(let scheduleItem))), .scheduleAction(.scheduleAction(.groupSetDetailAction(.artistDetailAction(id: _, .didTapScheduleItem(let scheduleItem))))):
                 state.selectedTab = .schedule
                 
                 return .task { .scheduleAction(.scheduleAction(.showAndHighlightCard(scheduleItem)))
@@ -94,13 +96,13 @@ public struct EventFeature: ReducerProtocol {
 
             case .setUpWhenDataLoaded(let data):
                 state.eventData = data
+                NSTimeZone.default = data.event.timeZone
+                print("TIMEZONE", NSTimeZone.default)
                 
                 return .fireAndForget {
                     async let _ = await ImageCacher.preFetchImage(urls: data.artists.compactMap { $0.imageURL })
                     async let _ = await ImageCacher.preFetchImage(urls: data.stages.compactMap{ $0.iconImageURL })
                 }
-            case .binding(_):
-                return .none
                 
             case let .userNotification(.willPresentNotification(_, completion)):
                 return .fireAndForget {

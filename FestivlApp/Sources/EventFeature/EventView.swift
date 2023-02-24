@@ -19,7 +19,7 @@ public struct EventView: View {
     }
 
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: Blank.init) { viewStore in
             TabBarView(store: store)
                 .task { await viewStore.send(.task).finish() }
         }

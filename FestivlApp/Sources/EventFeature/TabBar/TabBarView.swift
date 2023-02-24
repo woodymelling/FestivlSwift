@@ -25,11 +25,23 @@ public struct TabBarView: View {
     public init(store: StoreOf<EventFeature>) {
         self.store = store
     }
+    
+    struct ViewState: Equatable {
+        var selectedTab: Tab
+        
+        init(state: EventFeature.State) {
+            selectedTab = state.selectedTab
+        }
+    }
 
     public var body: some View {
-        WithViewStore(store) { viewStore in
-            TabView(selection: viewStore.binding(\.$selectedTab)) {
-
+        WithViewStore(store, observe: ViewState.init) { viewStore in
+            TabView(
+                selection: viewStore.binding(
+                     get: \.selectedTab,
+                     send: EventFeature.Action.didSelectTab
+                )
+            ) {
                 ScheduleLoadingView(store: store.scope(state: \.scheduleState, action: EventFeature.Action.scheduleAction))
                     .tabItem {
                         Label("Schedule", systemImage: "calendar")

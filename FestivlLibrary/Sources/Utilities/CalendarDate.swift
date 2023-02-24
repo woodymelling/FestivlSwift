@@ -38,8 +38,9 @@ public struct CalendarDate: Equatable, Hashable {
         self.day = day
     }
 
-    public init(date: Date) {
-        let calendar = Calendar.current
+    public init(date: Date, timeZone: TimeZone = NSTimeZone.default) {
+        var calendar = Calendar.current
+        calendar.timeZone = timeZone
         self.year = calendar.component(.year, from: date)
         self.month = calendar.component(.month, from: date)
         self.day = calendar.component(.day, from: date)

@@ -44,13 +44,13 @@ public struct ScheduleItem: Identifiable, Codable, Hashable {
         case artistSet(Artist.ID), groupSet([Artist.ID])
     }
     
-    public func schedulePageIdentifier(dayStartsAtNoon: Bool) -> Schedule.PageKey {
+    public func schedulePageIdentifier(dayStartsAtNoon: Bool, timeZone: TimeZone) -> Schedule.PageKey {
         let dateForScheduleItem: CalendarDate
         
         if dayStartsAtNoon {
-            dateForScheduleItem = CalendarDate(date: startTime - 12.hours)
+            dateForScheduleItem = CalendarDate(date: startTime - 12.hours, timeZone: timeZone)
         } else {
-            dateForScheduleItem = CalendarDate(date: startTime)
+            dateForScheduleItem = CalendarDate(date: startTime, timeZone: timeZone)
         }
         
         return .init(date: dateForScheduleItem, stageID: stageID)
@@ -129,3 +129,4 @@ public extension ScheduleItem {
         return  calendar.isDate(selectedDate, inSameDayAs: setStartTime)
     }
 }
+

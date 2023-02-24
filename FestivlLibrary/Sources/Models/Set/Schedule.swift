@@ -33,7 +33,7 @@ public struct Schedule: Equatable, Collection {
     public let dayStartsAtNoon: Bool
     
     
-    public init(scheduleItems: Set<ScheduleItem>, dayStartsAtNoon: Bool) {
+    public init(scheduleItems: Set<ScheduleItem>, dayStartsAtNoon: Bool, timeZone: TimeZone) {
         self.dayStartsAtNoon = dayStartsAtNoon
         var artistIndex: [Artist.ID : Set<ScheduleItem.ID>] = [:]
         var schedulePageIndex: [PageKey : Set<ScheduleItem.ID>] = [:]
@@ -45,7 +45,7 @@ public struct Schedule: Equatable, Collection {
             
             // Populate schedule page index
             schedulePageIndex.insert(
-                key: scheduleItem.schedulePageIdentifier(dayStartsAtNoon: dayStartsAtNoon),
+                key: scheduleItem.schedulePageIdentifier(dayStartsAtNoon: dayStartsAtNoon, timeZone: timeZone),
                 value: scheduleItem.id
             )
             
