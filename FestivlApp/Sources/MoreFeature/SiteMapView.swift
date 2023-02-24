@@ -7,9 +7,10 @@
 
 import SwiftUI
 import PDFKit
-import Kingfisher
+//import Kingfisher
 import ImageViewer
 import Utilities
+import Components
 
 struct SiteMapView: View {
     var imageURL: URL

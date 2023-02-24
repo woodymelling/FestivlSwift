@@ -15,6 +15,7 @@ import AddEditArtistSetFeature
 import AddEditEventFeature
 import ManagerArtistsFeature
 import EventDataFeature
+import ManagerScheduleFeature
 
 public struct FestivlManagerEventState: Equatable {
     public var event: Event
@@ -53,8 +54,19 @@ public struct FestivlManagerEventState: Equatable {
     var scheduleZoomAmount: CGFloat = 1
     var addEditArtistSetState: AddEditArtistSetState?
     var scheduleArtistSearchText = ""
+    var localSchedule: ManagerSchedule = .init(artistSets: .init(), groupSets: .init())
+    var hasUnpublishedChanges = false
 
-    
+    // EventDataState:
+    var contactNumbers: IdentifiedArrayOf<ContactNumber>
+    var contactNumberText: String = ""
+    var contactNumberDescriptionText: String = ""
+    var contactNumberTitleText: String = ""
+    var eventDataAddress: String
+    var eventDataTimeZone: String
+    var latitudeText: String
+    var longitudeText: String
+    var isTestEvent: Bool
 
     var dashboardState: Self {
         get {
@@ -68,6 +80,12 @@ public struct FestivlManagerEventState: Equatable {
     public init(event: Event) {
         self.event = event
         self.scheduleSelectedDate = event.festivalDates.first!.startOfDay(dayStartsAtNoon: event.dayStartsAtNoon)
+        self.contactNumbers = event.contactNumbers ?? .init()
+        self.eventDataAddress = event.address ?? ""
+        self.eventDataTimeZone = event.timeZone ?? ""
+        self.latitudeText = event.latitude ?? ""
+        self.longitudeText = event.longitude ?? ""
+        self.isTestEvent = event.isTestEvent ?? false
     }
 }
 
@@ -144,6 +162,9 @@ public let festivlManagerEventReducer = Reducer.combine(
             state.groupSets = sets.groupSets
             state.loadedArtistSets = true
 
+            PublishableScheduleService.inMemoryStore.schedule = .init(artistSets: sets.0, groupSets: sets.1)
+            
+
             return .none
 
         case .dashboardAction:
@@ -152,5 +173,3 @@ public let festivlManagerEventReducer = Reducer.combine(
     }
 )
 //.debug()
-
-

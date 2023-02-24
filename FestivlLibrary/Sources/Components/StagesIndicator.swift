@@ -54,7 +54,7 @@ public struct StagesIndicatorView: View {
                         path.addLine(to: bottomRight)
                         path.addLine(to: bottomLeft)
                     },
-                    with: .color(Color(hex: stage.colorString))
+                    with: .color(stage.color)
                 )
             }
         }

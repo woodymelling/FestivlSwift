@@ -8,6 +8,7 @@
 import SwiftUI
 import Models
 import Utilities
+import Components
 
 struct ArtistHeaderView: View {
     var artist: Artist

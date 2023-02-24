@@ -61,11 +61,14 @@ public let managerEventListReducer: Reducer<ManagerEventListState, ManagerEventL
                     ManagerEventListAction.eventsPublisherUpdate($0)
                 }
                 .eraseToEffect()
-
+            
         case .eventsPublisherUpdate(let events):
             state.events = events
             return .none
-        case .didSelectEvent:
+        case .didSelectEvent(let event):
+            if let timeZone = event.timeZone, let timeZone = TimeZone(identifier: timeZone) {
+                NSTimeZone.default = timeZone
+            }
             return .none
         case .didTapAddEventButton:
             state.addEventState = .init()

@@ -12,9 +12,9 @@ import Models
 import ArtistPageFeature
 
 public struct ExploreView: View {
-    let store: Store<ExploreState, ExploreAction>
+    let store: StoreOf<ExploreFeature>
 
-    public init(store: Store<ExploreState, ExploreAction>) {
+    public init(store: StoreOf<ExploreFeature>) {
         self.store = store
     }
 
@@ -25,23 +25,38 @@ public struct ExploreView: View {
         WithViewStore(store) { viewStore in
             NavigationView {
                 ZStack {
-                    NavigationLink(isActive: viewStore.binding(\.$selectedArtistPageState).isPresent(), destination: {
-                        IfLetStore(store.scope(state: \.selectedArtistPageState, action: {
-                            ExploreAction.artistPage(id: viewStore.selectedArtistPageState?.id, action: $0)
-                        }), then: ArtistPageView.init)
-                    }, label: { EmptyView() })
+                    NavigationLink(isActive: viewStore.binding(\.$selectedArtistPageState).isPresent()) {
+                        IfLetStore(
+                            store.scope(
+                                state: \.selectedArtistPageState,
+                                action: { .artistDetail(id: viewStore.selectedArtistPageState!.id, action: $0)
+                                }
+                            ),
+                            then: ArtistPageView.init
+                        )
+                    } label: { EmptyView() }
+                    
+                    if !viewStore.isLoading,
+                       let stages = viewStore.stages,
+                       let schedule = viewStore.schedule {
+                        
+                        ExploreViewHosting(
+                            artists: viewStore.artistStates,
+                            stages: stages,
+                            schedule: schedule,
+                            onSelectArtist: {
+                                viewStore.send(.didTapArtist($0))
+                            }
+                        )
+                        .navigationBarHidden(true)
+                    } else {
+                        ProgressView()
+                    }
 
-                    ExploreViewHosting(
-                        artists: viewStore.artistStates,
-                        stages: viewStore.stages,
-                        schedule: viewStore.schedule,
-                        onSelectArtist: {
-                            viewStore.send(.didSelectArtist($0.artist))
-                        },
-                        favoriteArtists: viewStore.favoriteArtists
-                    )
-                    .navigationBarHidden(true)
-                    .ignoresSafeArea(SafeAreaRegions.all, edges: .all)
+                }
+                .ignoresSafeArea(SafeAreaRegions.all, edges: .all)
+                .task {
+                    await viewStore.send(.task).finish()
                 }
             }
         }
@@ -50,32 +65,13 @@ public struct ExploreView: View {
 
 }
 
-extension Binding {
-    public func isPresent<Wrapped>() -> Binding<Bool>
-      where Value == Wrapped? {
-        .init(
-          get: {
-              self.wrappedValue != nil
-              
-          },
-          set: { isPresent, transaction in
-            if !isPresent {
-              self.transaction(transaction).wrappedValue = nil
-            }
-          }
-        )
-      }
-}
-
-
 struct ExploreView_Previews: PreviewProvider {
     static var previews: some View {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             ExploreView(
                 store: .init(
-                    initialState: .init(artists: Artist.testValues.asIdentifedArray, event: .testData, stages: Stage.testValues.asIdentifedArray, schedule: [:], selectedArtistPageState: nil, favoriteArtists: .init()),
-                    reducer: exploreReducer,
-                    environment: .init()
+                    initialState: .init(),
+                    reducer: ExploreFeature()
                 )
             )
             .preferredColorScheme($0)

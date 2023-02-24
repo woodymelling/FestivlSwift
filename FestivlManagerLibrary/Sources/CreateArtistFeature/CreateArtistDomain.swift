@@ -180,8 +180,9 @@ private func uploadArtist(
     environment: CreateArtistEnvironment
 ) -> Effect<CreateArtistAction, Never> {
 
-    var artist = artist
+
     return Effect.asyncTask {
+        var artist = artist
 
         if let image = image, didUpdateImage {
             print("Image Size: \(image.size)")

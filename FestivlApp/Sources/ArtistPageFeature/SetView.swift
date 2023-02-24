@@ -24,6 +24,7 @@ public struct SetView: View {
         ZStack {
             NavigationLink(destination: { EmptyView() }, label: { EmptyView() })
 
+            // TODO: Row Spacing Signleton FestivlTheme
             HStack(spacing: 10) {
                 let stage = stages[id: set.stageID]!
 
@@ -65,9 +66,6 @@ public struct SetView: View {
                     }
                 }
 
-
-
-
                 Spacer()
             }
             .padding(.horizontal, 5)
@@ -79,7 +77,7 @@ public struct SetView: View {
 struct ArtistSetViewView_Previews: PreviewProvider {
     static var previews: some View {
         List {
-            SetView(set: ArtistSet.testData.asScheduleItem(), stages: IdentifiedArray(uniqueElements: Stage.testValues))
+            SetView(set: ScheduleItem.testValues().first!, stages: IdentifiedArray(uniqueElements: Stage.testValues))
         }
         .listStyle(.plain)
         .previewAllColorModes()

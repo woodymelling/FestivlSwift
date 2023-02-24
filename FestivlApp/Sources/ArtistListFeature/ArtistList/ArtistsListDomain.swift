@@ -8,7 +8,7 @@
 import ComposableArchitecture
 import Models
 import Utilities
-import Services
+import FestivlDependencies
 import Combine
 import ArtistPageFeature
 
@@ -18,67 +18,89 @@ extension Artist: Searchable {
     }
 }
 
-public struct ArtistListState: Equatable {
-
-    public var event: Event
-    public var artistStates: IdentifiedArrayOf<ArtistPageState>
-    public var schedule: Schedule
-    public var stages: IdentifiedArrayOf<Stage>
-    
-    @BindableState public var searchText: String = ""
-
-    var filteredArtistStates: IdentifiedArrayOf<ArtistPageState> {
-        artistStates.filterForSearchTerm(searchText)
-    }
-
-    public init(
-        event: Event,
-        artists: IdentifiedArrayOf<Artist>,
-        stages: IdentifiedArrayOf<Stage>,
-        schedule: Schedule,
-        searchText: String,
-        favoriteArtists: Set<ArtistID>
-    ) {
-        self.event = event
-        self.stages = stages
-        self.schedule = schedule
-        self.searchText = searchText
-
-        self.artistStates = ArtistPageState.fromArtistList(
-            artists,
-            schedule: schedule,
-            event: event,
-            stages: stages,
-            favoriteArtists: favoriteArtists
-        )
-    }
-}
-
-public enum ArtistListAction: BindableAction {
-    case binding(_ action: BindingAction<ArtistListState>)
-    case artistDetail(id: Artist.ID, action: ArtistPageAction)
-}
-
-public struct ArtistListEnvironment {
+public struct ArtistListFeature: ReducerProtocol {
     public init() {}
-}
+    
+    @Dependency(\.eventID) var eventID
+    @Dependency(\.eventDataClient) var eventDataClient
+    @Dependency(\.userFavoritesClient) var userFavoritesClient
+    
+    public struct State: Equatable {
 
-public let artistListReducer = Reducer<ArtistListState, ArtistListAction, ArtistListEnvironment>.combine(
-    artistPageReducer.forEach(
-        state: \ArtistListState.artistStates,
-        action: /ArtistListAction.artistDetail,
-        environment: { _ in .init() }
-    ),
+        public var event: Event?
+        public var artistStates: IdentifiedArrayOf<ArtistPage.State> = .init()
+        public var schedule: Schedule?
+        public var stages: IdentifiedArrayOf<Stage>?
+        
+        var showArtistImages: Bool = false
+        
+        @BindingState public var searchText: String = ""
+        
+        var isLoading: Bool = false
+        
+        var filteredArtistStates: IdentifiedArrayOf<ArtistPage.State> {
+            artistStates.filterForSearchTerm(searchText).asIdentifedArray
+        }
 
-    Reducer<ArtistListState, ArtistListAction, ArtistListEnvironment> { state, action, environment in
-        switch action {
-        case .binding:
-            return .none
-        case .artistDetail:
-            return .none
+        public init() {}
+    }
+
+    public enum Action: BindableAction {
+        case binding(_ action: BindingAction<State>)
+        case artistDetail(id: Artist.ID, action: ArtistPage.Action)
+        case task
+        
+        case dataUpdate(EventData, UserFavorites)
+    }
+    
+    public var body: some ReducerProtocol<State, Action> {
+        BindingReducer()
+        
+        Reduce { state, action in
+            switch action {
+            case .binding, .artistDetail:
+                return .none
+            case .task:
+                return .run { send in
+                    
+                    for try await (data, userFavorites) in Publishers.CombineLatest(
+                        eventDataClient.getData(eventID.value),
+                        userFavoritesClient.userFavoritesPublisher()
+                    ).values {
+                        await send(.dataUpdate(data, userFavorites))
+                    }
+                } catch: { _, _ in
+                    print("Artist Page Loading error")
+                }
+                
+            case .dataUpdate(let eventData, let userFavorites):
+                state.artistStates = eventData.artists
+                    .sorted(by: \.name)
+                    .map {
+                        ArtistPage.State(
+                            artistID: $0.id,
+                            artist: $0,
+                            event: eventData.event,
+                            schedule: eventData.schedule,
+                            stages: eventData.stages,
+                            isFavorite: userFavorites.contains($0.id)
+                        )
+                    }
+                    .asIdentifedArray
+                
+                state.schedule = eventData.schedule
+                state.event = eventData.event
+                state.stages = eventData.stages
+                
+                state.showArtistImages = eventData.artists.contains(where: { $0.imageURL != nil })
+                
+                return .none
+                
+
+            }
+        }
+        .forEach(\.artistStates, action: /Action.artistDetail) {
+            ArtistPage()
         }
     }
-    .binding()
-)
-
-
+}

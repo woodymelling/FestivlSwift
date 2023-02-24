@@ -150,7 +150,8 @@ private func saveGroupSet(
     }
 
     func setTime(for time: Date) -> Date {
-        let calendar = Calendar.current
+        var calendar = Calendar.current
+        calendar.timeZone = NSTimeZone.default
         return calendar.date(
             byAdding: calendar.dateComponents([.hour, .minute], from: time),
             to: calendar.startOfDay(for: state.selectedDate)

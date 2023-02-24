@@ -43,7 +43,6 @@ public struct AddEditEventState: Equatable, Identifiable {
     @BindableState var image: NSImage?
     @BindableState var selectedImage: NSImage?
 
-
     var mode: Mode
     var loading = false
     var didUpdateImage = false
@@ -125,14 +124,24 @@ public let addEditEventReducer = Reducer<AddEditEventState, AddEditEventAction, 
 
         state.loading = true
 
+        var originalEvent: Event?
+        if case let .edit(event) = state.mode {
+            originalEvent = event
+        }
+
         var event = Event(
             id: nil,
             name: state.name,
             startDate: state.startDate,
             endDate: state.endDate,
             dayStartsAtNoon: state.dayStartsAtNoon,
-            imageURL: nil,
-            siteMapImageURL: nil
+            imageURL: originalEvent?.imageURL,
+            siteMapImageURL: originalEvent?.siteMapImageURL,
+            contactNumbers: originalEvent?.contactNumbers ?? .init(),
+            address: originalEvent?.address ?? "",
+            latitude: originalEvent?.latitude ?? "",
+            longitude: originalEvent?.longitude ?? "",
+            timeZone: originalEvent?.timeZone ?? ""
         )
 
         return uploadEvent(

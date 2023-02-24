@@ -10,33 +10,37 @@ import Models
 import Utilities
 import Components
 import IdentifiedCollections
+//import FestivlDependencies
 
 
 public struct ArtistRow: View {
-    public init(artist: Artist, event: Event, stages: IdentifiedArrayOf<Stage>, sets: IdentifiedArrayOf<ScheduleItem>, isFavorite: Bool) {
+    public init(artist: Artist, event: Event, stages: IdentifiedArrayOf<Stage>, sets: Set<ScheduleItem>, isFavorite: Bool, showArtistImage: Bool) {
         self.artist = artist
         self.event = event
         self.stages = stages
         self.sets = sets
         self.isFavorite = isFavorite
+        self.showArtistImage = showArtistImage
     }
 
 
-    var artist: Artist
-    var event: Event
-    var stages: IdentifiedArrayOf<Stage>
-    var sets: IdentifiedArrayOf<ScheduleItem>
-    var isFavorite: Bool
+    let artist: Artist
+    let event: Event
+    let stages: IdentifiedArrayOf<Stage>
+    let sets: Set<ScheduleItem>
+    let isFavorite: Bool
+    let showArtistImage: Bool
 
     public var body: some View {
         HStack(spacing: 10) {
 
-            Group {
+            if showArtistImage {
+               
                 CachedAsyncImage(url: artist.imageURL, placeholder: {
                     Image(systemName: "person.fill")
                         .resizable()
                         .frame(square: 30)
-
+                    
                 })
                 .frame(square: 60)
             }
@@ -64,6 +68,7 @@ public struct ArtistRow: View {
             }
 
         }
+        .frame(height: 60)
     }
 
 }

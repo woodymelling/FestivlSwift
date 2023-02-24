@@ -8,49 +8,68 @@
 import SwiftUI
 import ComposableArchitecture
 import Models
-import Services
 import ArtistPageFeature
+import Components
 import iOSComponents
 
 public struct ArtistListView: View {
-    let store: Store<ArtistListState, ArtistListAction>
-
-    public init(store: Store<ArtistListState, ArtistListAction>) {
+    let store: StoreOf<ArtistListFeature>
+    
+    public init(store: StoreOf<ArtistListFeature>) {
         self.store = store
     }
-
+    
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-
                 Group {
-                    if viewStore.artistStates.isEmpty {
-                        ProgressView()
-                    } else {
-
-                        List {
-                            ForEachStore(
-                                self.store.scope(state: \.filteredArtistStates, action: ArtistListAction.artistDetail)
-                            ) { artistStore in
-                                WithViewStore(artistStore) { artistViewStore in
-                                    
-                                    NavigationLink(destination: {
+                
+                    if !viewStore.isLoading,
+                       let schedule = viewStore.schedule,
+                       let event = viewStore.event,
+                       let stages = viewStore.stages {
+                        
+                        if viewStore.filteredArtistStates.isEmpty {
+                            NoResultsView(searchText: viewStore.searchText)
+                        } else {
+                            List {
+                                ForEachStore(
+                                    store.scope(
+                                        state: \.filteredArtistStates,
+                                        action: ArtistListFeature.Action.artistDetail
+                                    )
+                                ) { artistStore in
+                                    NavigationLink {
                                         ArtistPageView(store: artistStore)
-                                    }, label: {
-                                        ArtistRow(
-                                            artist: artistViewStore.artist,
-                                            event: artistViewStore.event,
-                                            stages: artistViewStore.stages,
-                                            sets: artistViewStore.sets,
-                                            isFavorite: artistViewStore.isFavorite
-                                        )
-                                    })
+                                    } label: {
+                                        
+                                        WithViewStore(artistStore) { artistViewStore in
+                                            
+                                            if let artist = artistViewStore.artist {
+                                                ArtistRow(
+                                                    artist: artist,
+                                                    event: event,
+                                                    stages: stages,
+                                                    sets: schedule[artistID: artist.id],
+                                                    isFavorite: artistViewStore.isFavorite,
+                                                    showArtistImage: viewStore.showArtistImages
+                                                )
+                                            }
+                                            
+                                        }
+                                    }
                                 }
                             }
+                            .listStyle(.plain)
+                            .searchable(text: viewStore.binding(\.$searchText))
                         }
-                        .searchable(text: viewStore.binding(\.$searchText))
-                        .listStyle(.plain)
+                    } else {
+                        ProgressView()
+                        Text("Loading")
                     }
+                }
+                .task {
+                    viewStore.send(.task)
                 }
                 .navigationTitle("Artists")
             }
@@ -63,19 +82,11 @@ struct ArtistListView_Previews: PreviewProvider {
     static var previews: some View {
         ArtistListView(
             store: .init(
-                initialState: ArtistListState(
-                    event: .testData,
-                    artists: [],
-                    stages: [],
-                    schedule: .init(),
-                    searchText: "",
-                    favoriteArtists: .init()
-                ),
-                reducer: artistListReducer,
-                environment: .init()
+                initialState: .init(),
+                reducer: ArtistListFeature()
             )
         )
-            .previewAllColorModes()
-
+        .previewAllColorModes()
+        
     }
 }

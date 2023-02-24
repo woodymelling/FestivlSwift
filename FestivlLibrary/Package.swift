@@ -1,7 +1,11 @@
-// swift-tools-version:5.5
+// swift-tools-version:5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
+
+extension Target.Dependency {
+    static var models: Self = "Models"
+}
 
 let package = Package(
     name: "FestivlLibrary",
@@ -9,19 +13,24 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(name: "FestivlLibrary", targets: ["FestivlLibrary"]),
-        .library(name: "ServiceCore", targets: ["ServiceCore"]),
-        .library(name: "Services", targets: ["Services"]),
         .library(name: "Models", targets: ["Models"]),
         .library(name: "Utilities", targets: ["Utilities"]),
         .library(name: "Components", targets: ["Components"]),
         .library(name: "SharedResources", targets: ["SharedResources"]),
+        .library(name: "FestivlDependencies", targets: ["FestivlDependencies"]),
+        .library(name: "ComposableArchitectureUtilities", targets: ["ComposableArchitectureUtilities"]),
+        .library(name: "FirebaseServiceImpl", targets: ["FirebaseServiceImpl"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.33.0"),
-        .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk.git", from: "8.0.0"),
-        .package(name: "Kingfisher", url: "https://github.com/onevcat/Kingfisher", from: "7.2.0")
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.50.2"),
+        .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "0.1.4"),
+        .package(url: "https://github.com/pointfreeco/swift-identified-collections", from: "0.5.0"),
+        .package(url: "https://github.com/pointfreeco/swift-tagged", from: "0.8.0"),
+        .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", from: "0.6.0"),
+        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "8.0.0"),
+        .package(url: "https://github.com/onevcat/Kingfisher", from: "7.2.0")
 
     ],
     targets: [
@@ -32,41 +41,53 @@ let package = Package(
             dependencies: []
         ),
         .target(name: "Models", dependencies: [
-            .target(name: "Utilities"),
-            .product(name: "FirebaseFirestoreSwift-Beta", package: "Firebase"),
+            .product(name: "Tagged", package: "swift-tagged"),
+            .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
+            .target(name: "Utilities")
         ]),
         .target(name: "Utilities", dependencies: [
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-            .product(name: "Kingfisher", package: "Kingfisher")
-
+            .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
         ]),
         .target(name: "Components", dependencies: [
-            .target(name: "Models")
-        ]),
-        .target(name: "ServiceCore", dependencies: [
+            .models,
             .target(name: "Utilities"),
-            .product(name: "FirebaseFirestore", package: "Firebase"),
-            .product(name: "FirebaseFirestoreSwift-Beta", package: "Firebase")
+            .product(name: "Kingfisher", package: "Kingfisher")
         ]),
-        .target(name: "Services", dependencies: [
-            .target(name: "Models"),
-            .target(name: "ServiceCore"),
-            .product(name: "FirebaseFirestore", package: "Firebase"),
-            .product(name: "FirebaseFirestoreSwift-Beta", package: "Firebase"),
-            .product(name: "FirebaseStorage", package: "Firebase"),
-            .product(name: "FirebaseStorageSwift-Beta", package: "Firebase")
+        .target(name: "FirebaseServiceImpl", dependencies: [
+            .target(name: "Utilities"),
+            .target(name: "FestivlDependencies"),
+            .product(name: "Dependencies", package: "swift-composable-architecture"),
+            .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
+            .product(name: "FirebaseStorage", package: "firebase-ios-sdk"),
+            .product(name: "FirebaseFirestoreSwift-Beta", package: "firebase-ios-sdk"),
+            .product(name: "FirebaseStorageSwift-Beta", package: "firebase-ios-sdk")
         ]),
         .target(
             name: "SharedResources",
             dependencies: [],
             resources: [
-                .copy("LinkIcons.xcassets")
+                .copy("Media.xcassets")
+            ]
+        ),
+        .target(
+            name: "FestivlDependencies",
+            dependencies: [
+                .models,
+                .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
+                .product(name: "Dependencies", package: "swift-composable-architecture"),
+                .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+            ]
+        ),
+        .target(
+            name: "ComposableArchitectureUtilities",
+            dependencies: [
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ]
         ),
         
 
         // MARK: Tests
         .testTarget(name: "FestivlLibraryTests", dependencies: ["FestivlLibrary"]),
-        .testTarget(name: "ComponentTests", dependencies: ["Components"]),
+        .testTarget(name: "ComponentTests", dependencies: ["Components"])
     ]
 )

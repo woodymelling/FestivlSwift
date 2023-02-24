@@ -77,8 +77,8 @@
             filePath = "FestivlManagerLibrary/Sources/AddEditEventFeature/AddEditEventDomain.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "138"
-            endingLineNumber = "138"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
             landmarkName = "unknown"
             landmarkType = "0">
          </BreakpointContent>
@@ -125,8 +125,8 @@
             filePath = "FestivlApp/Sources/EventFeature/EventDomain.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
+            startingLineNumber = "206"
+            endingLineNumber = "206"
             landmarkName = "unknown"
             landmarkType = "0">
          </BreakpointContent>
@@ -141,10 +141,217 @@
             filePath = "FestivlApp/Sources/EventFeature/EventDomain.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "184"
-            endingLineNumber = "184"
+            startingLineNumber = "204"
+            endingLineNumber = "204"
             landmarkName = "unknown"
             landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2C1C00C7-997B-4741-BC8B-31BFCF55694C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FestivlManagerLibrary/Sources/ManagerScheduleFeature/PublishableScheduleService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "162"
+            endingLineNumber = "162"
+            landmarkName = "createArtistSet(_:eventID:batch:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "92A409E8-A9AB-47C4-8AD8-62CE158DB19C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FestivlManagerLibrary/Sources/ManagerScheduleFeature/PublishableScheduleService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
+            landmarkName = "applyChange(eventID:changedID:batch:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C65FE289-958E-48D0-BE3D-791BEBE942FE"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FestivlManagerLibrary/Sources/CreateArtistFeature/CreateArtistDomain.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "187"
+            endingLineNumber = "187"
+            landmarkName = "uploadArtist(artist:image:eventID:didUpdateImage:mode:environment:)"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "C65FE289-958E-48D0-BE3D-791BEBE942FE - 66b8cd5ab0673953"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () async throws -&gt; () in CreateArtistFeature.uploadArtist(artist: Models.Artist, image: Swift.Optional&lt;__C.NSImage&gt;, eventID: Swift.String, didUpdateImage: Swift.Bool, mode: CreateArtistFeature.Mode, environment: CreateArtistFeature.CreateArtistEnvironment) -&gt; ComposableArchitecture.Effect&lt;CreateArtistFeature.CreateArtistAction, Swift.Never&gt;"
+                  moduleName = "FestivlManager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/woodrow.melling/source/Festivl/FestivlManagerLibrary/Sources/CreateArtistFeature/CreateArtistDomain.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "187"
+                  endingLineNumber = "187"
+                  offsetFromSymbolStart = "800">
+               </Location>
+               <Location
+                  uuid = "C65FE289-958E-48D0-BE3D-791BEBE942FE - 66b8cd5ab0673953"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () async throws -&gt; () in CreateArtistFeature.uploadArtist(artist: Models.Artist, image: Swift.Optional&lt;__C.NSImage&gt;, eventID: Swift.String, didUpdateImage: Swift.Bool, mode: CreateArtistFeature.Mode, environment: CreateArtistFeature.CreateArtistEnvironment) -&gt; ComposableArchitecture.Effect&lt;CreateArtistFeature.CreateArtistAction, Swift.Never&gt;"
+                  moduleName = "FestivlManager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/woodrow.melling/source/Festivl/FestivlManagerLibrary/Sources/CreateArtistFeature/CreateArtistDomain.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "187"
+                  endingLineNumber = "187"
+                  offsetFromSymbolStart = "960">
+               </Location>
+               <Location
+                  uuid = "C65FE289-958E-48D0-BE3D-791BEBE942FE - f7f1b2d11dd22450"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) await resume partial function for closure #1 () async throws -&gt; () in CreateArtistFeature.uploadArtist(artist: Models.Artist, image: Swift.Optional&lt;__C.NSImage&gt;, eventID: Swift.String, didUpdateImage: Swift.Bool, mode: CreateArtistFeature.Mode, environment: CreateArtistFeature.CreateArtistEnvironment) -&gt; ComposableArchitecture.Effect&lt;CreateArtistFeature.CreateArtistAction, Swift.Never&gt;"
+                  moduleName = "FestivlManager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/woodrow.melling/source/Festivl/FestivlManagerLibrary/Sources/CreateArtistFeature/CreateArtistDomain.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "187"
+                  endingLineNumber = "187"
+                  offsetFromSymbolStart = "172">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A0AD8833-3153-4D9D-922D-E73FD25ED765"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FestivlManagerLibrary/Sources/CreateArtistFeature/CreateArtistDomain.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "114"
+            endingLineNumber = "114"
+            landmarkName = "unknown"
+            landmarkType = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6806034B-6A66-45E6-9663-5A00B63CE2E2"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FestivlManagerLibrary/Sources/CreateArtistFeature/CreateArtistDomain.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
+            landmarkName = "init(editing:eventID:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "64E0423F-7E25-4246-A3DA-98C3C917DD9D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FestivlManagerLibrary/Sources/CreateArtistFeature/CreateArtistDomain.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "193"
+            endingLineNumber = "193"
+            landmarkName = "uploadArtist(artist:image:eventID:didUpdateImage:mode:environment:)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D1651B5A-7CE0-4423-974F-B93FD02CC493"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FestivlManagerLibrary/Sources/CreateArtistFeature/CreateArtistDomain.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "204"
+            endingLineNumber = "204"
+            landmarkName = "uploadArtist(artist:image:eventID:didUpdateImage:mode:environment:)"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "D1651B5A-7CE0-4423-974F-B93FD02CC493 - 66b8cd5ab0673f00"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () async throws -&gt; () in CreateArtistFeature.uploadArtist(artist: Models.Artist, image: Swift.Optional&lt;__C.NSImage&gt;, eventID: Swift.String, didUpdateImage: Swift.Bool, mode: CreateArtistFeature.Mode, environment: CreateArtistFeature.CreateArtistEnvironment) -&gt; ComposableArchitecture.Effect&lt;CreateArtistFeature.CreateArtistAction, Swift.Never&gt;"
+                  moduleName = "FestivlManager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/woodrow.melling/source/Festivl/FestivlManagerLibrary/Sources/CreateArtistFeature/CreateArtistDomain.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "204"
+                  endingLineNumber = "204"
+                  offsetFromSymbolStart = "2312">
+               </Location>
+               <Location
+                  uuid = "D1651B5A-7CE0-4423-974F-B93FD02CC493 - f7f1b2d11dd22203"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) await resume partial function for closure #1 () async throws -&gt; () in CreateArtistFeature.uploadArtist(artist: Models.Artist, image: Swift.Optional&lt;__C.NSImage&gt;, eventID: Swift.String, didUpdateImage: Swift.Bool, mode: CreateArtistFeature.Mode, environment: CreateArtistFeature.CreateArtistEnvironment) -&gt; ComposableArchitecture.Effect&lt;CreateArtistFeature.CreateArtistAction, Swift.Never&gt;"
+                  moduleName = "FestivlManager"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/woodrow.melling/source/Festivl/FestivlManagerLibrary/Sources/CreateArtistFeature/CreateArtistDomain.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "204"
+                  endingLineNumber = "204"
+                  offsetFromSymbolStart = "924">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F8D8EF22-4AD8-4419-ABC6-F9E62B41F892"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FestivlApp/Sources/MoreFeature/AddressView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "22"
+            endingLineNumber = "22"
+            landmarkName = "body"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

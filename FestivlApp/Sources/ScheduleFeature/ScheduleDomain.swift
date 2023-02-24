@@ -12,274 +12,327 @@ import ArtistPageFeature
 import GroupSetDetailFeature
 import Combine
 import SwiftUI
+import Utilities
+import FestivlDependencies
 
-public struct ScheduleState: Equatable {
-    public init(
-        artists: IdentifiedArrayOf<Artist>,
+public struct ScheduleLoadingFeature: ReducerProtocol {
+    
+    public init() {}
+    
+    @Dependency(\.eventID) var eventID
+    @Dependency(\.eventDataClient) var eventDataClient
+    @Dependency(\.date) var todaysDate
+    @Dependency(\.userFavoritesClient) var userFavoritesClient
+    
+    public struct State: Equatable {
+        
+        public init() {}
+        
+        var scheduleState: ScheduleFeature.State?
+    }
+    
+    public enum Action {
+        case task
+        case dataUpdate(EventData, UserFavorites)
+        
+        case scheduleAction(ScheduleFeature.Action)
+    }
+    
+    public var body: some ReducerProtocol<State, Action> {
+        Reduce { state, action in
+            switch action {
+            case .task:
+                return .run { send in
+                    for try await (data, userFavorites) in Publishers.CombineLatest(
+                        eventDataClient.getData(eventID.value),
+                        userFavoritesClient.userFavoritesPublisher()
+                    ).values {
+                        await send(.dataUpdate(data, userFavorites))
+                    }
+                } catch: { _, _ in
+                    print("Artist Page Loading error")
+                }
+            case .dataUpdate(let eventData, let userFavorites):
+                
+                guard !eventData.schedule.isEmpty else { return .none }
+                
+                userFavoritesClient.updateScheduleData(eventData.schedule, eventData.artists, eventData.stages)
+                
+                let selectedDate: CalendarDate
+                let selectedStage: Stage
+                let event = eventData.event
+                
+                // This check chooses the correct date for when the app is opened
+                if let currentlySelectedDate = state.scheduleState?.selectedDate {
+                    selectedDate = currentlySelectedDate
+                } else if CalendarDate.today.isWithin(rhs: event.startDate, lhs: event.endDate) { // TODO: Get from reducer
+                    selectedDate = CalendarDate(date: todaysDate())
+                } else {
+                    selectedDate = event.startDate
+                }
+                
+                // This check chooses the correct stage for when the app is opened
+                if let currentlySelectedStage = state.scheduleState?.selectedStage {
+                    selectedStage = currentlySelectedStage
+                } else if let firstStageWithItems = firstStageWithItems(
+                    onDate: selectedDate,
+                    stages: eventData.stages,
+                    schedule: eventData.schedule
+                ) {
+                    selectedStage = firstStageWithItems
+                } else {
+                    selectedStage = eventData.stages.first!
+                }
+            
+                state.scheduleState = .init(
+                    schedule: eventData.schedule,
+                    artists: eventData.artists,
+                    stages: eventData.stages,
+                    event: eventData.event,
+                    userFavorites: userFavorites,
+                    selectedStage: selectedStage,
+                    selectedDate: selectedDate
+                )
+                return .none
+                
+            case .scheduleAction:
+                return .none
+            }
+        }
+        .ifLet(\.scheduleState, action: /Action.scheduleAction) {
+            ScheduleFeature()
+        }
+    }
+    
+    func firstStageWithItems(
+        onDate selectedDate: CalendarDate,
         stages: IdentifiedArrayOf<Stage>,
-        schedule: Schedule,
-        event: Event,
-
-        favoriteArtists: Set<ArtistID>,
-        selectedStage: Stage,
-        selectedDate: Date,
-        filteringFavorites: Bool,
-        zoomAmount: CGFloat,
-        lastScaleValue: CGFloat,
-
-        cardToDisplay: ScheduleItem?,
-        selectedArtistState: ArtistPageState?,
-        selectedGroupSetState: GroupSetDetailState?,
-        deviceOrientation: DeviceOrientation,
-        currentTime: Date
-    ) {
-        self.artists = artists
-        self.stages = stages
-        self.event = event
-        self.favoriteArtists = favoriteArtists
-        self.zoomAmount = zoomAmount
-        self.lastScaleValue = lastScaleValue
-        self.selectedStage = selectedStage
-        self.selectedDate = selectedDate
-        self.schedule = schedule
-        self.cardToDisplay = cardToDisplay
-        self.selectedArtistState = selectedArtistState
-        self.selectedGroupSetState = selectedGroupSetState
-        self.deviceOrientation = deviceOrientation
-        self.currentTime = currentTime
-        self.filteringFavorites = filteringFavorites
-    }
-
-    public var schedule: Schedule
-    public let artists: IdentifiedArrayOf<Artist>
-    public let stages: IdentifiedArrayOf<Stage>
-    public var event: Event
-    public var favoriteArtists: Set<ArtistID>
-
-    public var zoomAmount: CGFloat = 1
-    public var lastScaleValue: CGFloat = 1
-    @BindableState public var selectedStage: Stage
-    public var selectedDate: Date
-    public var deviceOrientation: DeviceOrientation
-    @BindableState public var filteringFavorites: Bool
-
-    public var cardToDisplay: ScheduleItem?
-    @BindableState public var selectedArtistState: ArtistPageState?
-    @BindableState public var selectedGroupSetState: GroupSetDetailState?
-
-    public var currentTime: Date
-
-    var isFiltering: Bool {
-        // For future filters
-        return filteringFavorites
-    }
-
-    var shouldShowTimeIndicator: Bool {
-        if event.dayStartsAtNoon {
-            return Calendar.current.isDate(currentTime - 12.hours, inSameDayAs: selectedDate.startOfDay(dayStartsAtNoon: event.dayStartsAtNoon))
-        } else {
-            return Calendar.current.isDate(currentTime, inSameDayAs: selectedDate)
+        schedule: Schedule
+    ) -> Stage? {
+        return stages.first { stage in
+            !schedule[schedulePage: .init(date: selectedDate, stageID: stage.id)].isEmpty
         }
     }
 }
 
-public enum ScheduleAction: BindableAction {
-    case binding(_ action: BindingAction<ScheduleState>)
-    case selectedDate(Date)
+public struct ScheduleFeature: ReducerProtocol {
+    
+    @Dependency(\.deviceOrientationPublisher) var deviceOrientationPublisher
+    
+    public struct State: Equatable {
 
-    case zoomed(CGFloat)
-    case finishedZooming
+        public var schedule: Schedule
+        public let artists: IdentifiedArrayOf<Artist>
+        public let stages: IdentifiedArrayOf<Stage>
+        public var event: Event
+        var userFavorites: UserFavorites
+        
+        @BindingState public var selectedStage: Stage
+        public var selectedDate: CalendarDate
+        
+        public var zoomAmount: CGFloat = 1
+        public var lastScaleValue: CGFloat = 1
+        
+        public var deviceOrientation: DeviceOrientation = .portrait
+        @BindingState public var filteringFavorites: Bool = false
 
-    case subscribeToDataPublishers
-    case orientationPublisherUpdate(DeviceOrientation)
-    case timePublisherUpdate(Date)
+        public var cardToDisplay: ScheduleItem?
+        @BindingState public var selectedArtistState: ArtistPage.State?
+        @BindingState public var selectedGroupSetState: GroupSetDetail.State?
 
-    case showAndHighlightCard(ScheduleItem)
-    case highlightCard(ScheduleItem)
-    case unHilightCard
+        public var hasShownTutorialElements: Bool = true
+        @BindingState public var showingLandscapeTutorial: Bool = false
+        @BindingState public var showingFilterTutorial: Bool = false
+        
 
-    case didTapCard(ScheduleItem)
+        var isFiltering: Bool {
+            // For future filters
+            return filteringFavorites
+        }
 
-    case artistPageAction(ArtistPageAction)
-    case groupSetDetailAction(GroupSetDetailAction)
-}
-
-public struct ScheduleEnvironment {
-    var currentDate: () -> Date
-    var timePublisher: AnyPublisher<Date, Never>
-
-    public init(
-        currentDate: @escaping () -> Date = Date.init,
-        timePublisher: AnyPublisher<Date, Never> = Timer.publish(every: 1.seconds, on: RunLoop.main, in: .common).autoconnect().eraseToAnyPublisher()
-    ) {
-        self.currentDate = currentDate
-        self.timePublisher = timePublisher
+        var shouldShowTimeIndicator: Bool {
+            return true
+        }
     }
-}
+    
+    static func isFavorited(_ item: ScheduleItem, favorites: UserFavorites) -> Bool {
+        switch item.type {
+        case .artistSet(let artistID):
+            return favorites.contains(artistID)
+        case .groupSet(let artistIDs):
+            // Group set is favorited if one of the artists is favorited
+            return artistIDs.contains { favorites.contains($0) }
+        }
+    }
+    
+    public enum Action: BindableAction {
+        case binding(_ action: BindingAction<State>)
+        case selectedDate(CalendarDate)
 
-public let scheduleReducer = Reducer<ScheduleState, ScheduleAction, ScheduleEnvironment>.combine(
-    artistPageReducer.optional().pullback(
-        state: \ScheduleState.selectedArtistState,
-        action: /ScheduleAction.artistPageAction,
-        environment: { _ in .init()}
-    ),
+        case zoomed(CGFloat)
+        case finishedZooming
 
-    groupSetDetailReducer.optional().pullback(
-        state: \ScheduleState.selectedGroupSetState,
-        action: /ScheduleAction.groupSetDetailAction,
-        environment: { _ in .init() }
-    ),
+        case task
+        case showTutorialElements
+        case hideLandscapeTutorial
+        case showFilterTutorial
+        case hideFilterTutorial
 
-    Reducer { state, action, environment in
-        switch action {
-        case .binding:
-            return .none
+        case subscribeToDataPublishers
+        case orientationPublisherUpdate(DeviceOrientation)
 
-        case .zoomed(let val):
-            let delta = val / state.lastScaleValue
-            state.lastScaleValue = val
-            state.zoomAmount = (state.zoomAmount * delta).bounded(min: 0.5, max: 3)
-            return .none
+        case showAndHighlightCard(ScheduleItem)
+        case highlightCard(ScheduleItem)
+        case unHighlightCard
 
-        case .finishedZooming:
-            state.lastScaleValue = 1
-            return .none
+        case didTapCard(ScheduleItem)
 
-        case .selectedDate(let date):
-            state.selectedDate = date
-            return .none
+        case artistPageAction(ArtistPage.Action)
+        case groupSetDetailAction(GroupSetDetail.Action)
+    }
+    
+    public var body: some ReducerProtocol<State, Action> {
+        BindingReducer()
+        
+        Reduce<State, Action> { state, action in
+            switch action {
+            case .binding:
+                return .none
 
-        case .subscribeToDataPublishers:
-            return DeviceOrientation.deviceOrientationPublisher().map {
-                ScheduleAction.orientationPublisherUpdate($0)
-            }
-            .eraseToEffect()
+            case .task:
+                return .run { send in
+                    await send(.subscribeToDataPublishers)
+                    
+                    try await Task.sleep(nanoseconds: NSEC_PER_SEC)
+                    
+                    await send(.showTutorialElements)
+                    
+                }
 
-        case .orientationPublisherUpdate(let orientation):
-            state.deviceOrientation = orientation
-            return .none
 
-        case .timePublisherUpdate(let currentTime):
-//            state.currentTime = currentTime
-            return .none
+            case .showTutorialElements:
 
-        case .showAndHighlightCard(let card):
-            if let stage = state.stages[id: card.stageID] {
-                state.selectedStage = stage
-            }
+                guard !state.hasShownTutorialElements else { return .none }
 
-            state.selectedDate = card.startTime.startOfDay(dayStartsAtNoon: state.event.dayStartsAtNoon)
+                state.showingLandscapeTutorial = true
+                state.hasShownTutorialElements = true
+                
+                return .run { send in
+                    try await Task.sleep(nanoseconds: 5 * NSEC_PER_SEC)
+                    await send(.hideLandscapeTutorial)
+                    await send(.showFilterTutorial)
+                    try await Task.sleep(nanoseconds: 5 * NSEC_PER_SEC)
+                    await send(.hideFilterTutorial)
+                }
 
-            return .asyncTask {
-                try! await Task.sleep(nanoseconds: 100_000_000)
+            case .hideLandscapeTutorial:
+                state.showingLandscapeTutorial = false
+                return .none
 
-                // Need to set cardToDisplay after a delay, otherwise the onChange and scrollTo combination won't work
-                return .highlightCard(card)
-            }
-            .receive(on: DispatchQueue.main)
-            .eraseToEffect()
+            case .showFilterTutorial:
+                state.showingFilterTutorial = true
+                return .none
 
-        case .highlightCard(let card):
-            state.cardToDisplay = card
-            return Effect(value: .unHilightCard)
-                .delay(for: 1, scheduler: DispatchQueue.main)
-                .receive(on: DispatchQueue.main.animation(.easeOut(duration: 1)))
+            case .hideFilterTutorial:
+                state.showingFilterTutorial = false
+                return .none
+
+            case .zoomed(let val):
+                let delta = val / state.lastScaleValue
+                state.lastScaleValue = val
+                state.zoomAmount = (state.zoomAmount * delta).bounded(min: 0.5, max: 3)
+                return .none
+
+            case .finishedZooming:
+                state.lastScaleValue = 1
+                return .none
+
+            case .selectedDate(let date):
+                state.selectedDate = date
+                return .none
+
+            case .subscribeToDataPublishers:
+                return deviceOrientationPublisher.map {
+                    Action.orientationPublisherUpdate($0)
+                }
                 .eraseToEffect()
 
-        case .unHilightCard:
-            state.cardToDisplay = nil
-
-            return .none
-
-        case .didTapCard(let card):
-            switch card.type {
-            case .artistSet(let artistID):
-                guard let artist = state.artists[id: artistID]  ?? state.artists.first else { return .none }
-
-                state.selectedArtistState = .init(
-                    artist: artist,
-                    event: state.event,
-                    setsForArtist: state.schedule.scheduleItemsForArtist(artist: artist),
-                    stages: state.stages,
-                    isFavorite: state.favoriteArtists.contains(artist.id!)
-                )
-
+            case .orientationPublisherUpdate(let orientation):
+                state.deviceOrientation = orientation
                 return .none
 
-            case .groupSet:
-                guard let groupSet = state.schedule.itemFor(itemID: card.id) else { return.none }
-
-                state.selectedGroupSetState = .init(
-                    groupSet: groupSet,
-                    event: state.event,
-                    schedule: state.schedule,
-                    artists: state.artists,
-                    stages: state.stages,
-                    favoriteArtists: state.favoriteArtists
-                )
-
-                return .none
-            }
-        case .artistPageAction(.didTapArtistSet(let scheduleItem)):
-            state.selectedArtistState = nil
-            return Effect(value: .showAndHighlightCard(scheduleItem))
-
-        case .groupSetDetailAction(.didTapScheduleItem(let scheduleItem)):
-            state.selectedGroupSetState = nil
-            return Effect(value: .showAndHighlightCard(scheduleItem))
-            
-        case .artistPageAction, .groupSetDetailAction:
-            return .none
-        }
-    }
-    .binding()
-)
-
-
-extension Store where State == ScheduleState, Action == ScheduleAction {
-    static var testStore: Store<ScheduleState, ScheduleAction> {
-        let time = Event.testData.festivalDates[0]
-        return Store(
-            initialState: .init(
-                artists: Artist.testValues.asIdentifedArray,
-                stages: Stage.testValues.asIdentifedArray,
-                schedule: .init(),
-                event: .testData,
-                favoriteArtists: .init(),
-                selectedStage: Stage.testValues[0],
-                selectedDate: time,
-                filteringFavorites: false, zoomAmount: 1,
-                lastScaleValue: 1,
-                cardToDisplay: nil,
-                selectedArtistState: nil,
-                selectedGroupSetState: nil,
-                deviceOrientation: .portrait,
-                currentTime: Date()
-            ),
-            reducer: scheduleReducer,
-            environment: .init()
-        )
-    }
-}
-
-public enum DeviceOrientation {
-    case portrait
-    case landscape
-
-    static func deviceOrientationPublisher() -> AnyPublisher<DeviceOrientation, Never> {
-
-        NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)
-            .compactMap { ($0.object as? UIDevice)?.orientation }
-            .compactMap { deviceOrientation -> DeviceOrientation? in
-                if deviceOrientation.isPortrait {
-                    return .portrait
-                } else if deviceOrientation.isLandscape {
-                    return .landscape
-                } else {
-                    return nil
+            case .showAndHighlightCard(let card):
+                
+                state.selectedGroupSetState = nil
+                state.selectedArtistState = nil
+                
+                let schedulePage = card.schedulePageIdentifier(dayStartsAtNoon: state.event.dayStartsAtNoon, timeZone: state.event.timeZone)
+                
+                if let stage = state.stages[id: schedulePage.stageID] {
+                    state.selectedStage = stage
                 }
-            }
-            .eraseToAnyPublisher()
 
+                state.selectedDate = schedulePage.date
+
+                return .run { send in
+                    try await Task.sleep(nanoseconds: 100_000_000)
+
+                    // Need to set cardToDisplay after a delay, otherwise the onChange and scrollTo combination won't work
+                    await send(.highlightCard(card))
+                         
+                    await send(.unHighlightCard, animation: .easeOut(duration: 2))
+                }
+
+            case .highlightCard(let card):
+                state.cardToDisplay = card
+                return .none
+
+            case .unHighlightCard:
+                state.cardToDisplay = nil
+
+                return .none
+
+            case .didTapCard(let card):
+                switch card.type {
+                case .artistSet(let artistID):
+                    guard let artist = state.artists[id: artistID] else { return .none }
+
+                    state.selectedArtistState = .init(
+                        artistID: artist.id,
+                        artist: artist,
+                        event: state.event,
+                        schedule: state.schedule,
+                        stages: state.stages,
+                        isFavorite: false // TODO: Fix
+                    )
+
+                    return .none
+
+                case .groupSet:
+                    guard let groupSet = state.schedule[id: card.id] else { return.none }
+
+                    state.selectedGroupSetState = .init(groupSet: groupSet)
+
+                    return .none
+                }
+                
+            case .artistPageAction(.didTapScheduleItem(let scheduleItem)):
+                state.selectedArtistState = nil
+                return .task { .showAndHighlightCard(scheduleItem) }
+
+            case .groupSetDetailAction(.didTapScheduleItem(let scheduleItem)):
+                state.selectedGroupSetState = nil
+                return .task { .showAndHighlightCard(scheduleItem) }
+                
+            case .artistPageAction, .groupSetDetailAction:
+                return .none
+            }
+        }
+        .ifLet(\.selectedArtistState, action: /Action.artistPageAction) {
+            ArtistPage()
+        }
+        .ifLet(\.selectedGroupSetState, action: /Action.groupSetDetailAction) {
+            GroupSetDetail()
+        }
     }
 }

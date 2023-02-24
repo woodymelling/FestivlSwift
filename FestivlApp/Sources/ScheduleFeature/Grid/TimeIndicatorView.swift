@@ -6,78 +6,91 @@
 //
 
 import SwiftUI
-
-struct TimeIndicatorEnvironment: Equatable {
-    var currentTime: Date
-
-}
-
+import Utilities
 
 struct TimeIndicatorView: View {
-    var selectedDate: Date
+    var selectedDate: CalendarDate
     var dayStartsAtNoon: Bool
 
-    @State var currentTime: Date = Date()
-
-    var shouldShowTimeIndicator: Bool {
+    func shouldShowTimeIndicator(_ currentTime: Date) -> Bool {
+        var calendar = Calendar.current
+        calendar.timeZone = NSTimeZone.default
+        let selectedDate = selectedDate.date // Convert to Date object
+        
         if dayStartsAtNoon {
-            return Calendar.current.isDate(
-                currentTime + 12.hours,
+            return calendar.isDate(
+                currentTime - 12.hours,
                 inSameDayAs: selectedDate.startOfDay(dayStartsAtNoon: dayStartsAtNoon)
             )
         } else {
-            return Calendar.current.isDate(currentTime, inSameDayAs: selectedDate)
+            return calendar.isDate(currentTime, inSameDayAs: selectedDate)
         }
     }
 
-
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    var timeFormat: Date.FormatStyle {
+        var format = Date.FormatStyle.dateTime.hour(.defaultDigits(amPM: .narrow)).minute()
+        format.timeZone = NSTimeZone.default
+        return format
+    }
 
     @ScaledMetric var textWidth: CGFloat = 50
+    @ScaledMetric var gradientHeight: CGFloat = 30
     var body: some View {
-        GeometryReader { geo in
-            if shouldShowTimeIndicator {
-                ZStack(alignment: .leading) {
-                    Text(
-                        currentTime
-                            .formatted(
-                                .dateTime
-                                .hour(
-                                    .defaultDigits(amPM: .narrow)
+        TimelineView(.periodic(from: .now, by: 1)) { context in
+            GeometryReader { geo in
+                if shouldShowTimeIndicator(context.date) {
+                    ZStack(alignment: .leading) {
+                        
+                        // Gradient behind the current time text so that it doesn't overlap with the grid time text
+                        Rectangle()
+                            .fill(
+                                LinearGradient(
+                                    colors: [.clear, Color(uiColor: .systemBackground), Color(uiColor: .systemBackground), .clear],
+                                    startPoint: .top,
+                                    endPoint: .bottom
                                 )
-                                .minute()
                             )
-                            .lowercased()
-                            .replacingOccurrences(of: " ", with: "")
-                    )
-                    .foregroundColor(Color.accentColor)
-                    .font(.caption)
-                    .frame(width: textWidth)
+                            .frame(width: textWidth, height: gradientHeight)
+                        
+                        // Current time text
+                        Text(
+                            context.date
+                                .formatted(
+                                    timeFormat
+                                )
+                                .lowercased()
+                                .replacingOccurrences(of: " ", with: "")
+                        )
+                        .foregroundColor(Color.accentColor)
+                        .font(.caption)
+                        .frame(width: textWidth)
 
-                    Circle()
-                        .fill(Color.accentColor)
-                        .frame(square: 5)
-                        .offset(x: textWidth, y: 0)
 
-                    Rectangle()
-                        .fill(Color.accentColor)
-                        .frame(height: 1)
-                        .offset(x: textWidth, y: 0)
+                        // Circle indicator
+                        Circle()
+                            .fill(Color.accentColor)
+                            .frame(square: 5)
+                            .offset(x: textWidth, y: 0)
+                        
+                        
+                        // Line going across the schedule
+                        Rectangle()
+                            .fill(Color.accentColor)
+                            .frame(height: 1)
+                            .offset(x: textWidth, y: 0)
+                    }
+                    .position(x: geo.size.width / 2, y: context.date.toY(containerHeight: geo.size.height, dayStartsAtNoon: dayStartsAtNoon))
+                } else {
+                    EmptyView()
                 }
-                .position(x: geo.size.width / 2, y: currentTime.toY(containerHeight: geo.size.height, dayStartsAtNoon: dayStartsAtNoon))
-            } else {
-                EmptyView()
             }
         }
-        .onReceive(timer, perform: {
-            currentTime = $0
-        })
 
     }
 }
 
 struct TimeIndicatorView_Previews: PreviewProvider {
     static var previews: some View {
-        TimeIndicatorView(selectedDate: Date(), dayStartsAtNoon: false)
+        TimeIndicatorView(selectedDate: .today, dayStartsAtNoon: false)
     }
 }

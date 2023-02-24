@@ -46,7 +46,7 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Services", package: "FestivlLibrary"),
+                .product(name: "FestivlDependencies", package: "FestivlLibrary"),
                 .target(name: "AddEditEventFeature")
             ]
         ),
@@ -55,7 +55,7 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Services", package: "FestivlLibrary"),
+                .product(name: "FestivlDependencies", package: "FestivlLibrary"),
                 .target(name: "ManagerArtistsFeature"),
                 .target(name: "StagesFeature"),
                 .target(name: "ManagerScheduleFeature"),
@@ -87,7 +87,7 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
                 .target(name: "MacOSComponents"),
-                .product(name: "Services", package: "FestivlLibrary")
+                .product(name: "FestivlDependencies", package: "FestivlLibrary")
             ]
         ),
         .target(
@@ -96,7 +96,7 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
                 .target(name: "MacOSComponents"),
-                .product(name: "Services", package: "FestivlLibrary"),
+                .product(name: "FestivlDependencies", package: "FestivlLibrary"),
                 .product(name: "SharedResources", package: "FestivlLibrary")
             ]
         ),
@@ -105,7 +105,7 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Services", package: "FestivlLibrary"),
+                .product(name: "FestivlDependencies", package: "FestivlLibrary"),
                 .target(name: "AddEditStageFeature"),
                 .target(name: "StageDetailFeature")
             ]
@@ -116,7 +116,7 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "Components", package: "FestivlLibrary"),
-                .product(name: "Services", package: "FestivlLibrary"),
+                .product(name: "FestivlDependencies", package: "FestivlLibrary"),
                 .target(name: "MacOSComponents")
             ]
         ),
@@ -125,7 +125,7 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Services", package: "FestivlLibrary"),
+                .product(name: "FestivlDependencies", package: "FestivlLibrary"),
                 .product(name: "Components", package: "FestivlLibrary"),
             ]
         ),
@@ -135,6 +135,7 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
                 .product(name: "Components", package: "FestivlLibrary"),
+                .product(name: "FestivlDependencies", package: "FestivlLibrary"),
                 .target(name: "MacOSComponents"),
                 .target(name: "AddEditArtistSetFeature")
             ]
@@ -144,7 +145,7 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Services", package: "FestivlLibrary"),
+                .product(name: "FestivlDependencies", package: "FestivlLibrary"),
                 .target(name: "MacOSComponents")
             ]
         ),
@@ -153,7 +154,7 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Services", package: "FestivlLibrary"),
+                .product(name: "FestivlDependencies", package: "FestivlLibrary"),
                 .target(name: "MacOSComponents")
             ]
         ),
@@ -162,7 +163,7 @@ let package = Package(
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
-                .product(name: "Services", package: "FestivlLibrary"),
+                .product(name: "FestivlDependencies", package: "FestivlLibrary"),
                 .target(name: "MacOSComponents")
             ]
         ),
@@ -172,10 +173,8 @@ let package = Package(
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "Models", package: "FestivlLibrary"),
                 .target(name: "MacOSComponents"),
-                .product(name: "Services", package: "FestivlLibrary")
+                .product(name: "FestivlDependencies", package: "FestivlLibrary")
             ]
         ),
-
-        
     ]
 )

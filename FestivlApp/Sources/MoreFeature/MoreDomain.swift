@@ -7,81 +7,63 @@
 
 import ComposableArchitecture
 import Models
+import FestivlDependencies
 import NotificationsFeature
 
-public struct MoreState: Equatable {
-
-    let event: Event
-    let favoriteArtists: Set<ArtistID>
-    let schedule: Schedule
-    let artists: IdentifiedArrayOf<Artist>
-    let stages: IdentifiedArrayOf<Stage>
-    let isTestMode: Bool
-
-    public var notificationsEnabled: Bool
-    public var notificationTimeBeforeSet: Int
-    public var showingNavigateToSettingsAlert: Bool
-
-    public init(
-        event: Event,
-        favoriteArtists: Set<ArtistID>,
-        schedule: Schedule,
-        artists: IdentifiedArrayOf<Artist>,
-        stages: IdentifiedArrayOf<Stage>,
-        isTestMode: Bool,
-        notificationsEnabled: Bool,
-        notificationTimeBeforeSet: Int,
-        showingNavigateToSettingsAlert: Bool
-    ) {
-        self.event = event
-        self.favoriteArtists = favoriteArtists
-        self.schedule = schedule
-        self.artists = artists
-        self.stages = stages
-        self.isTestMode = isTestMode
-        self.notificationsEnabled = notificationsEnabled
-        self.notificationTimeBeforeSet = notificationTimeBeforeSet
-        self.showingNavigateToSettingsAlert = showingNavigateToSettingsAlert
-    }
-
-    var notificationsState: NotificationsState {
-        get {
-            .init(
-                favoriteArtists: favoriteArtists,
-                schedule: schedule,
-                artists: artists,
-                stages: stages,
-                isTestMode: isTestMode,
-                notificationsEnabled: notificationsEnabled,
-                notificationTimeBeforeSet: notificationTimeBeforeSet,
-                showingNavigateToSettingsAlert: showingNavigateToSettingsAlert
-            )
-        }
-
-        set {
-            self.notificationsEnabled = newValue.notificationsEnabled
-            self.notificationTimeBeforeSet = newValue.notificationTimeBeforeSet
-            self.showingNavigateToSettingsAlert = newValue.showingNavigateToSettingsAlert
-        }
-    }
-}
-
-public enum MoreAction {
-    case notificationsAction(NotificationsAction)
-}
-
-public struct MoreEnvironment {
+public struct MoreFeature: ReducerProtocol {
     public init() {}
-}
-
-public let moreReducer = Reducer<MoreState, MoreAction, MoreEnvironment>.combine(
-    notificationsReducer.pullback(
-        state: \.notificationsState,
-        action: /MoreAction.notificationsAction,
-        environment: { _ in .init() }
-    ),
-
-    Reducer { state, action, _ in
-        return .none
+    
+    
+    @Dependency(\.eventID) var eventID
+    @Dependency(\.isEventSpecificApplication) var isEventSpecificApplication
+    @Dependency(\.eventDataClient) var eventDataClient
+    
+    public struct State: Equatable {
+        public init() {}
+        
+        var eventData: EventData?
+        var isEventSpecificApplication: Bool = true
+        
+        var notificationsState: NotificationsFeature.State = .init()
     }
-)
+    
+    public enum Action {
+        case didExitEvent
+        case task
+        
+        case dataLoaded(EventData)
+        
+        case notificationsAction(NotificationsFeature.Action)
+    }
+    
+    public var body: some ReducerProtocol<MoreFeature.State, MoreFeature.Action> {
+        Reduce { state, action in
+            switch action {
+            case .didExitEvent:
+                return .none
+            case .task:
+                state.isEventSpecificApplication = isEventSpecificApplication
+                
+                return .run { send in
+                    for try await data in eventDataClient.getData(eventID.value).values {
+                        await send(.dataLoaded(data))
+                    }
+                } catch: { _, _ in
+                    print("Event Data Loading Error")
+                }
+                
+            case .dataLoaded(let data):
+                state.eventData = data
+                
+                return .none
+                
+            case .notificationsAction:
+                return .none
+            }
+        }
+        
+        Scope(state: \.notificationsState, action: /Action.notificationsAction) {
+            NotificationsFeature()
+        }
+    }
+}

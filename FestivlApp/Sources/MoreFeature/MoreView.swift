@@ -11,79 +11,87 @@ import Models
 import NotificationsFeature
 
 public struct MoreView: View {
-    let store: Store<MoreState, MoreAction>
-
-    public init(store: Store<MoreState, MoreAction>) {
+    let store: StoreOf<MoreFeature>
+    
+    public init(store: StoreOf<MoreFeature>) {
         self.store = store
     }
-
+    
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-                List {
-                    NavigationLink {
-                        NotificationsView(
-                            store: store.scope(
-                                state: \.notificationsState,
-                                action: MoreAction.notificationsAction
+                if let eventData = viewStore.eventData {
+                    List {
+                        
+                        NavigationLink {
+                            NotificationsView(
+                                store: store.scope(
+                                    state: \.notificationsState,
+                                    action: MoreFeature.Action.notificationsAction
+                                )
                             )
-                        )
-                    } label: {
-                        Label("Notifications", systemImage: "bell.badge.fill")
-                            .labelStyle(ColorfulIconLabelStyle(color: .red))
+                        } label: {
+                            Label("Notifications", systemImage: "bell.badge.fill")
+                                .labelStyle(ColorfulIconLabelStyle(color: .red))
+                        }
+                        
+                        
+                        if let imageURL = eventData.event.siteMapImageURL {
+                            NavigationLink {
+                                SiteMapView(imageURL: imageURL)
+                            } label: {
+                                Label("Site Map", systemImage: "map.fill")
+                                    .labelStyle(ColorfulIconLabelStyle(color: .purple))
+                            }
+                        }
+                        
+                        if let contactNumbers = eventData.event.contactNumbers, !contactNumbers.isEmpty {
+                            NavigationLink(destination: {
+                                ContactInfoView(contactNumbers: contactNumbers)
+                            }, label: {
+                                Label("Contact Information", systemImage: "phone.fill")
+                                    .labelStyle(ColorfulIconLabelStyle(color: .blue))
+                            })
+                        }
+                        
+                        if let address = eventData.event.address, !address.isEmpty {
+                            NavigationLink(destination: {
+                                AddressView(
+                                    address: address,
+                                    latitude: eventData.event.latitude ?? "",
+                                    longitude: eventData.event.longitude ?? ""
+                                )
+                            }, label: {
+                                Label("Address", systemImage: "mappin")
+                                    .labelStyle(ColorfulIconLabelStyle(color: .green))
+                            })
+                        }
+                        
+                        if !viewStore.isEventSpecificApplication {
+                            Section {
+                                Button {
+                                    viewStore.send(.didExitEvent, animation: .default)
+                                } label: {
+                                    Text("Exit \(viewStore.eventData?.event.name ?? "")")
+                                }
+                            }
+                        }
+                        
                     }
-
-
-                    if let imageURL = viewStore.event.siteMapImageURL {
-                        NavigationLink(destination: {
-                            SiteMapView(imageURL: imageURL)
-
-                        }, label: {
-                            Label("Site Map", systemImage: "map.fill")
-                                .labelStyle(ColorfulIconLabelStyle(color: .purple))
-                        })
-                    }
+                    .listStyle(.insetGrouped)
+                    .navigationTitle("More")
+                } else {
+                    ProgressView()
                 }
-                .listStyle(.insetGrouped)
-                .navigationTitle("More")
             }
+            .task { await viewStore.send(.task).finish() }
         }
-    }
-}
-
-struct ColoredIconView: View {
-
-    let imageName: String
-    let foregroundColor: Color
-    let backgroundColor: Color
-    @State private var frameSize: CGSize = CGSize(width: 30, height: 30)
-    @State private var cornerRadius: CGFloat = 5
-
-    var body: some View {
-        Image(systemName: imageName)
-            .overlay(
-                GeometryReader { proxy in
-                    Color.clear
-                        .preference(key: SFSymbolKey.self, value: max(proxy.size.width, proxy.size.height))
-                }
-            )
-            .onPreferenceChange(SFSymbolKey.self) {
-                let size = $0 * 1.05
-                frameSize = CGSize(width:size, height: size)
-                cornerRadius = $0 / 6.4
-            }
-            .frame(width: frameSize.width, height: frameSize.height)
-            .foregroundColor(foregroundColor)
-            .background(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(backgroundColor)
-            )
     }
 }
 
 struct ColorfulIconLabelStyle: LabelStyle {
     var color: Color
-
+    
     func makeBody(configuration: Configuration) -> some View {
         Label {
             configuration.title
@@ -115,19 +123,8 @@ struct MoreView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             MoreView(
                 store: .init(
-                    initialState: .init(
-                        event: .testData,
-                        favoriteArtists: .init(),
-                        schedule: .init(),
-                        artists: Artist.testValues.asIdentifedArray,
-                        stages: Stage.testValues.asIdentifedArray,
-                        isTestMode: true,
-                        notificationsEnabled: false,
-                        notificationTimeBeforeSet: 5,
-                        showingNavigateToSettingsAlert: false
-                    ),
-                    reducer: moreReducer,
-                    environment: .init()
+                    initialState: .init(),
+                    reducer: MoreFeature()
                 )
             )
             .preferredColorScheme($0)

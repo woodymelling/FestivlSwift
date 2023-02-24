@@ -79,8 +79,9 @@ extension FestivlManagerEventState {
                 zoomAmount: self.scheduleZoomAmount,
                 artists: self.artists,
                 stages: self.stages,
-                artistSets: self.artistSets,
-                groupSets: self.groupSets,
+                schedule: self.localSchedule,
+                liveSchedule: .init(artistSets: self.artistSets, groupSets: self.groupSets),
+                hasUnpublishedChanges: self.hasUnpublishedChanges,
                 addEditArtistSetState: self.addEditArtistSetState,
                 artistSearchText: self.scheduleArtistSearchText
             )
@@ -90,19 +91,39 @@ extension FestivlManagerEventState {
             self.scheduleSelectedDate = newValue.selectedDate
             self.scheduleZoomAmount = newValue.zoomAmount
             self.addEditArtistSetState = newValue.addEditArtistSetState
-            self.artistSets = newValue.artistSets
-            self.groupSets = newValue.groupSets
+            self.localSchedule = newValue.schedule
             self.scheduleArtistSearchText = newValue.artistSearchText
+            self.hasUnpublishedChanges = newValue.hasUnpublishedChanges
         }
     }
 
     var eventDataState: EventDataState {
         get {
-            .init(event: event)
+            .init(
+                event: event,
+                contactNumbers: contactNumbers,
+                contactNumberText: contactNumberText,
+                contactNumberDescriptionText: contactNumberDescriptionText,
+                contactNumberTitleText: contactNumberTitleText,
+                addressText: self.eventDataAddress,
+                latitudeText: self.latitudeText,
+                longitudeText: self.longitudeText,
+                timeZone: self.eventDataTimeZone,
+                isTestEvent: self.isTestEvent
+            )
         }
 
         set {
             self.event = newValue.event
+            self.contactNumbers = newValue.contactNumbers
+            self.contactNumberText = newValue.contactNumberText
+            self.contactNumberDescriptionText = newValue.contactNumberDescriptionText
+            self.contactNumberTitleText = newValue.contactNumberTitleText
+            self.eventDataAddress = newValue.address
+            self.latitudeText = newValue.latitude
+            self.longitudeText = newValue.longitude
+            self.eventDataTimeZone = newValue.timeZone
+            self.isTestEvent = newValue.isTestEvent
         }
     }
 }
@@ -146,7 +167,7 @@ public let managerEventDashboardReducer = Reducer.combine(
     managerScheduleReducer.pullback(
         state: \FestivlManagerEventState.scheduleState,
         action: /ManagerEventDashboardAction.scheduleAction,
-        environment: { _ in .init() }
+        environment: { _ in .init(artistSetService: { PublishableScheduleService.inMemoryStore }) }
     ),
 
     eventDataReducer.pullback(

@@ -8,90 +8,100 @@
 import ComposableArchitecture
 import Models
 import ArtistPageFeature
+import Combine
 
-public struct ExploreState: Equatable {
-    public init(
-        artists: IdentifiedArrayOf<Artist>,
-        event: Event,
-        stages: IdentifiedArrayOf<Stage>,
-        schedule: Schedule,
-        selectedArtistPageState: ArtistPageState?,
-        favoriteArtists: Set<ArtistID>
-    ) {
-        self.event = event
-        self.stages = stages
-        self.schedule = schedule
-        self.favoriteArtists = favoriteArtists
-
-        self.artistStates = ArtistPageState.fromArtistList(
-            artists,
-            schedule: schedule,
-            event: event,
-            stages: stages,
-            favoriteArtists: favoriteArtists
-        )
-
-        // If selectedArtistPageState has arrived, it may have a different state than the real state
-        // for that artist, which is actually in the artists list. This can happen when favoriting.
-        // I'm not sure if there's a better way to do this
-        if let selectedArtistPageState = selectedArtistPageState {
-            self.selectedArtistPageState = artistStates[id: selectedArtistPageState.artist.id!]
-        }
-        
-    }
-
-    public var artistStates: IdentifiedArrayOf<ArtistPageState>
-    public let event: Event
-    public let stages: IdentifiedArrayOf<Stage>
-    public let schedule: Schedule
-    public var favoriteArtists: Set<ArtistID>
-
-    @BindableState public var selectedArtistPageState: ArtistPageState?
-
-}
-
-public enum ExploreAction: BindableAction {
-    case binding(_ action: BindingAction<ExploreState>)
-    case didSelectArtist(Artist)
-    case artistPage(id: String?, action: ArtistPageAction)
-}
-
-public struct ExploreEnvironment {
+public struct ExploreFeature: ReducerProtocol {
     public init() {}
-}
+    
+    @Dependency(\.stageClient) var stageClient
+    @Dependency(\.artistClient) var artistClient
+    @Dependency(\.scheduleClient) var scheduleClient
+    @Dependency(\.eventID) var eventID
+    @Dependency(\.eventClient) var eventClient
+    
+    public struct State: Equatable {
 
-public let exploreReducer = Reducer<ExploreState, ExploreAction, ExploreEnvironment>.combine (
+        public var event: Event?
+        public var artistStates: IdentifiedArrayOf<ArtistPage.State> = .init()
+        public var schedule: Schedule?
+        public var stages: IdentifiedArrayOf<Stage>?
+        
+        @BindingState var selectedArtistPageState: ArtistPage.State?
+        
+        var isLoading: Bool = false
+        
+        public init() {}
+    }
 
-//    artistPageReducer.optional().pullback(state: \.selectedArtistPageState, action: /ExploreAction.artistPage, environment: { _ in .init() }),
-    artistPageReducer.forEach(state: \.artistStates, action: /ExploreAction.artistPage, environment:   { _ in .init() }),
-
-    Reducer { state, action, _ in
-        switch action {
-        case .binding:
-            return .none
-        case .didSelectArtist(let artist):
-            state.selectedArtistPageState = .init(
-                artist: artist,
-                event: state.event,
-                setsForArtist: state.schedule.scheduleItemsForArtist(artist: artist),
-                stages: state.stages,
-                isFavorite: state.favoriteArtists.contains(artist.id!)
-            )
-
-            return .none
-
-        case .artistPage(id: let id, action: .favoriteArtistButtonTapped):
-            state.favoriteArtists.toggle(item: id!)
-
-            return .none
-        case .artistPage:
-            return .none
+    public enum Action: BindableAction {
+        case binding(_ action: BindingAction<State>)
+        
+        case task
+        case dataUpdate((IdentifiedArrayOf<Artist>, Schedule, Event, IdentifiedArrayOf<Stage>))
+        
+        case artistDetail(id: Artist.ID, action: ArtistPage.Action)
+        
+        case didTapArtist(ArtistPage.State)
+    }
+    
+    public var body: some ReducerProtocol<State, Action> {
+        BindingReducer()
+        
+        Reduce { state, action in
+            switch action {
+            case .binding, .artistDetail:
+                return .none
+            case .task:
+                return .run { send in
+                    for try await data in Publishers.CombineLatest4(
+                        artistClient.getArtists(eventID.value),
+                        scheduleClient.getSchedule(eventID.value),
+                        eventClient.getEvent(eventID.value),
+                        stageClient.getStages(eventID.value)
+                    ).values {
+                        await send(.dataUpdate(data))
+                    }
+                } catch: { _, _ in
+                    print("Artist Page Loading error")
+                }
+                
+            case .dataUpdate((let artists, let schedule, let event, let stages)):
+                state.artistStates = artists
+                    .filter { $0.imageURL != nil }
+                    .map {
+                        ArtistPage.State(
+                            artistID: $0.id,
+                            artist: $0,
+                            event: event,
+                            schedule: schedule,
+                            stages: stages,
+                            isFavorite: false
+                        )
+                    }
+                    .asIdentifedArray
+                
+                state.schedule = schedule
+                state.event = event
+                state.stages = stages
+                
+                return .none
+                
+            case .didTapArtist(let artistPageState):
+                state.selectedArtistPageState = artistPageState
+                return .none
+            }
+        }
+        .forEach(\.artistStates, action: /Action.artistDetail) {
+            ArtistPage()
         }
     }
-        .binding()
-//        .debug()
-
-)
+    
+    func shuffleArtistStates(artistPageState: inout IdentifiedArrayOf<ArtistPage.State>) {
+        artistPageState.shuffle()
+    }
+    
+    
+}
 
 extension Set {
     mutating func toggle(item: Element) {

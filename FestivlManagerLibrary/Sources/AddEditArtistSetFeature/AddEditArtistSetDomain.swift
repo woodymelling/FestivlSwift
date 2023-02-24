@@ -30,7 +30,8 @@ extension Date {
     }
 
     func atTimeOfDate(_ secondDate: Date) -> Date {
-        let calendar = Calendar.autoupdatingCurrent
+        var calendar = Calendar.autoupdatingCurrent
+        calendar.timeZone = NSTimeZone.default
         let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: secondDate)
 
         return self.atTime(
@@ -41,7 +42,8 @@ extension Date {
     }
 
     public func atTime(hour: Int = 0, minute: Int = 0, seconds: Int = 0) -> Date {
-        let calendar = Calendar.autoupdatingCurrent
+        var calendar = Calendar.autoupdatingCurrent
+        calendar.timeZone = NSTimeZone.default
         var components = calendar.dateComponents([.day, .month, .year], from: self)
 
         components.hour = hour
@@ -226,7 +228,8 @@ private func saveArtistSet(
     }
 
     func setTime(for time: Date) -> Date {
-        let calendar = Calendar.current
+        var calendar = Calendar.current
+        calendar.timeZone = NSTimeZone.default
         return calendar.date(
             byAdding: calendar.dateComponents([.hour, .minute], from: time),
             to: calendar.startOfDay(for: state.selectedDate)
@@ -248,13 +251,15 @@ private func saveArtistSet(
             artistSet = try await environment.artistSetService()
                 .createArtistSet(
                     artistSet,
-                    eventID: state.event.id!
+                    eventID: state.event.id!,
+                    batch: nil
                 )
         case .editArtistSet(let orignalSet):
             artistSet.id = orignalSet.id
             try await environment.artistSetService().updateArtistSet(
                 artistSet,
-                eventID: state.event.id!
+                eventID: state.event.id!,
+                batch: nil
             )
         case .editGroupSet:
             // Delete old artistSet, upload new group set
@@ -286,7 +291,8 @@ private func saveGroupSet(
     }
 
     func setTime(for time: Date) -> Date {
-        let calendar = Calendar.current
+        var calendar = Calendar.current
+        calendar.timeZone = NSTimeZone.default
         return calendar.date(
             byAdding: calendar.dateComponents([.hour, .minute], from: time),
             to: calendar.startOfDay(for: state.selectedDate)
@@ -305,11 +311,11 @@ private func saveGroupSet(
         do {
             switch state.mode {
             case .create:
-                groupSet = try await environment.artistSetService().createGroupSet(groupSet, eventID: state.event.id!)
+                groupSet = try await environment.artistSetService().createGroupSet(groupSet, eventID: state.event.id!, batch: nil)
 
             case .editGroupSet(let originalGroupSet):
                 groupSet.id = originalGroupSet.id
-                try await environment.artistSetService().updateGroupSet(groupSet, eventID: state.event.id!)
+                try await environment.artistSetService().updateGroupSet(groupSet, eventID: state.event.id!, batch: nil)
 
             case .editArtistSet:
                 // Delete the old artistSet, create new GroupSet

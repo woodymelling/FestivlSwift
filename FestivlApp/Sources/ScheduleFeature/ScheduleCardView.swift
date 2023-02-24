@@ -46,6 +46,7 @@ struct ScheduleCardView: View {
                         if geo.size.height < 31 * scale {
                             HStack {
                                 Text(card.title)
+                                    .font(.caption)
                                 Text(FestivlFormatting.timeIntervalFormat(startTime: card.startTime, endTime: card.endTime))
                                     .font(.caption)
                             }
@@ -55,6 +56,11 @@ struct ScheduleCardView: View {
                                 Text(card.title)
                                 Text(FestivlFormatting.timeIntervalFormat(startTime: card.startTime, endTime: card.endTime))
                                     .font(.caption)
+
+                                if let subtext = card.subtext {
+                                    Text(subtext)
+                                        .font(.caption2)
+                                }
                             }
                         }
                     }
@@ -75,8 +81,9 @@ struct ScheduleCardView: View {
 
 
             }
-            .foregroundColor(stageColor.isDarkColor ? .white : .black)
+            .foregroundColor(.white)
         }
+        .clipped()
         .frame(maxWidth: .infinity)
         .background(stageColor)
         .border(.white, width: isSelected ? 1 : 0 )
@@ -85,9 +92,14 @@ struct ScheduleCardView: View {
 
 struct ArtistSetCardView_Previews: PreviewProvider {
     static var previews: some View {
-        ScheduleCardView(ArtistSet.testValues()[0].asScheduleItem(), stages: Stage.testValues.asIdentifedArray, isSelected: false, isFavorite: false)
-            .frame(width: 300, height: 100)
-            .previewLayout(.sizeThatFits)
-            .previewAllColorModes()
+        
+        ScheduleCardView(
+            .testValues().first!,
+            stages: Stage.testValues.asIdentifedArray,
+            isSelected: false,
+            isFavorite: false
+        )
+        .frame(width: 300, height: 100)
+        .previewLayout(.sizeThatFits)
     }
 }

@@ -15,11 +15,10 @@ import ComposableArchitecture
 import ArtistPageFeature
 
 struct ExploreViewHosting: UIViewControllerRepresentable {
-    var artists: IdentifiedArrayOf<ArtistPageState>
+    var artists: IdentifiedArrayOf<ArtistPage.State>
     var stages: IdentifiedArrayOf<Stage>
     var schedule: Schedule
-    var onSelectArtist: (ArtistPageState) -> Void
-    var favoriteArtists: Set<ArtistID>
+    var onSelectArtist: (ArtistPage.State) -> Void
 
 
     typealias UIViewControllerType = ExploreViewController
@@ -29,8 +28,7 @@ struct ExploreViewHosting: UIViewControllerRepresentable {
             exploreArtists: artists,
             stages: stages,
             schedule: schedule,
-            onSelectArtist: onSelectArtist,
-            favoriteArtists: favoriteArtists
+            onSelectArtist: onSelectArtist
         )
     }
 
@@ -39,13 +37,11 @@ struct ExploreViewHosting: UIViewControllerRepresentable {
         // Only reload data if the data actually changes
         if vc.exploreArtists != artists ||
             vc.stages != stages ||
-            vc.schedule != schedule ||
-            vc.favoriteArtists != favoriteArtists
+            vc.schedule != schedule
         {
             vc.exploreArtists = artists
             vc.stages = stages
             vc.schedule = schedule
-            vc.favoriteArtists = favoriteArtists
 
             print(artists)
             vc.collectionView.reloadData()
@@ -55,27 +51,24 @@ struct ExploreViewHosting: UIViewControllerRepresentable {
 }
 
 class ExploreViewController: UICollectionViewController {
-    var exploreArtists: IdentifiedArrayOf<ArtistPageState>
+    var exploreArtists: IdentifiedArrayOf<ArtistPage.State>
     var stages: IdentifiedArrayOf<Stage>
     var schedule: Schedule
-    var favoriteArtists: Set<ArtistID>
-    var onSelectArtist: (ArtistPageState) -> Void
+    var onSelectArtist: (ArtistPage.State) -> Void
 
     let layout = CollectionViewSlantedLayout()
 
     init(
-        exploreArtists: IdentifiedArrayOf<ArtistPageState>,
+        exploreArtists: IdentifiedArrayOf<ArtistPage.State>,
         stages: IdentifiedArrayOf<Stage>,
         schedule: Schedule,
-        onSelectArtist: @escaping (ArtistPageState) -> Void,
-        favoriteArtists: Set<ArtistID>
+        onSelectArtist: @escaping (ArtistPage.State) -> Void
     ) {
 
         self.exploreArtists = exploreArtists
         self.stages = stages
         self.schedule = schedule
         self.onSelectArtist = onSelectArtist
-        self.favoriteArtists = favoriteArtists
 
         super.init(collectionViewLayout: UICollectionViewLayout())
 
@@ -121,13 +114,10 @@ class ExploreViewController: UICollectionViewController {
         let cell: ArtistExploreCell = collectionView.dequeueReusableCell(withReuseIdentifier: "ArtistExploreCell", for: indexPath) as! ArtistExploreCell
 
         let artist = exploreArtists[indexPath.row].artist
+        
         cell.initWithArtist(
-            artist: artist,
-            stages: schedule
-                .scheduleItemsForArtist(artist: artist)
-                .compactMap {
-                    stages[id: $0.stageID]
-                }
+            artist: artist!,
+            stages: schedule[artistID: artist!.id].compactMap { stages[id: $0.stageID] }
         )
 
         if let layout = collectionView.collectionViewLayout as? CollectionViewSlantedLayout {

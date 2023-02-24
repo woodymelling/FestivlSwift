@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import MacOSComponents
 
+
 public struct EventDataView: View {
     let store: Store<EventDataState, EventDataAction>
 
@@ -25,8 +26,18 @@ public struct EventDataView: View {
 
                         if let imageURL = viewStore.event.siteMapImageURL {
                             ZStack {
-                                
-                                AsyncImage(url: imageURL)
+                                AsyncImage(
+                                    url: imageURL
+//                                    content: { image in
+//
+//                                        image
+//                                            .resizable()
+//                                            .aspectRatio(contentMode: .fit)
+//                                            .frame(width: 200, height: 200)
+//                                    },
+//                                    placeholder: { }
+                                )
+
                                 Button(action: {
                                     viewStore.send(.didRemoveSiteMapImage)
                                 }, label: {
@@ -51,6 +62,77 @@ public struct EventDataView: View {
                         .buttonStyle(.borderedProminent)
                     }
 
+                    Divider()
+
+                    Section(header: Text("Contact Numbers").font(.headline)) {
+
+                        ForEach(viewStore.contactNumbers, content: { number in
+                            HStack {
+                                VStack(alignment: .leading) {
+
+                                    HStack {
+
+                                        Text(number.title)
+
+                                        Text(number.phoneNumber)
+                                    }
+                                    Text(number.description)
+                                }
+                                Button {
+                                    viewStore.send(.didTapDeleteContactNumber(number.id))
+                                } label: {
+                                    Label("Remove", systemImage: "trash")
+                                }
+                            }
+                            .textFieldStyle(.roundedBorder)
+                        })
+
+                        VStack {
+                            TextField("Title", text: viewStore.binding(\.$contactNumberTitleText))
+                            TextField("Phone Number", text: viewStore.binding(\.$contactNumberText))
+                            TextField("Description", text: viewStore.binding(\.$contactNumberDescriptionText))
+                        }
+
+                        Button("Save", action: {
+                            viewStore.send(.didTapSaveContactNumber)
+                        })
+                    }
+
+                    Divider()
+
+                    Section(header: Text("Location").font(.headline)) {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Address")
+                                TextEditor(text: viewStore.binding(\.$address))
+                                    .frame(height: 100)
+                            }
+                        }
+
+                        VStack(alignment: .leading) {
+                            TextField("Latitude", text: viewStore.binding(\.$latitude))
+                            TextField("Longitude", text: viewStore.binding(\.$longitude))
+                        }
+
+                        Picker("Time Zone", selection: viewStore.binding(\.$timeZone), content: {
+                            ForEach(TimeZone.knownTimeZoneIdentifiers, id: \.self) { tz in
+                                if let timeZone = TimeZone(identifier: tz) {
+                                    Text(timeZone.identifier)
+                                }
+                            }
+                        })
+                    }
+
+                    Spacer()
+                    
+                    Toggle(isOn: viewStore.binding(\.$isTestEvent), label: {
+                        Text("Is Test Event")
+                    })
+                    
+                    Button("Save all data") {
+                        viewStore.send(.didTapSaveData)
+                    }
+
                 }
             }
 
@@ -64,7 +146,18 @@ struct EventDataView_Previews: PreviewProvider {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             EventDataView(
                 store: .init(
-                    initialState: .init(event: .testData),
+                    initialState: .init(
+                        event: .testData,
+                        contactNumbers: .init(),
+                        contactNumberText: "",
+                        contactNumberDescriptionText: "",
+                        contactNumberTitleText: "",
+                        addressText: "",
+                        latitudeText: "",
+                        longitudeText: "",
+                        timeZone: "",
+                        isTestEvent: false
+                    ),
                     reducer: eventDataReducer,
                     environment: .init()
                 )
