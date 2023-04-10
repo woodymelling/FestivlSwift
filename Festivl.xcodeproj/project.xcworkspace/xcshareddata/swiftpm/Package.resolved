@@ -46,6 +46,15 @@
       }
     },
     {
+      "identity" : "composable-architecture-forms",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/woodymelling/composable-architecture-forms",
+      "state" : {
+        "branch" : "tca-prerelease/1.0",
+        "revision" : "097abec684b660d20b13980b7d35f1b9f46c36ea"
+      }
+    },
+    {
       "identity" : "composable-user-notifications",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/miiha/composable-user-notifications",
@@ -109,12 +118,21 @@
       }
     },
     {
+      "identity" : "imagecropper",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/marshallino16/ImageCropper",
+      "state" : {
+        "revision" : "b73abb4f342497695b14d7a04a6b5a38cd4c9c26",
+        "version" : "0.1.1"
+      }
+    },
+    {
       "identity" : "kingfisher",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/onevcat/Kingfisher",
       "state" : {
-        "revision" : "2db469112fbcfd83ff0a96c4546772d283f317f5",
-        "version" : "7.6.0"
+        "revision" : "af4be924ad984cf4d16f4ae4df424e79a443d435",
+        "version" : "7.6.2"
       }
     },
     {
@@ -149,8 +167,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/promises.git",
       "state" : {
-        "revision" : "3e4e743631e86c8c70dbc6efdc7beaa6e90fd3bb",
-        "version" : "2.1.1"
+        "revision" : "ec957ccddbcc710ccc64c9dcbd4c7006fcf8b73a",
+        "version" : "2.2.0"
       }
     },
     {
@@ -167,8 +185,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-case-paths",
       "state" : {
-        "revision" : "c3a42e8d1a76ff557cf565ed6d8b0aee0e6e75af",
-        "version" : "0.11.0"
+        "revision" : "f623901b4bcc97f59c36704f81583f169b228e51",
+        "version" : "0.13.0"
       }
     },
     {
@@ -194,8 +212,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-composable-architecture",
       "state" : {
-        "branch" : "0.50.2",
-        "revision" : "a99024bbd171d85a92bccbcea23e7c66f05dc12b"
+        "branch" : "prerelease/1.0",
+        "revision" : "9960f29fbd8e3dcebc2495673ec3735664f09aba"
       }
     },
     {
@@ -221,8 +239,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-identified-collections",
       "state" : {
-        "revision" : "fd34c544ad27f3ba6b19142b348005bfa85b6005",
-        "version" : "0.6.0"
+        "revision" : "ad3932d28c2e0a009a0167089619526709ef6497",
+        "version" : "0.7.0"
       }
     },
     {
@@ -230,8 +248,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-protobuf.git",
       "state" : {
-        "revision" : "ab3a58b7209a17d781c0d1dbb3e1ff3da306bae8",
-        "version" : "1.20.3"
+        "revision" : "0af9125c4eae12a4973fb66574c53a54962a9e1e",
+        "version" : "1.21.0"
       }
     },
     {
@@ -257,8 +275,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/siteline/SwiftUI-Introspect.git",
       "state" : {
-        "revision" : "f2616860a41f9d9932da412a8978fec79c06fe24",
-        "version" : "0.1.4"
+        "revision" : "c18951c747ab62af7c15e17a81bd37d4fd5a9979",
+        "version" : "0.2.3"
       }
     },
     {
@@ -284,8 +302,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",
       "state" : {
-        "revision" : "ace21305e0dd3a9e749aef79fef14be79a3b4669",
-        "version" : "0.8.2"
+        "revision" : "62041e6016a30f56952f5d7d3f12a3fd7029e1cd",
+        "version" : "0.8.3"
       }
     }
   ],

@@ -94,7 +94,7 @@ public extension Event {
     static var testValues: IdentifiedArrayOf<Event> {
         IdentifiedArray(arrayLiteral:
             Event(
-                id: "0",
+                id: "1",
                 name: "Wicked Woods (September 2022)",
                 startDate: CalendarDate(year: 2022, month: 9, day: 8),
                 endDate: CalendarDate(year: 2022, month: 9, day: 11),
@@ -109,7 +109,7 @@ public extension Event {
                 isTestEvent: false
             ),
             Event(
-                id: "1",
+                id: "2",
                 name: "Wicked Woods (Spring 2022)",
                 startDate: CalendarDate(year: 2022, month: 5, day: 26),
                 endDate: CalendarDate(year: 2022, month: 5, day: 28),

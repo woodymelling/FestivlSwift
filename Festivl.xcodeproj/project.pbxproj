@@ -27,6 +27,10 @@
 		EF692E6C27B4CA48006F8E0D /* FestivlApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */; };
 		EF692E7027B4CA49006F8E0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF692E6F27B4CA49006F8E0D /* Assets.xcassets */; };
 		EF692E7327B4CA49006F8E0D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF692E7227B4CA49006F8E0D /* Preview Assets.xcassets */; };
+		EF92B83929A93E4E00815DF3 /* FestivlManageriOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF92B83829A93E4E00815DF3 /* FestivlManageriOSApp.swift */; };
+		EF92B83B29A93E4E00815DF3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF92B83A29A93E4E00815DF3 /* ContentView.swift */; };
+		EF92B83D29A93E4F00815DF3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF92B83C29A93E4F00815DF3 /* Assets.xcassets */; };
+		EF92B84529A93E6800815DF3 /* FestivlManageriOSLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = EF92B84429A93E6800815DF3 /* FestivlManageriOSLibrary */; };
 		EFAA58372956C0E800C8EE01 /* EventFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EFAA58362956C0E800C8EE01 /* EventFeature */; };
 		EFAF6BC429577A6D002122B4 /* FirebaseServiceImpl in Frameworks */ = {isa = PBXBuildFile; productRef = EFAF6BC329577A6D002122B4 /* FirebaseServiceImpl */; };
 		EFAF6BC629577ADE002122B4 /* FirebaseServiceImpl in Frameworks */ = {isa = PBXBuildFile; productRef = EFAF6BC529577ADE002122B4 /* FirebaseServiceImpl */; };
@@ -75,6 +79,11 @@
 		EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivlApp.swift; sourceTree = "<group>"; };
 		EF692E6F27B4CA49006F8E0D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EF692E7227B4CA49006F8E0D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		EF92B83129A93E2200815DF3 /* FestivlManageriOSLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FestivlManageriOSLibrary; sourceTree = "<group>"; };
+		EF92B83629A93E4E00815DF3 /* FestivlManageriOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FestivlManageriOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF92B83829A93E4E00815DF3 /* FestivlManageriOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivlManageriOSApp.swift; sourceTree = "<group>"; };
+		EF92B83A29A93E4E00815DF3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		EF92B83C29A93E4F00815DF3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EFCCBD9027B4CA79004E5270 /* FestivlLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FestivlLibrary; sourceTree = "<group>"; };
 		EFF6F493288264090017EED1 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		EFF6F495288264090017EED1 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -119,6 +128,14 @@
 			files = (
 				EFB2B4822956DBAF00B3FA13 /* FestivlAppFeature in Frameworks */,
 				EFAF6BC629577ADE002122B4 /* FirebaseServiceImpl in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EF92B83329A93E4E00815DF3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF92B84529A93E6800815DF3 /* FestivlManageriOSLibrary in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,11 +217,13 @@
 				EF22578128878F970053202D /* FestivlWidgetExtension.entitlements */,
 				EFCCBD9027B4CA79004E5270 /* FestivlLibrary */,
 				EF26A0C027D85F5B00E10A71 /* FestivlApp */,
+				EF92B83129A93E2200815DF3 /* FestivlManageriOSLibrary */,
 				EF692E6A27B4CA48006F8E0D /* Festivl */,
 				EF26A0B127D855CB00E10A71 /* FestivlManager */,
 				20CB41152814F3EF00D4F860 /* WickedWoods */,
 				EFF6F497288264090017EED1 /* FestivlWidget */,
 				EF4EC4492950274B00B82B94 /* Launchpad */,
+				EF92B83729A93E4E00815DF3 /* FestivlManageriOS */,
 				EF692E6927B4CA48006F8E0D /* Products */,
 				EF479E4C27B6108C0075D7E2 /* Frameworks */,
 			);
@@ -217,6 +236,7 @@
 				EF26A0B027D855CB00E10A71 /* FestivlManager.app */,
 				20CB41142814F3EF00D4F860 /* WickedWoods.app */,
 				EF4EC4482950274B00B82B94 /* Launchpad.app */,
+				EF92B83629A93E4E00815DF3 /* FestivlManageriOS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -240,6 +260,16 @@
 				EF692E7227B4CA49006F8E0D /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		EF92B83729A93E4E00815DF3 /* FestivlManageriOS */ = {
+			isa = PBXGroup;
+			children = (
+				EF92B83829A93E4E00815DF3 /* FestivlManageriOSApp.swift */,
+				EF92B83A29A93E4E00815DF3 /* ContentView.swift */,
+				EF92B83C29A93E4F00815DF3 /* Assets.xcassets */,
+			);
+			path = FestivlManageriOS;
 			sourceTree = "<group>";
 		};
 		EFF6F497288264090017EED1 /* FestivlWidget */ = {
@@ -342,6 +372,26 @@
 			productReference = EF692E6827B4CA48006F8E0D /* Festivl.app */;
 			productType = "com.apple.product-type.application";
 		};
+		EF92B83529A93E4E00815DF3 /* FestivlManageriOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF92B84129A93E4F00815DF3 /* Build configuration list for PBXNativeTarget "FestivlManageriOS" */;
+			buildPhases = (
+				EF92B83229A93E4E00815DF3 /* Sources */,
+				EF92B83329A93E4E00815DF3 /* Frameworks */,
+				EF92B83429A93E4E00815DF3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FestivlManageriOS;
+			packageProductDependencies = (
+				EF92B84429A93E6800815DF3 /* FestivlManageriOSLibrary */,
+			);
+			productName = FestivlManageriOS;
+			productReference = EF92B83629A93E4E00815DF3 /* FestivlManageriOS.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -364,6 +414,9 @@
 					EF692E6727B4CA48006F8E0D = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
+					EF92B83529A93E4E00815DF3 = {
+						CreatedOnToolsVersion = 14.2;
+					};
 				};
 			};
 			buildConfigurationList = EF692E6327B4CA48006F8E0D /* Build configuration list for PBXProject "Festivl" */;
@@ -385,6 +438,7 @@
 				EF26A0AF27D855CB00E10A71 /* FestivlManager */,
 				20CB41132814F3EF00D4F860 /* WickedWoods */,
 				EF4EC4472950274B00B82B94 /* Launchpad */,
+				EF92B83529A93E4E00815DF3 /* FestivlManageriOS */,
 			);
 		};
 /* End PBXProject section */
@@ -429,6 +483,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EF92B83429A93E4E00815DF3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF92B83D29A93E4F00815DF3 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -463,6 +525,15 @@
 			files = (
 				EFF6F49F2882640A0017EED1 /* FestivlWidget.intentdefinition in Sources */,
 				EF692E6C27B4CA48006F8E0D /* FestivlApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EF92B83229A93E4E00815DF3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF92B83B29A93E4E00815DF3 /* ContentView.swift in Sources */,
+				EF92B83929A93E4E00815DF3 /* FestivlManageriOSApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -835,6 +906,68 @@
 			};
 			name = Release;
 		};
+		EF92B84229A93E4F00815DF3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"FestivlManageriOS/Preview Content\"";
+				DEVELOPMENT_TEAM = FYZE6539TN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = woody.FestivlManageriOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EF92B84329A93E4F00815DF3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"FestivlManageriOS/Preview Content\"";
+				DEVELOPMENT_TEAM = FYZE6539TN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = woody.FestivlManageriOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -883,6 +1016,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		EF92B84129A93E4F00815DF3 /* Build configuration list for PBXNativeTarget "FestivlManageriOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF92B84229A93E4F00815DF3 /* Debug */,
+				EF92B84329A93E4F00815DF3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -901,6 +1043,10 @@
 		EF4EC4722950276F00B82B94 /* ArtistListFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ArtistListFeature;
+		};
+		EF92B84429A93E6800815DF3 /* FestivlManageriOSLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FestivlManageriOSLibrary;
 		};
 		EFAA58362956C0E800C8EE01 /* EventFeature */ = {
 			isa = XCSwiftPackageProductDependency;

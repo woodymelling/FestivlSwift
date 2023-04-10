@@ -35,6 +35,10 @@ public enum FestivlFormatting {
 
         return "\(startTime.formatted(timeFormat)) - \(endTime.formatted(timeFormat))"
     }
+    
+    public static func dateIntervalFormat(startDate: CalendarDate, endDate: CalendarDate) -> String {
+        return " \(startDate.date.formatted(.dateTime.month().day().year())) - \(endDate.date.formatted(.dateTime.month().day().year()))"
+    }
 
     public static func timeOfDayFormat(for date: Date) -> String {
 
