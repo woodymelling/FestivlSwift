@@ -56,10 +56,7 @@
 		EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivlApp.swift; sourceTree = "<group>"; };
 		EF692E6F27B4CA49006F8E0D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EF692E7227B4CA49006F8E0D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-<<<<<<< Updated upstream
-=======
 		EF92B83629A93E4E00815DF3 /* FestivlManageriOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FestivlManageriOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
->>>>>>> Stashed changes
 		EFF6F493288264090017EED1 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		EFF6F495288264090017EED1 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -144,10 +141,6 @@
 		EF692E5F27B4CA48006F8E0D = {
 			isa = PBXGroup;
 			children = (
-<<<<<<< Updated upstream
-				EF22578128878F970053202D /* FestivlWidgetExtension.entitlements */,
-=======
->>>>>>> Stashed changes
 				EF26A0C027D85F5B00E10A71 /* FestivlApp */,
 				EF692E6A27B4CA48006F8E0D /* Festivl */,
 				20CB41152814F3EF00D4F860 /* WickedWoods */,
