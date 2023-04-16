@@ -20,7 +20,7 @@ public struct EventList: ReducerProtocol {
         
         var events: IdentifiedArrayOf<Event> = []
         
-        @BindableState var searchText = ""
+        @BindingState var searchText = ""
 
         var isLoading: Bool = true
         

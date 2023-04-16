@@ -8,8 +8,10 @@
 import ComposableArchitecture
 import Models
 import ArtistPageFeature
+import ShowScheduleItemDependency
 import FestivlDependencies
 import Combine
+import Tagged
 
 
 public struct GroupSetDetail: ReducerProtocol {
@@ -19,6 +21,8 @@ public struct GroupSetDetail: ReducerProtocol {
     @Dependency(\.eventID) var eventID
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.userFavoritesClient) var userFavoritesClient
+    
+    @Dependency(\.showScheduleItem) var showScheduleItem
     
     public struct State: Equatable, Identifiable {
         public init(groupSet: ScheduleItem) {
@@ -89,7 +93,9 @@ public struct GroupSetDetail: ReducerProtocol {
                 
                 return .none
                 
-            case .didTapScheduleItem:
+            case .didTapScheduleItem(let scheduleItem):
+                
+                showScheduleItem(scheduleItem)
                 return .none
                 
             case .artistDetailAction:

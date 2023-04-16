@@ -137,8 +137,8 @@ public struct ScheduleFeature: ReducerProtocol {
         @BindingState public var filteringFavorites: Bool = false
 
         public var cardToDisplay: ScheduleItem?
-        @BindingState public var selectedArtistState: ArtistPage.State?
-        @BindingState public var selectedGroupSetState: GroupSetDetail.State?
+        
+        @PresentationState var destination: Destination.State?
 
         public var hasShownTutorialElements: Bool = true
         @BindingState public var showingLandscapeTutorial: Bool = false
@@ -187,8 +187,29 @@ public struct ScheduleFeature: ReducerProtocol {
 
         case didTapCard(ScheduleItem)
 
-        case artistPageAction(ArtistPage.Action)
-        case groupSetDetailAction(GroupSetDetail.Action)
+        case destination(PresentationAction<Destination.Action>)
+    }
+    
+    public struct Destination: ReducerProtocol {
+        public enum State: Equatable {
+            case artist(ArtistPage.State)
+            case groupSet(GroupSetDetail.State)
+        }
+        
+        public enum Action {
+            case artist(ArtistPage.Action)
+            case groupSet(GroupSetDetail.Action)
+        }
+        
+        public var body: some ReducerProtocolOf<Self> {
+            Scope(state: /State.artist, action: /Action.artist) {
+                ArtistPage()
+            }
+            
+            Scope(state: /State.groupSet, action: /Action.groupSet) {
+                GroupSetDetail()
+            }
+        }
     }
     
     public var body: some ReducerProtocol<State, Action> {
@@ -263,8 +284,7 @@ public struct ScheduleFeature: ReducerProtocol {
 
             case .showAndHighlightCard(let card):
                 
-                state.selectedGroupSetState = nil
-                state.selectedArtistState = nil
+                state.destination = nil
                 
                 let schedulePage = card.schedulePageIdentifier(dayStartsAtNoon: state.event.dayStartsAtNoon, timeZone: state.event.timeZone)
                 
@@ -296,14 +316,16 @@ public struct ScheduleFeature: ReducerProtocol {
                 switch card.type {
                 case .artistSet(let artistID):
                     guard let artist = state.artists[id: artistID] else { return .none }
-
-                    state.selectedArtistState = .init(
-                        artistID: artist.id,
-                        artist: artist,
-                        event: state.event,
-                        schedule: state.schedule,
-                        stages: state.stages,
-                        isFavorite: false // TODO: Fix
+                    
+                    state.destination = .artist(
+                        ArtistPage.State(
+                            artistID: artist.id,
+                            artist: artist,
+                            event: state.event,
+                            schedule: state.schedule,
+                            stages: state.stages,
+                            isFavorite: false // TODO: Fix
+                        )
                     )
 
                     return .none
@@ -311,28 +333,21 @@ public struct ScheduleFeature: ReducerProtocol {
                 case .groupSet:
                     guard let groupSet = state.schedule[id: card.id] else { return.none }
 
-                    state.selectedGroupSetState = .init(groupSet: groupSet)
+                    state.destination = .groupSet(.init(groupSet: groupSet))
 
                     return .none
                 }
                 
-            case .artistPageAction(.didTapScheduleItem(let scheduleItem)):
-                state.selectedArtistState = nil
-                return .task { .showAndHighlightCard(scheduleItem) }
-
-            case .groupSetDetailAction(.didTapScheduleItem(let scheduleItem)):
-                state.selectedGroupSetState = nil
-                return .task { .showAndHighlightCard(scheduleItem) }
+            case .destination(.presented(.artist(.didTapScheduleItem(let scheduleItem)))), .destination(.presented(.groupSet(.didTapScheduleItem(let scheduleItem)))):
+                state.destination = nil
+                return .task { .showAndHighlightCard(scheduleItem) } // TODO: Function to showAnd highlight
                 
-            case .artistPageAction, .groupSetDetailAction:
+            case .destination:
                 return .none
             }
         }
-        .ifLet(\.selectedArtistState, action: /Action.artistPageAction) {
-            ArtistPage()
-        }
-        .ifLet(\.selectedGroupSetState, action: /Action.groupSetDetailAction) {
-            GroupSetDetail()
+        .ifLet(\.$destination, action: /Action.destination) {
+            Destination()
         }
     }
 }

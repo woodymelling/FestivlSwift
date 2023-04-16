@@ -10,6 +10,18 @@
       }
     },
     {
+<<<<<<< Updated upstream
+=======
+      "identity" : "alerttoast",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/elai950/AlertToast",
+      "state" : {
+        "branch" : "master",
+        "revision" : "638f38f9daf08e17b7caea22d2fcb9c0a418d1b6"
+      }
+    },
+    {
+>>>>>>> Stashed changes
       "identity" : "boringssl-swiftpm",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/boringssl-SwiftPM.git",
@@ -19,6 +31,18 @@
       }
     },
     {
+<<<<<<< Updated upstream
+=======
+      "identity" : "collectionviewslantedlayout",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/yacir/CollectionViewSlantedLayout",
+      "state" : {
+        "branch" : "master",
+        "revision" : "0364421309bece26bff03da52c00222c55ed37bf"
+      }
+    },
+    {
+>>>>>>> Stashed changes
       "identity" : "combine-schedulers",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/combine-schedulers",
@@ -28,6 +52,18 @@
       }
     },
     {
+<<<<<<< Updated upstream
+=======
+      "identity" : "composable-user-notifications",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/miiha/composable-user-notifications",
+      "state" : {
+        "revision" : "da0ea3659941e8f72af30397538129e579268801",
+        "version" : "0.5.0"
+      }
+    },
+    {
+>>>>>>> Stashed changes
       "identity" : "firebase-ios-sdk",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk.git",
@@ -109,6 +145,18 @@
       }
     },
     {
+<<<<<<< Updated upstream
+=======
+      "identity" : "popovers",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/aheze/Popovers",
+      "state" : {
+        "revision" : "de44c4dd7271ec6413fe350f7efadb14e5e18dce",
+        "version" : "1.3.2"
+      }
+    },
+    {
+>>>>>>> Stashed changes
       "identity" : "promises",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/promises.git",
@@ -118,6 +166,18 @@
       }
     },
     {
+<<<<<<< Updated upstream
+=======
+      "identity" : "simultaneouslyscrollview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stonko1994/SimultaneouslyScrollView",
+      "state" : {
+        "revision" : "03283fcc014e01c8a45882dcbcf3cf719854e3c1",
+        "version" : "1.0.0"
+      }
+    },
+    {
+>>>>>>> Stashed changes
       "identity" : "swift-case-paths",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-case-paths",
@@ -199,6 +259,27 @@
       }
     },
     {
+<<<<<<< Updated upstream
+=======
+      "identity" : "swiftui-image-viewer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Jake-Short/swiftui-image-viewer.git",
+      "state" : {
+        "revision" : "f61f298c0100c81dfb0c7908091e68aad12a892c",
+        "version" : "2.3.1"
+      }
+    },
+    {
+      "identity" : "swiftui-introspect",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/siteline/SwiftUI-Introspect.git",
+      "state" : {
+        "revision" : "c18951c747ab62af7c15e17a81bd37d4fd5a9979",
+        "version" : "0.2.3"
+      }
+    },
+    {
+>>>>>>> Stashed changes
       "identity" : "swiftui-navigation",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swiftui-navigation",
@@ -208,6 +289,18 @@
       }
     },
     {
+<<<<<<< Updated upstream
+=======
+      "identity" : "url-image",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dmytro-anokhin/url-image.git",
+      "state" : {
+        "revision" : "ccab89ad1cedb04f25dd4df1776dd8c8583b914a",
+        "version" : "2.2.5"
+      }
+    },
+    {
+>>>>>>> Stashed changes
       "identity" : "xctest-dynamic-overlay",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/xctest-dynamic-overlay",

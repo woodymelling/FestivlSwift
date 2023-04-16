@@ -59,22 +59,6 @@ public struct ScheduleView: View {
                         AllStagesAtOnceView(store: store)
                     }
                 }
-                .sheet(
-                    scoping: store,
-                    state: \.$selectedArtistState,
-                    action: ScheduleFeature.Action.artistPageAction,
-                    then: { artistStore in
-                        NavigationView {
-                            ArtistPageView(store: artistStore)
-                        }
-                    }
-                )
-                .sheet(
-                    scoping: store,
-                    state: \.$selectedGroupSetState,
-                    action: ScheduleFeature.Action.groupSetDetailAction,
-                    then: GroupSetDetailView.init
-                )
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         Menu {
@@ -126,6 +110,22 @@ public struct ScheduleView: View {
                     }
                 }
                 .navigationBarTitleDisplayMode(.inline)
+                .sheet(
+                    store: self.store.scope(state: \.$destination, action: ScheduleFeature.Action.destination),
+                    state: /ScheduleFeature.Destination.State.artist,
+                    action: ScheduleFeature.Destination.Action.artist
+                ) { store in
+                    NavigationView {
+                        ArtistPageView(store: store)
+                    }
+                }
+                .sheet(
+                    store: store.scope(state: \.$destination, action: ScheduleFeature.Action.destination),
+                    state: /ScheduleFeature.Destination.State.groupSet,
+                    action: ScheduleFeature.Destination.Action.groupSet
+                ) {
+                    GroupSetDetailView(store: $0)
+                }
                 .toast(
                     isPresenting: viewStore.binding(\.$showingLandscapeTutorial),
                     duration: 5,

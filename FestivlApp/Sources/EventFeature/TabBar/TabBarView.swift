@@ -13,7 +13,6 @@ import ScheduleFeature
 import ExploreFeature
 import MoreFeature
 
-
 public enum Tab {
     case schedule, artists, explore, more
 }
@@ -62,11 +61,13 @@ public struct TabBarView: View {
                     .tag(Tab.explore)
 
 
-                MoreView(store: store.scope(state: \.moreState, action: EventFeature.Action.moreAction))
-                    .tabItem {
-                        Label("More", systemImage: "ellipsis")
-                    }
-                    .tag(Tab.more)
+                NavigationView {
+                    MoreView(store: store.scope(state: \.moreState, action: EventFeature.Action.moreAction))
+                }
+                .tabItem {
+                    Label("More", systemImage: "ellipsis")
+                }
+                .tag(Tab.more)
             }
         }
     }

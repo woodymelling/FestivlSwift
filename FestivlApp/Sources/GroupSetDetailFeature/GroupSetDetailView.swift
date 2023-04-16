@@ -24,7 +24,6 @@ public struct GroupSetDetailView: View {
             NavigationView {
                 List {
                     if let event = viewStore.event,
-                       let stages = viewStore.stages,
                        let schedule = viewStore.schedule {
                         Section {
                             Button(action: {
@@ -49,7 +48,7 @@ public struct GroupSetDetailView: View {
                                         ArtistRow(
                                             artist: artistViewStore.artist!,
                                             event: event,
-                                            stages: stages,
+                                            stages: viewStore.stages,
                                             sets: schedule[artistID: artistViewStore.artist!.id],
                                             isFavorite: false,
                                             showArtistImage: false

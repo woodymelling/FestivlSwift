@@ -8,18 +8,34 @@
 import SwiftUI
 import PDFKit
 //import Kingfisher
+import ComposableArchitecture
 import ImageViewer
 import Utilities
 import Components
 
-struct SiteMapView: View {
-    var imageURL: URL
-    @State var image: UIImage?
+public struct SiteMapFeature: ReducerProtocol {
+    
+    public struct State: Equatable {
+        var url: URL
+    }
+    
+    public enum Action: Equatable {}
+    
+    public var body: some ReducerProtocolOf<Self> {
+        return EmptyReducer()
+    }
+}
 
+struct SiteMapView: View {
+    
+    let store: StoreOf<SiteMapFeature>
+    
     var body: some View {
-        ZoomableScrollView {
-            CachedAsyncImage(url: imageURL, placeholder: { ProgressView() })
-                .aspectRatio(contentMode: .fit)
+        WithViewStore(store) { viewStore in
+            ZoomableScrollView {
+                CachedAsyncImage(url: viewStore.url, placeholder: { ProgressView() })
+                    .aspectRatio(contentMode: .fit)
+            }
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("Site Map")

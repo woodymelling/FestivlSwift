@@ -15,23 +15,15 @@
 		EF26A0D127D87C2500E10A71 /* FestivlManagerAppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EF26A0D027D87C2500E10A71 /* FestivlManagerAppFeature */; };
 		EF28EC5927E0432B008FCE36 /* MacOSComponents in Frameworks */ = {isa = PBXBuildFile; productRef = EF28EC5827E0432B008FCE36 /* MacOSComponents */; };
 		EF479E5027B629690075D7E2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EF479E4F27B629690075D7E2 /* GoogleService-Info.plist */; };
-		EF4EC44B2950274B00B82B94 /* LaunchpadApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF4EC44A2950274B00B82B94 /* LaunchpadApp.swift */; };
-		EF4EC44D2950274B00B82B94 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF4EC44C2950274B00B82B94 /* ContentView.swift */; };
-		EF4EC44F2950274C00B82B94 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF4EC44E2950274C00B82B94 /* Assets.xcassets */; };
-		EF4EC4522950274C00B82B94 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF4EC4512950274C00B82B94 /* Preview Assets.xcassets */; };
 		EF4EC4732950276F00B82B94 /* ArtistListFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EF4EC4722950276F00B82B94 /* ArtistListFeature */; };
 		EF692E6C27B4CA48006F8E0D /* FestivlApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */; };
 		EF692E7027B4CA49006F8E0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF692E6F27B4CA49006F8E0D /* Assets.xcassets */; };
 		EF692E7327B4CA49006F8E0D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF692E7227B4CA49006F8E0D /* Preview Assets.xcassets */; };
-		EF92B83929A93E4E00815DF3 /* FestivlManageriOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF92B83829A93E4E00815DF3 /* FestivlManageriOSApp.swift */; };
-		EF92B83B29A93E4E00815DF3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF92B83A29A93E4E00815DF3 /* ContentView.swift */; };
-		EF92B83D29A93E4F00815DF3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF92B83C29A93E4F00815DF3 /* Assets.xcassets */; };
 		EF92B84529A93E6800815DF3 /* FestivlManageriOSLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = EF92B84429A93E6800815DF3 /* FestivlManageriOSLibrary */; };
 		EFAA58372956C0E800C8EE01 /* EventFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EFAA58362956C0E800C8EE01 /* EventFeature */; };
 		EFAF6BC429577A6D002122B4 /* FirebaseServiceImpl in Frameworks */ = {isa = PBXBuildFile; productRef = EFAF6BC329577A6D002122B4 /* FirebaseServiceImpl */; };
 		EFAF6BC629577ADE002122B4 /* FirebaseServiceImpl in Frameworks */ = {isa = PBXBuildFile; productRef = EFAF6BC529577ADE002122B4 /* FirebaseServiceImpl */; };
 		EFB2B4822956DBAF00B3FA13 /* FestivlAppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EFB2B4812956DBAF00B3FA13 /* FestivlAppFeature */; };
-		EFF6F49F2882640A0017EED1 /* FestivlWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = EFF6F49A288264090017EED1 /* FestivlWidget.intentdefinition */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -56,26 +48,20 @@
 		20CB41282814F46A00D4F860 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		20CB412A2816062900D4F860 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		EF22578028878F800053202D /* Festivl.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Festivl.entitlements; sourceTree = "<group>"; };
-		EF22578128878F970053202D /* FestivlWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FestivlWidgetExtension.entitlements; sourceTree = "<group>"; };
 		EF26A0B027D855CB00E10A71 /* FestivlManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FestivlManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF26A0C027D85F5B00E10A71 /* FestivlApp */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FestivlApp; sourceTree = "<group>"; };
 		EF479E4F27B629690075D7E2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EF4EC4482950274B00B82B94 /* Launchpad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Launchpad.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		EF4EC44A2950274B00B82B94 /* LaunchpadApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchpadApp.swift; sourceTree = "<group>"; };
-		EF4EC44C2950274B00B82B94 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		EF4EC44E2950274C00B82B94 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		EF4EC4512950274C00B82B94 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		EF692E6827B4CA48006F8E0D /* Festivl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Festivl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivlApp.swift; sourceTree = "<group>"; };
 		EF692E6F27B4CA49006F8E0D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EF692E7227B4CA49006F8E0D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+<<<<<<< Updated upstream
+=======
+		EF92B83629A93E4E00815DF3 /* FestivlManageriOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FestivlManageriOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+>>>>>>> Stashed changes
 		EFF6F493288264090017EED1 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		EFF6F495288264090017EED1 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
-		EFF6F498288264090017EED1 /* WidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetView.swift; sourceTree = "<group>"; };
-		EFF6F49A288264090017EED1 /* FestivlWidget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = FestivlWidget.intentdefinition; sourceTree = "<group>"; };
-		EFF6F49B2882640A0017EED1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		EFF6F49D2882640A0017EED1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EFF6F4A7288264BC0017EED1 /* Provider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,36 +141,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		EF4EC4492950274B00B82B94 /* Launchpad */ = {
-			isa = PBXGroup;
-			children = (
-				EF4EC44A2950274B00B82B94 /* LaunchpadApp.swift */,
-				EF4EC44C2950274B00B82B94 /* ContentView.swift */,
-				EF4EC44E2950274C00B82B94 /* Assets.xcassets */,
-				EF4EC4502950274C00B82B94 /* Preview Content */,
-			);
-			path = Launchpad;
-			sourceTree = "<group>";
-		};
-		EF4EC4502950274C00B82B94 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				EF4EC4512950274C00B82B94 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
 		EF692E5F27B4CA48006F8E0D = {
 			isa = PBXGroup;
 			children = (
+<<<<<<< Updated upstream
 				EF22578128878F970053202D /* FestivlWidgetExtension.entitlements */,
+=======
+>>>>>>> Stashed changes
 				EF26A0C027D85F5B00E10A71 /* FestivlApp */,
-				EF92B83129A93E2200815DF3 /* FestivlManageriOSLibrary */,
 				EF692E6A27B4CA48006F8E0D /* Festivl */,
 				20CB41152814F3EF00D4F860 /* WickedWoods */,
-				EFF6F497288264090017EED1 /* FestivlWidget */,
-				EF4EC4492950274B00B82B94 /* Launchpad */,
-				EF92B83729A93E4E00815DF3 /* FestivlManageriOS */,
 				EF692E6927B4CA48006F8E0D /* Products */,
 				EF479E4C27B6108C0075D7E2 /* Frameworks */,
 			);
@@ -221,28 +187,6 @@
 				EF692E7227B4CA49006F8E0D /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		EF92B83729A93E4E00815DF3 /* FestivlManageriOS */ = {
-			isa = PBXGroup;
-			children = (
-				EF92B83829A93E4E00815DF3 /* FestivlManageriOSApp.swift */,
-				EF92B83A29A93E4E00815DF3 /* ContentView.swift */,
-				EF92B83C29A93E4F00815DF3 /* Assets.xcassets */,
-			);
-			path = FestivlManageriOS;
-			sourceTree = "<group>";
-		};
-		EFF6F497288264090017EED1 /* FestivlWidget */ = {
-			isa = PBXGroup;
-			children = (
-				EFF6F498288264090017EED1 /* WidgetView.swift */,
-				EFF6F4A7288264BC0017EED1 /* Provider.swift */,
-				EFF6F49A288264090017EED1 /* FestivlWidget.intentdefinition */,
-				EFF6F49B2882640A0017EED1 /* Assets.xcassets */,
-				EFF6F49D2882640A0017EED1 /* Info.plist */,
-			);
-			path = FestivlWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -426,8 +370,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF4EC4522950274C00B82B94 /* Preview Assets.xcassets in Resources */,
-				EF4EC44F2950274C00B82B94 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -445,7 +387,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF92B83D29A93E4F00815DF3 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -471,8 +412,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF4EC44D2950274B00B82B94 /* ContentView.swift in Sources */,
-				EF4EC44B2950274B00B82B94 /* LaunchpadApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -480,7 +419,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EFF6F49F2882640A0017EED1 /* FestivlWidget.intentdefinition in Sources */,
 				EF692E6C27B4CA48006F8E0D /* FestivlApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -489,8 +427,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF92B83B29A93E4E00815DF3 /* ContentView.swift in Sources */,
-				EF92B83929A93E4E00815DF3 /* FestivlManageriOSApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

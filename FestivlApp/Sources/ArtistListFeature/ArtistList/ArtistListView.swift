@@ -19,6 +19,13 @@ public struct ArtistListView: View {
         self.store = store
     }
     
+    
+    struct ViewState: Equatable {
+        var schedule: Schedule?
+        var event: Event?
+        var states: IdentifiedArrayOf<Stage>
+    }
+    
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {

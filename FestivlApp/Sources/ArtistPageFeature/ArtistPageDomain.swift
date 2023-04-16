@@ -11,12 +11,15 @@ import IdentifiedCollections
 import Utilities
 import FestivlDependencies
 import Combine
-
+import Tagged
+import ShowScheduleItemDependency
 
 public struct ArtistPage: ReducerProtocol {
     @Dependency(\.eventID) var eventID
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.userFavoritesClient) var userFavoritesClient
+    
+    @Dependency(\.showScheduleItem) var showScheduleItem
     
     public init() {}
     
@@ -51,7 +54,9 @@ public struct ArtistPage: ReducerProtocol {
     
     public func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
         switch action {
-        case .didTapScheduleItem:
+        case .didTapScheduleItem(let scheduleItem):
+            
+            showScheduleItem(scheduleItem)
             return .none
             
         case .favoriteArtistButtonTapped:

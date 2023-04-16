@@ -17,6 +17,8 @@ import ArtistListFeature
 import ExploreFeature
 import MoreFeature
 
+import ShowScheduleItemDependency
+
 import ComposableUserNotifications
 import FestivlDependencies
 import Components
@@ -28,6 +30,8 @@ public struct EventFeature: ReducerProtocol {
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.userNotifications) var userNotifications
     
+    @Dependency(\.showScheduleItem) var showScheduleItem
+    
     public struct State: Equatable {
         var selectedTab: Tab = .schedule
         
@@ -38,7 +42,6 @@ public struct EventFeature: ReducerProtocol {
         
         var eventData: EventData?
         
-
         public init() {}
     }
     
@@ -47,9 +50,9 @@ public struct EventFeature: ReducerProtocol {
         
         case didSelectTab(Tab)
         
-        case subscribeToEventData
-        case subscribeToNotificationsDelegate
         case setUpWhenDataLoaded(EventData)
+        
+        case showScheduleItem(ScheduleItem)
         
         case artistListAction(ArtistListFeature.Action)
         case scheduleAction(ScheduleLoadingFeature.Action)
@@ -63,45 +66,42 @@ public struct EventFeature: ReducerProtocol {
         Reduce<State, Action> { state, action in
             switch action {
             case .task:
-                
-                return .run { send in
-                    await send(.subscribeToEventData)
-                    await send(.subscribeToNotificationsDelegate)
-                }
+                return .merge(
+                    .run { send in
+                        for try await data in eventDataClient.getData(eventID.value).values {
+                            await send(.setUpWhenDataLoaded(data))
+                        }
+                    },
+                    
+                    .run { send in
+                        for await event in userNotifications.delegate() {
+                            await send(.userNotification(event))
+                        }
+                    },
+
+                    .run { send in
+                        for await scheduleItemToShow in showScheduleItem.items().values {
+                            await send(.showScheduleItem(scheduleItemToShow))
+                        }
+                    }
+                )
                 
             case .didSelectTab(let tab):
                 state.selectedTab = tab
                 return .none
                 
-            case .subscribeToNotificationsDelegate:
-                return .run { send in
-                    for await event in userNotifications.delegate() {
-                        await send(.userNotification(event))
-                    }
-                }
-
-            case .subscribeToEventData:
-                return .run { send in
-                    for try await data in eventDataClient.getData(eventID.value).values {
-                        await send(.setUpWhenDataLoaded(data))
-                    }
-                }
-
-            case .artistListAction(.artistDetail(_, .didTapScheduleItem(let scheduleItem))),
-                    .exploreAction(.artistDetail(_, .didTapScheduleItem(let scheduleItem))), .scheduleAction(.scheduleAction(.groupSetDetailAction(.artistDetailAction(id: _, .didTapScheduleItem(let scheduleItem))))):
+            case .showScheduleItem(let scheduleItem):
                 state.selectedTab = .schedule
                 
-                return .task { .scheduleAction(.scheduleAction(.showAndHighlightCard(scheduleItem)))
-                }
+                return .task { .scheduleAction(.scheduleAction(.showAndHighlightCard(scheduleItem))) }
 
             case .setUpWhenDataLoaded(let data):
                 state.eventData = data
                 NSTimeZone.default = data.event.timeZone
-                print("TIMEZONE", NSTimeZone.default)
                 
                 return .fireAndForget {
                     async let _ = await ImageCacher.preFetchImage(urls: data.artists.compactMap { $0.imageURL })
-                    async let _ = await ImageCacher.preFetchImage(urls: data.stages.compactMap{ $0.iconImageURL })
+                    async let _ = await ImageCacher.preFetchImage(urls: data.stages.compactMap { $0.iconImageURL })
                 }
                 
             case let .userNotification(.willPresentNotification(_, completion)):
