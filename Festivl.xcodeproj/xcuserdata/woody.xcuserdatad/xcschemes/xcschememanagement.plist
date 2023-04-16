@@ -222,7 +222,7 @@
 		<key>FestivlManager.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<key>FestivlManageriOS.xcscheme_^#shared#^_</key>
 		<dict>
@@ -232,7 +232,7 @@
 		<key>Launchpad.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>5</integer>
+			<integer>33</integer>
 		</dict>
 		<key>Promises (Playground) 1.xcscheme</key>
 		<dict>
