@@ -222,11 +222,7 @@
 		<key>FestivlManager.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-<<<<<<< Updated upstream
-			<integer>2</integer>
-=======
 			<integer>3</integer>
->>>>>>> Stashed changes
 		</dict>
 		<key>FestivlManageriOS.xcscheme_^#shared#^_</key>
 		<dict>
@@ -236,11 +232,7 @@
 		<key>Launchpad.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-<<<<<<< Updated upstream
-			<integer>33</integer>
-=======
 			<integer>28</integer>
->>>>>>> Stashed changes
 		</dict>
 		<key>Promises (Playground) 1.xcscheme</key>
 		<dict>
@@ -497,11 +489,7 @@
 		<key>WickedWoods.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-<<<<<<< Updated upstream
-			<integer>3</integer>
-=======
 			<integer>6</integer>
->>>>>>> Stashed changes
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
