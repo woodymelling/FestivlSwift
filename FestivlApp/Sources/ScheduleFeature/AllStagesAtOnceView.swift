@@ -12,7 +12,7 @@ import Components
 import Utilities
 
 struct AllStagesAtOnceView: View {
-    let store: Store<ScheduleState, ScheduleAction>
+    let store: StoreOf<ScheduleFeature>
 
     var body: some View {
         WithViewStore(store) { viewStore in
@@ -42,8 +42,8 @@ struct StagesIndicatorView: View {
     }
 }
 
-struct AllStagesAtOnceView_Previews: PreviewProvider {
-    static var previews: some View {
-        AllStagesAtOnceView(store: .testStore)
-    }
-}
+//struct AllStagesAtOnceView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        AllStagesAtOnceView(store: .testStore)
+//    }
+//}

@@ -12,10 +12,10 @@ import EventFeature
 
 
 public struct AppView: View {
-    let store: Store<AppState, AppAction>
+    let store: StoreOf<AppFeature>
 
 
-    public init(store: Store<AppState, AppAction>) {
+    public init(store: StoreOf<AppFeature>) {
         self.store = store
     }
 
@@ -23,15 +23,15 @@ public struct AppView: View {
         WithViewStore(store) { viewStore in
             IfLetStore(
                 store.scope(
-                    state: \AppState.eventState,
-                    action: AppAction.eventAction
+                    state: \AppFeature.State.eventState,
+                    action: AppFeature.Action.eventAction
                 ),
-                then: EventLoadingView.init(store:),
+                then: EventView.init(store:),
                 else: {
                     EventListView(
                         store: store.scope(
-                            state: \AppState.eventListState,
-                            action: AppAction.eventListAction
+                            state: \AppFeature.State.eventListState,
+                            action: AppFeature.Action.eventListAction
                         )
                     )
                 }
@@ -45,11 +45,7 @@ struct AppView_Previews: PreviewProvider {
     static var previews: some View {
         ForEach(ColorScheme.allCases.reversed(), id: \.self) {
             AppView(
-                store: .init(
-                    initialState: AppState(isTestMode: true),
-                    reducer: appReducer,
-                    environment: .init()
-                )
+                store: .init(initialState: .init(), reducer: AppFeature())
             )
             .preferredColorScheme($0)
         }

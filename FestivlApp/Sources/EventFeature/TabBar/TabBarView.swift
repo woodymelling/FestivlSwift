@@ -13,69 +13,62 @@ import ScheduleFeature
 import ExploreFeature
 import MoreFeature
 
+public enum Tab {
+    case schedule, artists, explore, more
+}
+
 public struct TabBarView: View {
 
-    let store: Store<EventState, TabBarAction>
+    let store: StoreOf<EventFeature>
 
-    public init(store: Store<EventState, TabBarAction>) {
+    public init(store: StoreOf<EventFeature>) {
         self.store = store
+    }
+    
+    struct ViewState: Equatable {
+        var selectedTab: Tab
+        
+        init(state: EventFeature.State) {
+            selectedTab = state.selectedTab
+        }
     }
 
     public var body: some View {
-        WithViewStore(store) { viewStore in
-            TabView(selection: viewStore.binding(\.$selectedTab)) {
-
-                ScheduleView(store: store.scope(state: \.scheduleState, action: TabBarAction.scheduleAction))
+        WithViewStore(store, observe: ViewState.init) { viewStore in
+            TabView(
+                selection: viewStore.binding(
+                     get: \.selectedTab,
+                     send: EventFeature.Action.didSelectTab
+                )
+            ) {
+                ScheduleLoadingView(store: store.scope(state: \.scheduleState, action: EventFeature.Action.scheduleAction))
                     .tabItem {
                         Label("Schedule", systemImage: "calendar")
                     }
                     .tag(Tab.schedule)
 
-                ArtistListView(store: store.scope(state: \.artistListState, action: TabBarAction.artistListAction))
+                ArtistListView(store: store.scope(state: \.artistListState, action: EventFeature.Action.artistListAction))
                     .tabItem {
                         Label("Artists", systemImage: "person.3")
                     }
                     .tag(Tab.artists)
                 
-                if !viewStore.exploreArtists.isEmpty {
-                    ExploreView(store: store.scope(state: \.exploreState, action: TabBarAction.exploreAction))
-                        .tabItem {
-                            // TODO: Get better icon
-                            Label("Explore", systemImage: "barometer")
-                        }
-                        .tag(Tab.explore)
-                }
-
-
-                MoreView(store: store.scope(state: \.moreState, action: TabBarAction.moreAction))
+                ExploreView(store: store.scope(state: \.exploreState, action: EventFeature.Action.exploreAction))
                     .tabItem {
-                        Label("More", systemImage: "ellipsis")
+                        // TODO: Get better icon
+                        Label("Explore", systemImage: "barometer")
                     }
-                    .tag(Tab.more)
+                    .tag(Tab.explore)
+
+
+                NavigationView {
+                    MoreView(store: store.scope(state: \.moreState, action: EventFeature.Action.moreAction))
+                }
+                .tabItem {
+                    Label("More", systemImage: "ellipsis")
+                }
+                .tag(Tab.more)
             }
         }
     }
 }
-//
-//struct TabBarView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        TabBarView(
-//            store: .init(
-//                initialState: .init(
-//                    event: .testData,
-//                    artists: Artist.testValues.asIdentifedArray,
-//                    stages: Stage.testValues.asIdentifedArray,
-//                    artistSets: ArtistSet.testValues().asIdentifedArray,
-//                    selectedTab: .schedule,
-//                    artistsListSearchText: "",
-//                    scheduleSelectedStage: Stage.testValues[0],
-//                    scheduleZoomAmount: 1,
-//                    scheduleSelectedDate: Event.testData.startDate,
-//                    scheduleScrollAmount: .zero
-//                ),
-//                reducer: tabBarReducer,
-//                environment: TabBarEnvironment()
-//            )
-//        )
-//    }
-//}

@@ -9,32 +9,19 @@ import SwiftUI
 import ComposableArchitecture
 import Models
 import Utilities
+import Components
 
 public struct EventView: View {
-    let store: Store<EventState, EventAction>
+    let store: StoreOf<EventFeature>
 
-    public init(store: Store<EventState, EventAction>) {
+    public init(store: StoreOf<EventFeature>) {
         self.store = store
     }
 
-    @AppStorage("favoriteArtists") var favoriteArtists: Data = .init()
-
-
     public var body: some View {
-        WithViewStore(store) { viewStore in
-
-            Group {
-                if viewStore.eventLoaded {
-                    TabBarView(store: store.scope(state: \.tabBarState, action: EventAction.tabBarAction))
-                } else {
-                    LoadingView(event: viewStore.event)
-                }
-
-            }
-            .onAppear { viewStore.send(.onAppear) }
-            .onChange(of: viewStore.favoriteArtists, perform: { _ in
-                print("CHANGED FAVORITE ARTISTS")
-            })
+        WithViewStore(store, observe: Blank.init) { viewStore in
+            TabBarView(store: store)
+                .task { await viewStore.send(.task).finish() }
         }
     }
 }
@@ -70,15 +57,11 @@ struct LoadingView: View {
 
 struct EventView_Previews: PreviewProvider {
     static var previews: some View {
-        ForEach(ColorScheme.allCases.reversed(), id: \.self) {
-            EventView(
-                store: .init(
-                    initialState: .init(event: .testData, isTestMode: true, isEventSpecificApplication: false),
-                    reducer: eventReducer,
-                    environment: .init()
-                )
+        EventView(
+            store: .init(
+                initialState: .init(),
+                reducer: EventFeature()
             )
-            .preferredColorScheme($0)
-        }
+        )
     }
 }

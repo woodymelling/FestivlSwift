@@ -13,7 +13,7 @@ import SimultaneouslyScrollView
 import Combine
 
 struct ScheduleScrollView: View {
-    let store: Store<ScheduleState, ScheduleAction>
+    let store: StoreOf<ScheduleFeature>
     let style: ScheduleStyle
 
     @ObservedObject var scrollViewHandler: SingleStageAtOnceView.ViewModel
@@ -32,7 +32,7 @@ struct ScheduleScrollView: View {
                             HStack {
                                 ScheduleHourLabelsView(
                                     dayStartsAtNoon: viewStore.event.dayStartsAtNoon,
-                                    currentTime: viewStore.currentTime, shouldHideTime: viewStore.shouldShowTimeIndicator
+                                    shouldHideTime: viewStore.shouldShowTimeIndicator
                                 )
                                 .frame(height: scheduleHeight * viewStore.zoomAmount)
 
@@ -81,9 +81,9 @@ struct ScheduleScrollView: View {
 }
 
 var scrollViewCancellables = Set<AnyCancellable>()
-
-struct ScheduleScrollView_Previews: PreviewProvider {
-    static var previews: some View {
-        ScheduleScrollView(store: .testStore, style: .allStages, scrollViewHandler: .init())
-    }
-}
+//
+//struct ScheduleScrollView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ScheduleScrollView(store: .testStore, style: .allStages, scrollViewHandler: .init())
+//    }
+//}

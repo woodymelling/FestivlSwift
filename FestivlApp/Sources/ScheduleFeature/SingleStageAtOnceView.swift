@@ -12,13 +12,13 @@ import Models
 import SimultaneouslyScrollView
 
 public struct SingleStageAtOnceView: View {
-    let store: Store<ScheduleState, ScheduleAction>
+    let store: StoreOf<ScheduleFeature>
 
     @StateObject var scrollViewModel: ViewModel = .init()
 
     @State private var headerHeight: CGFloat = 0
 
-    public init(store: Store<ScheduleState, ScheduleAction>) {
+    public init(store: StoreOf<ScheduleFeature>) {
         self.store = store
     }
 
@@ -75,13 +75,13 @@ public struct SingleStageAtOnceView: View {
 
 
 
-struct SingleStageAtOnceView_Previews: PreviewProvider {
-    static var previews: some View {
-        SingleStageAtOnceView(
-            store: .testStore
-        )
-        .previewAllColorModes()
-//        .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
-    }
-
-}
+//struct SingleStageAtOnceView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SingleStageAtOnceView(
+//            store: .testStore
+//        )
+//        .previewAllColorModes()
+////        .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
+//    }
+//
+//}

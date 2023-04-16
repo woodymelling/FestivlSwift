@@ -8,63 +8,80 @@
 import SwiftUI
 import ComposableArchitecture
 import Models
-import Introspect
+import Utilities
+//import Introspect
+
 
 public struct ArtistPageView: View {
-    let store: Store<ArtistPageState, ArtistPageAction>
+    let store: StoreOf<ArtistPage>
 
-    public init(store: Store<ArtistPageState, ArtistPageAction>) {
+    public init(store: StoreOf<ArtistPage>) {
         self.store = store
     }
 
+    // TODO: Move to Reducer when doing navigation updates
     @State var navigatingURL: URL?
 
     public var body: some View {
         WithViewStore(store) { viewStore in
-
-            VStack {
-                ArtistHeaderView(artist: viewStore.artist, event: viewStore.event)
-
-                List {
-                    ForEach(viewStore.sets) { scheduleSet in
-                        Button(action: {
-                            viewStore.send(.didTapArtistSet(scheduleSet))
-                        }, label: {
-                            SetView(
-                                set: scheduleSet,
-                                stages: viewStore.stages
-                            )
-                        })
-                    }
-
-                    if let description = viewStore.artist.description, !description.isEmpty {
-                        Text(description)
-                    }
-
-                    if let urlString = viewStore.artist.soundcloudURL, let url = URL(string: urlString) {
-                        ArtistLinkView(linkType: .soundcloud) {
-                            navigatingURL = url
+            Group {
+                if let artist = viewStore.artist,
+                   let event = viewStore.event,
+                   let schedule = viewStore.schedule,
+                   let stages = viewStore.stages {
+                    VStack {
+                        ArtistHeaderView(artist: artist, event: event)
+                        
+                        List {
+                            ForEach(
+                                schedule[artistID: viewStore.artistID].sortedByStartTime
+                            ) { scheduleItem in
+                                Button {
+                                    viewStore.send(.didTapScheduleItem(scheduleItem))
+                                } label: {
+                                    SetView(
+                                        set: scheduleItem,
+                                        stages: stages
+                                    )
+                                }
+                            }
+                            
+                            if let description = artist.description, !description.isEmpty {
+                                Text(description)
+                            }
+                            
+                            if let urlString = artist.soundcloudURL, let url = URL(string: urlString) {
+                                ArtistLinkView(linkType: .soundcloud) {
+                                    navigatingURL = url
+                                }
+                            }
+                            
+                            if let urlString = artist.spotifyURL, let url = URL(string: urlString) {
+                                ArtistLinkView(linkType: .spotify) {
+                                    navigatingURL = url
+                                }
+                            }
+                            
+                            if let urlString = artist.websiteURL, let url = URL(string: urlString) {
+                                ArtistLinkView(linkType: .website) {
+                                    navigatingURL = url
+                                }
+                            }
                         }
+                        .listStyle(.plain)
+                        .ignoresSafeArea(.all, edges: [.leading,.trailing,.top])
                     }
-
-                    if let urlString = viewStore.artist.spotifyURL, let url = URL(string: urlString) {
-                        ArtistLinkView(linkType: .spotify) {
-                            navigatingURL = url
-                        }
-                    }
-
-                    if let urlString = viewStore.artist.websiteURL, let url = URL(string: urlString) {
-                        ArtistLinkView(linkType: .website) {
-                            navigatingURL = url
-                        }
-                    }
+                    .clipped()
+                    .edgesIgnoringSafeArea(.top)
+                    .toolbar(content: { toolbar(viewStore: viewStore) })
+                    
+                } else {
+                    
+                    ProgressView()
                 }
-                .listStyle(.plain)
-                .ignoresSafeArea(.all, edges: [.leading,.trailing,.top])
             }
-            .clipped()
-            .edgesIgnoringSafeArea(.top)
-            .toolbar(content: { toolbar(viewStore: viewStore) })
+            .task { await viewStore.send(.task).finish() }
+                
         }
         .sheet(isPresented: $navigatingURL.isPresent(), content: {
             if let navigatingURL = navigatingURL {
@@ -77,12 +94,10 @@ public struct ArtistPageView: View {
     }
 
     @ToolbarContentBuilder
-    func toolbar(viewStore: ViewStore<ArtistPageState, ArtistPageAction>) -> some ToolbarContent {
+    func toolbar(viewStore: ViewStore<ArtistPage.State, ArtistPage.Action>) -> some ToolbarContent {
         ToolbarItem(placement: .primaryAction, content: {
-
-
             Button(action: {
-                viewStore.send(ArtistPageAction.favoriteArtistButtonTapped)
+                viewStore.send(ArtistPage.Action.favoriteArtistButtonTapped)
             }, label: {
                 Group {
                     if viewStore.isFavorite {
@@ -110,23 +125,6 @@ public struct ArtistPageView: View {
 
 import SafariServices
 
-extension Binding {
-    public func isPresent<Wrapped>() -> Binding<Bool>
-      where Value == Wrapped? {
-        .init(
-          get: {
-              self.wrappedValue != nil
-
-          },
-          set: { isPresent, transaction in
-            if !isPresent {
-              self.transaction(transaction).wrappedValue = nil
-            }
-          }
-        )
-      }
-}
-
 struct SafariView: UIViewControllerRepresentable {
 
     let url: URL
@@ -144,18 +142,11 @@ struct SafariView: UIViewControllerRepresentable {
 
 struct ArtistPageView_Previews: PreviewProvider {
     static var previews: some View {
-        ForEach(ColorScheme.allCases.reversed(), id: \.self) {
-            NavigationView {
-                ArtistPageView(
-                    store: .init(
-                        initialState: .init(artist: Artist.testValues[1], event: .testData, setsForArtist: [ArtistSet.testData.asScheduleItem()], stages: IdentifiedArrayOf(uniqueElements: [.testData]), isFavorite: false),
-                        reducer: artistPageReducer,
-                        environment: .init()
-                    )
-                )
-                
-            }
-            .preferredColorScheme($0)
-        }
+        ArtistPageView(
+            store: .init(
+                initialState: .init(artistID: .init(""), isFavorite: false),
+                reducer: ArtistPage()
+            )
+        )
     }
 }

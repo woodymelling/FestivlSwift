@@ -10,9 +10,9 @@ import ComposableArchitecture
 import Models
 
 public struct NotificationsView: View {
-    let store: Store<NotificationsState, NotificationsAction>
+    let store: StoreOf<NotificationsFeature>
 
-    public init(store: Store<NotificationsState, NotificationsAction>) {
+    public init(store: StoreOf<NotificationsFeature>) {
         self.store = store
     }
 
@@ -46,20 +46,14 @@ public struct NotificationsView: View {
                 }
 
 
-                if viewStore.isTestMode {
+                if viewStore.currentEnvironment == .test {
                     Section("Testing") {
                         Button("Send notifications now", action: {
-                            viewStore.send(.regenerateNotifications(sendNow: true))
+                            viewStore.send(.didTapSendNotificationsButton)
                         })
                     }
                 }
             }
-            .onAppear {
-                viewStore.send(.registerForNotifications)
-            }
-            .onChange(of: viewStore.favoriteArtists, perform: { _ in
-                viewStore.send(.regenerateNotifications())
-            })
             .navigationTitle("Notifications")
             .alert(
                 "Enable notifications in Settings to receive alerts for artists",
@@ -74,30 +68,32 @@ public struct NotificationsView: View {
                     Button("Cancel", role: .cancel) { }
                 }
             )
+            .task { await viewStore.send(.task).finish() }
         }
     }
 }
 
-struct NotificationsView_Previews: PreviewProvider {
-    static var previews: some View {
-        ForEach(ColorScheme.allCases.reversed(), id: \.self) {
-            NavigationView {
-                NotificationsView(
-                    store: .init(
-                        initialState: .init(
-                            favoriteArtists: .init(),
-                            schedule: .init(),
-                            artists: Artist.testValues.asIdentifedArray,
-                            stages: Stage.testValues.asIdentifedArray,
-                            isTestMode: true,
-                            notificationsEnabled: false,
-                            notificationTimeBeforeSet: 15, showingNavigateToSettingsAlert: false),
-                        reducer: notificationsReducer,
-                        environment: .init()
-                    )
-                )
-            }
-            .preferredColorScheme($0)
-        }
-    }
-}
+//struct NotificationsView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ForEach(ColorScheme.allCases.reversed(), id: \.self) {
+//            NavigationView {
+//                NotificationsView(
+//                    store: .init(
+//                        initialState: .init(
+//                            favoriteArtists: .init(),
+//                            schedule: .init(),
+//                            artists: Artist.testValues.asIdentifedArray,
+//                            stages: Stage.testValues.asIdentifedArray,
+//                            isTestMode: true,
+//                            notificationsEnabled: false,
+//                            notificationTimeBeforeSet: 15,
+//                            showingNavigateToSettingsAlert: false
+//                        ),
+//                        reducer: NotificationsFeature()
+//                    )
+//                )
+//            }
+//            .preferredColorScheme($0)
+//        }
+//    }
+//}

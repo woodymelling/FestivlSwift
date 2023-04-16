@@ -7,9 +7,9 @@
 
 import SwiftUI
 import ComposableArchitecture
-import Services
 import Models
 import Utilities
+import Components
 
 extension Event: Searchable {
     public var searchTerms: [String] {
@@ -17,41 +17,32 @@ extension Event: Searchable {
     }
 }
 
-
 public struct EventListView: View {
-    let store: Store<EventListState, EventListAction>
+    let store: StoreOf<EventList>
 
-    public init(store: Store<EventListState, EventListAction>) {
+    public init(store: StoreOf<EventList>) {
         self.store = store
     }
 
     public var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
-                Group {
-                    if viewStore.events.isEmpty {
-                        ProgressView()
-                    } else {
-                        List {
-                            ForEach(viewStore.events.filterForSearchTerm(viewStore.searchText)) { event in
-                                Button(action: { viewStore.send(.selectedEvent(event))
-
-                                }, label: {
-                                    EventRowView(event: event)
-                                })
-                            }
-                        }
-                        .listStyle(.plain)
-                        .searchable(text: viewStore.binding(\.$searchText))
+                SimpleSearchableList(
+                    data: viewStore.eventsWithTestMode,
+                    searchText: viewStore.binding(\.$searchText),
+                    isLoading: viewStore.isLoading
+                ) { event in
+                    Button {
+                        viewStore.send(.selectedEvent(event))
+                    } label: {
+                        EventRowView(event: event)
                     }
                 }
+                .listStyle(.plain)
                 .navigationTitle("Events")
             }
-            #if os(iOS)
-            .navigationViewStyle(.stack)
-            #endif
-            .onAppear {
-                viewStore.send(.subscribeToEvents)
+            .task {
+                await viewStore.send(.task).finish()
             }
         }
     }
@@ -59,19 +50,11 @@ public struct EventListView: View {
 
 struct EventListView_Previews: PreviewProvider {
     static var previews: some View {
-        ForEach(ColorScheme.allCases.reversed(), id: \.self) {
-            EventListView(
-                store: .init(
-                    initialState: .init(),
-                    reducer: eventListReducer,
-                    environment: .init(
-                        eventListService: {
-                            EventListMockService()
-                        }
-                    )
-                )
+        EventListView(
+            store: .init(
+                initialState: .init(),
+                reducer: EventList()
             )
-            .preferredColorScheme($0)
-        }
+        )
     }
 }

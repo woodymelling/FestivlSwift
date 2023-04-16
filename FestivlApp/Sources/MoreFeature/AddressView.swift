@@ -6,54 +6,90 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
+
+public struct AddressFeature: ReducerProtocol {
+    
+    @Dependency(\.openURL) var openURL
+    
+    public struct State: Equatable {
+        var address: String
+        var latitude: String
+        var longitude: String
+    }
+    
+    public enum Action {
+        case didTapOpenInAppleMaps
+        case didTapOpenInGoogleMaps
+    }
+    
+    public func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
+        switch action {
+        case .didTapOpenInAppleMaps:
+            guard let url = URL(string: "http://maps.apple.com/?daddr=\(state.latitude),\(state.longitude)") else { return .none }
+            
+            return .fireAndForget {
+                _ = await openURL(url)
+            }
+            
+        case .didTapOpenInGoogleMaps:
+            guard let url = URL(string: "https://www.google.com/maps/?q=\(state.latitude),\(state.longitude)") else { return .none }
+            
+            return .fireAndForget {
+                _ = await openURL(url)
+            }
+        }
+    }
+}
 
 struct AddressView: View {
-    var address: String
-    var latitude: String
-    var longitude: String
+    let store: StoreOf<AddressFeature>
     
     var body: some View {
-        List {
-            Text(address)
-                .font(.headline)
-                .textSelection(.enabled)
-
-            Button(action: {
-                if let url = URL(string: "http://maps.apple.com/?daddr=\(latitude),\(longitude)") {
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            List {
+                Text(viewStore.address)
+                    .font(.headline)
+                    .textSelection(.enabled)
+                
+                Button { viewStore.send(.didTapOpenInAppleMaps) } label: {
+                    Label {
+                        Text("Open in Apple Maps")
+                    } icon: {
+                        Image("apple-maps", bundle: .module)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                    }
                 }
-            }, label: {
-                Label(title: { Text("Open in Apple Maps") }, icon: {
-                    Image("apple-maps", bundle: .module)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                })
-            })
-
-            
-            Button(action: {
-                if let url = URL(string: "https://www.google.com/maps/?q=\(latitude),\(longitude)") {
-                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                
+                
+                Button { viewStore.send(.didTapOpenInGoogleMaps) } label: {
+                    Label {
+                        Text("Open in Google Maps")
+                        
+                    } icon: {
+                        Image("google-maps", bundle: .module)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                    }
                 }
-            }, label: {
-                Label(title: { Text("Open in Google Maps") }, icon: {
-                    Image("google-maps", bundle: .module)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                })
-            })
+            }
+            .navigationTitle("Address")
         }
-        .navigationTitle("Address")
-
     }
 }
 
 struct AddressView_Previews: PreviewProvider {
     static var previews: some View {
         AddressView(
-            address: "3901 Kootenay Hwy, Fairmont Hot Springs, BC V0B 1L1, Canada",
-            latitude: "",
-            longitude: ""
+            store: Store(
+                initialState: .init(
+                    address: "3901 Kootenay Hwy, Fairmont Hot Springs, BC V0B 1L1, Canada",
+                    latitude: "",
+                    longitude: ""
+                ),
+                reducer: AddressFeature()
+            )
         )
     }
 }

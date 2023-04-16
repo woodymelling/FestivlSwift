@@ -11,52 +11,70 @@ import ComposableArchitecture
 import Utilities
 
 
-
-struct ContactInfoView: View {
-    var contactNumbers: IdentifiedArrayOf<ContactNumber>
-
-    private func callNumber(phoneNumber: String) {
-        guard let url = URL(string: "tel:\(phoneNumber)"),
-            UIApplication.shared.canOpenURL(url) else {
-            return
-        }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+public struct ContactInfoFeature: ReducerProtocol {
+    @Dependency(\.openURL) var openURL
+    
+    public struct State: Equatable {
+        var contactNumbers: IdentifiedArrayOf<ContactNumber>
     }
-
-    var body: some View {
-        List {
-            ForEach(contactNumbers) { contactNumber in
-                Button {
-                    callNumber(phoneNumber: contactNumber.phoneNumber)
-                } label: {
-
-                    HStack {
-
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(contactNumber.title)
-                                .font(.headline)
-                            Text(contactNumber.phoneNumber.asPhoneNumber)
-                                .textSelection(.enabled)
-
-                            Text(contactNumber.description)
-                                .font(.caption)
-                        }
-                        Spacer()
-
-                        Image(systemName: "phone.fill")
-                            .resizable()
-                            .frame(square: 20)
-                            .foregroundColor(.accentColor)
-
-                    }
-                    .padding()
-
-                }
-                .buttonStyle(.plain)
-
+    
+    public enum Action {
+        case didTapContactNumber(ContactNumber)
+    }
+    
+    public func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
+        switch action {
+        case let .didTapContactNumber(contactNumber):
+            guard let url = URL(string: "tel:\(contactNumber.phoneNumber)") else { return .none }
+            
+            return .fireAndForget {
+                _ = await openURL(url)
             }
         }
-        .navigationTitle("Contact Info")
+    }
+}
+
+struct ContactInfoView: View {
+    let store: StoreOf<ContactInfoFeature>
+
+    var body: some View {
+        
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            List {
+                ForEach(viewStore.contactNumbers) { contactNumber in
+                    Button {
+                        viewStore.send(.didTapContactNumber(contactNumber))
+                    } label: {
+                        
+                        HStack {
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(contactNumber.title)
+                                    .font(.headline)
+                                Text(contactNumber.phoneNumber.asPhoneNumber)
+                                    .textSelection(.enabled)
+                                
+                                Text(contactNumber.description)
+                                    .font(.caption)
+                            }
+                            
+                            Spacer()
+                            
+                            Image(systemName: "phone.fill")
+                                .resizable()
+                                .frame(square: 20)
+                                .foregroundColor(.accentColor)
+                            
+                        }
+                        .padding()
+                        
+                    }
+                    .buttonStyle(.plain)
+                    
+                }
+            }
+            .navigationTitle("Contact Info")
+        }
     }
 }
 
@@ -80,14 +98,29 @@ extension String {
 
 struct ContactInfoView_Previews: PreviewProvider {
     static var previews: some View {
+        
         NavigationView {
-            ContactInfoView(contactNumbers: .init(uniqueElements: [
-                .init(title: "Emergency Services", phoneNumber: "5555551234", description: "This will connect you directly with our switchboard, and alert the appropriate services."),
-                .init(title: "General Information Line", phoneNumber: "5555554321", description: "For general information, questions or concerns, or to report any sanitation issues within the WW grounds, please contact this number.")
-            ]))
+            ContactInfoView(
+                store: .init(
+                    initialState: ContactInfoFeature.State(
+                        contactNumbers: .init(
+                            uniqueElements: [
+                                .init(
+                                    title: "Emergency Services",
+                                    phoneNumber: "5555551234",
+                                    description: "This will connect you directly with our switchboard, and alert the appropriate services."
+                                ),
+                                .init(
+                                    title: "General Information Line",
+                                    phoneNumber: "5555554321",
+                                    description: "For general information, questions or concerns, or to report any sanitation issues within the WW grounds, please contact this number."
+                                )
+                        ])
+                    ),
+                    reducer: ContactInfoFeature()
+                )
+            )
             .navigationBarTitleDisplayMode(.inline)
         }
-
-        .previewAllColorModes()
     }
 }

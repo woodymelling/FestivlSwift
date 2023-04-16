@@ -11,82 +11,100 @@ import Models
 import NotificationsFeature
 
 public struct MoreView: View {
-    let store: Store<MoreState, MoreAction>
-
-    public init(store: Store<MoreState, MoreAction>) {
+    let store: StoreOf<MoreFeature>
+    
+    public init(store: StoreOf<MoreFeature>) {
         self.store = store
     }
-
+    
     public var body: some View {
-        WithViewStore(store) { viewStore in
-            NavigationView {
-                List {
-                    Group { // Added for some weird compiler type-checking issue
-                        NavigationLink {
-                            NotificationsView(
-                                store: store.scope(
-                                    state: \.notificationsState,
-                                    action: MoreAction.notificationsAction
-                                )
-                            )
-                        } label: {
-                            Label("Notifications", systemImage: "bell.badge.fill")
-                                .labelStyle(ColorfulIconLabelStyle(color: .red))
-                        }
-                        
-                        
-                        if let imageURL = viewStore.event.siteMapImageURL {
-                            NavigationLink(destination: {
-                                SiteMapView(imageURL: imageURL)
-                                
-                            }, label: {
-                                Label("Site Map", systemImage: "map.fill")
-                                    .labelStyle(ColorfulIconLabelStyle(color: .purple))
-                            })
-                        }
-                        
-                        if let contactNumbers = viewStore.event.contactNumbers, !contactNumbers.isEmpty {
-                            NavigationLink(destination: {
-                                ContactInfoView(contactNumbers: contactNumbers)
-                            }, label: {
-                                Label("Contact Information", systemImage: "phone.fill")
-                                    .labelStyle(ColorfulIconLabelStyle(color: .blue))
-                            })
-                        }
-                        if let address = viewStore.event.address, !address.isEmpty {
-                            NavigationLink(destination: {
-                                AddressView(
-                                    address: address,
-                                    latitude: viewStore.event.latitude ?? "",
-                                    longitude: viewStore.event.longitude ?? ""
-                                )
-                            }, label: {
-                                Label("Address", systemImage: "mappin")
-                                    .labelStyle(ColorfulIconLabelStyle(color: .green))
-                            })
-                        }
-                    }
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            Group {
+                if let eventData = viewStore.eventData {
+                    List {
+                        NavigationLinkStore(
+                            store.scope(state: \.$destination, action: MoreFeature.Action.destination),
+                            state: /MoreFeature.Destination.State.notifications,
+                            action: MoreFeature.Destination.Action.notifications,
+                            onTap: { viewStore.send(.didTapNotifications) },
+                            destination: {
+                                NotificationsView(store: $0)
+                            },
+                            label: {
+                                Label("Notifications", systemImage: "bell.badge.fill")
+                                    .labelStyle(ColorfulIconLabelStyle(color: .red))
+                            }
+                        )
 
-                    
-                    if !viewStore.isEventSpecificApplication {
-                        Section {
-                            Button("Exit \(viewStore.event.name)", action: {
-                                viewStore.send(.didExitEvent, animation: .default)
-                            })
+                        if eventData.event.siteMapImageURL != nil {
+                            
+                            NavigationLinkStore(
+                                store.scope(state: \.$destination, action: MoreFeature.Action.destination),
+                                state: /MoreFeature.Destination.State.siteMap,
+                                action: MoreFeature.Destination.Action.siteMap,
+                                onTap: { viewStore.send(.didTapSiteMap) },
+                                destination: {
+                                    SiteMapView(store: $0)
+                                },
+                                label: {
+                                    Label("Site Map", systemImage: "map.fill")
+                                        .labelStyle(ColorfulIconLabelStyle(color: .purple))
+                                }
+                            )
+                        }
+
+                        if !eventData.event.contactNumbers.isNilOrEmpty {
+                            NavigationLinkStore(
+                                store.scope(state: \.$destination, action: MoreFeature.Action.destination),
+                                state: /MoreFeature.Destination.State.contactInfo,
+                                action: MoreFeature.Destination.Action.contactInfo,
+                                onTap: { viewStore.send(.didTapContactInfo) },
+                                destination: { ContactInfoView(store: $0) },
+                                label: {
+                                    Label("Contact Information", systemImage: "phone.fill")
+                                        .labelStyle(ColorfulIconLabelStyle(color: .blue))
+                                }
+                            )
+                        }
+
+                        if !eventData.event.address.isNilOrEmpty {
+                            NavigationLinkStore(
+                                store.scope(state: \.$destination, action: MoreFeature.Action.destination),
+                                state: /MoreFeature.Destination.State.address,
+                                action: MoreFeature.Destination.Action.address,
+                                onTap: { viewStore.send(.didTapAddress) },
+                                destination: { AddressView(store: $0) },
+                                label: {
+                                    Label("Address", systemImage: "mappin")
+                                        .labelStyle(ColorfulIconLabelStyle(color: .green))
+                                }
+                            )
+                        }
+
+                        if !viewStore.isEventSpecificApplication {
+                            Section {
+                                Button {
+                                    viewStore.send(.didExitEvent, animation: .default)
+                                } label: {
+                                    Text("Exit \(viewStore.eventData?.event.name ?? "")")
+                                }
+                            }
                         }
                     }
-                    
+                    .listStyle(.insetGrouped)
+                    .navigationTitle("More")
+                } else {
+                    ProgressView()
                 }
-                .listStyle(.insetGrouped)
-                .navigationTitle("More")
             }
+            .task { await viewStore.send(.task).finish() }
         }
     }
 }
 
 struct ColorfulIconLabelStyle: LabelStyle {
     var color: Color
-
+    
     func makeBody(configuration: Configuration) -> some View {
         Label {
             configuration.title
@@ -115,26 +133,14 @@ fileprivate struct SFSymbolKey: PreferenceKey {
 
 struct MoreView_Previews: PreviewProvider {
     static var previews: some View {
-        ForEach(ColorScheme.allCases.reversed(), id: \.self) {
+        NavigationView {
+            
             MoreView(
                 store: .init(
-                    initialState: .init(
-                        event: .testData,
-                        favoriteArtists: .init(),
-                        schedule: .init(),
-                        artists: Artist.testValues.asIdentifedArray,
-                        stages: Stage.testValues.asIdentifedArray,
-                        isTestMode: true,
-                        notificationsEnabled: false,
-                        notificationTimeBeforeSet: 5,
-                        showingNavigateToSettingsAlert: false,
-                        isEventSpecificApplication: true
-                    ),
-                    reducer: moreReducer,
-                    environment: .init()
+                    initialState: .init(),
+                    reducer: MoreFeature()
                 )
             )
-            .preferredColorScheme($0)
         }
     }
 }

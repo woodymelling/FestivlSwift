@@ -14,16 +14,36 @@ import AlertToast
 import Utilities
 import Popovers
 import Components
+import ComposableArchitectureUtilities
 
 enum ScheduleStyle: Equatable {
     case singleStage(Stage)
     case allStages
 }
 
-public struct ScheduleView: View {
-    let store: Store<ScheduleState, ScheduleAction>
+public struct ScheduleLoadingView: View {
+    let store: StoreOf<ScheduleLoadingFeature>
+    
+    public init(store: StoreOf<ScheduleLoadingFeature>) {
+        self.store = store
+    }
+    
+    public var body: some View {
+        WithViewStore(store, observe: Blank.init) { viewStore in
+            IfLetStore(store.scope(state: \.scheduleState, action: ScheduleLoadingFeature.Action.scheduleAction)) { store in
+                ScheduleView(store: store)
+            } else: {
+                ProgressView()
+            }
+            .task { await viewStore.send(.task).finish() }
+        }
+    }
+}
 
-    public init(store: Store<ScheduleState, ScheduleAction>) {
+public struct ScheduleView: View {
+    let store: StoreOf<ScheduleFeature>
+
+    public init(store: StoreOf<ScheduleFeature>) {
         self.store = store
     }
     @State var showing: Bool = true
@@ -39,31 +59,15 @@ public struct ScheduleView: View {
                         AllStagesAtOnceView(store: store)
                     }
                 }
-                .sheet(
-                    scoping: store,
-                    state: \.$selectedArtistState,
-                    action: ScheduleAction.artistPageAction,
-                    then: { artistStore in
-                        NavigationView {
-                            ArtistPageView(store: artistStore)
-                        }
-                    }
-                )
-                .sheet(
-                    scoping: store,
-                    state: \.$selectedGroupSetState,
-                    action: ScheduleAction.groupSetDetailAction,
-                    then: GroupSetDetailView.init
-                )
                 .toolbar {
-                    ToolbarItem(placement: .principal, content: {
+                    ToolbarItem(placement: .principal) {
                         Menu {
                             ForEach(viewStore.event.festivalDates, id: \.self, content: { date in
-                                Button(action: {
+                                Button {
                                     viewStore.send(.selectedDate(date), animation: .default)
-                                }, label: {
+                                } label: {
                                     Text(FestivlFormatting.weekdayFormat(for: date))
-                                })
+                                }
                             })
                         } label: {
                             HStack {
@@ -74,17 +78,17 @@ public struct ScheduleView: View {
                             }
                             .foregroundColor(.primary)
                         }
-                    })
+                    }
 
                     ToolbarItem {
-                        Menu(content: {
+                        Menu {
                             Toggle(isOn: viewStore.binding(\.$filteringFavorites), label: {
                                 Label(
                                     "Favorites",
                                     systemImage:  viewStore.isFiltering ? "heart.fill" : "heart"
                                 )
                             })
-                        }, label: {
+                        } label: {
                             Label(
                                 "Filter",
                                 systemImage: viewStore.isFiltering ?
@@ -94,7 +98,7 @@ public struct ScheduleView: View {
                             .if(viewStore.showingFilterTutorial, transform: {
                                 $0.colorMultiply(.gray)
                             })
-                        })
+                        }
                         .popover(present: viewStore.binding(\.$showingFilterTutorial), attributes: { $0.dismissal.mode = .tapOutside }) {
                             ArrowPopover(arrowSide: .top(.mostClockwise)) {
                                 Text("Filter the schedule to only see your favorite artists")
@@ -106,6 +110,22 @@ public struct ScheduleView: View {
                     }
                 }
                 .navigationBarTitleDisplayMode(.inline)
+                .sheet(
+                    store: self.store.scope(state: \.$destination, action: ScheduleFeature.Action.destination),
+                    state: /ScheduleFeature.Destination.State.artist,
+                    action: ScheduleFeature.Destination.Action.artist
+                ) { store in
+                    NavigationView {
+                        ArtistPageView(store: store)
+                    }
+                }
+                .sheet(
+                    store: store.scope(state: \.$destination, action: ScheduleFeature.Action.destination),
+                    state: /ScheduleFeature.Destination.State.groupSet,
+                    action: ScheduleFeature.Destination.Action.groupSet
+                ) {
+                    GroupSetDetailView(store: $0)
+                }
                 .toast(
                     isPresenting: viewStore.binding(\.$showingLandscapeTutorial),
                     duration: 5,
@@ -122,27 +142,20 @@ public struct ScheduleView: View {
                         )
                     },
                     completion: {
-                        viewStore.send(.landscapeTutorialHidden)
+                        viewStore.send(.hideLandscapeTutorial)
                     }
                 )
             }
             .navigationViewStyle(.stack)
-            .onAppear {
-                viewStore.send(.onAppear, animation: .default)
-            }
+            .task { await viewStore.send(.task).finish() }
         }
     }
 }
 
+
 struct ScheduleView_Previews: PreviewProvider {
     static var previews: some View {
-        ForEach(ColorScheme.allCases.reversed(), id: \.self) {
-            //            let time = Event.testData.festivalDates[0]
-            ScheduleView(
-                store: .testStore
-            )
-            .preferredColorScheme($0)
-        }
+        ScheduleLoadingView(store: .init(initialState: .init(), reducer: ScheduleLoadingFeature()))
     }
 }
 

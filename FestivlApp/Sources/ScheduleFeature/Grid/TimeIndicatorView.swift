@@ -6,18 +6,17 @@
 //
 
 import SwiftUI
-
-struct TimeIndicatorEnvironment: Equatable {
-    var currentTime: Date
-}
+import Utilities
 
 struct TimeIndicatorView: View {
-    var selectedDate: Date
+    var selectedDate: CalendarDate
     var dayStartsAtNoon: Bool
 
     func shouldShowTimeIndicator(_ currentTime: Date) -> Bool {
         var calendar = Calendar.current
         calendar.timeZone = NSTimeZone.default
+        let selectedDate = selectedDate.date // Convert to Date object
+        
         if dayStartsAtNoon {
             return calendar.isDate(
                 currentTime - 12.hours,
@@ -92,6 +91,6 @@ struct TimeIndicatorView: View {
 
 struct TimeIndicatorView_Previews: PreviewProvider {
     static var previews: some View {
-        TimeIndicatorView(selectedDate: Date(), dayStartsAtNoon: false)
+        TimeIndicatorView(selectedDate: .today, dayStartsAtNoon: false)
     }
 }

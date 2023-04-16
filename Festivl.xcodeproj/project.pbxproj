@@ -10,47 +10,55 @@
 		20CB41172814F3EF00D4F860 /* WickedWoodsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20CB41162814F3EF00D4F860 /* WickedWoodsApp.swift */; };
 		20CB411B2814F3F000D4F860 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20CB411A2814F3F000D4F860 /* Assets.xcassets */; };
 		20CB411E2814F3F000D4F860 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20CB411D2814F3F000D4F860 /* Preview Assets.xcassets */; };
-		20CB41232814F41500D4F860 /* EventFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 20CB41222814F41500D4F860 /* EventFeature */; };
-		20CB41272814F42E00D4F860 /* ServiceCore in Frameworks */ = {isa = PBXBuildFile; productRef = 20CB41262814F42E00D4F860 /* ServiceCore */; };
 		20CB41292814F46A00D4F860 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 20CB41282814F46A00D4F860 /* GoogleService-Info.plist */; };
-		EF26A0B327D855CB00E10A71 /* FestivlManagerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF26A0B227D855CB00E10A71 /* FestivlManagerApp.swift */; };
-		EF26A0B727D855D100E10A71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF26A0B627D855D100E10A71 /* Assets.xcassets */; };
-		EF26A0BA27D855D100E10A71 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF26A0B927D855D100E10A71 /* Preview Assets.xcassets */; };
-		EF26A0C227D8649300E10A71 /* FestivlAppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EF26A0C127D8649300E10A71 /* FestivlAppFeature */; };
-		EF26A0CD27D86E7400E10A71 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EF26A0CC27D86E7400E10A71 /* GoogleService-Info.plist */; };
 		EF26A0CF27D87C1E00E10A71 /* ServiceCore in Frameworks */ = {isa = PBXBuildFile; productRef = EF26A0CE27D87C1E00E10A71 /* ServiceCore */; };
 		EF26A0D127D87C2500E10A71 /* FestivlManagerAppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EF26A0D027D87C2500E10A71 /* FestivlManagerAppFeature */; };
 		EF28EC5927E0432B008FCE36 /* MacOSComponents in Frameworks */ = {isa = PBXBuildFile; productRef = EF28EC5827E0432B008FCE36 /* MacOSComponents */; };
 		EF479E5027B629690075D7E2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EF479E4F27B629690075D7E2 /* GoogleService-Info.plist */; };
-		EF479E5227B629E00075D7E2 /* ServiceCore in Frameworks */ = {isa = PBXBuildFile; productRef = EF479E5127B629E00075D7E2 /* ServiceCore */; };
+		EF4EC4732950276F00B82B94 /* ArtistListFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EF4EC4722950276F00B82B94 /* ArtistListFeature */; };
 		EF692E6C27B4CA48006F8E0D /* FestivlApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */; };
 		EF692E7027B4CA49006F8E0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF692E6F27B4CA49006F8E0D /* Assets.xcassets */; };
 		EF692E7327B4CA49006F8E0D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF692E7227B4CA49006F8E0D /* Preview Assets.xcassets */; };
+		EF92B84529A93E6800815DF3 /* FestivlManageriOSLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = EF92B84429A93E6800815DF3 /* FestivlManageriOSLibrary */; };
+		EFAA58372956C0E800C8EE01 /* EventFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EFAA58362956C0E800C8EE01 /* EventFeature */; };
+		EFAF6BC429577A6D002122B4 /* FirebaseServiceImpl in Frameworks */ = {isa = PBXBuildFile; productRef = EFAF6BC329577A6D002122B4 /* FirebaseServiceImpl */; };
+		EFAF6BC629577ADE002122B4 /* FirebaseServiceImpl in Frameworks */ = {isa = PBXBuildFile; productRef = EFAF6BC529577ADE002122B4 /* FirebaseServiceImpl */; };
+		EFB2B4822956DBAF00B3FA13 /* FestivlAppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EFB2B4812956DBAF00B3FA13 /* FestivlAppFeature */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		EFF6F4A32882640A0017EED1 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2046EC3E2814B7D700094617 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		2067AB8E27F54B28001E85BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		20CB41142814F3EF00D4F860 /* WickedWoods.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WickedWoods.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20CB41162814F3EF00D4F860 /* WickedWoodsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WickedWoodsApp.swift; sourceTree = "<group>"; };
 		20CB411A2814F3F000D4F860 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		20CB411D2814F3F000D4F860 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		20CB41282814F46A00D4F860 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		20CB412A2816062900D4F860 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		EF22578028878F800053202D /* Festivl.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Festivl.entitlements; sourceTree = "<group>"; };
 		EF26A0B027D855CB00E10A71 /* FestivlManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FestivlManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		EF26A0B227D855CB00E10A71 /* FestivlManagerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivlManagerApp.swift; sourceTree = "<group>"; };
-		EF26A0B627D855D100E10A71 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		EF26A0B927D855D100E10A71 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		EF26A0BB27D855D100E10A71 /* FestivlManager.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FestivlManager.entitlements; sourceTree = "<group>"; };
 		EF26A0C027D85F5B00E10A71 /* FestivlApp */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FestivlApp; sourceTree = "<group>"; };
-		EF26A0C327D8660200E10A71 /* FestivlManagerLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FestivlManagerLibrary; sourceTree = "<group>"; };
-		EF26A0CC27D86E7400E10A71 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EF479E4F27B629690075D7E2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		EF4EC4482950274B00B82B94 /* Launchpad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Launchpad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF692E6827B4CA48006F8E0D /* Festivl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Festivl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivlApp.swift; sourceTree = "<group>"; };
 		EF692E6F27B4CA49006F8E0D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EF692E7227B4CA49006F8E0D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		EFCCBD9027B4CA79004E5270 /* FestivlLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = FestivlLibrary; sourceTree = "<group>"; };
+		EF92B83629A93E4E00815DF3 /* FestivlManageriOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FestivlManageriOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFF6F493288264090017EED1 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		EFF6F495288264090017EED1 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,8 +66,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				20CB41232814F41500D4F860 /* EventFeature in Frameworks */,
-				20CB41272814F42E00D4F860 /* ServiceCore in Frameworks */,
+				EFAA58372956C0E800C8EE01 /* EventFeature in Frameworks */,
+				EFAF6BC429577A6D002122B4 /* FirebaseServiceImpl in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,12 +81,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EF4EC4452950274B00B82B94 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF4EC4732950276F00B82B94 /* ArtistListFeature in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EF692E6527B4CA48006F8E0D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF479E5227B629E00075D7E2 /* ServiceCore in Frameworks */,
-				EF26A0C227D8649300E10A71 /* FestivlAppFeature in Frameworks */,
+				EFB2B4822956DBAF00B3FA13 /* FestivlAppFeature in Frameworks */,
+				EFAF6BC629577ADE002122B4 /* FirebaseServiceImpl in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EF92B83329A93E4E00815DF3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF92B84529A93E6800815DF3 /* FestivlManageriOSLibrary in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,30 +129,11 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		EF26A0B127D855CB00E10A71 /* FestivlManager */ = {
-			isa = PBXGroup;
-			children = (
-				2067AB8E27F54B28001E85BE /* Info.plist */,
-				EF26A0CC27D86E7400E10A71 /* GoogleService-Info.plist */,
-				EF26A0B227D855CB00E10A71 /* FestivlManagerApp.swift */,
-				EF26A0B627D855D100E10A71 /* Assets.xcassets */,
-				EF26A0BB27D855D100E10A71 /* FestivlManager.entitlements */,
-				EF26A0B827D855D100E10A71 /* Preview Content */,
-			);
-			path = FestivlManager;
-			sourceTree = "<group>";
-		};
-		EF26A0B827D855D100E10A71 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				EF26A0B927D855D100E10A71 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
 		EF479E4C27B6108C0075D7E2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EFF6F493288264090017EED1 /* WidgetKit.framework */,
+				EFF6F495288264090017EED1 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -136,11 +141,8 @@
 		EF692E5F27B4CA48006F8E0D = {
 			isa = PBXGroup;
 			children = (
-				EFCCBD9027B4CA79004E5270 /* FestivlLibrary */,
 				EF26A0C027D85F5B00E10A71 /* FestivlApp */,
-				EF26A0C327D8660200E10A71 /* FestivlManagerLibrary */,
 				EF692E6A27B4CA48006F8E0D /* Festivl */,
-				EF26A0B127D855CB00E10A71 /* FestivlManager */,
 				20CB41152814F3EF00D4F860 /* WickedWoods */,
 				EF692E6927B4CA48006F8E0D /* Products */,
 				EF479E4C27B6108C0075D7E2 /* Frameworks */,
@@ -153,6 +155,8 @@
 				EF692E6827B4CA48006F8E0D /* Festivl.app */,
 				EF26A0B027D855CB00E10A71 /* FestivlManager.app */,
 				20CB41142814F3EF00D4F860 /* WickedWoods.app */,
+				EF4EC4482950274B00B82B94 /* Launchpad.app */,
+				EF92B83629A93E4E00815DF3 /* FestivlManageriOS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -160,6 +164,7 @@
 		EF692E6A27B4CA48006F8E0D /* Festivl */ = {
 			isa = PBXGroup;
 			children = (
+				EF22578028878F800053202D /* Festivl.entitlements */,
 				2046EC3E2814B7D700094617 /* Info.plist */,
 				EF479E4F27B629690075D7E2 /* GoogleService-Info.plist */,
 				EF692E6B27B4CA48006F8E0D /* FestivlApp.swift */,
@@ -194,8 +199,8 @@
 			);
 			name = WickedWoods;
 			packageProductDependencies = (
-				20CB41222814F41500D4F860 /* EventFeature */,
-				20CB41262814F42E00D4F860 /* ServiceCore */,
+				EFAA58362956C0E800C8EE01 /* EventFeature */,
+				EFAF6BC329577A6D002122B4 /* FirebaseServiceImpl */,
 			);
 			productName = WickedWoods;
 			productReference = 20CB41142814F3EF00D4F860 /* WickedWoods.app */;
@@ -223,6 +228,26 @@
 			productReference = EF26A0B027D855CB00E10A71 /* FestivlManager.app */;
 			productType = "com.apple.product-type.application";
 		};
+		EF4EC4472950274B00B82B94 /* Launchpad */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF4EC46F2950274E00B82B94 /* Build configuration list for PBXNativeTarget "Launchpad" */;
+			buildPhases = (
+				EF4EC4442950274B00B82B94 /* Sources */,
+				EF4EC4452950274B00B82B94 /* Frameworks */,
+				EF4EC4462950274B00B82B94 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Launchpad;
+			packageProductDependencies = (
+				EF4EC4722950276F00B82B94 /* ArtistListFeature */,
+			);
+			productName = Launchpad;
+			productReference = EF4EC4482950274B00B82B94 /* Launchpad.app */;
+			productType = "com.apple.product-type.application";
+		};
 		EF692E6727B4CA48006F8E0D /* Festivl */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF692E7627B4CA49006F8E0D /* Build configuration list for PBXNativeTarget "Festivl" */;
@@ -230,6 +255,7 @@
 				EF692E6427B4CA48006F8E0D /* Sources */,
 				EF692E6527B4CA48006F8E0D /* Frameworks */,
 				EF692E6627B4CA48006F8E0D /* Resources */,
+				EFF6F4A32882640A0017EED1 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
@@ -237,11 +263,31 @@
 			);
 			name = Festivl;
 			packageProductDependencies = (
-				EF479E5127B629E00075D7E2 /* ServiceCore */,
-				EF26A0C127D8649300E10A71 /* FestivlAppFeature */,
+				EFB2B4812956DBAF00B3FA13 /* FestivlAppFeature */,
+				EFAF6BC529577ADE002122B4 /* FirebaseServiceImpl */,
 			);
 			productName = Festivl;
 			productReference = EF692E6827B4CA48006F8E0D /* Festivl.app */;
+			productType = "com.apple.product-type.application";
+		};
+		EF92B83529A93E4E00815DF3 /* FestivlManageriOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF92B84129A93E4F00815DF3 /* Build configuration list for PBXNativeTarget "FestivlManageriOS" */;
+			buildPhases = (
+				EF92B83229A93E4E00815DF3 /* Sources */,
+				EF92B83329A93E4E00815DF3 /* Frameworks */,
+				EF92B83429A93E4E00815DF3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FestivlManageriOS;
+			packageProductDependencies = (
+				EF92B84429A93E6800815DF3 /* FestivlManageriOSLibrary */,
+			);
+			productName = FestivlManageriOS;
+			productReference = EF92B83629A93E4E00815DF3 /* FestivlManageriOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -251,7 +297,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1330;
+				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1330;
 				TargetAttributes = {
 					20CB41132814F3EF00D4F860 = {
@@ -260,8 +306,14 @@
 					EF26A0AF27D855CB00E10A71 = {
 						CreatedOnToolsVersion = 13.2.1;
 					};
+					EF4EC4472950274B00B82B94 = {
+						CreatedOnToolsVersion = 14.0.1;
+					};
 					EF692E6727B4CA48006F8E0D = {
 						CreatedOnToolsVersion = 13.2.1;
+					};
+					EF92B83529A93E4E00815DF3 = {
+						CreatedOnToolsVersion = 14.2;
 					};
 				};
 			};
@@ -283,6 +335,8 @@
 				EF692E6727B4CA48006F8E0D /* Festivl */,
 				EF26A0AF27D855CB00E10A71 /* FestivlManager */,
 				20CB41132814F3EF00D4F860 /* WickedWoods */,
+				EF4EC4472950274B00B82B94 /* Launchpad */,
+				EF92B83529A93E4E00815DF3 /* FestivlManageriOS */,
 			);
 		};
 /* End PBXProject section */
@@ -302,9 +356,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF26A0CD27D86E7400E10A71 /* GoogleService-Info.plist in Resources */,
-				EF26A0BA27D855D100E10A71 /* Preview Assets.xcassets in Resources */,
-				EF26A0B727D855D100E10A71 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EF4EC4462950274B00B82B94 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,6 +373,13 @@
 				EF692E7327B4CA49006F8E0D /* Preview Assets.xcassets in Resources */,
 				EF479E5027B629690075D7E2 /* GoogleService-Info.plist in Resources */,
 				EF692E7027B4CA49006F8E0D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EF92B83429A93E4E00815DF3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -333,7 +398,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF26A0B327D855CB00E10A71 /* FestivlManagerApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EF4EC4442950274B00B82B94 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -342,6 +413,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF692E6C27B4CA48006F8E0D /* FestivlApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EF92B83229A93E4E00815DF3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,7 +432,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"WickedWoods/Preview Content\"";
 				DEVELOPMENT_TEAM = FYZE6539TN;
 				ENABLE_PREVIEWS = YES;
@@ -369,7 +447,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Festivl.WickedWoods;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -384,7 +462,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"WickedWoods/Preview Content\"";
 				DEVELOPMENT_TEAM = FYZE6539TN;
 				ENABLE_PREVIEWS = YES;
@@ -399,7 +477,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Festivl.WickedWoods;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -467,6 +545,68 @@
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		EF4EC4692950274E00B82B94 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Launchpad/Preview Content\"";
+				DEVELOPMENT_TEAM = FYZE6539TN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = woody.Launchpad;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EF4EC46A2950274E00B82B94 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Launchpad/Preview Content\"";
+				DEVELOPMENT_TEAM = FYZE6539TN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = woody.Launchpad;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -589,8 +729,10 @@
 		EF692E7727B4CA49006F8E0D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Festivl/Festivl.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"Festivl/Preview Content\"";
@@ -620,8 +762,10 @@
 		EF692E7827B4CA49006F8E0D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Festivl/Festivl.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"Festivl/Preview Content\"";
@@ -648,6 +792,68 @@
 			};
 			name = Release;
 		};
+		EF92B84229A93E4F00815DF3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"FestivlManageriOS/Preview Content\"";
+				DEVELOPMENT_TEAM = FYZE6539TN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = woody.FestivlManageriOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EF92B84329A93E4F00815DF3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"FestivlManageriOS/Preview Content\"";
+				DEVELOPMENT_TEAM = FYZE6539TN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = woody.FestivlManageriOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -665,6 +871,15 @@
 			buildConfigurations = (
 				EF26A0BC27D855D100E10A71 /* Debug */,
 				EF26A0BD27D855D100E10A71 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EF4EC46F2950274E00B82B94 /* Build configuration list for PBXNativeTarget "Launchpad" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF4EC4692950274E00B82B94 /* Debug */,
+				EF4EC46A2950274E00B82B94 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -687,21 +902,18 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		EF92B84129A93E4F00815DF3 /* Build configuration list for PBXNativeTarget "FestivlManageriOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF92B84229A93E4F00815DF3 /* Debug */,
+				EF92B84329A93E4F00815DF3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		20CB41222814F41500D4F860 /* EventFeature */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = EventFeature;
-		};
-		20CB41262814F42E00D4F860 /* ServiceCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ServiceCore;
-		};
-		EF26A0C127D8649300E10A71 /* FestivlAppFeature */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = FestivlAppFeature;
-		};
 		EF26A0CE27D87C1E00E10A71 /* ServiceCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ServiceCore;
@@ -714,9 +926,29 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = MacOSComponents;
 		};
-		EF479E5127B629E00075D7E2 /* ServiceCore */ = {
+		EF4EC4722950276F00B82B94 /* ArtistListFeature */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = ServiceCore;
+			productName = ArtistListFeature;
+		};
+		EF92B84429A93E6800815DF3 /* FestivlManageriOSLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FestivlManageriOSLibrary;
+		};
+		EFAA58362956C0E800C8EE01 /* EventFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = EventFeature;
+		};
+		EFAF6BC329577A6D002122B4 /* FirebaseServiceImpl */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FirebaseServiceImpl;
+		};
+		EFAF6BC529577ADE002122B4 /* FirebaseServiceImpl */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FirebaseServiceImpl;
+		};
+		EFB2B4812956DBAF00B3FA13 /* FestivlAppFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FestivlAppFeature;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

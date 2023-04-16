@@ -10,73 +10,54 @@ import Models
 import EventListFeature
 import EventFeature
 import Utilities
+import FestivlDependencies
 
-public struct AppState: Equatable {
-    var eventState: EventLoadingState?
-    var isTestMode: Bool
+public struct AppFeature: ReducerProtocol {
     
-    @Storage(key: "savedEventID", defaultValue: "") var savedEventID: String
+    @Dependency(\.eventID) var eventID
+    
+    public init() {}
+    
+    public struct State: Equatable {
+        var eventState: EventFeature.State?
+        var eventListState: EventList.State = .init()
+        
+        public init() {}
+    }
 
-    public var eventListState: EventListState
+    public enum Action {
+        case eventListAction(EventList.Action)
+        case eventAction(EventFeature.Action)
+    }
+    
+    public var body: some ReducerProtocol<State, Action> {
+        Reduce { state, action in
+            switch action {
+            case .eventListAction(.selectedEvent(let event)):
+                eventID.value = event.id
+                state.eventState = EventFeature.State()
 
-    public init(
-        eventListState: EventListState = .init(),
-        isTestMode: Bool
-    ) {
-        self.eventListState = eventListState
-        self.isTestMode = isTestMode
-        if !savedEventID.isEmpty {
-            eventState = .init(eventID: savedEventID, isTestMode: isTestMode, isEventSpecificApplication: false)
+                return .none
+            case .eventListAction:
+                return .none
+                
+            case .eventAction(.moreAction(.didExitEvent)):
+                state.eventState = nil
+//                state.savedEventID = ""
+                return .none
+                
+            case .eventAction:
+                return .none
+            }
+        }
+        .ifLet(\.eventState, action: /Action.eventAction) {
+            EventFeature()
+        }
+       
+        Scope(state: \.eventListState, action: /Action.eventListAction) {
+            EventList()
         }
     }
 }
-
-public enum AppAction {
-    case eventListAction(EventListAction)
-    case eventAction(EventLoadingAction)
-}
-
-public struct AppEnvironment {
-    public init() {}
-}
-
-public let appReducer = Reducer.combine (
-
-    Reducer<AppState, AppAction, AppEnvironment> { state, action, _ in
-        switch action {
-        case .eventListAction(.selectedEvent(let event)):
-            state.savedEventID = event.id!
-            state.eventState = .init(eventID: event.id!, isTestMode: state.isTestMode, isEventSpecificApplication: false)
-
-            return .none
-        case .eventListAction:
-            return .none
-            
-        case .eventAction(.eventAction(.tabBarAction(.moreAction(.didExitEvent)))):
-            state.eventState = nil
-            state.savedEventID = ""
-            return .none
-            
-        case .eventAction:
-            return .none
-        }
-    },
-
-    eventLoadingReducer.optional().pullback(
-        state: \AppState.eventState,
-        action: /AppAction.eventAction,
-        environment: { (_: AppEnvironment) in
-            EventLoadingEnvironment()
-        }
-    ),
-
-    eventListReducer.pullback(
-        state: \AppState.eventListState,
-        action: /AppAction.eventListAction,
-        environment: { _ in .init() }
-    )
-
-)
-.debug()
 
 
