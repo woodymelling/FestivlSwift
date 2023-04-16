@@ -222,15 +222,7 @@
 		<key>FestivlManager.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-			<integer>4</integer>
-=======
-			<integer>2</integer>
->>>>>>> Stashed changes
-=======
-			<integer>2</integer>
->>>>>>> Stashed changes
+			<integer>1</integer>
 		</dict>
 		<key>FestivlManageriOS.xcscheme_^#shared#^_</key>
 		<dict>
@@ -240,15 +232,7 @@
 		<key>Launchpad.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-			<integer>6</integer>
-=======
-			<integer>33</integer>
->>>>>>> Stashed changes
-=======
-			<integer>33</integer>
->>>>>>> Stashed changes
+			<integer>5</integer>
 		</dict>
 		<key>Promises (Playground) 1.xcscheme</key>
 		<dict>
