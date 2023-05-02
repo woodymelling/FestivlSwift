@@ -41,7 +41,7 @@ struct ScheduleHeaderView: View {
     }
 }
 
-private extension View {
+internal extension View {
     func shadow() -> some View {
         self.modifier(FestivlShadowViewModifier())
     }

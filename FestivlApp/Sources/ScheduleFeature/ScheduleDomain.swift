@@ -23,6 +23,8 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.date) var todaysDate
     @Dependency(\.userFavoritesClient) var userFavoritesClient
+    @Dependency(\.internalPreviewClient) var internalPreviewClient
+
     
     public struct State: Equatable {
         
@@ -54,7 +56,7 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
                 }
             case .dataUpdate(let eventData, let userFavorites):
                 
-                guard !eventData.schedule.isEmpty else { return .none }
+//                guard !eventData.schedule.isEmpty else { return .none }
                 
                 userFavoritesClient.updateScheduleData(eventData.schedule, eventData.artists, eventData.stages)
                 
@@ -83,6 +85,10 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
                 } else {
                     selectedStage = eventData.stages.first!
                 }
+                
+                // Business Rule:
+                // If the schedule is unpublished and the user hasn't unlocked it with the passkey show the comingSoon Screen
+                let showComingSoonScreen = !(event.scheduleIsPublished || internalPreviewClient.internalPreviewsAreUnlocked(event.id))
             
                 state.scheduleState = .init(
                     schedule: eventData.schedule,
@@ -91,8 +97,10 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
                     event: eventData.event,
                     userFavorites: userFavorites,
                     selectedStage: selectedStage,
-                    selectedDate: selectedDate
+                    selectedDate: selectedDate,
+                    showComingSoonScreen: showComingSoonScreen
                 )
+                
                 return .none
                 
             case .scheduleAction:
@@ -144,6 +152,9 @@ public struct ScheduleFeature: ReducerProtocol {
         @BindingState public var showingLandscapeTutorial: Bool = false
         @BindingState public var showingFilterTutorial: Bool = false
         
+        
+        public var showComingSoonScreen: Bool
+        
 
         var isFiltering: Bool {
             // For future filters
@@ -192,18 +203,18 @@ public struct ScheduleFeature: ReducerProtocol {
     
     public struct Destination: ReducerProtocol {
         public enum State: Equatable {
-            case artist(ArtistPage.State)
+            case artist(ArtistDetail.State)
             case groupSet(GroupSetDetail.State)
         }
         
         public enum Action {
-            case artist(ArtistPage.Action)
+            case artist(ArtistDetail.Action)
             case groupSet(GroupSetDetail.Action)
         }
         
         public var body: some ReducerProtocolOf<Self> {
             Scope(state: /State.artist, action: /Action.artist) {
-                ArtistPage()
+                ArtistDetail()
             }
             
             Scope(state: /State.groupSet, action: /Action.groupSet) {
@@ -273,10 +284,11 @@ public struct ScheduleFeature: ReducerProtocol {
                 return .none
 
             case .subscribeToDataPublishers:
-                return deviceOrientationPublisher.map {
-                    Action.orientationPublisherUpdate($0)
+                return .run { send in
+                    for await orientation in  deviceOrientationPublisher.values {
+                        await send(.orientationPublisherUpdate(orientation))
+                    }
                 }
-                .eraseToEffect()
 
             case .orientationPublisherUpdate(let orientation):
                 state.deviceOrientation = orientation
@@ -318,7 +330,7 @@ public struct ScheduleFeature: ReducerProtocol {
                     guard let artist = state.artists[id: artistID] else { return .none }
                     
                     state.destination = .artist(
-                        ArtistPage.State(
+                        ArtistDetail.State(
                             artistID: artist.id,
                             artist: artist,
                             event: state.event,

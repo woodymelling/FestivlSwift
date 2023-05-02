@@ -24,7 +24,7 @@ public struct GroupSetDetail: ReducerProtocol {
     
     @Dependency(\.showScheduleItem) var showScheduleItem
     
-    public struct State: Equatable, Identifiable {
+    public struct State: Equatable {
         public init(groupSet: ScheduleItem) {
             self.groupSet = groupSet
         }
@@ -34,11 +34,13 @@ public struct GroupSetDetail: ReducerProtocol {
         public var schedule: Schedule?
         public var stages: IdentifiedArrayOf<Stage> = .init()
 
-        public var id: ScheduleItem.ID {
-            groupSet.id
-        }
-
-        public var artistDetailStates: IdentifiedArrayOf<ArtistPage.State> = .init()
+        public var artists: IdentifiedArrayOf<Artist> = .init()
+        
+        public var userFavorites: UserFavorites = .init()
+        
+        var showArtistImages: Bool = false
+        
+        @PresentationState var destination: Destination.State?
     }
     
     public enum Action {
@@ -46,8 +48,25 @@ public struct GroupSetDetail: ReducerProtocol {
         case dataUpdate(EventData, UserFavorites)
         
         case didTapScheduleItem(ScheduleItem)
+        case didTapArtist(Artist.ID)
 
-        case artistDetailAction(id: Artist.ID, ArtistPage.Action)
+        case destination(PresentationAction<Destination.Action>)
+    }
+    
+    public struct Destination: Reducer {
+        public enum State: Equatable {
+            case artistDetail(ArtistDetail.State)
+        }
+        
+        public enum Action {
+            case artistDetail(ArtistDetail.Action)
+        }
+        
+        public var body: some ReducerOf<Self> {
+            Scope(state: /State.artistDetail, action: /Action.artistDetail) {
+                ArtistDetail()
+            }
+        }
     }
     
     public var body: some ReducerProtocol<State, Action> {
@@ -73,23 +92,12 @@ public struct GroupSetDetail: ReducerProtocol {
                 guard case let .groupSet(artistIds) = state.groupSet.type else { return .none }
 
                 
-                let artists = artistIds.compactMap { eventData.artists[id: $0] }
-                
-                state.artistDetailStates = artists.map {
-                    ArtistPage.State(
-                        artistID: $0.id,
-                        artist: $0,
-                        event: eventData.event,
-                        schedule: eventData.schedule,
-                        stages: eventData.stages,
-                        isFavorite: userFavorites.contains($0.id) // TODO: Fix this
-                    )
-                    
-                }.asIdentifedArray
-                
+                state.artists = artistIds.compactMap { eventData.artists[id: $0] }.asIdentifedArray
                 state.event = eventData.event
                 state.stages = eventData.stages
                 state.schedule = eventData.schedule
+                state.userFavorites = userFavorites
+                state.showArtistImages = eventData.artists.contains(where: { $0.imageURL != nil })
                 
                 return .none
                 
@@ -98,12 +106,21 @@ public struct GroupSetDetail: ReducerProtocol {
                 showScheduleItem(scheduleItem)
                 return .none
                 
-            case .artistDetailAction:
+            case let .didTapArtist(artistID):
+                
+                state.destination = .artistDetail(
+                    ArtistDetail.State(artistID: artistID)
+                )
+                
+                return .none
+                
+                
+            case .destination:
                 return .none
             }
         }
-        .forEach(\.artistDetailStates, action: /Action.artistDetailAction) {
-            ArtistPage()
+        .ifLet(\.$destination, action: /Action.destination) {
+            Destination()
         }
     }
 }

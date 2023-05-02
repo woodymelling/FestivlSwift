@@ -47,26 +47,24 @@ public struct TabBarView: View {
                     }
                     .tag(Tab.schedule)
 
-                ArtistListView(store: store.scope(state: \.artistListState, action: EventFeature.Action.artistListAction))
-                    .tabItem {
-                        Label("Artists", systemImage: "person.3")
-                    }
-                    .tag(Tab.artists)
+                NavigationView {
+                    ArtistListView(store: store.scope(state: \.artistListState, action: EventFeature.Action.artistListAction))
+                        
+                }
+                .tabItem { Label("Artists", systemImage: "person.3") }
+                .tag(Tab.artists)
                 
-                ExploreView(store: store.scope(state: \.exploreState, action: EventFeature.Action.exploreAction))
-                    .tabItem {
-                        // TODO: Get better icon
-                        Label("Explore", systemImage: "barometer")
-                    }
-                    .tag(Tab.explore)
-
-
+                
+                NavigationView {
+                    ExploreView(store: store.scope(state: \.exploreState, action: EventFeature.Action.exploreAction))
+                }
+                .tabItem { Label("Explore", systemImage: "barometer") }
+                .tag(Tab.explore)
+                
                 NavigationView {
                     MoreView(store: store.scope(state: \.moreState, action: EventFeature.Action.moreAction))
                 }
-                .tabItem {
-                    Label("More", systemImage: "ellipsis")
-                }
+                .tabItem { Label("More", systemImage: "ellipsis") }
                 .tag(Tab.more)
             }
         }

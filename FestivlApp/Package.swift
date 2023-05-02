@@ -27,12 +27,12 @@ let package = Package(
         .library(name: "iOSComponents", targets: ["iOSComponents"]),
         .library(name: "MoreFeature", targets: ["MoreFeature"]),
         .library(name: "NotificationsFeature", targets: ["NotificationsFeature"]),
-        .library(name: "ShowScheduleItemDependency", targets: ["ShowScheduleItemDependency"])
+        .library(name: "ShowScheduleItemDependency", targets: ["ShowScheduleItemDependency"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "navigation-beta"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "prerelease/1.0"),
         .package(url: "https://github.com/yacir/CollectionViewSlantedLayout", branch: "master"),
         .package(name: "FestivlLibrary", path: "../../FestivlLibrary"),
         .package(url: "https://github.com/siteline/SwiftUI-Introspect.git", from: "0.0.0"),
@@ -42,6 +42,7 @@ let package = Package(
         .package(url: "https://github.com/elai950/AlertToast", branch: "master"),
         .package(url: "https://github.com/aheze/Popovers", from: "1.3.2"),
         .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "0.1.4"),
+        .package(url: "https://github.com/danielsaidi/ScrollKit.git", from: "0.3.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -106,6 +107,7 @@ let package = Package(
                 .product(name: "Components", package: "FestivlLibrary"),
                 .product(name: "SharedResources", package: "FestivlLibrary"),
                 .product(name: "FestivlDependencies", package: "FestivlLibrary"),
+                .product(name: "ScrollKit", package: "ScrollKit"),
                 
                 "ShowScheduleItemDependency"
             ]

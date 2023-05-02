@@ -13,56 +13,54 @@ import ArtistPageFeature
 
 public struct ExploreView: View {
     let store: StoreOf<ExploreFeature>
-
+    
     public init(store: StoreOf<ExploreFeature>) {
         self.store = store
     }
-
+    
     var angle: Angle = .degrees(0)
     var height: CGFloat = 275
-
+    
     public var body: some View {
-        WithViewStore(store) { viewStore in
-            NavigationView {
-                ZStack {
-                    NavigationLink(isActive: viewStore.binding(\.$selectedArtistPageState).isPresent()) {
-                        IfLetStore(
-                            store.scope(
-                                state: \.selectedArtistPageState,
-                                action: { .artistDetail(id: viewStore.selectedArtistPageState!.id, action: $0)
-                                }
-                            ),
-                            then: ArtistPageView.init
-                        )
-                    } label: { EmptyView() }
-                    
-                    if !viewStore.isLoading,
-                       let stages = viewStore.stages,
-                       let schedule = viewStore.schedule {
-                        
-                        ExploreViewHosting(
-                            artists: viewStore.artistStates,
-                            stages: stages,
-                            schedule: schedule,
-                            onSelectArtist: {
-                                viewStore.send(.didTapArtist($0))
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            
+            ZStack {
+                NavigationLink(isActive: viewStore.binding(\.$selectedArtistPageState).isPresent()) {
+                    IfLetStore(
+                        store.scope(
+                            state: \.selectedArtistPageState,
+                            action: { .artistDetail(id: viewStore.selectedArtistPageState!.id, action: $0)
                             }
-                        )
-                        .navigationBarHidden(true)
-                    } else {
-                        ProgressView()
-                    }
-
+                        ),
+                        then: ArtistPageView.init
+                    )
+                } label: { EmptyView() }
+                
+                if !viewStore.isLoading,
+                   let stages = viewStore.stages,
+                   let schedule = viewStore.schedule {
+                    
+                    ExploreViewHosting(
+                        artists: viewStore.artistStates,
+                        stages: stages,
+                        schedule: schedule,
+                        onSelectArtist: {
+                            viewStore.send(.didTapArtist($0))
+                        }
+                    )
+                    .navigationBarHidden(true)
+                } else {
+                    ProgressView()
                 }
-                .ignoresSafeArea(SafeAreaRegions.all, edges: .all)
-                .task {
-                    await viewStore.send(.task).finish()
-                }
+                
+            }
+            .ignoresSafeArea(SafeAreaRegions.all, edges: .all)
+            .task {
+                await viewStore.send(.task).finish()
             }
         }
+        
     }
-
-
 }
 
 struct ExploreView_Previews: PreviewProvider {

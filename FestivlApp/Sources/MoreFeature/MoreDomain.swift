@@ -17,12 +17,16 @@ public struct MoreFeature: ReducerProtocol {
     @Dependency(\.eventID) var eventID
     @Dependency(\.isEventSpecificApplication) var isEventSpecificApplication
     @Dependency(\.eventDataClient) var eventDataClient
+    @Dependency(\.internalPreviewClient) var internalPreviewClient
     
     public struct State: Equatable {
         public init() {}
         
         var eventData: EventData?
         var isEventSpecificApplication: Bool = true
+        
+        var isShowingKeyInput: Bool = false
+        var keyInputText: String = ""
         
         @PresentationState var destination: Destination.State?
     }
@@ -38,6 +42,10 @@ public struct MoreFeature: ReducerProtocol {
         case didTapAddress
         
         case didExitEvent
+        
+        case didTap7Times
+        case didUpdateKeyInput(String)
+        case didTapUnlockInternalPreview
         
         case destination(PresentationAction<Destination.Action>)
     }
@@ -126,6 +134,19 @@ public struct MoreFeature: ReducerProtocol {
                 
             case .destination:
                 return .none
+                
+            case .didTap7Times:
+                state.isShowingKeyInput = true
+                
+            case .didUpdateKeyInput(let key):
+                state.keyInputText = key
+                return .none
+                
+            case .didTapUnlockInternalPreview:
+                guard let event = state.eventData?.event, let internalPreviewKey = event.internalPreviewKey else { return .none }
+                if internalPreviewKey == state.keyInputText {
+                    internalPreviewClient.unlockInternalPreviews(event.id)
+                }
             }
             return .none
         }

@@ -20,7 +20,7 @@ struct TimeIndicatorView: View {
         if dayStartsAtNoon {
             return calendar.isDate(
                 currentTime - 12.hours,
-                inSameDayAs: selectedDate.startOfDay(dayStartsAtNoon: dayStartsAtNoon)
+                inSameDayAs: selectedDate.startOfDay(dayStartsAtNoon: false)
             )
         } else {
             return calendar.isDate(currentTime, inSameDayAs: selectedDate)

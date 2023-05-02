@@ -9,24 +9,23 @@ import ComposableArchitecture
 import Models
 import ArtistPageFeature
 import Combine
+import FestivlDependencies
 
 public struct ExploreFeature: ReducerProtocol {
     public init() {}
     
-    @Dependency(\.stageClient) var stageClient
-    @Dependency(\.artistClient) var artistClient
-    @Dependency(\.scheduleClient) var scheduleClient
-    @Dependency(\.eventID) var eventID
-    @Dependency(\.eventClient) var eventClient
+    @Dependency(\.eventDataClient) var eventDataClient
+    @Dependency(\.eventID.value) var eventID
+
     
     public struct State: Equatable {
 
         public var event: Event?
-        public var artistStates: IdentifiedArrayOf<ArtistPage.State> = .init()
+        public var artistStates: IdentifiedArrayOf<ArtistDetail.State> = .init()
         public var schedule: Schedule?
         public var stages: IdentifiedArrayOf<Stage>?
         
-        @BindingState var selectedArtistPageState: ArtistPage.State?
+        @BindingState var selectedArtistPageState: ArtistDetail.State?
         
         var isLoading: Bool = false
         
@@ -37,11 +36,11 @@ public struct ExploreFeature: ReducerProtocol {
         case binding(_ action: BindingAction<State>)
         
         case task
-        case dataUpdate((IdentifiedArrayOf<Artist>, Schedule, Event, IdentifiedArrayOf<Stage>))
+        case dataUpdate(EventData)
         
-        case artistDetail(id: Artist.ID, action: ArtistPage.Action)
+        case artistDetail(id: Artist.ID, action: ArtistDetail.Action)
         
-        case didTapArtist(ArtistPage.State)
+        case didTapArtist(ArtistDetail.State)
     }
     
     public var body: some ReducerProtocol<State, Action> {
@@ -53,36 +52,31 @@ public struct ExploreFeature: ReducerProtocol {
                 return .none
             case .task:
                 return .run { send in
-                    for try await data in Publishers.CombineLatest4(
-                        artistClient.getArtists(eventID.value),
-                        scheduleClient.getSchedule(eventID.value),
-                        eventClient.getEvent(eventID.value),
-                        stageClient.getStages(eventID.value)
-                    ).values {
+                    for try await data in eventDataClient.getData(eventID).values {
                         await send(.dataUpdate(data))
                     }
                 } catch: { _, _ in
                     print("Artist Page Loading error")
                 }
                 
-            case .dataUpdate((let artists, let schedule, let event, let stages)):
-                state.artistStates = artists
+            case .dataUpdate(let eventData):
+                state.artistStates = eventData.artists
                     .filter { $0.imageURL != nil }
                     .map {
-                        ArtistPage.State(
+                        ArtistDetail.State(
                             artistID: $0.id,
                             artist: $0,
-                            event: event,
-                            schedule: schedule,
-                            stages: stages,
+                            event: eventData.event,
+                            schedule: eventData.schedule,
+                            stages: eventData.stages,
                             isFavorite: false
                         )
                     }
                     .asIdentifedArray
                 
-                state.schedule = schedule
-                state.event = event
-                state.stages = stages
+                state.schedule = eventData.schedule
+                state.event = eventData.event
+                state.stages = eventData.stages
                 
                 return .none
                 
@@ -92,11 +86,11 @@ public struct ExploreFeature: ReducerProtocol {
             }
         }
         .forEach(\.artistStates, action: /Action.artistDetail) {
-            ArtistPage()
+            ArtistDetail()
         }
     }
     
-    func shuffleArtistStates(artistPageState: inout IdentifiedArrayOf<ArtistPage.State>) {
+    func shuffleArtistStates(artistPageState: inout IdentifiedArrayOf<ArtistDetail.State>) {
         artistPageState.shuffle()
     }
     

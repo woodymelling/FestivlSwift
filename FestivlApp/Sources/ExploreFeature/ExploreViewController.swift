@@ -15,10 +15,10 @@ import ComposableArchitecture
 import ArtistPageFeature
 
 struct ExploreViewHosting: UIViewControllerRepresentable {
-    var artists: IdentifiedArrayOf<ArtistPage.State>
+    var artists: IdentifiedArrayOf<ArtistDetail.State>
     var stages: IdentifiedArrayOf<Stage>
     var schedule: Schedule
-    var onSelectArtist: (ArtistPage.State) -> Void
+    var onSelectArtist: (ArtistDetail.State) -> Void
 
 
     typealias UIViewControllerType = ExploreViewController
@@ -51,18 +51,18 @@ struct ExploreViewHosting: UIViewControllerRepresentable {
 }
 
 class ExploreViewController: UICollectionViewController {
-    var exploreArtists: IdentifiedArrayOf<ArtistPage.State>
+    var exploreArtists: IdentifiedArrayOf<ArtistDetail.State>
     var stages: IdentifiedArrayOf<Stage>
     var schedule: Schedule
-    var onSelectArtist: (ArtistPage.State) -> Void
+    var onSelectArtist: (ArtistDetail.State) -> Void
 
     let layout = CollectionViewSlantedLayout()
 
     init(
-        exploreArtists: IdentifiedArrayOf<ArtistPage.State>,
+        exploreArtists: IdentifiedArrayOf<ArtistDetail.State>,
         stages: IdentifiedArrayOf<Stage>,
         schedule: Schedule,
-        onSelectArtist: @escaping (ArtistPage.State) -> Void
+        onSelectArtist: @escaping (ArtistDetail.State) -> Void
     ) {
 
         self.exploreArtists = exploreArtists

@@ -14,14 +14,21 @@ struct ArtistHeaderView: View {
     var artist: Artist
     var event: Event
 
-    var initialHeight = UIScreen.main.bounds.height / 3
+    var initialHeight = UIScreen.main.bounds.height / 2.5
 
     var body: some View {
         ZStack(alignment: .bottom) {
-
-            CachedAsyncImage(url: artist.imageURL ?? event.imageURL, placeholder: {
-                ProgressView()
-            })
+            
+            Group {
+                if let artistImageURL = artist.imageURL {
+                    CachedAsyncImage(url: artistImageURL) { ProgressView() }
+                        .aspectRatio(contentMode: .fill)
+                } else {
+                    CachedAsyncImage(url: event.imageURL, renderingMode: .template) {
+                        ProgressView()
+                    }
+                }
+            }
             .frame(height: initialHeight)
             .aspectRatio(contentMode: .fill)
             .clipped()

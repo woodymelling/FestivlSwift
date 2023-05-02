@@ -13,15 +13,23 @@ import Utilities
 
 struct AllStagesAtOnceView: View {
     let store: StoreOf<ScheduleFeature>
+    
+    struct ViewState: Equatable {
+        var stages: IdentifiedArrayOf<Stage>
+        
+        init(_ state: ScheduleFeature.State) {
+            self.stages = state.stages
+        }
+    }
 
     var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: ViewState.init) { viewStore in
             ScheduleScrollView(store: store, style: .allStages, scrollViewHandler: .init())
-                .toolbar(content: {
+                .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         StagesIndicatorView(stages: viewStore.stages)
                     }
-                })
+                }
         }
     }
 }

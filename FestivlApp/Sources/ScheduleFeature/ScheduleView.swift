@@ -29,7 +29,7 @@ public struct ScheduleLoadingView: View {
     }
     
     public var body: some View {
-        WithViewStore(store, observe: Blank.init) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             IfLetStore(store.scope(state: \.scheduleState, action: ScheduleLoadingFeature.Action.scheduleAction)) { store in
                 ScheduleView(store: store)
             } else: {
@@ -46,10 +46,9 @@ public struct ScheduleView: View {
     public init(store: StoreOf<ScheduleFeature>) {
         self.store = store
     }
-    @State var showing: Bool = true
 
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             NavigationView {
                 Group {
                     switch viewStore.deviceOrientation {

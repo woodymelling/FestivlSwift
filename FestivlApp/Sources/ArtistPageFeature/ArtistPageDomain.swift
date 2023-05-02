@@ -14,7 +14,7 @@ import Combine
 import Tagged
 import ShowScheduleItemDependency
 
-public struct ArtistPage: ReducerProtocol {
+public struct ArtistDetail: ReducerProtocol {
     @Dependency(\.eventID) var eventID
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.userFavoritesClient) var userFavoritesClient
@@ -34,7 +34,7 @@ public struct ArtistPage: ReducerProtocol {
         public var id: Artist.ID { artistID }
         public var isFavorite: Bool
 
-        public init(artistID: Artist.ID, artist: Artist? = nil, event: Event? = nil, schedule: Schedule? = nil, stages: IdentifiedArrayOf<Stage>? = nil, isFavorite: Bool) {
+        public init(artistID: Artist.ID, artist: Artist? = nil, event: Event? = nil, schedule: Schedule? = nil, stages: IdentifiedArrayOf<Stage>? = nil, isFavorite: Bool = false) {
             self.artist = artist
             self.event = event
             self.schedule = schedule
@@ -89,7 +89,7 @@ public struct ArtistPage: ReducerProtocol {
     }
 }
 
-extension ArtistPage.State: Searchable {
+extension ArtistDetail.State: Searchable {
     public var searchTerms: [String] {
         if let artist {
             return [artist.name]

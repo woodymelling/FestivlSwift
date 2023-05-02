@@ -47,7 +47,7 @@ struct CardContainerView: View {
     }
 
     var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             GeometryReader { geo in
                 ZStack {
                     let stageCount = style == .allStages ? viewStore.stages.count : 1

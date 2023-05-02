@@ -9,12 +9,15 @@ import SwiftUI
 import ComposableArchitecture
 import FirebaseServiceImpl
 import EventFeature
+import FestivlDependencies
 
 @main
 struct WickedWoodsApp: App {
 
     init() {
         FirebaseServices.initialize()
+        EventIDStore.shared.value = "NLL2bpmp0IkYF2tohlsI"
+        
     }
     
     var body: some Scene {
@@ -23,7 +26,8 @@ struct WickedWoodsApp: App {
                 store: Store(
                     initialState: .init(),
                     reducer: EventFeature()
-                        .dependency(\.eventID, "uxKxjEQe1RDi5AzB9zZI")
+                        .dependency(\.isEventSpecificApplication, true)
+//                        .dependency(\.eventID, "uxKxjEQe1RDi5AzB9zZI")
                 )
             )
         }

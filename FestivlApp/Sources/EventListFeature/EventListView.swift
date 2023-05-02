@@ -25,7 +25,7 @@ public struct EventListView: View {
     }
 
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             NavigationView {
                 SimpleSearchableList(
                     data: viewStore.eventsWithTestMode,

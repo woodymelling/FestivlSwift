@@ -13,9 +13,9 @@ import Utilities
 
 
 public struct ArtistPageView: View {
-    let store: StoreOf<ArtistPage>
+    let store: StoreOf<ArtistDetail>
 
-    public init(store: StoreOf<ArtistPage>) {
+    public init(store: StoreOf<ArtistDetail>) {
         self.store = store
     }
 
@@ -23,7 +23,7 @@ public struct ArtistPageView: View {
     @State var navigatingURL: URL?
 
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             Group {
                 if let artist = viewStore.artist,
                    let event = viewStore.event,
@@ -50,21 +50,42 @@ public struct ArtistPageView: View {
                                 Text(description)
                             }
                             
-                            if let urlString = artist.soundcloudURL, let url = URL(string: urlString) {
-                                ArtistLinkView(linkType: .soundcloud) {
-                                    navigatingURL = url
-                                }
-                            }
-                            
-                            if let urlString = artist.spotifyURL, let url = URL(string: urlString) {
+                 
+                            // MARK: Socials
+                            if let urlString = artist.spotifyURL, let url = URL(string: urlString), !(artist.soundcloudURL?.isEmpty ?? true) {
                                 ArtistLinkView(linkType: .spotify) {
                                     navigatingURL = url
                                 }
                             }
                             
-                            if let urlString = artist.websiteURL, let url = URL(string: urlString) {
+                            if let urlString = artist.soundcloudURL, let url = URL(string: urlString), !(artist.soundcloudURL?.isEmpty ?? true) {
+                                ArtistLinkView(linkType: .soundcloud) {
+                                    navigatingURL = url
+                                }
+                            }
+                            
+                            
+                            if let urlString = artist.websiteURL, let url = URL(string: urlString), !(artist.websiteURL?.isEmpty ?? true) {
                                 ArtistLinkView(linkType: .website) {
                                     navigatingURL = url
+                                }
+                            }
+                            
+                            if let urlString = artist.instagramURL.map({ URL(string: $0) }), !(artist.instagramURL?.isEmpty ?? true) {
+                                ArtistLinkView(linkType: .instagram) {
+                                    navigatingURL = urlString
+                                }
+                            }
+      
+                            if let urlString = artist.facebookURL.map({ URL(string: $0) }), !(artist.facebookURL?.isEmpty ?? true) {
+                                ArtistLinkView(linkType: .facebook) {
+                                    navigatingURL = urlString
+                                }
+                            }
+                            
+                            if let urlString = artist.youtubeURL.map({ URL(string: $0) }), !(artist.youtubeURL?.isEmpty ?? true) {
+                                ArtistLinkView(linkType: .youtube) {
+                                    navigatingURL = urlString
                                 }
                             }
                         }
@@ -94,10 +115,10 @@ public struct ArtistPageView: View {
     }
 
     @ToolbarContentBuilder
-    func toolbar(viewStore: ViewStore<ArtistPage.State, ArtistPage.Action>) -> some ToolbarContent {
+    func toolbar(viewStore: ViewStore<ArtistDetail.State, ArtistDetail.Action>) -> some ToolbarContent {
         ToolbarItem(placement: .primaryAction, content: {
             Button(action: {
-                viewStore.send(ArtistPage.Action.favoriteArtistButtonTapped)
+                viewStore.send(ArtistDetail.Action.favoriteArtistButtonTapped)
             }, label: {
                 Group {
                     if viewStore.isFavorite {
@@ -145,8 +166,10 @@ struct ArtistPageView_Previews: PreviewProvider {
         ArtistPageView(
             store: .init(
                 initialState: .init(artistID: .init(""), isFavorite: false),
-                reducer: ArtistPage()
+                reducer: ArtistDetail()
             )
         )
     }
 }
+
+

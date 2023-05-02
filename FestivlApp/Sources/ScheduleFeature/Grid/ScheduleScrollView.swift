@@ -18,35 +18,42 @@ struct ScheduleScrollView: View {
 
     @ObservedObject var scrollViewHandler: SingleStageAtOnceView.ViewModel
 
-    @ScaledMetric var scheduleHeight: CGFloat = 1000
+    @ScaledMetric var scheduleHeight: CGFloat = 1500
+    
+    var color: Color {
+        switch style {
+        case .singleStage(let stage):
+            return stage.color
+        case .allStages:
+            return .label
+        }
+    }
 
     var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             
             ScrollViewReader { proxy in
                 ScrollView {
                     GeometryReader { geo in
                         ZStack {
-
-
                             HStack {
                                 ScheduleHourLabelsView(
                                     dayStartsAtNoon: viewStore.event.dayStartsAtNoon,
                                     shouldHideTime: viewStore.shouldShowTimeIndicator
                                 )
                                 .frame(height: scheduleHeight * viewStore.zoomAmount)
-
+                                
                                 ZStack {
-
+                                    
                                     ScheduleGridView()
                                         .frame(height: scheduleHeight * viewStore.zoomAmount)
-
+                                    
                                     CardContainerView(style: style, store: store)
                                         .frame(height: scheduleHeight * viewStore.zoomAmount)
-
+                                    
                                 }
                             }
-
+                            
                             TimeIndicatorView(selectedDate: viewStore.selectedDate, dayStartsAtNoon: viewStore.event.dayStartsAtNoon)
                                 .frame(height: scheduleHeight * viewStore.zoomAmount)
                         }
@@ -57,7 +64,7 @@ struct ScheduleScrollView: View {
                         MagnificationGesture(minimumScaleDelta: 0)
                             .onChanged {
                                 viewStore.send(.zoomed($0.magnitude))
-
+                                
                             }
                             .onEnded { _ in
                                 viewStore.send(.finishedZooming)
@@ -68,13 +75,14 @@ struct ScheduleScrollView: View {
                     withAnimation {
                         proxy.scrollTo(cardToDisplay?.id, anchor: .center)
                     }
-
+                    
                 })
                 .introspectScrollView { scrollView in
                     scrollViewHandler.scrollViewHandler.register(scrollView: scrollView)
                 }
-
+                
             }
+            
         }
 
     }

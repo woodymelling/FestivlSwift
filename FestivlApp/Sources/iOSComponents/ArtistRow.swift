@@ -42,7 +42,9 @@ public struct ArtistRow: View {
                         .frame(square: 30)
                     
                 })
+                .aspectRatio(contentMode: .fill)
                 .frame(square: 60)
+                .clipped()
             }
 
             StagesIndicatorView(

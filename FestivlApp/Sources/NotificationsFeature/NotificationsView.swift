@@ -21,7 +21,7 @@ public struct NotificationsView: View {
     }
 
     public var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             Form {
                 Toggle(
                     "Notify me for favorite artists",
@@ -54,6 +54,7 @@ public struct NotificationsView: View {
                     }
                 }
             }
+            .task { await viewStore.send(.task).finish() }
             .navigationTitle("Notifications")
             .alert(
                 "Enable notifications in Settings to receive alerts for artists",
@@ -68,7 +69,7 @@ public struct NotificationsView: View {
                     Button("Cancel", role: .cancel) { }
                 }
             )
-            .task { await viewStore.send(.task).finish() }
+            
         }
     }
 }

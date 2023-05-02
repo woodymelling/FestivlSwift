@@ -20,34 +20,26 @@ public struct AppView: View {
     }
 
     public var body: some View {
-        WithViewStore(store) { viewStore in
-            IfLetStore(
-                store.scope(
-                    state: \AppFeature.State.eventState,
-                    action: AppFeature.Action.eventAction
-                ),
-                then: EventView.init(store:),
-                else: {
-                    EventListView(
-                        store: store.scope(
-                            state: \AppFeature.State.eventListState,
-                            action: AppFeature.Action.eventListAction
-                        )
+        IfLetStore(
+            store.scope(
+                state: \AppFeature.State.eventState,
+                action: AppFeature.Action.eventAction
+            ),
+            then: EventView.init(store:),
+            else: {
+                EventListView(
+                    store: store.scope(
+                        state: \AppFeature.State.eventListState,
+                        action: AppFeature.Action.eventListAction
                     )
-                }
-            )
-        }
-
+                )
+            }
+        )
     }
 }
 
 struct AppView_Previews: PreviewProvider {
     static var previews: some View {
-        ForEach(ColorScheme.allCases.reversed(), id: \.self) {
-            AppView(
-                store: .init(initialState: .init(), reducer: AppFeature())
-            )
-            .preferredColorScheme($0)
-        }
+        AppView(store: .init(initialState: .init(), reducer: AppFeature()))
     }
 }

@@ -21,25 +21,26 @@ extension Artist: Searchable {
 public struct ArtistListFeature: ReducerProtocol {
     public init() {}
     
-    @Dependency(\.eventID) var eventID
+    @Dependency(\.eventID.value) var eventID
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.userFavoritesClient) var userFavoritesClient
     
     public struct State: Equatable {
-
         public var event: Event?
-        public var artistStates: IdentifiedArrayOf<ArtistPage.State> = .init()
+        public var artists: IdentifiedArrayOf<Artist> = .init()
         public var schedule: Schedule?
         public var stages: IdentifiedArrayOf<Stage>?
         
+        @PresentationState var destination: Destination.State?
+        
         var showArtistImages: Bool = false
-        
         @BindingState public var searchText: String = ""
-        
         var isLoading: Bool = false
         
-        var filteredArtistStates: IdentifiedArrayOf<ArtistPage.State> {
-            artistStates.filterForSearchTerm(searchText).asIdentifedArray
+        var userFavorites: UserFavorites = .init()
+        
+        var filteredArtists: [Artist] {
+            artists.filterForSearchTerm(searchText)
         }
 
         public init() {}
@@ -47,10 +48,29 @@ public struct ArtistListFeature: ReducerProtocol {
 
     public enum Action: BindableAction {
         case binding(_ action: BindingAction<State>)
-        case artistDetail(id: Artist.ID, action: ArtistPage.Action)
+        case destination(PresentationAction<Destination.Action>)
         case task
         
         case dataUpdate(EventData, UserFavorites)
+        
+        case didTapArtist(Artist.ID)
+    }
+    
+    
+    public struct Destination: Reducer {
+        public enum State: Equatable {
+            case artistDetail(ArtistDetail.State)
+        }
+        
+        public enum Action {
+            case artistDetail(ArtistDetail.Action)
+        }
+        
+        public var body: some ReducerOf<Self> {
+            Scope(state: /State.artistDetail, action: /Action.artistDetail) {
+                ArtistDetail()
+            }
+        }
     }
     
     public var body: some ReducerProtocol<State, Action> {
@@ -58,13 +78,13 @@ public struct ArtistListFeature: ReducerProtocol {
         
         Reduce { state, action in
             switch action {
-            case .binding, .artistDetail:
+            case .binding, .destination:
                 return .none
             case .task:
                 return .run { send in
                     
                     for try await (data, userFavorites) in Publishers.CombineLatest(
-                        eventDataClient.getData(eventID.value),
+                        eventDataClient.getData(eventID),
                         userFavoritesClient.userFavoritesPublisher()
                     ).values {
                         await send(.dataUpdate(data, userFavorites))
@@ -74,33 +94,28 @@ public struct ArtistListFeature: ReducerProtocol {
                 }
                 
             case .dataUpdate(let eventData, let userFavorites):
-                state.artistStates = eventData.artists
-                    .sorted(by: \.name)
-                    .map {
-                        ArtistPage.State(
-                            artistID: $0.id,
-                            artist: $0,
-                            event: eventData.event,
-                            schedule: eventData.schedule,
-                            stages: eventData.stages,
-                            isFavorite: userFavorites.contains($0.id)
-                        )
-                    }
-                    .asIdentifedArray
-                
+                state.artists = eventData.artists
                 state.schedule = eventData.schedule
                 state.event = eventData.event
                 state.stages = eventData.stages
                 
                 state.showArtistImages = eventData.artists.contains(where: { $0.imageURL != nil })
                 
+                state.userFavorites = userFavorites
+                
                 return .none
                 
-
+            case let .didTapArtist(artistID):
+                
+                state.destination = .artistDetail(
+                    ArtistDetail.State(artistID: artistID)
+                )
+                
+                return .none
             }
         }
-        .forEach(\.artistStates, action: /Action.artistDetail) {
-            ArtistPage()
+        .ifLet(\.$destination, action: /Action.destination) {
+            Destination()
         }
     }
 }

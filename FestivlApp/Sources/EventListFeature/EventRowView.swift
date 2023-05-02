@@ -23,12 +23,15 @@ struct EventRowView: View {
             HStack(spacing: 10) {
                 CachedAsyncImage(
                     url: event.imageURL,
+                    renderingMode: .template,
                     placeholder: {
                         Image(systemName: "calendar.circle.fill")
                             .resizable()
                     }
                 )
                 .frame(width: 60, height: 60)
+                .foregroundColor(.label)
+//                .invertForLightMode()
 
                 VStack(alignment: .leading) {
                     Text(event.name)
@@ -36,6 +39,7 @@ struct EventRowView: View {
                         .lineLimit(1)
                         .font(.caption2)
                 }
+                .foregroundColor(event.endDate.date < Date.now ? .secondaryLabel : .label )
 
                 Spacer()
             }

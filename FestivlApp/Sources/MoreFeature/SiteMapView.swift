@@ -31,7 +31,7 @@ struct SiteMapView: View {
     let store: StoreOf<SiteMapFeature>
     
     var body: some View {
-        WithViewStore(store) { viewStore in
+        WithViewStore(store, observe: { $0 }) { viewStore in
             ZoomableScrollView {
                 CachedAsyncImage(url: viewStore.url, placeholder: { ProgressView() })
                     .aspectRatio(contentMode: .fit)

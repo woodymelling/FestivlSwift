@@ -90,12 +90,25 @@ public struct MoreView: View {
                                 }
                             }
                         }
+                        
+                        if viewStore.isShowingKeyInput {
+                            Section {
+                                TextField("Internal Preview Key", text: viewStore.binding(get: \.keyInputText, send: { .didUpdateKeyInput($0) } ))
+                                    .textInputAutocapitalization(.none)
+                                Button("Unlock Internal Preview") {
+                                    viewStore.send(.didTapUnlockInternalPreview)
+                                }
+                            }
+                        }
                     }
                     .listStyle(.insetGrouped)
                     .navigationTitle("More")
                 } else {
                     ProgressView()
                 }
+            }
+            .onTapGesture(count: 7) {
+                viewStore.send(.didTap7Times)
             }
             .task { await viewStore.send(.task).finish() }
         }

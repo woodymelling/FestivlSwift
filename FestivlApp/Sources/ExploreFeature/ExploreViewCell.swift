@@ -24,7 +24,7 @@ class ArtistExploreCell: CollectionViewSlantedCell {
     var stageIndicator = StageIndicatorUIView(frame: .zero)
     var gradient = UIHostingController(
         rootView: LinearGradient(
-            colors: [Color(uiColor: .systemBackground), Color.clear],
+            colors: [.systemBackground, Color.clear],
             startPoint: .bottom,
             endPoint: .top
         )
@@ -108,7 +108,7 @@ class ArtistExploreCell: CollectionViewSlantedCell {
 
         guard offset.y.rounded(.towardZero) != 0 else { return }
 
-        let newBounds = imageView.bounds.offsetBy(dx: offset.x, dy: offset.y)
+        let newBounds = imageView.bounds.offsetBy(dx: offset.x, dy: offset.y + 50)
         // Fix crash where newBounds contains NAN
         if newBounds.origin.x.isNaN {
             return

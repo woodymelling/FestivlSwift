@@ -97,6 +97,10 @@ public struct EventFeature: ReducerProtocol {
 
             case .setUpWhenDataLoaded(let data):
                 state.eventData = data
+                
+                if !data.event.scheduleIsPublished && state.selectedTab == .schedule {
+                    state.selectedTab = .artists
+                }
                 NSTimeZone.default = data.event.timeZone
                 
                 return .fireAndForget {
@@ -105,9 +109,9 @@ public struct EventFeature: ReducerProtocol {
                 }
                 
             case let .userNotification(.willPresentNotification(_, completion)):
-                return .fireAndForget {
-                    completion([.list, .banner, .sound])
-                }
+                completion([.list, .banner, .sound])
+                
+                return .none
                 
             case let .userNotification(.didReceiveResponse(response, completion)):
                 return navigateToSetFromNotification(
@@ -121,6 +125,7 @@ public struct EventFeature: ReducerProtocol {
                 
             case .scheduleAction, .artistListAction, .exploreAction,  .moreAction:
                 return .none
+
             }
         }
         
@@ -157,7 +162,9 @@ public struct EventFeature: ReducerProtocol {
                     state.selectedTab = .schedule
                     return .concatenate(
                         .send( .scheduleAction(.scheduleAction(.showAndHighlightCard(scheduleItem)))),
-                        .fireAndForget { completion() }
+                        .run  { _ in
+                            completion()
+                        }
                     )
                 }
             default:
