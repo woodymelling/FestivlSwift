@@ -19,7 +19,7 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
     
     public init() {}
     
-    @Dependency(\.eventID) var eventID
+    @Dependency(\.userDefaults.eventID) var eventID
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.date) var todaysDate
     @Dependency(\.userFavoritesClient) var userFavoritesClient
@@ -46,7 +46,7 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
             case .task:
                 return .run { send in
                     for try await (data, userFavorites) in Publishers.CombineLatest(
-                        eventDataClient.getData(eventID.value),
+                        eventDataClient.getData(self.eventID),
                         userFavoritesClient.userFavoritesPublisher()
                     ).values {
                         await send(.dataUpdate(data, userFavorites))
@@ -98,7 +98,7 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
                     userFavorites: userFavorites,
                     selectedStage: selectedStage,
                     selectedDate: selectedDate,
-                    showComingSoonScreen: showComingSoonScreen
+                    showingComingSoonScreen: showComingSoonScreen
                 )
                 
                 return .none
@@ -126,6 +126,7 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
 public struct ScheduleFeature: ReducerProtocol {
     
     @Dependency(\.deviceOrientationPublisher) var deviceOrientationPublisher
+    @Dependency(\.userDefaults) var userDefaults //
     
     public struct State: Equatable {
 
@@ -136,7 +137,7 @@ public struct ScheduleFeature: ReducerProtocol {
         var userFavorites: UserFavorites
         
         @BindingState public var selectedStage: Stage
-        public var selectedDate: CalendarDate
+        @BindingState public var selectedDate: CalendarDate
         
         public var zoomAmount: CGFloat = 1
         public var lastScaleValue: CGFloat = 1
@@ -148,12 +149,12 @@ public struct ScheduleFeature: ReducerProtocol {
         
         @PresentationState var destination: Destination.State?
 
-        public var hasShownTutorialElements: Bool = true
+        public var showTutorialElements: Bool = false
         @BindingState public var showingLandscapeTutorial: Bool = false
         @BindingState public var showingFilterTutorial: Bool = false
         
         
-        public var showComingSoonScreen: Bool
+        public var showingComingSoonScreen: Bool
         
 
         var isFiltering: Bool {
@@ -178,18 +179,10 @@ public struct ScheduleFeature: ReducerProtocol {
     
     public enum Action: BindableAction {
         case binding(_ action: BindingAction<State>)
-        case selectedDate(CalendarDate)
-
-        case zoomed(CGFloat)
-        case finishedZooming
 
         case task
-        case showTutorialElements
-        case hideLandscapeTutorial
-        case showFilterTutorial
-        case hideFilterTutorial
+        case scheduleTutorial(ScheduleTutorialAction)
 
-        case subscribeToDataPublishers
         case orientationPublisherUpdate(DeviceOrientation)
 
         case showAndHighlightCard(ScheduleItem)
@@ -199,6 +192,14 @@ public struct ScheduleFeature: ReducerProtocol {
         case didTapCard(ScheduleItem)
 
         case destination(PresentationAction<Destination.Action>)
+        
+        
+        public enum ScheduleTutorialAction {
+            case showLandscapeTutorial
+            case hideLandscapeTutorial
+            case showFilterTutorial
+            case hideFilterTutorial
+        }
     }
     
     public struct Destination: ReducerProtocol {
@@ -232,63 +233,29 @@ public struct ScheduleFeature: ReducerProtocol {
                 return .none
 
             case .task:
-                return .run { send in
-                    await send(.subscribeToDataPublishers)
-                    
-                    try await Task.sleep(nanoseconds: NSEC_PER_SEC)
-                    
-                    await send(.showTutorialElements)
-                    
-                }
-
-
-            case .showTutorialElements:
-
-                guard !state.hasShownTutorialElements else { return .none }
-
-                state.showingLandscapeTutorial = true
-                state.hasShownTutorialElements = true
-                
-                return .run { send in
-                    try await Task.sleep(nanoseconds: 5 * NSEC_PER_SEC)
-                    await send(.hideLandscapeTutorial)
-                    await send(.showFilterTutorial)
-                    try await Task.sleep(nanoseconds: 5 * NSEC_PER_SEC)
-                    await send(.hideFilterTutorial)
-                }
-
-            case .hideLandscapeTutorial:
-                state.showingLandscapeTutorial = false
-                return .none
-
-            case .showFilterTutorial:
-                state.showingFilterTutorial = true
-                return .none
-
-            case .hideFilterTutorial:
-                state.showingFilterTutorial = false
-                return .none
-
-            case .zoomed(let val):
-                let delta = val / state.lastScaleValue
-                state.lastScaleValue = val
-                state.zoomAmount = (state.zoomAmount * delta).bounded(min: 0.5, max: 3)
-                return .none
-
-            case .finishedZooming:
-                state.lastScaleValue = 1
-                return .none
-
-            case .selectedDate(let date):
-                state.selectedDate = date
-                return .none
-
-            case .subscribeToDataPublishers:
-                return .run { send in
-                    for await orientation in  deviceOrientationPublisher.values {
-                        await send(.orientationPublisherUpdate(orientation))
+                return .merge(
+                    showFilterTutorialIfRequired(state: &state),
+                    .run { send in
+                        for await orientation in deviceOrientationPublisher.values {
+                            await send(.orientationPublisherUpdate(orientation))
+                        }
                     }
+                )
+
+            case let .scheduleTutorial(tutorialAction):
+                
+                switch tutorialAction {
+                case .showLandscapeTutorial:
+                    state.showingLandscapeTutorial = true
+                case .hideLandscapeTutorial:
+                    state.showingLandscapeTutorial = false
+                case .showFilterTutorial:
+                    state.showingFilterTutorial = true
+                case .hideFilterTutorial:
+                    state.showingFilterTutorial = false
                 }
+                
+                return .none
 
             case .orientationPublisherUpdate(let orientation):
                 state.deviceOrientation = orientation
@@ -307,10 +274,12 @@ public struct ScheduleFeature: ReducerProtocol {
                 state.selectedDate = schedulePage.date
 
                 return .run { send in
-                    try await Task.sleep(nanoseconds: 100_000_000)
-
+                    
+                    try! await Task.sleep(nanoseconds: 1 * NSEC_PER_SEC)
                     // Need to set cardToDisplay after a delay, otherwise the onChange and scrollTo combination won't work
                     await send(.highlightCard(card))
+                    
+                    try! await Task.sleep(nanoseconds: 2 * NSEC_PER_SEC)
                          
                     await send(.unHighlightCard, animation: .easeOut(duration: 2))
                 }
@@ -360,6 +329,26 @@ public struct ScheduleFeature: ReducerProtocol {
         }
         .ifLet(\.$destination, action: /Action.destination) {
             Destination()
+        }
+    }
+    
+    func showFilterTutorialIfRequired(state: inout State) -> Effect<Action> {
+        if state.showingComingSoonScreen || self.userDefaults.hasShownScheduleTutorial {
+            return .none
+        }
+        
+        self.userDefaults.hasShownScheduleTutorial = true
+
+        return .run { send in
+            try await Task.sleep(nanoseconds: 1 * NSEC_PER_SEC)
+            
+            await send(.scheduleTutorial(.showLandscapeTutorial))
+            try await Task.sleep(nanoseconds: 5 * NSEC_PER_SEC)
+            await send(.scheduleTutorial(.hideLandscapeTutorial))
+            
+            await send(.scheduleTutorial(.showFilterTutorial))
+            try await Task.sleep(nanoseconds: 5 * NSEC_PER_SEC)
+            await send(.scheduleTutorial(.hideFilterTutorial))
         }
     }
 }

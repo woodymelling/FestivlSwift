@@ -60,33 +60,20 @@ public struct ScheduleView: View {
                 }
                 .toolbar {
                     ToolbarItem(placement: .principal) {
-                        Menu {
-                            ForEach(viewStore.event.festivalDates, id: \.self, content: { date in
-                                Button {
-                                    viewStore.send(.selectedDate(date), animation: .default)
-                                } label: {
-                                    Text(FestivlFormatting.weekdayFormat(for: date))
-                                }
-                            })
-                        } label: {
-                            HStack {
-                                Text(FestivlFormatting.weekdayFormat(for: viewStore.selectedDate))
-                                    .font(.title2)
-                                Image(systemName: "chevron.down")
-
-                            }
-                            .foregroundColor(.primary)
-                        }
+                        EventDaySelector(
+                            selectedDate: viewStore.binding(\.$selectedDate),
+                            dates: viewStore.event.festivalDates
+                        )
                     }
 
                     ToolbarItem {
                         Menu {
-                            Toggle(isOn: viewStore.binding(\.$filteringFavorites), label: {
+                            Toggle(isOn: viewStore.binding(\.$filteringFavorites)) {
                                 Label(
                                     "Favorites",
                                     systemImage:  viewStore.isFiltering ? "heart.fill" : "heart"
                                 )
-                            })
+                            }
                         } label: {
                             Label(
                                 "Filter",
@@ -94,16 +81,16 @@ public struct ScheduleView: View {
                                     "line.3.horizontal.decrease.circle.fill" :
                                     "line.3.horizontal.decrease.circle"
                             )
-                            .if(viewStore.showingFilterTutorial, transform: {
+                            .if(viewStore.showingFilterTutorial) {
                                 $0.colorMultiply(.gray)
-                            })
+                            }
                         }
                         .popover(present: viewStore.binding(\.$showingFilterTutorial), attributes: { $0.dismissal.mode = .tapOutside }) {
                             ArrowPopover(arrowSide: .top(.mostClockwise)) {
                                 Text("Filter the schedule to only see your favorite artists")
                             }
                             .onTapGesture {
-                                viewStore.send(.binding(.set(\.$showingFilterTutorial, false)))
+                                viewStore.send(.scheduleTutorial(.hideFilterTutorial))
                             }
                         }
                     }
@@ -141,12 +128,38 @@ public struct ScheduleView: View {
                         )
                     },
                     completion: {
-                        viewStore.send(.hideLandscapeTutorial)
+                        viewStore.send(.scheduleTutorial(.hideLandscapeTutorial))
                     }
                 )
             }
             .navigationViewStyle(.stack)
             .task { await viewStore.send(.task).finish() }
+        }
+    }
+}
+
+struct EventDaySelector: View {
+    @Binding var selectedDate: CalendarDate
+    var dates: [CalendarDate]
+    
+    
+    var body: some View {
+        Menu {
+            ForEach(dates, id: \.self) { date in
+                Button {
+                    selectedDate = date
+                } label: {
+                    Text(FestivlFormatting.weekdayFormat(for: date))
+                }
+            }
+        } label: {
+            HStack {
+                Text(FestivlFormatting.weekdayFormat(for: selectedDate))
+                    .font(.title2)
+                Image(systemName: "chevron.down")
+
+            }
+            .foregroundColor(.primary)
         }
     }
 }

@@ -21,7 +21,7 @@ extension Artist: Searchable {
 public struct ArtistListFeature: ReducerProtocol {
     public init() {}
     
-    @Dependency(\.eventID.value) var eventID
+    @Dependency(\.userDefaults.eventID) var eventID
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.userFavoritesClient) var userFavoritesClient
     

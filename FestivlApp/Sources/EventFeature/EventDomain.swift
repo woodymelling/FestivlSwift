@@ -26,11 +26,14 @@ import Components
 public struct EventFeature: ReducerProtocol {
     public init() {}
 
-    @Dependency(\.eventID) var eventID
+    @Dependency(\.userDefaults.eventID) var eventID
+    @Dependency(\.internalPreviewClient) var internalPreviewClient
+    
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.userNotifications) var userNotifications
     
     @Dependency(\.showScheduleItem) var showScheduleItem
+    
     
     public struct State: Equatable {
         var selectedTab: Tab = .schedule
@@ -41,6 +44,8 @@ public struct EventFeature: ReducerProtocol {
         var moreState: MoreFeature.State = .init()
         
         var eventData: EventData?
+        
+        
         
         public init() {}
     }
@@ -68,7 +73,7 @@ public struct EventFeature: ReducerProtocol {
             case .task:
                 return .merge(
                     .run { send in
-                        for try await data in eventDataClient.getData(eventID.value).values {
+                        for try await data in eventDataClient.getData(self.eventID).values {
                             await send(.setUpWhenDataLoaded(data))
                         }
                     },
@@ -98,9 +103,13 @@ public struct EventFeature: ReducerProtocol {
             case .setUpWhenDataLoaded(let data):
                 state.eventData = data
                 
-                if !data.event.scheduleIsPublished && state.selectedTab == .schedule {
+                let hasScheduleAccess = data.event.scheduleIsPublished || self.internalPreviewClient.internalPreviewsAreUnlocked(self.eventID)
+                
+                
+                if !hasScheduleAccess && state.selectedTab == .schedule {
                     state.selectedTab = .artists
                 }
+                
                 NSTimeZone.default = data.event.timeZone
                 
                 return .fireAndForget {

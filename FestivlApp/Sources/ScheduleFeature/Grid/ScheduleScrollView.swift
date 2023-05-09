@@ -35,47 +35,33 @@ struct ScheduleScrollView: View {
             ScrollViewReader { proxy in
                 ScrollView {
                     GeometryReader { geo in
-                        ZStack {
-                            HStack {
-                                ScheduleHourLabelsView(
-                                    dayStartsAtNoon: viewStore.event.dayStartsAtNoon,
-                                    shouldHideTime: viewStore.shouldShowTimeIndicator
-                                )
-                                .frame(height: scheduleHeight * viewStore.zoomAmount)
-                                
-                                ZStack {
-                                    
-                                    ScheduleGridView()
-                                        .frame(height: scheduleHeight * viewStore.zoomAmount)
-                                    
-                                    CardContainerView(style: style, store: store)
-                                        .frame(height: scheduleHeight * viewStore.zoomAmount)
-                                    
-                                }
-                            }
+                        HStack {
+                            ScheduleHourLabelsView(
+                                dayStartsAtNoon: viewStore.event.dayStartsAtNoon,
+                                shouldHideTime: viewStore.shouldShowTimeIndicator
+                            )
+                            .frame(height: scheduleHeight * viewStore.zoomAmount)
                             
-                            TimeIndicatorView(selectedDate: viewStore.selectedDate, dayStartsAtNoon: viewStore.event.dayStartsAtNoon)
-                                .frame(height: scheduleHeight * viewStore.zoomAmount)
-                        }
-                    }
-                    .coordinateSpace(name: "ScheduleTimeline")
-                    .frame(height: scheduleHeight * viewStore.zoomAmount)
-                    .highPriorityGesture(
-                        MagnificationGesture(minimumScaleDelta: 0)
-                            .onChanged {
-                                viewStore.send(.zoomed($0.magnitude))
+                            ZStack {
+                                
+                                ScheduleGridView()
+                                    .frame(height: scheduleHeight * viewStore.zoomAmount)
+                                
+                                CardContainerView(style: style, store: store)
+                                    .frame(height: scheduleHeight * viewStore.zoomAmount)
                                 
                             }
-                            .onEnded { _ in
-                                viewStore.send(.finishedZooming)
-                            }
-                    )
+                        }
+                        
+                        TimeIndicatorView(selectedDate: viewStore.selectedDate, dayStartsAtNoon: viewStore.event.dayStartsAtNoon)
+                            .frame(height: scheduleHeight * viewStore.zoomAmount)
+                    }
+                    .frame(height: scheduleHeight)
                 }
                 .onChange(of: viewStore.cardToDisplay, perform: { cardToDisplay in
                     withAnimation {
-                        proxy.scrollTo(cardToDisplay?.id, anchor: .center)
+                        proxy.scrollTo(cardToDisplay?.id)
                     }
-                    
                 })
                 .introspectScrollView { scrollView in
                     scrollViewHandler.scrollViewHandler.register(scrollView: scrollView)

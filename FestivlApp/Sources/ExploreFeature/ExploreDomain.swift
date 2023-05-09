@@ -15,7 +15,7 @@ public struct ExploreFeature: ReducerProtocol {
     public init() {}
     
     @Dependency(\.eventDataClient) var eventDataClient
-    @Dependency(\.eventID.value) var eventID
+    @Dependency(\.userDefaults.eventID) var eventID
 
     
     public struct State: Equatable {
@@ -52,7 +52,7 @@ public struct ExploreFeature: ReducerProtocol {
                 return .none
             case .task:
                 return .run { send in
-                    for try await data in eventDataClient.getData(eventID).values {
+                    for try await data in eventDataClient.getData(self.eventID).values {
                         await send(.dataUpdate(data))
                     }
                 } catch: { _, _ in

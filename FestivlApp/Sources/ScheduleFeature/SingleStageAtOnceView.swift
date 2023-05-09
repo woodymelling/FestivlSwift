@@ -32,7 +32,7 @@ public struct SingleStageAtOnceView: View {
                         .frame(height: headerHeight)
                     
                     TabView(selection: viewStore.binding(\.$selectedStage)) {
-                        if viewStore.showComingSoonScreen {
+                        if viewStore.showingComingSoonScreen {
                             ScheduleComingSoonView(imageURL: viewStore.event.imageURL)
                         } else {
                             ForEach(viewStore.stages) { stage in

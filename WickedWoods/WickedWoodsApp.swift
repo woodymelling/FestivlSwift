@@ -16,7 +16,7 @@ struct WickedWoodsApp: App {
 
     init() {
         FirebaseServices.initialize()
-        EventIDStore.shared.value = "NLL2bpmp0IkYF2tohlsI"
+        UserDefaultStore.shared.eventID = "NLL2bpmp0IkYF2tohlsI"
         
     }
     

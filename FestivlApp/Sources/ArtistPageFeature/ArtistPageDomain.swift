@@ -15,7 +15,7 @@ import Tagged
 import ShowScheduleItemDependency
 
 public struct ArtistDetail: ReducerProtocol {
-    @Dependency(\.eventID) var eventID
+    @Dependency(\.userDefaults.eventID) var eventID
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.userFavoritesClient) var userFavoritesClient
     
@@ -68,7 +68,7 @@ public struct ArtistDetail: ReducerProtocol {
             return .run { [state] send in
                 
                 for try await (data, artistIsFavorited) in Publishers.CombineLatest(
-                    eventDataClient.getData(eventID.value),
+                    eventDataClient.getData(self.eventID),
                     userFavoritesClient.userFavoritesPublisher().map { $0.contains(state.artistID) }
                 ).values {
                     await send(.dataUpdate(data, artistIsFavorited))

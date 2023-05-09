@@ -73,10 +73,11 @@ struct CardContainerView: View {
                                 favorites: viewStore.userFavorites
                             )
                         )
+                        .id(scheduleItem.id)
+                        .tag(scheduleItem.id)
                         .onTapGesture {
                             viewStore.send(.didTapCard(scheduleItem))
                         }
-                        .id(scheduleItem.id)
                         .frame(size: size)
                         //                        .fixedSize()
                         .position(
