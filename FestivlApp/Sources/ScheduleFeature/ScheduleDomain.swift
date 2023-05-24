@@ -45,10 +45,13 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
             switch action {
             case .task:
                 return .run { send in
+                    
                     for try await (data, userFavorites) in Publishers.CombineLatest(
                         eventDataClient.getData(self.eventID),
                         userFavoritesClient.userFavoritesPublisher()
-                    ).values {
+                    )
+                    .values {
+                        print("Received Data!")
                         await send(.dataUpdate(data, userFavorites))
                     }
                 } catch: { _, _ in
@@ -61,7 +64,7 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
                 userFavoritesClient.updateScheduleData(eventData.schedule, eventData.artists, eventData.stages)
                 
                 let selectedDate: CalendarDate
-                let selectedStage: Stage
+                let selectedStage: Stage.ID
                 let event = eventData.event
                 
                 // This check chooses the correct date for when the app is opened
@@ -81,16 +84,16 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
                     stages: eventData.stages,
                     schedule: eventData.schedule
                 ) {
-                    selectedStage = firstStageWithItems
+                    selectedStage = firstStageWithItems.id
                 } else {
-                    selectedStage = eventData.stages.first!
+                    selectedStage = eventData.stages.first!.id
                 }
                 
                 // Business Rule:
                 // If the schedule is unpublished and the user hasn't unlocked it with the passkey show the comingSoon Screen
                 let showComingSoonScreen = !(event.scheduleIsPublished || internalPreviewClient.internalPreviewsAreUnlocked(event.id))
-            
-                state.scheduleState = .init(
+                
+                state.scheduleState = ScheduleFeature.State(
                     schedule: eventData.schedule,
                     artists: eventData.artists,
                     stages: eventData.stages,
@@ -98,6 +101,12 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
                     userFavorites: userFavorites,
                     selectedStage: selectedStage,
                     selectedDate: selectedDate,
+                    filteringFavorites: state.scheduleState?.filteringFavorites ?? false,
+                    cardToDisplay: state.scheduleState?.cardToDisplay,
+                    destination: state.scheduleState?.destination,
+                    showTutorialElements: state.scheduleState?.showTutorialElements ?? false,
+                    showingLandscapeTutorial: state.scheduleState?.showingLandscapeTutorial ?? false,
+                    showingFilterTutorial: state.scheduleState?.showingFilterTutorial ?? false,
                     showingComingSoonScreen: showComingSoonScreen
                 )
                 
@@ -129,29 +138,60 @@ public struct ScheduleFeature: ReducerProtocol {
     @Dependency(\.userDefaults) var userDefaults //
     
     public struct State: Equatable {
-
-        public var schedule: Schedule
-        public let artists: IdentifiedArrayOf<Artist>
-        public let stages: IdentifiedArrayOf<Stage>
-        public var event: Event
-        var userFavorites: UserFavorites
-        
-        @BindingState public var selectedStage: Stage
-        @BindingState public var selectedDate: CalendarDate
-        
-        public var zoomAmount: CGFloat = 1
-        public var lastScaleValue: CGFloat = 1
-        
-        public var deviceOrientation: DeviceOrientation = .portrait
-        @BindingState public var filteringFavorites: Bool = false
-
-        public var cardToDisplay: ScheduleItem?
+        internal init(
+            schedule: Schedule,
+            artists: IdentifiedArrayOf<Artist>,
+            stages: IdentifiedArrayOf<Stage>,
+            event: Event,
+            userFavorites: UserFavorites,
+            selectedStage: Stage.ID,
+            selectedDate: CalendarDate,
+            deviceOrientation: DeviceOrientation = .portrait,
+            filteringFavorites: Bool,
+            cardToDisplay: ScheduleItem.ID?,
+            destination: ScheduleFeature.Destination.State?,
+            showTutorialElements: Bool,
+            showingLandscapeTutorial: Bool,
+            showingFilterTutorial: Bool,
+            showingComingSoonScreen: Bool
+        ) {
+            self.schedule = schedule
+            self.artists = artists
+            self.stages = stages
+            self.event = event
+            self.userFavorites = userFavorites
+            self.selectedStage = selectedStage
+            self.selectedDate = selectedDate
+            self.deviceOrientation = deviceOrientation
+            self.filteringFavorites = filteringFavorites
+            self.cardToDisplay = cardToDisplay
+            self.destination = destination
+            self.showTutorialElements = showTutorialElements
+            self.showingLandscapeTutorial = showingLandscapeTutorial
+            self.showingFilterTutorial = showingFilterTutorial
+            self.showingComingSoonScreen = showingComingSoonScreen
+        }
         
         @PresentationState var destination: Destination.State?
 
-        public var showTutorialElements: Bool = false
-        @BindingState public var showingLandscapeTutorial: Bool = false
-        @BindingState public var showingFilterTutorial: Bool = false
+        var schedule: Schedule
+        let artists: IdentifiedArrayOf<Artist>
+        let stages: IdentifiedArrayOf<Stage>
+        var event: Event
+        var userFavorites: UserFavorites
+        
+        @BindingState public var selectedStage: Stage.ID
+        @BindingState public var selectedDate: CalendarDate
+        @BindingState public var filteringFavorites: Bool
+        
+        public var deviceOrientation: DeviceOrientation = .portrait
+
+        public var cardToDisplay: ScheduleItem.ID?
+        
+
+        public var showTutorialElements: Bool
+        @BindingState public var showingLandscapeTutorial: Bool
+        @BindingState public var showingFilterTutorial: Bool
         
         
         public var showingComingSoonScreen: Bool
@@ -160,10 +200,6 @@ public struct ScheduleFeature: ReducerProtocol {
         var isFiltering: Bool {
             // For future filters
             return filteringFavorites
-        }
-
-        var shouldShowTimeIndicator: Bool {
-            return true
         }
     }
     
@@ -185,7 +221,7 @@ public struct ScheduleFeature: ReducerProtocol {
 
         case orientationPublisherUpdate(DeviceOrientation)
 
-        case showAndHighlightCard(ScheduleItem)
+        case showAndHighlightCard(ScheduleItem.ID)
         case highlightCard(ScheduleItem)
         case unHighlightCard
 
@@ -261,23 +297,26 @@ public struct ScheduleFeature: ReducerProtocol {
                 state.deviceOrientation = orientation
                 return .none
 
-            case .showAndHighlightCard(let card):
+            case .showAndHighlightCard(let cardID):
                 
                 state.destination = nil
+                
+                guard let card = state.schedule[id: cardID] else {
+                    XCTFail("Could not find scheduleItem with id: \(cardID)")
+                    return .none
+                }
                 
                 let schedulePage = card.schedulePageIdentifier(dayStartsAtNoon: state.event.dayStartsAtNoon, timeZone: state.event.timeZone)
                 
                 if let stage = state.stages[id: schedulePage.stageID] {
-                    state.selectedStage = stage
+                    state.selectedStage = stage.id
                 }
 
                 state.selectedDate = schedulePage.date
+                
+                state.cardToDisplay = cardID
 
                 return .run { send in
-                    
-                    try! await Task.sleep(nanoseconds: 1 * NSEC_PER_SEC)
-                    // Need to set cardToDisplay after a delay, otherwise the onChange and scrollTo combination won't work
-                    await send(.highlightCard(card))
                     
                     try! await Task.sleep(nanoseconds: 2 * NSEC_PER_SEC)
                          
@@ -285,7 +324,7 @@ public struct ScheduleFeature: ReducerProtocol {
                 }
 
             case .highlightCard(let card):
-                state.cardToDisplay = card
+                state.cardToDisplay = card.id
                 return .none
 
             case .unHighlightCard:
@@ -318,10 +357,6 @@ public struct ScheduleFeature: ReducerProtocol {
 
                     return .none
                 }
-                
-            case .destination(.presented(.artist(.didTapScheduleItem(let scheduleItem)))), .destination(.presented(.groupSet(.didTapScheduleItem(let scheduleItem)))):
-                state.destination = nil
-                return .task { .showAndHighlightCard(scheduleItem) } // TODO: Function to showAnd highlight
                 
             case .destination:
                 return .none

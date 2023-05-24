@@ -56,7 +56,7 @@ public struct ArtistDetail: ReducerProtocol {
         switch action {
         case .didTapScheduleItem(let scheduleItem):
             
-            showScheduleItem(scheduleItem)
+            showScheduleItem(scheduleItem.id)
             return .none
             
         case .favoriteArtistButtonTapped:

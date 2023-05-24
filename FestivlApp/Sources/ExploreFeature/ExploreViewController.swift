@@ -117,7 +117,7 @@ class ExploreViewController: UICollectionViewController {
         
         cell.initWithArtist(
             artist: artist!,
-            stages: schedule[artistID: artist!.id].compactMap { stages[id: $0.stageID] }
+            stages: schedule[artistID: artist!.id].map(\.stage)
         )
 
         if let layout = collectionView.collectionViewLayout as? CollectionViewSlantedLayout {

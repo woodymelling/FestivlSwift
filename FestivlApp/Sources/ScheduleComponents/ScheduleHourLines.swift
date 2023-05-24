@@ -8,7 +8,7 @@
 import SwiftUI
 import Utilities
 
-struct ScheduleGridView: View {
+struct ScheduleHourLines: View {
     var body: some View {
         GeometryReader { proxy in
             let hourSpacing = proxy.size.height / 24
@@ -28,7 +28,7 @@ struct ScheduleGridView: View {
 
                         path.addLine(
                             to: CGPoint(
-                                x: 10000,
+                                x: proxy.size.width,
                                 y: lineHeight
                             )
                         )
@@ -44,7 +44,7 @@ struct ScheduleGridView: View {
 struct ScheduleGridView_Previews: PreviewProvider {
     static var previews: some View {
         
-        ScheduleGridView()
+        ScheduleHourLines()
             .previewAllColorModes()
     }
 }

@@ -12,9 +12,10 @@ import Components
 
 struct ArtistHeaderView: View {
     var artist: Artist
-    var event: Event
 
     var initialHeight = UIScreen.main.bounds.height / 2.5
+    
+    @Environment(\.eventImageURL) var eventImageURL
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -24,7 +25,7 @@ struct ArtistHeaderView: View {
                     CachedAsyncImage(url: artistImageURL) { ProgressView() }
                         .aspectRatio(contentMode: .fill)
                 } else {
-                    CachedAsyncImage(url: event.imageURL, renderingMode: .template) {
+                    CachedAsyncImage(url: eventImageURL, renderingMode: .template) {
                         ProgressView()
                     }
                 }
@@ -55,6 +56,6 @@ struct ArtistHeaderView: View {
 
 struct ArtistHeaderView_Previews: PreviewProvider {
     static var previews: some View {
-        ArtistHeaderView(artist: Artist.testValues[1], event: .testData)
+        ArtistHeaderView(artist: Artist.testValues[1])
     }
 }

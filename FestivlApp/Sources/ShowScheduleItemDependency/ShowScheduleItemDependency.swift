@@ -11,13 +11,13 @@ import Combine
 import Models
 
 public struct ShowScheduleItemClient {
-    static var livePublisher: PassthroughSubject<ScheduleItem, Never> = .init()
+    static var livePublisher: PassthroughSubject<ScheduleItem.ID, Never> = .init()
     
     
-    public var showScheduleItem: (ScheduleItem) -> Void
-    public var items: () -> AnyPublisher<ScheduleItem, Never>
+    public var showScheduleItem: (ScheduleItem.ID) -> Void
+    public var items: () -> AnyPublisher<ScheduleItem.ID, Never>
     
-    public func callAsFunction(_ scheduleItem: ScheduleItem) {
+    public func callAsFunction(_ scheduleItem: ScheduleItem.ID) {
         self.showScheduleItem(scheduleItem)
     }
 }

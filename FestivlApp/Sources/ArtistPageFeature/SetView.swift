@@ -11,13 +11,11 @@ import Components
 import ComposableArchitecture
 
 public struct SetView: View {
-    public init(set: ScheduleItem, stages: IdentifiedArrayOf<Stage>) {
+    public init(set: ScheduleItem) {
         self.set = set
-        self.stages = stages
     }
 
     var set: ScheduleItem
-    var stages: IdentifiedArrayOf<Stage>
 
     public var body: some View {
         
@@ -26,12 +24,10 @@ public struct SetView: View {
 
             // TODO: Row Spacing Signleton FestivlTheme
             HStack(spacing: 10) {
-                let stage = stages[id: set.stageID]!
-
-                StagesIndicatorView(stages: [stage])
+                StagesIndicatorView(stages: [set.stage])
                     .frame(width: 5)
 
-                StageIconView(stage: stage)
+                StageIconView(stage: set.stage)
                     .frame(square: 60)
 
                 switch set.type {
@@ -77,7 +73,7 @@ public struct SetView: View {
 struct ArtistSetViewView_Previews: PreviewProvider {
     static var previews: some View {
         List {
-            SetView(set: ScheduleItem.testValues().first!, stages: IdentifiedArray(uniqueElements: Stage.testValues))
+            SetView(set: ScheduleItem.testValues().first!)
         }
         .listStyle(.plain)
         .previewAllColorModes()

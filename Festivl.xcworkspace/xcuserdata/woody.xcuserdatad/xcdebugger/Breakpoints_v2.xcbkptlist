@@ -7,47 +7,77 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "4F2220BD-2693-46FA-B313-B8E82B6D193F"
+            uuid = "82EB74BC-CA4A-483D-A25A-FA1B454F3EDF"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FestivlApp/Sources/ScheduleFeature/ScheduleDomain.swift"
+            filePath = "../FestivlLibrary/Sources/FestivlDependencies/APIClients/UserFavoritesClient.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "59"
-            endingLineNumber = "59"
-            landmarkName = "body"
+            startingLineNumber = "113"
+            endingLineNumber = "113"
+            landmarkName = "beforeSetNotificationTime"
             landmarkType = "24">
             <Locations>
                <Location
-                  uuid = "4F2220BD-2693-46FA-B313-B8E82B6D193F - 33bd1793908ecca8"
-                  shouldBeEnabled = "Yes"
+                  uuid = "82EB74BC-CA4A-483D-A25A-FA1B454F3EDF - 71cca468c2d24e52"
+                  shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (inout ScheduleFeature.ScheduleLoadingFeature.State, ScheduleFeature.ScheduleLoadingFeature.Action) -&gt; ComposableArchitecture.EffectPublisher&lt;ScheduleFeature.ScheduleLoadingFeature.Action, Swift.Never&gt; in ScheduleFeature.ScheduleLoadingFeature.body.getter : some"
-                  moduleName = "Festivl"
+                  symbolName = "FestivlDependencies.UserFavoritesStore.beforeSetNotificationTime.getter : Swift.Int"
+                  moduleName = "WickedWoods"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/woody/Developer/Festivl/iOS/Festivl/FestivlApp/Sources/ScheduleFeature/ScheduleDomain.swift"
+                  urlString = "file:///Users/woody/Developer/Festivl/iOS/FestivlLibrary/Sources/FestivlDependencies/APIClients/UserFavoritesClient.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "57"
-                  endingLineNumber = "57"
-                  offsetFromSymbolStart = "1392">
+                  startingLineNumber = "108"
+                  endingLineNumber = "108"
+                  offsetFromSymbolStart = "376">
                </Location>
                <Location
-                  uuid = "4F2220BD-2693-46FA-B313-B8E82B6D193F - 33bd1793908eccee"
-                  shouldBeEnabled = "Yes"
+                  uuid = "82EB74BC-CA4A-483D-A25A-FA1B454F3EDF - 707485fa9b93125e"
+                  shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (inout ScheduleFeature.ScheduleLoadingFeature.State, ScheduleFeature.ScheduleLoadingFeature.Action) -&gt; ComposableArchitecture.EffectPublisher&lt;ScheduleFeature.ScheduleLoadingFeature.Action, Swift.Never&gt; in ScheduleFeature.ScheduleLoadingFeature.body.getter : some"
-                  moduleName = "Festivl"
+                  symbolName = "FestivlDependencies.UserFavoritesStore.beforeSetNotificationTime.setter : Swift.Int"
+                  moduleName = "WickedWoods"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/woody/Developer/Festivl/iOS/Festivl/FestivlApp/Sources/ScheduleFeature/ScheduleDomain.swift"
+                  urlString = "file:///Users/woody/Developer/Festivl/iOS/FestivlLibrary/Sources/FestivlDependencies/APIClients/UserFavoritesClient.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "59"
-                  endingLineNumber = "59"
-                  offsetFromSymbolStart = "1376">
+                  startingLineNumber = "108"
+                  endingLineNumber = "108"
+                  offsetFromSymbolStart = "108">
+               </Location>
+               <Location
+                  uuid = "82EB74BC-CA4A-483D-A25A-FA1B454F3EDF - 7975f06e0549236f"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "FestivlDependencies.UserFavoritesStore.beforeSetNotificationTime.modify : Swift.Int"
+                  moduleName = "WickedWoods"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/woody/Developer/Festivl/iOS/FestivlLibrary/Sources/FestivlDependencies/APIClients/UserFavoritesClient.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "108"
+                  endingLineNumber = "108"
+                  offsetFromSymbolStart = "0">
+               </Location>
+               <Location
+                  uuid = "82EB74BC-CA4A-483D-A25A-FA1B454F3EDF - 880aa2fd598b23a6"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "FestivlDependencies.UserFavoritesStore.beforeSetNotificationTime.modify : Swift.Int with unmangled suffix &quot;.resume.0&quot;"
+                  moduleName = "WickedWoods"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/woody/Developer/Festivl/iOS/FestivlLibrary/Sources/FestivlDependencies/APIClients/UserFavoritesClient.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "108"
+                  endingLineNumber = "108"
+                  offsetFromSymbolStart = "24">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -55,64 +85,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "194C048A-4C25-47C6-A1B9-8D55A5182B86"
+            uuid = "744D4BF6-4F43-4DCA-87F4-81654287F9E5"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "FestivlApp/Sources/ArtistPageFeature/ArtistPageView.swift"
+            filePath = "FestivlApp/Sources/ScheduleFeature/ScheduleDomain.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "86"
-            endingLineNumber = "86"
+            startingLineNumber = "331"
+            endingLineNumber = "331"
             landmarkName = "body"
             landmarkType = "24">
-            <Locations>
-               <Location
-                  uuid = "194C048A-4C25-47C6-A1B9-8D55A5182B86 - 3d937fa61df534f7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.ForEach&lt;Swift.Array&lt;Models.ScheduleItem&gt;, Tagged.Tagged&lt;Models.ScheduleItem, Swift.String&gt;, SwiftUI.Button&lt;ArtistPageFeature.SetView&gt;&gt;, Swift.Optional&lt;SwiftUI.Text&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;)&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(ArtistPageFeature.ArtistHeaderView, &lt;&lt;opaque return type of SwiftUI.View.ignoresSafeArea(_: SwiftUI.SafeAreaRegions, edges: SwiftUI.Edge.Set) -&gt; some&gt;&gt;.0)&gt; in closure #1 () -&gt; SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.toolbar&lt;&#x3c4;_0_0 where &#x3c4;_1_0: SwiftUI.ToolbarContent&gt;(content: () -&gt; &#x3c4;_1_0) -&gt; some&gt;&gt;.0, SwiftUI.ProgressView&lt;SwiftUI.EmptyView, SwiftUI.EmptyView&gt;&gt; in closure #1 (ComposableArchitecture.ViewStore&lt;ArtistPageFeature.ArtistPage.State, ArtistPageFeature.ArtistPage.Action&gt;) -&gt; &lt;&lt;opaque return type of SwiftUI.View.task(priority: Swift.TaskPriority, _: @Sendable () async -&gt; ()) -&gt; some&gt;&gt;.0 in ArtistPageFeature.ArtistPageView.body.getter : some"
-                  moduleName = "Festivl"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/woody/Developer/Festivl/iOS/Festivl/FestivlApp/Sources/ArtistPageFeature/ArtistPageView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "86"
-                  endingLineNumber = "86"
-                  offsetFromSymbolStart = "5908">
-               </Location>
-               <Location
-                  uuid = "194C048A-4C25-47C6-A1B9-8D55A5182B86 - 3d937fa61df534f7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.ForEach&lt;Swift.Array&lt;Models.ScheduleItem&gt;, Tagged.Tagged&lt;Models.ScheduleItem, Swift.String&gt;, SwiftUI.Button&lt;ArtistPageFeature.SetView&gt;&gt;, Swift.Optional&lt;SwiftUI.Text&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;)&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(ArtistPageFeature.ArtistHeaderView, &lt;&lt;opaque return type of SwiftUI.View.ignoresSafeArea(_: SwiftUI.SafeAreaRegions, edges: SwiftUI.Edge.Set) -&gt; some&gt;&gt;.0)&gt; in closure #1 () -&gt; SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.toolbar&lt;&#x3c4;_0_0 where &#x3c4;_1_0: SwiftUI.ToolbarContent&gt;(content: () -&gt; &#x3c4;_1_0) -&gt; some&gt;&gt;.0, SwiftUI.ProgressView&lt;SwiftUI.EmptyView, SwiftUI.EmptyView&gt;&gt; in closure #1 (ComposableArchitecture.ViewStore&lt;ArtistPageFeature.ArtistPage.State, ArtistPageFeature.ArtistPage.Action&gt;) -&gt; &lt;&lt;opaque return type of SwiftUI.View.task(priority: Swift.TaskPriority, _: @Sendable () async -&gt; ()) -&gt; some&gt;&gt;.0 in ArtistPageFeature.ArtistPageView.body.getter : some"
-                  moduleName = "Festivl"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/woody/Developer/Festivl/iOS/Festivl/FestivlApp/Sources/ArtistPageFeature/ArtistPageView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "86"
-                  endingLineNumber = "86"
-                  offsetFromSymbolStart = "6108">
-               </Location>
-               <Location
-                  uuid = "194C048A-4C25-47C6-A1B9-8D55A5182B86 - 6bbbb81dcc968c4a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #9 (Swift.String) -&gt; Swift.Optional&lt;Foundation.URL&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.ForEach&lt;Swift.Array&lt;Models.ScheduleItem&gt;, Tagged.Tagged&lt;Models.ScheduleItem, Swift.String&gt;, SwiftUI.Button&lt;ArtistPageFeature.SetView&gt;&gt;, Swift.Optional&lt;SwiftUI.Text&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;, Swift.Optional&lt;ArtistPageFeature.ArtistLinkView&gt;)&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(ArtistPageFeature.ArtistHeaderView, &lt;&lt;opaque return type of SwiftUI.View.ignoresSafeArea(_: SwiftUI.SafeAreaRegions, edges: SwiftUI.Edge.Set) -&gt; some&gt;&gt;.0)&gt; in closure #1 () -&gt; SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.toolbar&lt;&#x3c4;_0_0 where &#x3c4;_1_0: SwiftUI.ToolbarContent&gt;(content: () -&gt; &#x3c4;_1_0) -&gt; some&gt;&gt;.0, SwiftUI.ProgressView&lt;SwiftUI.EmptyView, SwiftUI.EmptyView&gt;&gt; in closure #1 (ComposableArchitecture.ViewStore&lt;ArtistPageFeature.ArtistPage.State, ArtistPageFeature.ArtistPage.Action&gt;) -&gt; &lt;&lt;opaque return type of SwiftUI.View.task(priority: Swift.TaskPriority, _: @Sendable () async -&gt; ()) -&gt; some&gt;&gt;.0 in ArtistPageFeature.ArtistPageView.body.getter : some"
-                  moduleName = "Festivl"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/woody/Developer/Festivl/iOS/Festivl/FestivlApp/Sources/ArtistPageFeature/ArtistPageView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "86"
-                  endingLineNumber = "86"
-                  offsetFromSymbolStart = "44">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

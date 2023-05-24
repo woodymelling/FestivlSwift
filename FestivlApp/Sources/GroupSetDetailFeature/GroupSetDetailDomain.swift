@@ -103,7 +103,7 @@ public struct GroupSetDetail: ReducerProtocol {
                 
             case .didTapScheduleItem(let scheduleItem):
                 
-                showScheduleItem(scheduleItem)
+                showScheduleItem(scheduleItem.id)
                 return .none
                 
             case let .didTapArtist(artistID):

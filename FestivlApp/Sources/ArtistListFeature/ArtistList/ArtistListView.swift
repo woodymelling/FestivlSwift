@@ -24,7 +24,7 @@ public struct ArtistListView: View {
     struct ViewState: Equatable {
         enum LoadingState: Equatable {
             case loading
-            case loaded(Schedule, Event, IdentifiedArrayOf<Stage>, [Artist], UserFavorites)
+            case loaded(Schedule, Event, [Artist], UserFavorites)
         }
         
         var loadingState: LoadingState
@@ -37,17 +37,14 @@ public struct ArtistListView: View {
             
             if !state.isLoading,
                let schedule = state.schedule,
-               let event = state.event,
-               let stages = state.stages
+               let event = state.event
             {
-                self.loadingState = .loaded(schedule, event, stages, state.filteredArtists, state.userFavorites)
+                self.loadingState = .loaded(schedule, event, state.filteredArtists, state.userFavorites)
             } else {
                 self.loadingState = .loading
             }
         }
     }
-    
-    
     
     public var body: some View {
         WithViewStore(store, observe: ViewState.init) { viewStore in
@@ -57,7 +54,7 @@ public struct ArtistListView: View {
                 case .loading:
                     ProgressView()
                                         
-                case let .loaded(schedule, event, stages, artists, userFavorites):
+                case let .loaded(schedule, event, artists, userFavorites):
                     if artists.isEmpty {
                         NoResultsView(searchText: viewStore.searchText)
                     } else {
@@ -76,15 +73,13 @@ public struct ArtistListView: View {
                                 ArtistRow(
                                     artist: artist,
                                     event: event,
-                                    stages: stages,
                                     sets: schedule[artistID: artist.id],
                                     isFavorite: userFavorites.contains(artist.id),
-                                    showArtistImage: viewStore.showArtistImages
+                                    showArtistImage: true
                                 )
                             }
                         }
                         .listStyle(.plain)
-                 
                     }
                 }
             }

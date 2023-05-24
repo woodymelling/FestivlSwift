@@ -31,7 +31,6 @@ public struct MoreFeature: ReducerProtocol {
         @PresentationState var destination: Destination.State?
     }
     
-    
     public enum Action {
         case task
         case dataLoaded(EventData)

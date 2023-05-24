@@ -16,11 +16,13 @@ struct ScheduleComingSoonView: View {
     
     @State var degrees: Angle = .degrees(0)
     
+    @Environment(\.eventImageURL) var eventImageURL
+    
     var body: some View {
         ZStack {
             
             
-            CachedAsyncImage(url: imageURL, renderingMode: .template) {
+            CachedAsyncImage(url: eventImageURL, renderingMode: .template) {
                 ProgressView()
             }
 //            .frame(square: 300)

@@ -27,6 +27,8 @@ struct WickedWoodsApp: App {
                     initialState: .init(),
                     reducer: EventFeature()
                         .dependency(\.isEventSpecificApplication, true)
+//                        ._printChanges()
+//                        .dependency(\.userFavoritesClient, .liveValue)
 //                        .dependency(\.eventID, "uxKxjEQe1RDi5AzB9zZI")
                 )
             )

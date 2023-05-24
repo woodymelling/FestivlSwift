@@ -41,7 +41,10 @@ public struct TabBarView: View {
                      send: EventFeature.Action.didSelectTab
                 )
             ) {
-                ScheduleLoadingView(store: store.scope(state: \.scheduleState, action: EventFeature.Action.scheduleAction))
+                NavigationView {
+                    
+                    ScheduleLoadingView(store: store.scope(state: \.scheduleState, action: EventFeature.Action.scheduleAction))
+                }
                     .tabItem {
                         Label("Schedule", systemImage: "calendar")
                     }

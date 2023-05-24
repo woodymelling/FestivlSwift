@@ -11,31 +11,29 @@ import Models
 import Components
 import Utilities
 
-struct ScheduleHeaderView: View {
+struct ScheduleStageSelector: View {
     var stages: IdentifiedArrayOf<Stage>
-    @Binding var selectedStage: Stage
-
+    @Binding var selectedStage: Stage.ID
 
     var body: some View {
         ZStack(alignment: .bottom) {
-
             HStack {
-
                 ForEach(stages) { stage in
                     Spacer()
                     ScheduleHeaderButton(
                         stage: stage,
-                        isSelected: selectedStage == stage,
+                        isSelected: selectedStage == stage.id,
                         onSelect: {
                             selectedStage = $0
                         }
                     )
-
                 }
                 Spacer()
             }
-            .background(Color(uiColor: .systemBackground))
             .frame(maxWidth: .infinity)
+            .background(
+                Color.systemBackground.edgesIgnoringSafeArea(.top)
+            )
             .shadow()
         }
     }
@@ -62,7 +60,7 @@ struct ScheduleHeaderButton: View {
     var stage: Stage
     var isSelected: Bool
     @State var press = false
-    var onSelect: (Stage) -> Void
+    var onSelect: (Stage.ID) -> Void
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
@@ -93,7 +91,7 @@ struct ScheduleHeaderButton: View {
             animation: .easeInOut(duration: 0.05),
             onRelease: {
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                onSelect(stage)
+                onSelect(stage.id)
 
             }
         )
@@ -109,9 +107,9 @@ struct ScheduleHeaderView_Previews: PreviewProvider {
 
     struct PreviewWrapper: View {
 
-        @State var selectedStage = Stage.testValues[1]
+        @State var selectedStage = Stage.testValues[1].id
         var body: some View {
-            ScheduleHeaderView(
+            ScheduleStageSelector(
                 stages: IdentifiedArray(uniqueElements: Stage.testValues),
                 selectedStage: $selectedStage
             )

@@ -45,8 +45,6 @@ public struct EventFeature: ReducerProtocol {
         
         var eventData: EventData?
         
-        
-        
         public init() {}
     }
     
@@ -57,7 +55,7 @@ public struct EventFeature: ReducerProtocol {
         
         case setUpWhenDataLoaded(EventData)
         
-        case showScheduleItem(ScheduleItem)
+        case showScheduleItem(ScheduleItem.ID)
         
         case artistListAction(ArtistListFeature.Action)
         case scheduleAction(ScheduleLoadingFeature.Action)
@@ -137,6 +135,7 @@ public struct EventFeature: ReducerProtocol {
 
             }
         }
+
         
         Scope(state: \.artistListState, action: /Action.artistListAction) {
             ArtistListFeature()
@@ -153,6 +152,7 @@ public struct EventFeature: ReducerProtocol {
         Scope(state: \.moreState, action: /Action.moreAction) {
             MoreFeature()
         }
+//        ._printChanges()
     }
     
     
@@ -170,7 +170,7 @@ public struct EventFeature: ReducerProtocol {
                    let scheduleItem = schedule[id: .init(setID)] {
                     state.selectedTab = .schedule
                     return .concatenate(
-                        .send( .scheduleAction(.scheduleAction(.showAndHighlightCard(scheduleItem)))),
+                        .send( .scheduleAction(.scheduleAction(.showAndHighlightCard(scheduleItem.id)))),
                         .run  { _ in
                             completion()
                         }

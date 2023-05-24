@@ -10,6 +10,7 @@ import ComposableArchitecture
 import Models
 import Utilities
 import Components
+import ScheduleComponents
 
 public struct EventView: View {
     let store: StoreOf<EventFeature>
@@ -17,11 +18,23 @@ public struct EventView: View {
     public init(store: StoreOf<EventFeature>) {
         self.store = store
     }
+    
+    struct ViewState: Equatable {
+        var dayStartsAtNoon: Bool
+        var eventImageURL: URL?
+        
+        init(state: EventFeature.State) {
+            self.dayStartsAtNoon = state.eventData?.event.dayStartsAtNoon ?? false
+            self.eventImageURL = state.eventData?.event.imageURL
+        }
+    }
 
     public var body: some View {
-        WithViewStore(store, observe: Blank.init) { viewStore in
+        WithViewStore(store, observe: ViewState.init) { viewStore in
             TabBarView(store: store)
                 .task { await viewStore.send(.task).finish() }
+                .environment(\.dayStartsAtNoon, viewStore.dayStartsAtNoon)
+                .environment(\.eventImageURL, viewStore.eventImageURL)
         }
     }
 }

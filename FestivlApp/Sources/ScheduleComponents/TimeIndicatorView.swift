@@ -8,33 +8,24 @@
 import SwiftUI
 import Utilities
 
+struct SelectedDateEnvironmentKey: EnvironmentKey {
+    static var defaultValue: CalendarDate = .today
+}
+
+extension EnvironmentValues {
+    public var calendarSelectedDate: CalendarDate {
+        get { self[SelectedDateEnvironmentKey.self] }
+        set { self[SelectedDateEnvironmentKey.self] = newValue }
+    }
+}
+
 struct TimeIndicatorView: View {
-    var selectedDate: CalendarDate
-    var dayStartsAtNoon: Bool
-
-    func shouldShowTimeIndicator(_ currentTime: Date) -> Bool {
-        var calendar = Calendar.current
-        calendar.timeZone = NSTimeZone.default
-        let selectedDate = selectedDate.date // Convert to Date object
-        
-        if dayStartsAtNoon {
-            return calendar.isDate(
-                currentTime - 12.hours,
-                inSameDayAs: selectedDate.startOfDay(dayStartsAtNoon: false)
-            )
-        } else {
-            return calendar.isDate(currentTime, inSameDayAs: selectedDate)
-        }
-    }
-
-    var timeFormat: Date.FormatStyle {
-        var format = Date.FormatStyle.dateTime.hour(.defaultDigits(amPM: .narrow)).minute()
-        format.timeZone = NSTimeZone.default
-        return format
-    }
+    @Environment(\.dayStartsAtNoon) var dayStartsAtNoon: Bool
+    @Environment(\.calendarSelectedDate) var selectedDate: CalendarDate
 
     @ScaledMetric var textWidth: CGFloat = 50
     @ScaledMetric var gradientHeight: CGFloat = 30
+    
     var body: some View {
         TimelineView(.periodic(from: .now, by: 1)) { context in
             GeometryReader { geo in
@@ -85,12 +76,32 @@ struct TimeIndicatorView: View {
                 }
             }
         }
+    }
+    
+    func shouldShowTimeIndicator(_ currentTime: Date) -> Bool {
+        func isDate(_ date1: Date, inSameDayAs date2: Date) -> Bool {
+            var calendar = Calendar.current
+            calendar.timeZone = NSTimeZone.default
+            
+            return calendar.isDate(date1, inSameDayAs: date2)
+        }
+        
+        if dayStartsAtNoon {
+            return isDate(currentTime - 12.hours, inSameDayAs: selectedDate.date)
+        } else {
+            return isDate(currentTime, inSameDayAs: selectedDate.date)
+        }
+    }
 
+    var timeFormat: Date.FormatStyle {
+        var format = Date.FormatStyle.dateTime.hour(.defaultDigits(amPM: .narrow)).minute()
+        format.timeZone = NSTimeZone.default
+        return format
     }
 }
 
 struct TimeIndicatorView_Previews: PreviewProvider {
     static var previews: some View {
-        TimeIndicatorView(selectedDate: .today, dayStartsAtNoon: false)
+        TimeIndicatorView()
     }
 }

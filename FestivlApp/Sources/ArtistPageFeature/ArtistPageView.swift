@@ -26,23 +26,18 @@ public struct ArtistPageView: View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             Group {
                 if let artist = viewStore.artist,
-                   let event = viewStore.event,
-                   let schedule = viewStore.schedule,
-                   let stages = viewStore.stages {
+                   let schedule = viewStore.schedule {
                     VStack {
-                        ArtistHeaderView(artist: artist, event: event)
+                        ArtistHeaderView(artist: artist)
                         
                         List {
                             ForEach(
-                                schedule[artistID: viewStore.artistID].sortedByStartTime
+                                schedule[artistID: viewStore.artistID].sorted(by: \.startTime)
                             ) { scheduleItem in
                                 Button {
                                     viewStore.send(.didTapScheduleItem(scheduleItem))
                                 } label: {
-                                    SetView(
-                                        set: scheduleItem,
-                                        stages: stages
-                                    )
+                                    SetView(set: scheduleItem)
                                 }
                             }
                             

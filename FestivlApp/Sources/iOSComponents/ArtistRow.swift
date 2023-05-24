@@ -10,24 +10,22 @@ import Models
 import Utilities
 import Components
 import IdentifiedCollections
+import Collections
 //import FestivlDependencies
 
 
 public struct ArtistRow: View {
-    public init(artist: Artist, event: Event, stages: IdentifiedArrayOf<Stage>, sets: Set<ScheduleItem>, isFavorite: Bool, showArtistImage: Bool) {
+    public init(artist: Artist, event: Event, sets: OrderedSet<ScheduleItem>, isFavorite: Bool, showArtistImage: Bool) {
         self.artist = artist
         self.event = event
-        self.stages = stages
         self.sets = sets
         self.isFavorite = isFavorite
         self.showArtistImage = showArtistImage
     }
 
-
     let artist: Artist
     let event: Event
-    let stages: IdentifiedArrayOf<Stage>
-    let sets: Set<ScheduleItem>
+    let sets: OrderedSet<ScheduleItem>
     let isFavorite: Bool
     let showArtistImage: Bool
 
@@ -47,11 +45,7 @@ public struct ArtistRow: View {
                 .clipped()
             }
 
-            StagesIndicatorView(
-                stages: sets.compactMap {
-                    stages[id: $0.stageID]
-                }
-            )
+            StagesIndicatorView(stages: sets.map(\.stage))
             .frame(width: 5)
 
             Text(artist.name)
@@ -83,7 +77,6 @@ struct ArtistRowView_Previews: PreviewProvider {
                     NavigationLink(destination: EmptyView()) {
 //                        ArtistRow(artist: Artist.testData, event: .testData)
                     }
-
                 }
             }
             .listStyle(.plain)
