@@ -45,7 +45,7 @@ public struct ArtistRow: View {
                 .clipped()
             }
 
-            StagesIndicatorView(stages: sets.map(\.stage))
+            StagesIndicatorView(stageIDs: sets.map(\.stageID))
             .frame(width: 5)
 
             Text(artist.name)

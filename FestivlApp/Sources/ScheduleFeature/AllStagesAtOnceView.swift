@@ -11,54 +11,62 @@ import Models
 import Components
 import Utilities
 import ScheduleComponents
+import FestivlDependencies
 
 struct AllStagesAtOnceView: View {
     let store: StoreOf<ScheduleFeature>
     let date: CalendarDate
     
     struct ViewState: Equatable {
-        var schedule: [ScheduleItem]
+        var schedule: [TimelineWrapper<ScheduleItem>]
         var stages: IdentifiedArrayOf<Stage>
-        var selectedCard: ScheduleItem.ID?
+        var selectedCard: ScheduleItem?
         var selectedDate: CalendarDate
+        var userFavorites: UserFavorites
         
         init(_ state: ScheduleFeature.State, date: CalendarDate) {
-           
-            self.schedule = Array(
-                state.stages
-                    .map { Schedule.PageKey(date: date, stageID: $0.id) }
-                    .reduce(Set<ScheduleItem>()) { partialResult, pageIdentifier in
-                        partialResult.union(state.schedule[schedulePage: pageIdentifier])
-                    }
-                    .filter {
-                        if state.isFiltering {
-                            return $0.isFavorite
-                        } else {
-                            return true
-                        }
-                    }
-            )
-            
+            self.userFavorites = state.userFavorites
             self.stages = state.stages
+            
+            self.schedule = state.stages
+                .map { Schedule.PageKey(date: date, stageID: $0.id) }
+                .reduce([ScheduleItem]()) { partialResult, pageIdentifier in
+                    partialResult + state.schedule[schedulePage: pageIdentifier]
+                }
+                .filter {
+                    if state.isFiltering {
+                        return state.userFavorites.contains($0)
+                    } else {
+                        return true
+                    }
+                }
+                .map {
+                    let stageIndex = state.stages[id: $0.stageID]?.sortIndex ?? 0
+                    return TimelineWrapper(groupWidth: stageIndex..<stageIndex, item: $0)
+                }
+
+            
             self.selectedDate = state.selectedDate
             self.selectedCard = state.cardToDisplay
         }
     }
+    
+    @Environment(\.stages) var stages
 
     var body: some View {
         WithViewStore(store, observe: { ViewState($0, date: self.date) }) { viewStore in
-            SelectingScrollView(selecting: viewStore.selectedCard) {
-                
+            DateSelectingScrollView(selecting: viewStore.selectedCard?.startTime) {
                 SchedulePageView(viewStore.schedule) { scheduleItem in
                     Button {
-                        viewStore.send(.didTapCard(scheduleItem))
+                        viewStore.send(.didTapCard(scheduleItem.item))
                     } label: {
                         ScheduleCardView(
-                            scheduleItem,
-                            isSelected: viewStore.selectedCard == scheduleItem.id
+                            scheduleItem.item,
+                            isSelected: viewStore.selectedCard == scheduleItem.item,
+                            isFavorite: viewStore.userFavorites.contains(scheduleItem.item)
                         )
                     }
-                    .tag(scheduleItem)
+                    .tag(scheduleItem.item)
                 }
             }
             .toolbar {

@@ -16,7 +16,7 @@ struct ScheduleComingSoonView: View {
     
     @State var degrees: Angle = .degrees(0)
     
-    @Environment(\.eventImageURL) var eventImageURL
+    @Environment(\.event.imageURL) var eventImageURL
     
     var body: some View {
         ZStack {

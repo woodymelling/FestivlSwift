@@ -113,6 +113,7 @@ public struct EventFeature: ReducerProtocol {
                 return .fireAndForget {
                     async let _ = await ImageCacher.preFetchImage(urls: data.artists.compactMap { $0.imageURL })
                     async let _ = await ImageCacher.preFetchImage(urls: data.stages.compactMap { $0.iconImageURL })
+                    async let _ = await ImageCacher.preFetchImage(urls: data.event.imageURL.map { [$0] } ?? [] )
                 }
                 
             case let .userNotification(.willPresentNotification(_, completion)):
@@ -152,7 +153,6 @@ public struct EventFeature: ReducerProtocol {
         Scope(state: \.moreState, action: /Action.moreAction) {
             MoreFeature()
         }
-//        ._printChanges()
     }
     
     

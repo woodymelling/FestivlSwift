@@ -9,6 +9,7 @@ import ComposableArchitecture
 import Models
 import FestivlDependencies
 import NotificationsFeature
+import WorkshopsFeature
 import XCTestDynamicOverlay
 
 public struct MoreFeature: ReducerProtocol {
@@ -39,6 +40,7 @@ public struct MoreFeature: ReducerProtocol {
         case didTapSiteMap
         case didTapContactInfo
         case didTapAddress
+        case didTapWorkshops
         
         case didExitEvent
         
@@ -56,6 +58,7 @@ public struct MoreFeature: ReducerProtocol {
             case contactInfo(ContactInfoFeature.State)
             case siteMap(SiteMapFeature.State)
             case notifications(NotificationsFeature.State)
+            case workshops(WorkshopsFeature.State)
         }
 
         public enum Action {
@@ -63,6 +66,7 @@ public struct MoreFeature: ReducerProtocol {
             case notifications(NotificationsFeature.Action)
             case siteMap(SiteMapFeature.Action)
             case contactInfo(ContactInfoFeature.Action)
+            case workshops(WorkshopsFeature.Action)
         }
 
         public var body: some ReducerProtocolOf<Self> {
@@ -80,6 +84,10 @@ public struct MoreFeature: ReducerProtocol {
 
             Scope(state: /State.contactInfo, action: /Action.contactInfo) {
                 ContactInfoFeature()
+            }
+            
+            Scope(state: /State.workshops, action: /Action.workshops) {
+                WorkshopsFeature()
             }
         }
     }
@@ -125,6 +133,9 @@ public struct MoreFeature: ReducerProtocol {
                 }
                 
                 state.destination = .address(AddressFeature.State(address: address, latitude: event.latitude ?? "", longitude: event.longitude ?? ""))
+                
+            case .didTapWorkshops:
+                state.destination = .workshops(.init())
                 
             case .dataLoaded(let data):
                 state.eventData = data

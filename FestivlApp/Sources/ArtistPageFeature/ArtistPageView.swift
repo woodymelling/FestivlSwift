@@ -9,7 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import Models
 import Utilities
-//import Introspect
+import iOSComponents
 
 
 public struct ArtistPageView: View {
@@ -28,7 +28,11 @@ public struct ArtistPageView: View {
                 if let artist = viewStore.artist,
                    let schedule = viewStore.schedule {
                     VStack {
-                        ArtistHeaderView(artist: artist)
+                        DetailsHeaderView(imageURL: artist.imageURL) {
+                            Text(artist.name)
+                                .font(.system(size: 30))
+                                .padding()
+                        }
                         
                         List {
                             ForEach(
@@ -160,7 +164,7 @@ struct ArtistPageView_Previews: PreviewProvider {
     static var previews: some View {
         ArtistPageView(
             store: .init(
-                initialState: .init(artistID: .init(""), isFavorite: false),
+                initialState: .init(artistID: Artist.testValues.first!.id, isFavorite: false),
                 reducer: ArtistDetail()
             )
         )

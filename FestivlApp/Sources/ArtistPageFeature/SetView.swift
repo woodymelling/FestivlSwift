@@ -24,10 +24,10 @@ public struct SetView: View {
 
             // TODO: Row Spacing Signleton FestivlTheme
             HStack(spacing: 10) {
-                StagesIndicatorView(stages: [set.stage])
+                StagesIndicatorView(stageIDs: [set.stageID])
                     .frame(width: 5)
 
-                StageIconView(stage: set.stage)
+                StageIconView(stageID: set.stageID)
                     .frame(square: 60)
 
                 switch set.type {

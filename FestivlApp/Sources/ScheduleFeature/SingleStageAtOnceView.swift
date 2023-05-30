@@ -10,6 +10,7 @@ import ComposableArchitecture
 import Utilities
 import Models
 import ScheduleComponents
+import FestivlDependencies
 
 extension View {
     func toolbarBackground(style: some ShapeStyle) -> some View {
@@ -32,25 +33,29 @@ public struct SingleStageAtOnceView: View {
     struct ViewState: Equatable {
         var selectedDaySchedule: [Stage.ID: [ScheduleItem]]
         var stages: IdentifiedArrayOf<Stage>
-        var cardToDisplay: ScheduleItem.ID?
+        var cardToDisplay: ScheduleItem?
         var showingComingSoonScreen: Bool
+        var userFavorites: UserFavorites
         
         var selectedStage: Stage.ID
         private var selectedDate: CalendarDate
         
         init(state: ScheduleFeature.State) {
-           
-
             self.stages = state.stages
             self.cardToDisplay = state.cardToDisplay
             self.showingComingSoonScreen = state.showingComingSoonScreen
             self.selectedStage = state.selectedStage
             self.selectedDate = state.selectedDate
+            self.userFavorites = state.userFavorites
+            
             
             var selectedDaySchedule: [Stage.ID : [ScheduleItem]] = [:]
             
             for stage in stages {
-                selectedDaySchedule[stage.id] = Array(state.schedule[schedulePage: .init(date: state.selectedDate, stageID: stage.id)])
+                selectedDaySchedule[stage.id] =
+                    state.schedule[schedulePage: .init(date: state.selectedDate, stageID: stage.id)]
+                    .filter { !state.filteringFavorites || state.userFavorites.contains($0) }
+                
             }
             
             self.selectedDaySchedule = selectedDaySchedule
@@ -63,29 +68,20 @@ public struct SingleStageAtOnceView: View {
         }
     }
 }
-
-extension Dictionary: CustomDumpStringConvertible where Key == Stage.ID, Value == [ScheduleItem] {
-    public var customDumpDescription: String {
-        return "Schedule(...)"
-    }
-}
-
-extension IdentifiedArray: CustomDumpStringConvertible where Element == Stage {
-    public var customDumpDescription: String {
-        return "Stages(...)"
-    }
+extension ScheduleItem: TimeRangeRepresentable {
+    public var timeRange: Range<Date> { startTime..<endTime }
 }
 
 struct SingleStageContent: View {
     var viewStore: ViewStore<SingleStageAtOnceView.ViewState, ScheduleFeature.Action>
     
     var body: some View {
-        let _ = customDump(viewStore)
         Group {
             if viewStore.showingComingSoonScreen {
                 ScheduleComingSoonView()
             } else {
-                SelectingScrollView(selecting: viewStore.cardToDisplay) {
+                DateSelectingScrollView(selecting: viewStore.cardToDisplay?.startTime) {
+
                     TabView(
                         selection: viewStore.binding(
                             get: { $0.selectedStage },
@@ -94,19 +90,21 @@ struct SingleStageContent: View {
                     ) {
                         ForEach(viewStore.stages) { stage in
                             SchedulePageView(viewStore.selectedDaySchedule[stage.id] ?? []) { scheduleItem in
-                          
+
                                 Button {
                                     viewStore.send(.didTapCard(scheduleItem))
                                 } label: {
                                     ScheduleCardView(
                                         scheduleItem,
-                                        isSelected: viewStore.cardToDisplay == scheduleItem.id
+                                        isSelected: viewStore.cardToDisplay == scheduleItem,
+                                        isFavorite: viewStore.userFavorites.contains(scheduleItem)
                                     )
                                 }
+                                .id(scheduleItem.id)
                                 .tag(scheduleItem.id)
                             }
-                            .id(stage.id) // Needed to prevent bug where TabView doesn't stay synced properly when jumping over many pages
                             .tag(stage.id)
+                            .id(stage.id) // Needed to prevent bug where TabView doesn't stay synced properly when jumping over many pages
                         }
                     }
                     .tabViewStyle(.page(indexDisplayMode: .never))

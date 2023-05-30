@@ -62,6 +62,7 @@ public struct ExploreFeature: ReducerProtocol {
             case .dataUpdate(let eventData):
                 state.artistStates = eventData.artists
                     .filter { $0.imageURL != nil }
+                    .shuffled()
                     .map {
                         ArtistDetail.State(
                             artistID: $0.id,
@@ -72,6 +73,7 @@ public struct ExploreFeature: ReducerProtocol {
                             isFavorite: false
                         )
                     }
+
                     .asIdentifedArray
                 
                 state.schedule = eventData.schedule

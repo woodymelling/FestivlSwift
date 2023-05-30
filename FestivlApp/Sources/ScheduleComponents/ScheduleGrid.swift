@@ -9,16 +9,14 @@ import Foundation
 import SwiftUI
 import Utilities
 
-struct ScheduleGrid<Content: View>: View {
-    init(content: @escaping () -> Content) {
+public struct ScheduleGrid<Content: View>: View {
+    public init(content: @escaping () -> Content) {
         self.content = content
     }
 
     var content: () -> Content
     
-    @Environment(\.scenePhase) var scene
-    
-    var body: some View {
+    public var body: some View {
         ZStack {
             HStack {
                 ScheduleHourLabelsView()

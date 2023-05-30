@@ -14,7 +14,7 @@ import FestivlDependencies
 
 public struct AppFeature: ReducerProtocol {
     
-    @Dependency(\.eventID) var eventID
+    @Dependency(\.userDefaults.eventID) var eventID
     
     public init() {}
     
@@ -34,7 +34,7 @@ public struct AppFeature: ReducerProtocol {
         Reduce { state, action in
             switch action {
             case .eventListAction(.selectedEvent(let event)):
-                eventID.value = event.id
+                eventID = event.id
                 state.eventState = EventFeature.State()
 
                 return .none

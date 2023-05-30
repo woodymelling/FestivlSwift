@@ -9,13 +9,6 @@ import Foundation
 import SwiftUI
 import Utilities
 
-public protocol TimelineCard: Equatable, Identifiable {
-    var startTime: Date { get }
-    var endTime: Date { get }
-
-    var horizontalGrouping: Int { get }
-}
-
 public struct SchedulePageView<
     ListType: RandomAccessCollection,
     CardContent: View
@@ -37,12 +30,11 @@ public struct SchedulePageView<
         // Calculate distinct group numbers
         var groups = Set<Int>.init()
         for card in cards {
-            groups.insert(card.horizontalGrouping)
+            groups.insert(card.groupWidth.lowerBound)
         }
         
         self.groupCount = groups.count
     }
-    
     
     public var body: some View {
         ScheduleGrid {
@@ -52,6 +44,7 @@ public struct SchedulePageView<
                         cardContent(scheduleItem)
                             .placement(frame(for: scheduleItem, in: geo.size))
                             .id(scheduleItem.id)
+                            .zIndex(0)
                     }
                 }
             }
@@ -64,21 +57,44 @@ public struct SchedulePageView<
     }
 }
 
+extension SchedulePageView {
+    public init<T>(
+        _ cards: T,
+        @ViewBuilder cardContent: @escaping (T.Element) -> CardContent
+    )
+    where T: RandomAccessCollection,
+        ListType == Array<TimelineWrapper<T.Element>>,
+        T.Element: TimeRangeRepresentable & Equatable & Identifiable
+    {
+        self.init(cards.groupedToPreventOverlaps, cardContent: { cardContent($0.item) })
+    }
+}
+
 extension TimelineCard {
     func xOrigin(containerWidth: CGFloat, groupCount: Int) -> CGFloat {
         guard groupCount > 1 else { return 0 }
-        return containerWidth / CGFloat(groupCount) * CGFloat(horizontalGrouping)
+        return containerWidth / CGFloat(groupCount) * CGFloat(groupWidth.lowerBound)
     }
     
     /// Get the y placement for a set in a container of a specific height
     func yOrigin(containerHeight: CGFloat, dayStartsAtNoon: Bool) -> CGFloat {
-        return startTime.toY(containerHeight: containerHeight, dayStartsAtNoon: dayStartsAtNoon)
+        return dateRange.lowerBound.toY(containerHeight: containerHeight, dayStartsAtNoon: dayStartsAtNoon)
     }
     /// Get the frame size for an artistSet in a specfic container
     func size(in containerSize: CGSize, groupCount: Int) -> CGSize {
-        let setLengthInSeconds = endTime.timeIntervalSince(startTime)
+        let setLengthInSeconds = dateRange.lengthInSeconds
         let height = secondsToY(Int(setLengthInSeconds), containerHeight: containerSize.height)
-        let width = containerSize.width / CGFloat(groupCount)
+        
+        
+        let width: CGFloat
+        if groupCount <= 1 {
+            width = containerSize.width / CGFloat(groupCount)
+        } else {
+            let groupSpanCount: Int
+            groupSpanCount = groupWidth.upperBound - groupWidth.lowerBound + 1
+            width = (containerSize.width / CGFloat(groupCount)) * CGFloat(groupSpanCount)
+        }
+
         return CGSize(width: width, height: height)
     }
     
@@ -97,5 +113,12 @@ extension View {
         self
             .frame(size: frame.size)
             .position(frame.offsetBy(dx: frame.size.width / 2, dy: frame.size.height / 2).origin)
+    }
+}
+
+
+extension Range where Bound == Date {
+    var lengthInSeconds: Double {
+        return upperBound.timeIntervalSince(lowerBound)
     }
 }

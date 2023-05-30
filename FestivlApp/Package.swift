@@ -112,6 +112,7 @@ let package = Package(
                 .utlities,
                 
                 "ShowScheduleItemDependency",
+                "iOSComponents",
                 
                 .product(name: "Components", package: "FestivlLibrary"),
                 .product(name: "SharedResources", package: "FestivlLibrary"),
@@ -185,7 +186,9 @@ let package = Package(
                 .product(name: "Components", package: "FestivlLibrary"),
                 
                 .product(name: "ImageViewer", package: "swiftui-image-viewer"),
-                .target(name: "NotificationsFeature")
+                .target(name: "NotificationsFeature"),
+                
+                "WorkshopsFeature"
             ],
             resources: [
                 .copy("Media.xcassets")
@@ -218,6 +221,8 @@ let package = Package(
                 .festivlDependencies,
                 .utlities,
                 
+                "iOSComponents",
+                
                 "ScheduleComponents",
             ]
         ),
@@ -226,6 +231,7 @@ let package = Package(
             name: "ScheduleComponents",
             dependencies: [
                 .utlities,
+                .product(name: "Components", package: "FestivlLibrary")
             ]
         )
     ]

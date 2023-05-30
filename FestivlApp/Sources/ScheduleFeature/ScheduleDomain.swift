@@ -51,7 +51,6 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
                         userFavoritesClient.userFavoritesPublisher()
                     )
                     .values {
-                        print("Received Data!")
                         await send(.dataUpdate(data, userFavorites))
                     }
                 } catch: { _, _ in
@@ -66,15 +65,11 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
                 let selectedDate: CalendarDate
                 let selectedStage: Stage.ID
                 let event = eventData.event
-                
-                // This check chooses the correct date for when the app is opened
-                if let currentlySelectedDate = state.scheduleState?.selectedDate {
-                    selectedDate = currentlySelectedDate
-                } else if CalendarDate.today.isWithin(rhs: event.startDate, lhs: event.endDate) { // TODO: Get from reducer
-                    selectedDate = CalendarDate(date: todaysDate())
-                } else {
-                    selectedDate = event.startDate
-                }
+
+                selectedDate = event.dateForCalendarAtLaunch(
+                    todaysDate: todaysDate(),
+                    selectedDate: state.scheduleState?.selectedDate
+                )
                 
                 // This check chooses the correct stage for when the app is opened
                 if let currentlySelectedStage = state.scheduleState?.selectedStage {
@@ -148,7 +143,7 @@ public struct ScheduleFeature: ReducerProtocol {
             selectedDate: CalendarDate,
             deviceOrientation: DeviceOrientation = .portrait,
             filteringFavorites: Bool,
-            cardToDisplay: ScheduleItem.ID?,
+            cardToDisplay: ScheduleItem?,
             destination: ScheduleFeature.Destination.State?,
             showTutorialElements: Bool,
             showingLandscapeTutorial: Bool,
@@ -186,7 +181,7 @@ public struct ScheduleFeature: ReducerProtocol {
         
         public var deviceOrientation: DeviceOrientation = .portrait
 
-        public var cardToDisplay: ScheduleItem.ID?
+        public var cardToDisplay: ScheduleItem?
         
 
         public var showTutorialElements: Bool
@@ -314,7 +309,7 @@ public struct ScheduleFeature: ReducerProtocol {
 
                 state.selectedDate = schedulePage.date
                 
-                state.cardToDisplay = cardID
+                state.cardToDisplay = state.schedule[id: cardID]
 
                 return .run { send in
                     
@@ -324,7 +319,7 @@ public struct ScheduleFeature: ReducerProtocol {
                 }
 
             case .highlightCard(let card):
-                state.cardToDisplay = card.id
+                state.cardToDisplay = card
                 return .none
 
             case .unHighlightCard:

@@ -10,61 +10,44 @@ import Utilities
 import Components
 import ComposableArchitecture
 import Models
+import ScheduleComponents
 
-public struct ScheduleCardView: View {
-
-    
+struct ScheduleCardView: View {
     let card: ScheduleItem
     let isSelected: Bool
+    let isFavorite: Bool
 
     @ScaledMetric var scale: CGFloat = 1
 
-    public init(_ card: ScheduleItem, isSelected: Bool) {
+    public init(_ card: ScheduleItem, isSelected: Bool, isFavorite: Bool) {
         self.card = card
         self.isSelected = isSelected
+        self.isFavorite = isFavorite
     }
     
+    @Environment(\.stages) var stages
     
     public var body: some View {
-        VStack(spacing: 0) {
-            Rectangle()
-                .fill(.primary)
-                .frame(height: 1)
-                .opacity(0.25)
-
-            HStack {
-                Rectangle() 
-                    .fill(.primary)
-                    .frame(width: 5)
-                    .opacity(0.25)
-
+        ScheduleCardBackground(color: stages[id: card.stageID]?.color ?? .blue, isSelected: isSelected) {
+            HStack(alignment: .center) {
+                
                 GeometryReader { geo in
-                    // Arrange horizontally if the card is too small
-                    if geo.size.height < 31 * scale {
-                        HStack {
-                            Text(card.title)
-                                .font(.caption)
-                            Text(FestivlFormatting.timeIntervalFormat(startTime: card.startTime, endTime: card.endTime))
-                                .font(.caption)
+                    VStack(alignment: .leading) {
+                        Text(card.title)
+                        Text(FestivlFormatting.timeIntervalFormat(startTime: card.startTime, endTime: card.endTime))
+                            .font(.caption)
+                        
+                        if let subtext = card.subtext {
+                            Text(subtext)
+                                .font(.caption2)
                         }
-                    } else {
-                        VStack(alignment: .leading) {
-                            Text(card.title)
-                            Text(FestivlFormatting.timeIntervalFormat(startTime: card.startTime, endTime: card.endTime))
-                                .font(.caption)
-
-                            if let subtext = card.subtext {
-                                Text(subtext)
-                                    .font(.caption2)
-                            }
-                        }
-                        .padding(.top, 2)
                     }
+                    .padding(.top, 2)
                 }
-
+                
                 Spacer()
-
-                if card.isFavorite {
+                
+                if isFavorite {
                     Image(systemName: "heart.fill")
                         .resizable()
                         .renderingMode(.template)
@@ -72,14 +55,10 @@ public struct ScheduleCardView: View {
                         .frame(square: 15)
                         .padding(.trailing)
                 }
-
-
             }
-            .foregroundColor(.white)
         }
-        .clipped()
-        .frame(maxWidth: .infinity)
-        .background(card.stage.color)
-        .border(.white, width: isSelected ? 1 : 0 )
+        .id(card.id)
+        .tag(card.id)
     }
+ 
 }

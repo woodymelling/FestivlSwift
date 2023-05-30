@@ -23,11 +23,6 @@ enum ScheduleStyle: Equatable {
     case allStages
 }
 
-
-extension ScheduleItem: TimelineCard {
-    public var horizontalGrouping: Int { return stage.sortIndex }
-}
-
 public struct ScheduleLoadingView: View {
     let store: StoreOf<ScheduleLoadingFeature>
     
@@ -37,7 +32,6 @@ public struct ScheduleLoadingView: View {
     
     public var body: some View {
         WithViewStore(store, observe: Blank.init) { viewStore in
-            let _ = Self._printChanges()
             IfLetStore(store.scope(state: \.scheduleState, action: ScheduleLoadingFeature.Action.scheduleAction)) { store in
                 ScheduleView(store: store)
             } else: {
@@ -81,13 +75,12 @@ public struct ScheduleView: View {
                     AllStagesAtOnceView(store: store, date: viewStore.selectedDate)
                 }
             }
-//            .environment(\.calendarSelectedDate, viewStore.selectedDate)
+            .environment(\.calendarSelectedDate, viewStore.selectedDate)
             .toolbarDateSelector(
                 selectedDate: viewStore.binding(
                     get: { $0.selectedDate },
                     send: { .binding(.set(\.$selectedDate, $0)) }
-                ).animation(),
-                dates: viewStore.festivalDates
+                ).animation()
             )
             .toolbar {
                 ToolbarItem {
@@ -137,66 +130,7 @@ public struct ScheduleView: View {
 }
 
 
-extension View {
-    func toolbarDateSelector(selectedDate: Binding<CalendarDate>, dates: [CalendarDate]) -> some View {
-        self.modifier(ToolbarDateSelectorViewModifier(selectedDate: selectedDate, dates: dates))
-    }
-}
-struct ToolbarDateSelectorViewModifier: ViewModifier {
-    
-    @Binding var selectedDate: CalendarDate
-    var dates: [CalendarDate]
-    
-    func body(content: Content) -> some View {
-        if #available(iOS 16, *) {
-            content
-                .navigationTitle(Text(FestivlFormatting.weekdayFormat(for: selectedDate)))
-                .toolbarTitleMenu {
-                    ForEach(dates, id: \.self) { date in
-                        Button {
-                            selectedDate = date
-                        } label: {
-                            Text(FestivlFormatting.weekdayFormat(for: date))
-                        }
-                    }
-                }
-        } else {
-            content
-                .toolbar {
-                    ToolbarItem(placement: .principal) {
-                        EventDaySelector(
-                            selectedDate: $selectedDate, dates: dates)
-                    }
-                }
-        }
-    }
-}
 
-struct EventDaySelector: View {
-    @Binding var selectedDate: CalendarDate
-    var dates: [CalendarDate]
-    
-    
-    var body: some View {
-        Menu {
-            ForEach(dates, id: \.self) { date in
-                Button {
-                    selectedDate = date
-                } label: {
-                    Text(FestivlFormatting.weekdayFormat(for: date))
-                }
-            }
-        } label: {
-            HStack {
-                Text(FestivlFormatting.weekdayFormat(for: selectedDate))
-                    .font(.title2)
-                Image(systemName: "chevron.down")
-                
-            }
-            .foregroundColor(.primary)
-        }
-    }
-}
 
 struct FilterMenu: View {
     var store: StoreOf<ScheduleFeature>
@@ -205,7 +139,7 @@ struct FilterMenu: View {
         
         WithViewStore(store, observe: { $0}) { viewStore in
             Menu {
-                Toggle(isOn: viewStore.binding(\.$filteringFavorites)) {
+                Toggle(isOn: viewStore.binding(\.$filteringFavorites).animation()) {
                     Label(
                         "Favorites",
                         systemImage:  viewStore.isFiltering ? "heart.fill" : "heart"

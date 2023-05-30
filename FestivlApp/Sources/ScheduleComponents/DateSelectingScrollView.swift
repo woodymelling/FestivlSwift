@@ -8,13 +8,12 @@
 import SwiftUI
 import Utilities
 import Combine
-import Models
 
-public struct SelectingScrollView<Content: View, Tag: Hashable>: View {
+public struct DateSelectingScrollView<Content: View>: View {
     var content: () -> Content
-    var tag: Tag?
+    var tag: Date?
 
-    public init(selecting tag: Tag?, @ViewBuilder content: @escaping () -> Content) {
+    public init(selecting tag: Date?, @ViewBuilder content: @escaping () -> Content) {
         self.content = content
         self.tag = tag
     }
@@ -23,10 +22,13 @@ public struct SelectingScrollView<Content: View, Tag: Hashable>: View {
         ScrollViewReader { proxy in
             ScrollView {
                 content()
-                    .onChange(of: tag) { newTag in
-                        if let newTag {
+                    .onChange(of: tag) { newDate in
+                        if let newDate {
+                            
+                            let hour = Calendar.current.component(.hour, from: newDate)
+
                             withAnimation {
-                                proxy.scrollTo(newTag, anchor: .center)
+                                proxy.scrollTo(ScheduleHourTag(hour: hour), anchor: .center)
                             }
                         }
                     }

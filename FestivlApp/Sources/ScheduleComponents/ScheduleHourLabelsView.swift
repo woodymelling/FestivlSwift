@@ -8,14 +8,23 @@
 import SwiftUI
 import Utilities
 
-private struct DayStartsAtNoonEnvironmentKey: EnvironmentKey {
-    static let defaultValue: Bool = false
+
+struct DayStartsAtNoonEnvironmentKey: EnvironmentKey {
+    static var defaultValue = false
 }
 
-extension EnvironmentValues {
-    public var dayStartsAtNoon: Bool {
+public extension EnvironmentValues {
+    var dayStartsAtNoon: Bool {
         get { self[DayStartsAtNoonEnvironmentKey.self] }
         set { self[DayStartsAtNoonEnvironmentKey.self] = newValue }
+    }
+}
+
+public struct ScheduleHourTag: Hashable {
+    var hour: Int
+    
+    public init(hour: Int) {
+        self.hour = hour
     }
 }
 
@@ -36,6 +45,7 @@ public struct ScheduleHourLabelsView: View {
             VStack(alignment: .trailing, spacing: 0) {
                 ForEach(0..<24) { index in
                     Text(timeStringForIndex(index))
+                        .id(ScheduleHourTag(hour: adjustedIndex(index)))
                         .lineLimit(1)
                         .font(.caption)
                         .monospacedDigit()
@@ -44,16 +54,23 @@ public struct ScheduleHourLabelsView: View {
                 }
             }
             .offset(y: -hourSpacing / 2 - 2) // Make it match the lines
+            
 
         }
         .frame(maxWidth: hourLabelsWidth, alignment: .trailing)
     }
     
-    func timeStringForIndex(_ index: Int) -> String{
-        var index: Int = index
+    func adjustedIndex(_ index: Int) -> Int {
         if dayStartsAtNoon {
-            index = (index + 12) % 24
+            return (index + 12) % 24
+        } else {
+            return index
         }
+    }
+    
+    func timeStringForIndex(_ index: Int) -> String{
+        let index: Int = adjustedIndex(index)
+
         switch index {
         case 0: return "mdnt"
         case 12: return "noon"
@@ -74,12 +91,7 @@ struct ScheduleHourLinesView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             ScheduleHourLabelsView()
-                .environment(\.dayStartsAtNoon, false)
                 .previewDisplayName("Day starts at midnight")
-
-            ScheduleHourLabelsView()
-                .environment(\.dayStartsAtNoon, true)
-                .previewDisplayName("Day starts at noon")
         }
         .previewAllColorModes()
 
