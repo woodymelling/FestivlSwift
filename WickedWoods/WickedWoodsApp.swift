@@ -24,7 +24,7 @@ struct WickedWoodsApp: App {
         WindowGroup {
             EventView(
                 store: Store(
-                    initialState: .init(),
+                    initialState: .init(selectedTab: .more),
                     reducer: EventFeature()
                         .dependency(\.isEventSpecificApplication, true)
 //                        ._printChanges()

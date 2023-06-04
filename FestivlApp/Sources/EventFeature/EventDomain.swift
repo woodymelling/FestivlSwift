@@ -45,7 +45,9 @@ public struct EventFeature: ReducerProtocol {
         
         var eventData: EventData?
         
-        public init() {}
+        public init(selectedTab: Tab = .schedule) {
+            self.selectedTab = selectedTab
+        }
     }
     
     public enum Action {

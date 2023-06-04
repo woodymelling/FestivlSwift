@@ -114,5 +114,69 @@
             landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4A1EE321-7871-484A-9D31-FBB761BB06CD"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FestivlApp/Sources/ScheduleComponents/SchedulePageView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "frame(for:in:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "4A1EE321-7871-484A-9D31-FBB761BB06CD - 4cc2d78fdae41a79"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ScheduleComponents.SchedulePageView.frame(for: &#x3c4;_0_0.Element, in: __C.CGSize) -&gt; __C.CGRect"
+                  moduleName = "WickedWoods"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/woody/Developer/Festivl/iOS/Festivl/FestivlApp/Sources/ScheduleComponents/SchedulePageView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "66"
+                  endingLineNumber = "66"
+                  offsetFromSymbolStart = "668">
+               </Location>
+               <Location
+                  uuid = "4A1EE321-7871-484A-9D31-FBB761BB06CD - 4cc2d78fdae41a79"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ScheduleComponents.SchedulePageView.frame(for: &#x3c4;_0_0.Element, in: __C.CGSize) -&gt; __C.CGRect"
+                  moduleName = "WickedWoods"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/woody/Developer/Festivl/iOS/Festivl/FestivlApp/Sources/ScheduleComponents/SchedulePageView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "66"
+                  endingLineNumber = "66"
+                  offsetFromSymbolStart = "236">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "17900546-9A3B-4692-A4A4-7001B427E114"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FestivlApp/Sources/ScheduleComponents/SchedulePageView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "88"
+            endingLineNumber = "88"
+            landmarkName = "xOrigin(containerWidth:groupMapping:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

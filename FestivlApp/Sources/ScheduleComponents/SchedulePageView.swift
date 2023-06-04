@@ -18,7 +18,9 @@ public struct SchedulePageView<
     
     var cards: ListType
     var cardContent: (ListType.Element) -> CardContent
-    var groupCount: Int
+    var groups: [Int]
+    
+    var groupMapping: [Int:Int] = [:]
     
     public init(
         _ cards: ListType,
@@ -33,7 +35,15 @@ public struct SchedulePageView<
             groups.insert(card.groupWidth.lowerBound)
         }
         
-        self.groupCount = groups.count
+        self.groups = Array(groups).sorted()
+        
+        var groupMapping: [Int:Int] = [:]
+        for (idx, group) in self.groups.enumerated() {
+            groupMapping[group] = idx
+        }
+        self.groupMapping = groupMapping
+
+        print(groupMapping)
     }
     
     public var body: some View {
@@ -53,7 +63,9 @@ public struct SchedulePageView<
     }
     
     func frame(for timelineCard: ListType.Element, in size: CGSize) -> CGRect {
-        timelineCard.frame(in: size, groupCount: self.groupCount, dayStartsAtNoon: self.dayStartsAtNoon)
+        let frame = timelineCard.frame(in: size, groupMapping: self.groupMapping, dayStartsAtNoon: self.dayStartsAtNoon)
+        print(frame)
+        return frame
     }
 }
 
@@ -71,9 +83,9 @@ extension SchedulePageView {
 }
 
 extension TimelineCard {
-    func xOrigin(containerWidth: CGFloat, groupCount: Int) -> CGFloat {
-        guard groupCount > 1 else { return 0 }
-        return containerWidth / CGFloat(groupCount) * CGFloat(groupWidth.lowerBound)
+    func xOrigin(containerWidth: CGFloat, groupMapping: [Int:Int]) -> CGFloat {
+        guard groupMapping.count > 1 else { return 0 }
+git st        return containerWidth / CGFloat(groupMapping.count) * CGFloat(groupMapping[groupWidth.lowerBound] ?? 0)
     }
     
     /// Get the y placement for a set in a container of a specific height
@@ -81,30 +93,30 @@ extension TimelineCard {
         return dateRange.lowerBound.toY(containerHeight: containerHeight, dayStartsAtNoon: dayStartsAtNoon)
     }
     /// Get the frame size for an artistSet in a specfic container
-    func size(in containerSize: CGSize, groupCount: Int) -> CGSize {
+    func size(in containerSize: CGSize, groupMapping: [Int:Int]) -> CGSize {
         let setLengthInSeconds = dateRange.lengthInSeconds
         let height = secondsToY(Int(setLengthInSeconds), containerHeight: containerSize.height)
         
-        
         let width: CGFloat
-        if groupCount <= 1 {
-            width = containerSize.width / CGFloat(groupCount)
+        if groupMapping.count <= 1 {
+            width = containerSize.width / CGFloat(groupMapping.count)
         } else {
             let groupSpanCount: Int
-            groupSpanCount = groupWidth.upperBound - groupWidth.lowerBound + 1
-            width = (containerSize.width / CGFloat(groupCount)) * CGFloat(groupSpanCount)
+            groupSpanCount = (groupMapping[groupWidth.upperBound] ?? 0) - (groupMapping[groupWidth.lowerBound] ?? 0) + 1
+            width = (containerSize.width / CGFloat(groupMapping.count)) * CGFloat(groupSpanCount)
         }
 
+        print(width)
         return CGSize(width: width, height: height)
     }
     
-    func frame(in containerSize: CGSize, groupCount: Int, dayStartsAtNoon: Bool) -> CGRect {
+    func frame(in containerSize: CGSize, groupMapping: [Int:Int], dayStartsAtNoon: Bool) -> CGRect {
         return CGRect(
             origin: CGPoint(
-                x: xOrigin(containerWidth: containerSize.width, groupCount: groupCount),
+                x: xOrigin(containerWidth: containerSize.width, groupMapping: groupMapping),
                 y: yOrigin(containerHeight: containerSize.height, dayStartsAtNoon: dayStartsAtNoon)
             ),
-            size: size(in: containerSize, groupCount: groupCount))
+            size: size(in: containerSize, groupMapping: groupMapping))
     }
 }
 

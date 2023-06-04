@@ -11,6 +11,25 @@ import ScheduleComponents
 import Models
 import Utilities
 
+
+extension Workshop {
+    var wickedWoodsWorkshopWrapper: TimelineWrapper<Workshop> {
+        
+        let sortOrder: Int
+        switch self.location {
+        case "Relaxation Ridge": sortOrder = 0
+        case "Ursus": sortOrder = 1
+        case "Art Gallery": sortOrder = 2
+        default: sortOrder = 3
+        }
+        
+        return TimelineWrapper(
+            groupWidth: sortOrder..<sortOrder,
+            item: self
+        )
+    }
+}
+
 public struct WorkshopsView: View {
     public init(store: StoreOf<WorkshopsFeature>) {
         self.store = store
@@ -37,10 +56,10 @@ public struct WorkshopsView: View {
         WithViewStore(store, observe: ViewState.init) { viewStore in
             ScrollViewReader { proxy in
                 ScrollView {
-                    SchedulePageView(viewStore.workshops) { workshop in
-                        WorkshopCard(workshop: workshop)
+                    SchedulePageView(viewStore.workshops.map { $0.wickedWoodsWorkshopWrapper }) { workshop in
+                        WorkshopCard(workshop: workshop.item)
                             .onTapGesture {
-                                viewStore.send(.didTapWorkshop(workshop))
+                                viewStore.send(.didTapWorkshop(workshop.item))
                             }
                     }
                 }
@@ -71,7 +90,12 @@ public struct WorkshopsView: View {
 
 extension Workshop: TimeRangeRepresentable {
     public var timeRange: Range<Date> {
-        startTime..<endTime
+        
+        guard startTime < endTime else {
+            return Date.now..<(Date.now + 1.seconds)
+        }
+        
+        return startTime..<endTime
     }
 }
 
@@ -82,29 +106,31 @@ struct WorkshopCard: View {
     
     var body: some View {
         ScheduleCardBackground(color: event.workshopsColor) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading) {
-                    Group {
+            HStack(alignment: .center) {
+                
+                GeometryReader { geo in
+                    VStack(alignment: .leading) {
                         Text(workshop.name)
                             .lineLimit(1)
                         
-                        if let instructorName = workshop.instructorName {
-                            Text(instructorName)
-                                .font(.caption)
-                        }
                         
                         Text(workshop.location)
-                            .font(.caption)
+                            .font(.caption2)
+                        
+                        if let instructorName = workshop.instructorName {
+                            Text(instructorName)
+                                .font(.caption2)
+                        }
                     }
-                    
-                    Spacer()
+                    .padding(.top, 2)
                 }
                 
                 Spacer()
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .clipped()
         }
         
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
