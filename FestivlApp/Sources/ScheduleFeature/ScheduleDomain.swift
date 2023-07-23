@@ -56,9 +56,6 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
                     print("Artist Page Loading error")
                 }
             case .dataUpdate(let eventData, let userFavorites):
-                
-//                guard !eventData.schedule.isEmpty else { return .none }
-                
                 userFavoritesClient.updateScheduleData(eventData.schedule, eventData.artists, eventData.stages)
                 
                 let selectedDate: CalendarDate
@@ -66,7 +63,6 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
                 let event = eventData.event
 
                 selectedDate = event.dateForCalendarAtLaunch(
-                    todaysDate: todaysDate(),
                     selectedDate: state.scheduleState?.selectedDate
                 )
                 
