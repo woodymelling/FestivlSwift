@@ -14,7 +14,7 @@ import Combine
 import Tagged
 
 
-public struct GroupSetDetail: ReducerProtocol {
+public struct GroupSetDetail: Reducer {
     
     public init() {}
     
@@ -68,7 +68,7 @@ public struct GroupSetDetail: ReducerProtocol {
         }
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
                 

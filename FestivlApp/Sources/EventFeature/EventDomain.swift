@@ -23,7 +23,7 @@ import ComposableUserNotifications
 import FestivlDependencies
 import Components
 
-public struct EventFeature: ReducerProtocol {
+public struct EventFeature: Reducer {
     public init() {}
 
     @Dependency(\.internalPreviewClient) var internalPreviewClient
@@ -67,7 +67,7 @@ public struct EventFeature: ReducerProtocol {
         case userNotification(UserNotificationClient.DelegateAction)
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         Reduce<State, Action> { state, action in
             switch action {
             case .task:
@@ -98,7 +98,9 @@ public struct EventFeature: ReducerProtocol {
             case .showScheduleItem(let scheduleItem):
                 state.selectedTab = .schedule
                 
-                return .task { .scheduleAction(.scheduleAction(.showAndHighlightCard(scheduleItem))) }
+                return .run { send in
+                    await send(.scheduleAction(.scheduleAction(.showAndHighlightCard(scheduleItem)))) // TODO: Function on state
+                }
 
             case .setUpWhenDataLoaded(let data):
                 state.eventData = data
@@ -112,7 +114,7 @@ public struct EventFeature: ReducerProtocol {
                 
                 NSTimeZone.default = data.event.timeZone
                 
-                return .fireAndForget {
+                return .run { _ in
                     async let _ = await ImageCacher.preFetchImage(urls: data.artists.compactMap { $0.imageURL })
                     async let _ = await ImageCacher.preFetchImage(urls: data.stages.compactMap { $0.iconImageURL })
                     async let _ = await ImageCacher.preFetchImage(urls: data.event.imageURL.map { [$0] } ?? [] )
@@ -162,7 +164,7 @@ public struct EventFeature: ReducerProtocol {
         state: inout State,
         response: ComposableUserNotifications.Notification.Response,
         completion: @escaping () -> Void
-    ) -> EffectTask<Action> {
+    ) -> Effect<Action> {
         guard let schedule = state.eventData?.schedule else { return .none }
         if case .user(let action) = response {
             print("ACTIONIDENTIFIER", response.actionIdentifier)

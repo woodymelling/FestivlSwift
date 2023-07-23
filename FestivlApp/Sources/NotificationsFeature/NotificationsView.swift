@@ -25,7 +25,7 @@ public struct NotificationsView: View {
             Form {
                 Toggle(
                     "Notify me for favorite artists",
-                    isOn: viewStore.binding(\.$notificationsEnabled)
+                    isOn: viewStore.$notificationsEnabled
                 )
 
                 if viewStore.notificationsEnabled {
@@ -33,7 +33,7 @@ public struct NotificationsView: View {
                         Text("Time before set:")
                         Picker(
                             "Time before set",
-                            selection: viewStore.binding(\.$notificationTimeBeforeSet),
+                            selection: viewStore.$notificationTimeBeforeSet,
                             content: {
                                 ForEach(notificationTimes, id: \.self) { time in
                                     Text("\(time) minutes")
@@ -58,7 +58,7 @@ public struct NotificationsView: View {
             .navigationTitle("Notifications")
             .alert(
                 "Enable notifications in Settings to receive alerts for artists",
-                isPresented: viewStore.binding(\.$showingNavigateToSettingsAlert),
+                isPresented: viewStore.$showingNavigateToSettingsAlert,
                 actions: {
                     Button("Settings") {
                         if let appSettings = URL(string: UIApplication.openSettingsURLString), UIApplication.shared.canOpenURL(appSettings) {

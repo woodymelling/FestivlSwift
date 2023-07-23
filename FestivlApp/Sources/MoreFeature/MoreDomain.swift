@@ -12,7 +12,7 @@ import NotificationsFeature
 import WorkshopsFeature
 import XCTestDynamicOverlay
 
-public struct MoreFeature: ReducerProtocol {
+public struct MoreFeature: Reducer {
     public init() {}
     
     @Dependency(\.isEventSpecificApplication) var isEventSpecificApplication
@@ -51,7 +51,7 @@ public struct MoreFeature: ReducerProtocol {
     }
     
 
-    public struct Destination: ReducerProtocol {
+    public struct Destination: Reducer {
         public enum State: Equatable {
             case address(AddressFeature.State)
             case contactInfo(ContactInfoFeature.State)
@@ -68,7 +68,7 @@ public struct MoreFeature: ReducerProtocol {
             case workshops(WorkshopsFeature.Action)
         }
 
-        public var body: some ReducerProtocolOf<Self> {
+        public var body: some ReducerOf<Self> {
             Scope(state: /State.siteMap, action: /Action.siteMap) {
                 SiteMapFeature()
             }
@@ -91,7 +91,7 @@ public struct MoreFeature: ReducerProtocol {
         }
     }
     
-    public var body: some ReducerProtocol<MoreFeature.State, MoreFeature.Action> {
+    public var body: some Reducer<MoreFeature.State, MoreFeature.Action> {
         Reduce { state, action in
             switch action {
             case .didExitEvent:

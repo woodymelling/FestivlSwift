@@ -14,7 +14,7 @@ import Combine
 import Tagged
 import ShowScheduleItemDependency
 
-public struct ArtistDetail: ReducerProtocol {
+public struct ArtistDetail: Reducer {
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.userFavoritesClient) var userFavoritesClient
     
@@ -51,7 +51,7 @@ public struct ArtistDetail: ReducerProtocol {
         case favoriteArtistButtonTapped
     }
     
-    public func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
+    public func reduce(into state: inout State, action: Action) -> Effect<Action> {
         switch action {
         case .didTapScheduleItem(let scheduleItem):
             

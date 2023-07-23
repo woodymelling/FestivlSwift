@@ -40,7 +40,8 @@ struct ScheduleArtistListView: View {
         ScheduleArtistListView(
             store: .init(
                 initialState: .init(),
-                reducer: ScheduleArtistListDomain())
+                reducer: ScheduleArtistListDomain.init
+            )
         )
         .frame(width: 200)
         

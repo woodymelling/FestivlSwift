@@ -32,7 +32,7 @@ let package = Package(
     dependencies: [
         .package(name: "FestivlLibrary", path: "../FestivlLibrary"),
         
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "prerelease/1.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "1.0.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.

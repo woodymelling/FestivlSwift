@@ -15,7 +15,7 @@ import SwiftUI
 import Utilities
 import FestivlDependencies
 
-public struct ScheduleLoadingFeature: ReducerProtocol {
+public struct ScheduleLoadingFeature: Reducer {
     
     public init() {}
     
@@ -39,7 +39,7 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
         case scheduleAction(ScheduleFeature.Action)
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .task:
@@ -122,7 +122,7 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
     }
 }
 
-public struct ScheduleFeature: ReducerProtocol {
+public struct ScheduleFeature: Reducer {
     
     @Dependency(\.deviceOrientationPublisher) var deviceOrientationPublisher
     @Dependency(\.userDefaults) var userDefaults //
@@ -230,7 +230,7 @@ public struct ScheduleFeature: ReducerProtocol {
         }
     }
     
-    public struct Destination: ReducerProtocol {
+    public struct Destination: Reducer {
         public enum State: Equatable {
             case artist(ArtistDetail.State)
             case groupSet(GroupSetDetail.State)
@@ -241,7 +241,7 @@ public struct ScheduleFeature: ReducerProtocol {
             case groupSet(GroupSetDetail.Action)
         }
         
-        public var body: some ReducerProtocolOf<Self> {
+        public var body: some ReducerOf<Self> {
             Scope(state: /State.artist, action: /Action.artist) {
                 ArtistDetail()
             }
@@ -252,7 +252,7 @@ public struct ScheduleFeature: ReducerProtocol {
         }
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         BindingReducer()
         
         Reduce<State, Action> { state, action in

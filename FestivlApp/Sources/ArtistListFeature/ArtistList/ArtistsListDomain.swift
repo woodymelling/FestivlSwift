@@ -12,13 +12,7 @@ import FestivlDependencies
 import Combine
 import ArtistPageFeature
 
-extension Artist: Searchable {
-    public var searchTerms: [String] {
-        [name]
-    }
-}
-
-public struct ArtistListFeature: ReducerProtocol {
+public struct ArtistListFeature: Reducer {
     public init() {}
     
     @Dependency(\.eventDataClient) var eventDataClient
@@ -72,7 +66,7 @@ public struct ArtistListFeature: ReducerProtocol {
         }
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         BindingReducer()
         
         Reduce { state, action in

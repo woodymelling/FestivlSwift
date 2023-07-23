@@ -29,7 +29,7 @@ public struct EventListView: View {
             NavigationView {
                 SimpleSearchableList(
                     data: viewStore.eventsWithTestMode,
-                    searchText: viewStore.binding(\.$searchText),
+                    searchText: viewStore.$searchText,
                     isLoading: viewStore.isLoading
                 ) { event in
                     Button {
@@ -53,7 +53,7 @@ struct EventListView_Previews: PreviewProvider {
         EventListView(
             store: .init(
                 initialState: .init(),
-                reducer: EventList()
+                reducer: EventList.init
             )
         )
     }

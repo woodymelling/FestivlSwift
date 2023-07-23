@@ -16,10 +16,9 @@
 		EF1FFAF12A4FEAF50064FE5F /* ScheduleHourLines.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF1FFAE82A4FEAF50064FE5F /* ScheduleHourLines.swift */; };
 		EF1FFAF22A4FEAF50064FE5F /* ScheduleGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF1FFAE92A4FEAF50064FE5F /* ScheduleGrid.swift */; };
 		EF1FFAF32A4FEAF50064FE5F /* ScheduleCardBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF1FFAEA2A4FEAF50064FE5F /* ScheduleCardBackground.swift */; };
-		EF1FFAF62A527D7A0064FE5F /* SystemColors in Frameworks */ = {isa = PBXBuildFile; productRef = EF1FFAF52A527D7A0064FE5F /* SystemColors */; };
-		EF40667A2A64A43A000C8F7B /* ScheduleManagementFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EF4066792A64A43A000C8F7B /* ScheduleManagementFeature */; };
-		EF40667C2A65C771000C8F7B /* FirebaseServiceImpl in Frameworks */ = {isa = PBXBuildFile; productRef = EF40667B2A65C771000C8F7B /* FirebaseServiceImpl */; };
 		EF4066802A65C8A1000C8F7B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EF40667F2A65C8A1000C8F7B /* GoogleService-Info.plist */; };
+		EF9748FF2A6DEE8000A1E0FE /* FirebaseServiceImpl in Frameworks */ = {isa = PBXBuildFile; productRef = EF9748FE2A6DEE8000A1E0FE /* FirebaseServiceImpl */; };
+		EF9749012A6DEE9F00A1E0FE /* ScheduleManagementFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EF9749002A6DEE9F00A1E0FE /* ScheduleManagementFeature */; };
 		EFF9C99C2A48955400119691 /* FestivlManagerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF9C99B2A48955400119691 /* FestivlManagerApp.swift */; };
 		EFF9C99E2A48955400119691 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF9C99D2A48955400119691 /* ContentView.swift */; };
 		EFF9C9A02A48955500119691 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EFF9C99F2A48955500119691 /* Assets.xcassets */; };
@@ -51,9 +50,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF1FFAF62A527D7A0064FE5F /* SystemColors in Frameworks */,
-				EF40667C2A65C771000C8F7B /* FirebaseServiceImpl in Frameworks */,
-				EF40667A2A64A43A000C8F7B /* ScheduleManagementFeature in Frameworks */,
+				EF9748FF2A6DEE8000A1E0FE /* FirebaseServiceImpl in Frameworks */,
+				EF9749012A6DEE9F00A1E0FE /* ScheduleManagementFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,9 +138,8 @@
 			);
 			name = FestivlManager;
 			packageProductDependencies = (
-				EF1FFAF52A527D7A0064FE5F /* SystemColors */,
-				EF4066792A64A43A000C8F7B /* ScheduleManagementFeature */,
-				EF40667B2A65C771000C8F7B /* FirebaseServiceImpl */,
+				EF9748FE2A6DEE8000A1E0FE /* FirebaseServiceImpl */,
+				EF9749002A6DEE9F00A1E0FE /* ScheduleManagementFeature */,
 			);
 			productName = FestivlManager;
 			productReference = EFF9C9982A48955400119691 /* FestivlManager.app */;
@@ -444,18 +441,13 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		EF1FFAF52A527D7A0064FE5F /* SystemColors */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = EF1FFAF42A527D790064FE5F /* XCRemoteSwiftPackageReference "swiftui-system-colors" */;
-			productName = SystemColors;
-		};
-		EF4066792A64A43A000C8F7B /* ScheduleManagementFeature */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ScheduleManagementFeature;
-		};
-		EF40667B2A65C771000C8F7B /* FirebaseServiceImpl */ = {
+		EF9748FE2A6DEE8000A1E0FE /* FirebaseServiceImpl */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FirebaseServiceImpl;
+		};
+		EF9749002A6DEE9F00A1E0FE /* ScheduleManagementFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ScheduleManagementFeature;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

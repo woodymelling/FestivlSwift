@@ -11,7 +11,7 @@ import ArtistPageFeature
 import Combine
 import FestivlDependencies
 
-public struct ExploreFeature: ReducerProtocol {
+public struct ExploreFeature: Reducer {
     public init() {}
     
     @Dependency(\.eventDataClient) var eventDataClient
@@ -41,7 +41,7 @@ public struct ExploreFeature: ReducerProtocol {
         case didTapArtist(ArtistDetail.State)
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         BindingReducer()
         
         Reduce { state, action in

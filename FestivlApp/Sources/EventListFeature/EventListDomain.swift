@@ -10,7 +10,7 @@ import Models
 import FestivlDependencies
 import Combine
 
-public struct EventList: ReducerProtocol {
+public struct EventList: Reducer {
     public init() {}
     
     @Dependency(\.eventClient.getEvents) var getEvents
@@ -40,14 +40,15 @@ public struct EventList: ReducerProtocol {
     }
 
     public enum Action: BindableAction {
-        case eventUpdate(IdentifiedArrayOf<Event>)
         case task
+        case binding(_ action: BindingAction<State>)
+        
+        case eventUpdate(IdentifiedArrayOf<Event>)
         case selectedEvent(Event)
         
-        case binding(_ action: BindingAction<State>)
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         BindingReducer()
         
         Reduce { state, action in

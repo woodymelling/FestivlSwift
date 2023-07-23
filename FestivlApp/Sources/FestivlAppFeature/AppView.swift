@@ -37,6 +37,6 @@ public struct AppView: View {
 
 struct AppView_Previews: PreviewProvider {
     static var previews: some View {
-        AppView(store: .init(initialState: .init(), reducer: AppFeature()))
+        AppView(store: .init(initialState: .init(), reducer: AppFeature.init))
     }
 }

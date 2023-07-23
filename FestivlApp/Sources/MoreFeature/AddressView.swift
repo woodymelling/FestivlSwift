@@ -8,7 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 
-public struct AddressFeature: ReducerProtocol {
+public struct AddressFeature: Reducer {
     
     @Dependency(\.openURL) var openURL
     
@@ -23,20 +23,20 @@ public struct AddressFeature: ReducerProtocol {
         case didTapOpenInGoogleMaps
     }
     
-    public func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
+    public func reduce(into state: inout State, action: Action) -> Effect<Action> {
         switch action {
         case .didTapOpenInAppleMaps:
             guard let url = URL(string: "http://maps.apple.com/?daddr=\(state.latitude),\(state.longitude)") else { return .none }
             
-            return .fireAndForget {
-                _ = await openURL(url)
+            return .run { _ in
+               await openURL(url)
             }
             
         case .didTapOpenInGoogleMaps:
             guard let url = URL(string: "https://www.google.com/maps/?q=\(state.latitude),\(state.longitude)") else { return .none }
             
-            return .fireAndForget {
-                _ = await openURL(url)
+            return .run { _ in
+                await openURL(url)
             }
         }
     }
@@ -88,7 +88,7 @@ struct AddressView_Previews: PreviewProvider {
                     latitude: "",
                     longitude: ""
                 ),
-                reducer: AddressFeature()
+                reducer: AddressFeature.init
             )
         )
     }
