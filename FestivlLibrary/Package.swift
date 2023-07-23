@@ -84,6 +84,7 @@ let package = Package(
                 .models,
                 .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
                 .product(name: "Dependencies", package: "swift-composable-architecture"),
+                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
             ]
         ),
