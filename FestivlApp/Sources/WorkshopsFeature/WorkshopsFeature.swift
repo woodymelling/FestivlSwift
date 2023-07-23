@@ -21,11 +21,11 @@ public struct WorkshopsFeature: Reducer {
     public init() {}
     
     public struct State: Equatable {
-        var selectedDate: CalendarDate
+        @BindingState var selectedDate: CalendarDate
+        @BindingState var selectedWorkshop: Workshop?
         
         var workshops: [CalendarDate : IdentifiedArrayOf<Workshop>] = [:]
         
-        @BindingState var selectedWorkshop: Workshop?
         
         public init(selectedDate: CalendarDate? = nil) {
             @Dependency(\.date) var date
@@ -35,7 +35,6 @@ public struct WorkshopsFeature: Reducer {
     
     public enum Action: Equatable, BindableAction {
         case task
-        
         case binding(_ action: BindingAction<State>)
         
         case loadedData(Event, [CalendarDate : IdentifiedArrayOf<Workshop>])
@@ -65,7 +64,6 @@ public struct WorkshopsFeature: Reducer {
             case let .loadedData(event, workshops):
                 state.workshops = workshops
                 state.selectedDate = event.dateForCalendarAtLaunch(
-                    todaysDate: date(),
                     selectedDate: state.selectedDate
                 )
                 

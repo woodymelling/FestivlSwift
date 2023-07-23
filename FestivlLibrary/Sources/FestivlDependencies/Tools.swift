@@ -18,10 +18,16 @@ public typealias DataStream<T> = AnyPublisher<T, FestivlError>
 
 public extension Effect {
     static func observe<T>(_ dataStream: DataStream<T>, sending action: @escaping (T) -> Action) -> Effect<Action> {
-        .run { send in
-            for try await data in dataStream.values {
-                await send(action(data))
-            }
+        Effect.publisher {
+            dataStream
+                .eraseErrorToPrint(errorSource: String(describing: T.self))
+                .map(action)
+        }
+    }
+    
+    static func observe<T>(_ dataStream: AnyPublisher<T, Never>, sending action: @escaping (T) -> Action) -> Effect<Action> {
+        Effect.publisher {
+            dataStream.map(action)
         }
     }
 }

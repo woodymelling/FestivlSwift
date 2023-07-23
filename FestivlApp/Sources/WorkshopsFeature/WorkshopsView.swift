@@ -42,13 +42,13 @@ public struct WorkshopsView: View {
     
     struct ViewState: Equatable {
         var workshops:  IdentifiedArrayOf<Workshop>
-        var selectedDate: CalendarDate
-        var selectedWorkshop: Workshop?
+        @BindingViewState var selectedDate: CalendarDate
+        @BindingViewState var selectedWorkshop: Workshop?
         
-        init(state: WorkshopsFeature.State) {
+        init(state: BindingViewStore<WorkshopsFeature.State>) {
             self.workshops = state.workshops[state.selectedDate] ?? []
-            self.selectedDate = state.selectedDate
-            self.selectedWorkshop = state.selectedWorkshop
+            self._selectedDate = state.$selectedDate
+            self._selectedWorkshop = state.$selectedWorkshop
         }
     }
     
@@ -68,20 +68,11 @@ public struct WorkshopsView: View {
                 }
             }
             .task { await viewStore.send(.task).finish() }
-            .toolbarDateSelector(
-                selectedDate: viewStore.binding(
-                    get: { $0.selectedDate },
-                    send: { .didSelectDay($0) }
-                )
-                .animation()
-            )
+            .toolbarDateSelector(selectedDate: viewStore.$selectedDate.animation())
             .environment(\.dayStartsAtNoon, false) //
             .environment(\.calendarSelectedDate, viewStore.selectedDate)
             .sheet(
-                item: viewStore.binding(
-                    get: \.selectedWorkshop,
-                    send: { .binding(.set(\.$selectedWorkshop, $0)) }
-                ),
+                item: viewStore.$selectedWorkshop,
                 content: WorkshopDetailsView.init
             )
         }
@@ -139,9 +130,9 @@ struct WorkshopsView_Previews: PreviewProvider {
         NavigationView {
             
             WorkshopsView(
-                store: .init(
+                store: StoreOf<WorkshopsFeature>(
                     initialState: .init(selectedDate: Event.previewData.startDate),
-                    reducer: WorkshopsFeature()
+                    reducer: WorkshopsFeature.init
                 )
             )
             .environment(\.event, .previewData)
