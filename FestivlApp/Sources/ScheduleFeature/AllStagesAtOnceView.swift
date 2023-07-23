@@ -13,6 +13,13 @@ import Utilities
 import ScheduleComponents
 import FestivlDependencies
 
+extension ScheduleItem: TimeRangeRepresentable {
+    public var timeRange: Range<Date> {
+        return startTime..<endTime
+    }
+}
+
+
 struct AllStagesAtOnceView: View {
     let store: StoreOf<ScheduleFeature>
     let date: CalendarDate
@@ -31,7 +38,7 @@ struct AllStagesAtOnceView: View {
             self.schedule = state.stages
                 .map { Schedule.PageKey(date: date, stageID: $0.id) }
                 .reduce([ScheduleItem]()) { partialResult, pageIdentifier in
-                    partialResult + state.schedule[schedulePage: pageIdentifier]
+                    partialResult + state.schedule[page: pageIdentifier]
                 }
                 .filter {
                     if state.isFiltering {

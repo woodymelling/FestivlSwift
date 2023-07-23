@@ -13,7 +13,8 @@ import Utilities
 
 struct ScheduleStageSelector: View {
     var stages: IdentifiedArrayOf<Stage>
-    @Binding var selectedStage: Stage.ID
+    var selectedStage: Stage.ID
+    var onSelectStage: (Stage.ID) -> Void
 
     var body: some View {
         ZStack(alignment: .bottom) {
@@ -23,9 +24,7 @@ struct ScheduleStageSelector: View {
                     ScheduleHeaderButton(
                         stage: stage,
                         isSelected: selectedStage == stage.id,
-                        onSelect: {
-                            selectedStage = $0
-                        }
+                        onSelect: onSelectStage
                     )
                 }
                 Spacer()
@@ -98,26 +97,26 @@ struct ScheduleHeaderButton: View {
 
     }
 }
-
-struct ScheduleHeaderView_Previews: PreviewProvider {
-
-    static var previews: some View {
-        PreviewWrapper()
-    }
-
-    struct PreviewWrapper: View {
-
-        @State var selectedStage = Stage.testValues[1].id
-        var body: some View {
-            ScheduleStageSelector(
-                stages: IdentifiedArray(uniqueElements: Stage.testValues),
-                selectedStage: $selectedStage
-            )
-            .previewLayout(.sizeThatFits)
-            .previewAllColorModes()
-        }
-    }
-}
+//
+//struct ScheduleHeaderView_Previews: PreviewProvider {
+//
+//    static var previews: some View {
+//        PreviewWrapper()
+//    }
+//
+//    struct PreviewWrapper: View {
+//
+//        @State var selectedStage = Stage.testValues[1].id
+//        var body: some View {
+//            ScheduleStageSelector(
+//                stages: IdentifiedArray(uniqueElements: Stage.testValues),
+//                selectedStage: $selectedStage
+//            )
+//            .previewLayout(.sizeThatFits)
+//            .previewAllColorModes()
+//        }
+//    }
+//}
 
 struct PressAndReleaseModifier: ViewModifier {
     @Binding var pressing: Bool

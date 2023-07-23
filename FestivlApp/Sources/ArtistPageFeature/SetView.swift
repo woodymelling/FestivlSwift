@@ -73,7 +73,7 @@ public struct SetView: View {
 struct ArtistSetViewView_Previews: PreviewProvider {
     static var previews: some View {
         List {
-            SetView(set: ScheduleItem.testValues().first!)
+            SetView(set: ScheduleItem.previewData().first!)
         }
         .listStyle(.plain)
         .previewAllColorModes()

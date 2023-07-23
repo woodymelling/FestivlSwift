@@ -15,7 +15,7 @@ import Combine
 public struct WorkshopsFeature: Reducer {
     @Dependency(\.workshopsClient) var workshopsClient
     @Dependency(\.eventClient) var eventClient
-    @Dependency(\.userDefaults.eventID) var eventID
+    @Dependency(\.eventID) var eventID
     @Dependency(\.date) var date
     
     public init() {}
@@ -55,7 +55,7 @@ public struct WorkshopsFeature: Reducer {
             case .task:
                 return .run { send in
                     for try await (event, workshops) in Publishers.CombineLatest(
-                        eventClient.getEvent(eventID),
+                        eventClient.getEvent(),
                         workshopsClient.fetchWorkshops(eventID)
                     ).values {
                         await send(.loadedData(event, workshops.sortedByDay))

@@ -140,11 +140,11 @@ struct WorkshopsView_Previews: PreviewProvider {
             
             WorkshopsView(
                 store: .init(
-                    initialState: .init(selectedDate: Event.testData.startDate),
+                    initialState: .init(selectedDate: Event.previewData.startDate),
                     reducer: WorkshopsFeature()
                 )
             )
-            .environment(\.event, .testData)
+            .environment(\.event, .previewData)
         }
     }
 }

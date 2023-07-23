@@ -15,7 +15,6 @@ import XCTestDynamicOverlay
 public struct MoreFeature: ReducerProtocol {
     public init() {}
     
-    @Dependency(\.userDefaults.eventID) var eventID
     @Dependency(\.isEventSpecificApplication) var isEventSpecificApplication
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.internalPreviewClient) var internalPreviewClient
@@ -101,7 +100,7 @@ public struct MoreFeature: ReducerProtocol {
                 state.isEventSpecificApplication = isEventSpecificApplication
                 
                 return .run { send in
-                    for try await data in eventDataClient.getData(self.eventID).values {
+                    for try await data in eventDataClient.getData().values {
                         await send(.dataLoaded(data))
                     }
                 } catch: { _, _ in

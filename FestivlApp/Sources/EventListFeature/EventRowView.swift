@@ -51,7 +51,7 @@ struct EventRowView_Previews: PreviewProvider {
     static var previews: some View {
         List {
             
-            EventRowView(event: Event.testData)
+            EventRowView(event: Event.previewData)
 
         }
         .listStyle(.plain)

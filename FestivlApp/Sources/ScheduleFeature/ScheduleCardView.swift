@@ -28,7 +28,7 @@ struct ScheduleCardView: View {
     @Environment(\.stages) var stages
     
     public var body: some View {
-        ScheduleCardBackground(color: stages[id: card.stageID]?.color ?? .blue, isSelected: isSelected) {
+        ScheduleCardBackground(color: stages[id: card.stageID]!.color, isSelected: isSelected) {
             HStack(alignment: .center) {
                 
                 GeometryReader { geo in

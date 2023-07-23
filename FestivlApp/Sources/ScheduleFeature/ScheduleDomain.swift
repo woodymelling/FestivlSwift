@@ -19,7 +19,6 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
     
     public init() {}
     
-    @Dependency(\.userDefaults.eventID) var eventID
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.date) var todaysDate
     @Dependency(\.userFavoritesClient) var userFavoritesClient
@@ -47,7 +46,7 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
                 return .run { send in
                     
                     for try await (data, userFavorites) in Publishers.CombineLatest(
-                        eventDataClient.getData(self.eventID),
+                        eventDataClient.getData(),
                         userFavoritesClient.userFavoritesPublisher()
                     )
                     .values {
@@ -122,7 +121,7 @@ public struct ScheduleLoadingFeature: ReducerProtocol {
         schedule: Schedule
     ) -> Stage? {
         return stages.first { stage in
-            !schedule[schedulePage: .init(date: selectedDate, stageID: stage.id)].isEmpty
+            !schedule[page: .init(date: selectedDate, stageID: stage.id)].isEmpty
         }
     }
 }
@@ -224,6 +223,8 @@ public struct ScheduleFeature: ReducerProtocol {
 
         case destination(PresentationAction<Destination.Action>)
         
+        case didSelectStage(Stage.ID)
+        
         
         public enum ScheduleTutorialAction {
             case showLandscapeTutorial
@@ -314,8 +315,10 @@ public struct ScheduleFeature: ReducerProtocol {
                 return .run { send in
                     
                     try! await Task.sleep(nanoseconds: 2 * NSEC_PER_SEC)
+                    
+//                    await send(.unHighlightCard)
                          
-                    await send(.unHighlightCard, animation: .easeOut(duration: 2))
+                    await send(.unHighlightCard, animation: .default)
                 }
 
             case .highlightCard(let card):
@@ -352,6 +355,10 @@ public struct ScheduleFeature: ReducerProtocol {
 
                     return .none
                 }
+                
+            case .didSelectStage(let stageID):
+                state.selectedStage = stageID
+                return .none
                 
             case .destination:
                 return .none

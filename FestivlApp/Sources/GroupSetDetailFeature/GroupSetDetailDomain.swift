@@ -18,7 +18,6 @@ public struct GroupSetDetail: ReducerProtocol {
     
     public init() {}
     
-    @Dependency(\.userDefaults.eventID) var eventID
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.userFavoritesClient) var userFavoritesClient
     
@@ -76,7 +75,7 @@ public struct GroupSetDetail: ReducerProtocol {
             case .task:
                 return .run { send in
                     for try await (data, userFavorites) in Publishers.CombineLatest(
-                        eventDataClient.getData(self.eventID),
+                        eventDataClient.getData(),
                         userFavoritesClient.userFavoritesPublisher()
                     ).values {
                         await send(.dataUpdate(data, userFavorites))
@@ -92,7 +91,7 @@ public struct GroupSetDetail: ReducerProtocol {
                 guard case let .groupSet(artistIds) = state.groupSet.type else { return .none }
 
                 
-                state.artists = artistIds.compactMap { eventData.artists[id: $0] }.asIdentifedArray
+                state.artists = artistIds.compactMap { eventData.artists[id: $0] }.asIdentifiedArray
                 state.event = eventData.event
                 state.stages = eventData.stages
                 state.schedule = eventData.schedule

@@ -44,12 +44,21 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
+            BlueprintIdentifier = "EFF9C9972A48955400119691"
+            BuildableName = "FestivlManager.app"
+            BlueprintName = "FestivlManager"
+            ReferencedContainer = "container:FestivlManager.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
             BlueprintIdentifier = "EF26A0AF27D855CB00E10A71"
             BuildableName = "FestivlManager.app"
             BlueprintName = "FestivlManager"
             ReferencedContainer = "container:Festivl.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
       <CommandLineArguments>
          <CommandLineArgument
             argument = "-FIRDebugEnabled"
@@ -73,6 +82,15 @@
             ReferencedContainer = "container:Festivl.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "EF26A0AF27D855CB00E10A71"
+            BuildableName = "FestivlManager.app"
+            BlueprintName = "FestivlManager"
+            ReferencedContainer = "container:Festivl.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

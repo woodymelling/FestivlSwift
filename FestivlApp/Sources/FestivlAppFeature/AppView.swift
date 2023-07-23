@@ -20,18 +20,15 @@ public struct AppView: View {
     }
 
     public var body: some View {
+        
+        
+        
         IfLetStore(
-            store.scope(
-                state: \AppFeature.State.eventState,
-                action: AppFeature.Action.eventAction
-            ),
+            store.scope(state: \.eventState, action: AppFeature.Action.eventAction),
             then: EventView.init(store:),
             else: {
                 EventListView(
-                    store: store.scope(
-                        state: \AppFeature.State.eventListState,
-                        action: AppFeature.Action.eventListAction
-                    )
+                    store: store.scope(state: \.eventListState, action: AppFeature.Action.eventListAction)
                 )
             }
         )

@@ -53,7 +53,7 @@ public struct SingleStageAtOnceView: View {
             
             for stage in stages {
                 selectedDaySchedule[stage.id] =
-                    state.schedule[schedulePage: .init(date: state.selectedDate, stageID: stage.id)]
+                    state.schedule[page: .init(date: state.selectedDate, stageID: stage.id)]
                     .filter { !state.filteringFavorites || state.userFavorites.contains($0) }
                 
             }
@@ -61,79 +61,51 @@ public struct SingleStageAtOnceView: View {
             self.selectedDaySchedule = selectedDaySchedule
         }
     }
-        
-    public var body: some View {
-        WithViewStore(store, observe: ViewState.init) { viewStore in
-            SingleStageContent(viewStore: viewStore)
-        }
-    }
-}
-extension ScheduleItem: TimeRangeRepresentable {
-    public var timeRange: Range<Date> { startTime..<endTime }
-}
-
-struct SingleStageContent: View {
-    var viewStore: ViewStore<SingleStageAtOnceView.ViewState, ScheduleFeature.Action>
     
-    var body: some View {
-        Group {
-            if viewStore.showingComingSoonScreen {
-                ScheduleComingSoonView()
-            } else {
-                DateSelectingScrollView(selecting: viewStore.cardToDisplay?.startTime) {
+//    @State var selectedStageID: Stage.ID = .init("")
+    
+    public var body: some View {
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            Group {
+                if viewStore.showingComingSoonScreen {
+                    ScheduleComingSoonView()
+                } else {
+                    DateSelectingScrollView(selecting: viewStore.cardToDisplay?.startTime) {
 
-                    TabView(
-                        selection: viewStore.binding(
-                            get: { $0.selectedStage },
-                            send: { .binding(.set(\.$selectedStage, $0)) }
-                        ).animation(.default)
-                    ) {
-                        ForEach(viewStore.stages) { stage in
-                            SchedulePageView(viewStore.selectedDaySchedule[stage.id] ?? []) { scheduleItem in
-
-                                Button {
-                                    viewStore.send(.didTapCard(scheduleItem))
-                                } label: {
+                        TabView(
+                            selection: viewStore.binding(\.$selectedStage)
+                        ) {
+                            
+                            ForEach(viewStore.stages) { stage in
+                                SchedulePageView(viewStore.schedule[page: .init(date: viewStore.selectedDate, stageID: stage.id)]) { scheduleItem in
+                                    
                                     ScheduleCardView(
                                         scheduleItem,
                                         isSelected: viewStore.cardToDisplay == scheduleItem,
                                         isFavorite: viewStore.userFavorites.contains(scheduleItem)
                                     )
+                                    .onTapGesture {
+                                        viewStore.send(.didTapCard(scheduleItem))
+                                    }
+                                    .tag(scheduleItem.id)
                                 }
-                                .id(scheduleItem.id)
-                                .tag(scheduleItem.id)
+                                .tag(stage)
                             }
-                            .tag(stage.id)
-                            .id(stage.id) // Needed to prevent bug where TabView doesn't stay synced properly when jumping over many pages
                         }
+                        .tabViewStyle(.page(indexDisplayMode: .never))
+                        .frame(height: 1500)
                     }
-                    .tabViewStyle(.page(indexDisplayMode: .never))
-                    .frame(height: 1500)
                 }
             }
-        }
-        .toolbarBackground(style: Color.systemBackground)
-        .safeAreaInset(edge: .top) {
-            ScheduleStageSelector(
-                stages: viewStore.stages,
-                selectedStage: viewStore.binding(
-                    get: { $0.selectedStage },
-                    send: { .binding(.set(\.$selectedStage, $0)) }
-                ).animation(.default)
-            )
+            .toolbarBackground(style: Color.systemBackground)
+            .safeAreaInset(edge: .top) {
+                ScheduleStageSelector(
+                    stages: viewStore.stages,
+                    selectedStage: viewStore.selectedStage,
+                    onSelectStage: { viewStore.send(.didSelectStage($0), animation: .default) }
+                )
+                
+            }
         }
     }
 }
-
-
-
-//struct SingleStageAtOnceView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SingleStageAtOnceView(
-//            store: .testStore
-//        )
-//        .previewAllColorModes()
-////        .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
-//    }
-//
-//}

@@ -26,8 +26,8 @@ import Components
 public struct EventFeature: ReducerProtocol {
     public init() {}
 
-    @Dependency(\.userDefaults.eventID) var eventID
     @Dependency(\.internalPreviewClient) var internalPreviewClient
+    @Dependency(\.eventID) var eventID
     
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.userNotifications) var userNotifications
@@ -73,7 +73,7 @@ public struct EventFeature: ReducerProtocol {
             case .task:
                 return .merge(
                     .run { send in
-                        for try await data in eventDataClient.getData(self.eventID).values {
+                        for try await data in eventDataClient.getData().values {
                             await send(.setUpWhenDataLoaded(data))
                         }
                     },

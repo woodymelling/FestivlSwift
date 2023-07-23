@@ -13,7 +13,7 @@ extension Target.Dependency {
 
 let package = Package(
     name: "FestivlApp",
-    platforms: [.iOS(.v15)],
+    platforms: [.iOS(.v16)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(name: "FestivlAppFeature", targets: ["FestivlAppFeature"]),
@@ -29,10 +29,10 @@ let package = Package(
         .library(name: "NotificationsFeature", targets: ["NotificationsFeature"]),
         .library(name: "ShowScheduleItemDependency", targets: ["ShowScheduleItemDependency"]),
         .library(name: "WorkshopsFeature", targets: ["WorkshopsFeature"]),
-        .library(name: "ScheduleComponents", targets: ["ScheduleComponents"])
+
     ],
     dependencies: [
-        .package(name: "FestivlLibrary", path: "../../FestivlLibrary"),
+        .package(name: "FestivlLibrary", path: "../FestivlLibrary"),
         
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "prerelease/1.0"),
         .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "0.1.4"),
@@ -83,8 +83,6 @@ let package = Package(
                 "ExploreFeature",
                 "MoreFeature",
                 
-                "ScheduleComponents",
-                
                 "ShowScheduleItemDependency",
                 
                 .product(name: "ComposableUserNotifications", package: "composable-user-notifications")
@@ -130,7 +128,8 @@ let package = Package(
                 
                 "ArtistPageFeature",
                 "GroupSetDetailFeature",
-                "ScheduleComponents",
+                
+                .product(name: "ScheduleComponents", package: "FestivlLibrary"),
                 
                 .product(name: "AlertToast", package: "AlertToast"),
                 .product(name: "Popovers", package: "Popovers"),
@@ -223,16 +222,8 @@ let package = Package(
                 
                 "iOSComponents",
                 
-                "ScheduleComponents",
+                .product(name: "ScheduleComponents", package: "FestivlLibrary")
             ]
         ),
-        
-        .target(
-            name: "ScheduleComponents",
-            dependencies: [
-                .utlities,
-                .product(name: "Components", package: "FestivlLibrary")
-            ]
-        )
     ]
 )

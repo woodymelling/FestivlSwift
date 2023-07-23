@@ -21,7 +21,6 @@ extension Artist: Searchable {
 public struct ArtistListFeature: ReducerProtocol {
     public init() {}
     
-    @Dependency(\.userDefaults.eventID) var eventID
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.userFavoritesClient) var userFavoritesClient
     
@@ -84,7 +83,7 @@ public struct ArtistListFeature: ReducerProtocol {
                 return .run { send in
                     
                     for try await (data, userFavorites) in Publishers.CombineLatest(
-                        eventDataClient.getData(eventID),
+                        eventDataClient.getData(),
                         userFavoritesClient.userFavoritesPublisher()
                     ).values {
                         await send(.dataUpdate(data, userFavorites))

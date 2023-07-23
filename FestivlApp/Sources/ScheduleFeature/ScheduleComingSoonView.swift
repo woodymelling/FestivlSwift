@@ -73,7 +73,7 @@ struct ScheduleComingSoonView: View {
 
 struct ScheduleComingSoonView_Previews: PreviewProvider {
     static var previews: some View {
-        ScheduleComingSoonView(imageURL: Event.testData.imageURL)
+        ScheduleComingSoonView(imageURL: Event.previewData.imageURL)
     }
 }
 
