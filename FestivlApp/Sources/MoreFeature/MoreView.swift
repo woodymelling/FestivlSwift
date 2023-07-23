@@ -130,7 +130,7 @@ public struct MoreView: View {
                         
                         if viewStore.isShowingKeyInput {
                             Section {
-                                TextField("Internal Preview Key", text: viewStore.binding(get: \.keyInputText, send: { .didUpdateKeyInput($0) } ))
+                                TextField("Internal Preview Key", text: viewStore.$keyInputText)
                                     .textInputAutocapitalization(.none)
                                 Button("Unlock Internal Preview") {
                                     viewStore.send(.didTapUnlockInternalPreview)

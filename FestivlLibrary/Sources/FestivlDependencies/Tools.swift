@@ -17,7 +17,10 @@ public enum FestivlError: Error {
 public typealias DataStream<T> = AnyPublisher<T, FestivlError>
 
 public extension Effect {
-    static func observe<T>(_ dataStream: DataStream<T>, sending action: @escaping (T) -> Action) -> Effect<Action> {
+    static func observe<T>(
+        _ dataStream: DataStream<T>,
+        sending action: @escaping (T) -> Action
+    ) -> Effect<Action> {
         Effect.publisher {
             dataStream
                 .eraseErrorToPrint(errorSource: String(describing: T.self))
@@ -25,9 +28,23 @@ public extension Effect {
         }
     }
     
-    static func observe<T>(_ dataStream: AnyPublisher<T, Never>, sending action: @escaping (T) -> Action) -> Effect<Action> {
+    static func observe<T>(
+        _ dataStream: AnyPublisher<T, Never>,
+        sending action: @escaping (T) -> Action
+    ) -> Effect<Action> {
         Effect.publisher {
             dataStream.map(action)
+        }
+    }
+    
+    static func observe<T>(
+        _ dataStream: AsyncStream<T>,
+        sending action: @escaping(T) -> Action
+    ) -> Effect<Action> {
+        .run { send in
+            for await newValue in dataStream {
+                await send(action(newValue))
+            }
         }
     }
 }

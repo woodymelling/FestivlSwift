@@ -26,21 +26,16 @@ public struct TabBarView: View {
     }
     
     struct ViewState: Equatable {
-        var selectedTab: Tab
+        @BindingViewState var selectedTab: Tab
         
-        init(state: EventFeature.State) {
-            selectedTab = state.selectedTab
+        init(state: BindingViewStore<EventFeature.State>) {
+            _selectedTab = state.$selectedTab
         }
     }
 
     public var body: some View {
         WithViewStore(store, observe: ViewState.init) { viewStore in
-            TabView(
-                selection: viewStore.binding(
-                     get: \.selectedTab,
-                     send: EventFeature.Action.didSelectTab
-                )
-            ) {
+            TabView(selection: viewStore.$selectedTab) {
                 NavigationView {
                     ScheduleLoadingView(store: store.scope(state: \.scheduleState, action: EventFeature.Action.scheduleAction))
                 }

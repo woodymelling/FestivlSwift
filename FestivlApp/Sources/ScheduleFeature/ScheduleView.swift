@@ -51,14 +51,14 @@ public struct ScheduleView: View {
     
     struct ViewState: Equatable {
         var deviceOrientation: DeviceOrientation
-        var selectedDate: CalendarDate
-        var showingLandscapeTutorial: Bool
+        @BindingViewState var selectedDate: CalendarDate
+        @BindingViewState var showingLandscapeTutorial: Bool
         var festivalDates: [CalendarDate]
         
-        init(state: ScheduleFeature.State) {
+        init(state: BindingViewStore<ScheduleFeature.State>) {
             self.deviceOrientation = state.deviceOrientation
-            self.selectedDate = state.selectedDate
-            self.showingLandscapeTutorial = state.showingLandscapeTutorial
+            self._selectedDate = state.$selectedDate
+            self._showingLandscapeTutorial = state.$showingLandscapeTutorial
             self.festivalDates = state.event.festivalDates
         }
     }
@@ -76,12 +76,7 @@ public struct ScheduleView: View {
                 }
             }
             .environment(\.calendarSelectedDate, viewStore.selectedDate)
-            .toolbarDateSelector(
-                selectedDate: viewStore.binding(
-                    get: { $0.selectedDate },
-                    send: { .binding(.set(\.$selectedDate, $0)) }
-                ).animation()
-            )
+            .toolbarDateSelector(selectedDate: viewStore.$selectedDate)
             .toolbar {
                 ToolbarItem {
                     FilterMenu(store: store)
@@ -105,10 +100,7 @@ public struct ScheduleView: View {
                 GroupSetDetailView(store: $0)
             }
             .toast(
-                isPresenting: viewStore.binding(
-                    get: { $0.showingLandscapeTutorial },
-                    send: { .binding(.set(\.$showingLandscapeTutorial, $0))}
-                ),
+                isPresenting: viewStore.$showingLandscapeTutorial,
                 duration: 5,
                 tapToDismiss: true,
                 alert: {
