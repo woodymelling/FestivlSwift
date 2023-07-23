@@ -102,7 +102,7 @@ struct ArtistListView_Previews: PreviewProvider {
         ArtistListView(
             store: .init(
                 initialState: .init(),
-                reducer: ArtistListFeature()
+                reducer: ArtistListFeature.init
             )
         )
         .previewAllColorModes()

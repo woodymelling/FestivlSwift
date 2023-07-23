@@ -194,7 +194,7 @@ struct MoreView_Previews: PreviewProvider {
             MoreView(
                 store: .init(
                     initialState: .init(),
-                    reducer: MoreFeature()
+                    reducer: MoreFeature.init
                 )
             )
         }

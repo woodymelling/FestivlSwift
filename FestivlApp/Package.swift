@@ -32,9 +32,9 @@ let package = Package(
 
     ],
     dependencies: [
-        .package(name: "FestivlLibrary", path: "../FestivlLibrary"),
+        .package(name: "FestivlLibrary", path: "../../FestivlLibrary"),
         
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "prerelease/1.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "1.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "0.1.4"),
         
         .package(url: "https://github.com/miiha/composable-user-notifications", from: "0.5.0"),
@@ -199,7 +199,7 @@ let package = Package(
                 .composableArchitecture,
                 .models,
                 
-                .product(name: "FestivlDependencies", package: "FestivlLibrary")
+                .festivlDependencies
             ]
         ),
         

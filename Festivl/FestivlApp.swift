@@ -22,7 +22,12 @@ struct FestivlApp: App {
     var body: some Scene {
         WindowGroup {
             AppView(
-                store: .init(initialState: .init(), reducer: AppFeature().dependency(\.currentEnvironment, .test))
+                store: .init(
+                    initialState: .init(),
+                    reducer: {
+                        AppFeature().dependency(\.currentEnvironment, .test)
+                    }
+                )
             )
         }
     }

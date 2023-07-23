@@ -12,7 +12,7 @@ import EventFeature
 import Utilities
 import FestivlDependencies
 
-public struct AppFeature: ReducerProtocol {
+public struct AppFeature: Reducer {
     
     @Dependency(\.eventID) var eventID
     
@@ -32,7 +32,7 @@ public struct AppFeature: ReducerProtocol {
         case eventAction(EventFeature.Action)
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         ReducerReader { state, action in
             
             Reduce { state, action in
@@ -70,7 +70,7 @@ public struct AppFeature: ReducerProtocol {
 
 
 // A reducer that builds a reducer from the current state and action.
-public struct ReducerReader<State, Action, Reader: ReducerProtocol>: ReducerProtocol
+public struct ReducerReader<State, Action, Reader: Reducer>: Reducer
 where Reader.State == State, Reader.Action == Action {
   let reader: (State, Action) -> Reader
 
@@ -86,7 +86,7 @@ where Reader.State == State, Reader.Action == Action {
     self.reader = reader
   }
 
-  public func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
+  public func reduce(into state: inout State, action: Action) -> Effect<Action> {
     self.reader(state, action).reduce(into: &state, action: action)
   }
 }

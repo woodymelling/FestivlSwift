@@ -25,7 +25,7 @@ public struct ExploreView: View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             
             ZStack {
-                NavigationLink(isActive: viewStore.binding(\.$selectedArtistPageState).isPresent()) {
+                NavigationLink(isActive: viewStore.$selectedArtistPageState.isPresent()) {
                     IfLetStore(
                         store.scope(
                             state: \.selectedArtistPageState,
@@ -69,7 +69,7 @@ struct ExploreView_Previews: PreviewProvider {
             ExploreView(
                 store: .init(
                     initialState: .init(),
-                    reducer: ExploreFeature()
+                    reducer: ExploreFeature.init
                 )
             )
             .preferredColorScheme($0)

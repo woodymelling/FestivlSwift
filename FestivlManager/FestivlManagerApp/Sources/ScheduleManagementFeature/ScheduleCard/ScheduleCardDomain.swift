@@ -110,14 +110,14 @@ struct ScheduleCardView: View {
                         
                         .padding(.top, 4)
                 }                
-                // Gestures
-                .overlay { DragHandles(send: viewStore.send, containerSize: geo.size) }
-                .onTapGesture { viewStore.send(.didTapCard) }
                 .placement(viewStore.scheduleItem.frame(
                     in: geo.frame(in: .named("Timeline")).size,
                     groupMapping: [0:0],
                     dayStartsAtNoon: self.dayStartsAtNoon
                 ))
+                // Gestures
+                .overlay { DragHandles(send: { viewStore.send($0) } , containerSize: geo.size) }
+                .onTapGesture { viewStore.send(.didTapCard) }
                 
             }
         }
@@ -143,7 +143,7 @@ struct ScheduleCardView: View {
     
     struct DragHandles: View {
         
-        var send: (ScheduleCardDomain.Action) -> ViewStoreTask
+        var send: (ScheduleCardDomain.Action) -> Void
         var containerSize: CGSize
         
         func handle(_ handle: ScheduleCardDragHandle) -> some View {

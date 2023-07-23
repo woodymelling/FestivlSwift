@@ -80,7 +80,7 @@ struct EventView_Previews: PreviewProvider {
         EventView(
             store: .init(
                 initialState: .init(),
-                reducer: EventFeature()
+                reducer: EventFeature.init
             )
         )
     }

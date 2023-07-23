@@ -139,7 +139,7 @@ struct FilterMenu: View {
         
         WithViewStore(store, observe: { $0}) { viewStore in
             Menu {
-                Toggle(isOn: viewStore.binding(\.$filteringFavorites).animation()) {
+                Toggle(isOn: viewStore.$filteringFavorites.animation()) {
                     Label(
                         "Favorites",
                         systemImage:  viewStore.isFiltering ? "heart.fill" : "heart"
@@ -156,7 +156,7 @@ struct FilterMenu: View {
                     $0.colorMultiply(.gray)
                 }
             }
-            .popover(present: viewStore.binding(\.$showingFilterTutorial), attributes: { $0.dismissal.mode = .tapOutside }) {
+            .popover(present: viewStore.$showingFilterTutorial, attributes: { $0.dismissal.mode = .tapOutside }) {
                 ArrowPopover(arrowSide: .top(.mostClockwise)) {
                     Text("Filter the schedule to only see your favorite artists")
                 }
@@ -170,13 +170,11 @@ struct FilterMenu: View {
 
 struct ScheduleView_Previews: PreviewProvider {
     static var previews: some View {
-        ScheduleLoadingView(store: .init(initialState: .init(), reducer: ScheduleLoadingFeature()))
+        ScheduleLoadingView(
+            store: .init(
+                initialState: .init(),
+                reducer: ScheduleLoadingFeature.init
+            )
+        )
     }
 }
-
-
-//struct SelectedCardEnvironmentKey: EnvironmentKey {
-//    static var defaultValue: ScheduleItem.ID? = nil
-//    
-//    
-//}

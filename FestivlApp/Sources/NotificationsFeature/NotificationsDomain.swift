@@ -10,7 +10,7 @@ import Models
 import UserNotifications
 import FestivlDependencies
 
-public struct NotificationsFeature: ReducerProtocol {
+public struct NotificationsFeature: Reducer {
     
     public init() {}
 
@@ -25,6 +25,7 @@ public struct NotificationsFeature: ReducerProtocol {
         @BindingState public var notificationsEnabled: Bool = false
         @BindingState public var notificationTimeBeforeSet: Int = 0
 
+        // TODO: Change to PresentationState
         @BindingState public var showingNavigateToSettingsAlert: Bool = false
      
         var currentEnvironment: FestivlEnvironment = .live
@@ -40,7 +41,7 @@ public struct NotificationsFeature: ReducerProtocol {
         case task
     }
     
-    public var body: some ReducerProtocol<State, Action> {
+    public var body: some Reducer<State, Action> {
         BindingReducer()
         
         Reduce { state, action in
@@ -57,15 +58,15 @@ public struct NotificationsFeature: ReducerProtocol {
                 
             case .binding(\.$notificationsEnabled):
                 if state.notificationsEnabled {
-                    return .task {
+                    return .run { send in
                         do {
                             if try await notificationCenter().requestAuthorization(options: [.alert, .sound]) {
-                                return .notifictationsPermitted
+                                await send(.notifictationsPermitted)
                             } else {
-                                return .notificationsDenied
+                                await send(.notificationsDenied)
                             }
                         } catch {
-                            return .notificationsDenied
+                            await send(.notificationsDenied)
                         }
                     }
                 } else {

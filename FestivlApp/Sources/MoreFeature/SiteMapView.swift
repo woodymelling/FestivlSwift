@@ -13,7 +13,7 @@ import ImageViewer
 import Utilities
 import Components
 
-public struct SiteMapFeature: ReducerProtocol {
+public struct SiteMapFeature: Reducer {
     
     public struct State: Equatable {
         var url: URL
@@ -21,7 +21,7 @@ public struct SiteMapFeature: ReducerProtocol {
     
     public enum Action: Equatable {}
     
-    public var body: some ReducerProtocolOf<Self> {
+    public var body: some ReducerOf<Self> {
         return EmptyReducer()
     }
 }

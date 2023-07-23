@@ -165,7 +165,7 @@ struct ArtistPageView_Previews: PreviewProvider {
         ArtistPageView(
             store: .init(
                 initialState: .init(artistID: Artist.testValues.first!.id, isFavorite: false),
-                reducer: ArtistDetail()
+                reducer: ArtistDetail.init
             )
         )
     }

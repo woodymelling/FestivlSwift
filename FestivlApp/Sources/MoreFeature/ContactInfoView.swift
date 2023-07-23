@@ -11,7 +11,7 @@ import ComposableArchitecture
 import Utilities
 
 
-public struct ContactInfoFeature: ReducerProtocol {
+public struct ContactInfoFeature: Reducer {
     @Dependency(\.openURL) var openURL
     
     public struct State: Equatable {
@@ -22,13 +22,13 @@ public struct ContactInfoFeature: ReducerProtocol {
         case didTapContactNumber(ContactNumber)
     }
     
-    public func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
+    public func reduce(into state: inout State, action: Action) -> Effect<Action> {
         switch action {
         case let .didTapContactNumber(contactNumber):
             guard let url = URL(string: "tel:\(contactNumber.phoneNumber)") else { return .none }
             
-            return .fireAndForget {
-                _ = await openURL(url)
+            return .run { _ in
+                await openURL(url)
             }
         }
     }
@@ -117,7 +117,7 @@ struct ContactInfoView_Previews: PreviewProvider {
                                 )
                         ])
                     ),
-                    reducer: ContactInfoFeature()
+                    reducer: ContactInfoFeature.init
                 )
             )
             .navigationBarTitleDisplayMode(.inline)

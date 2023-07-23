@@ -72,9 +72,7 @@ public struct SingleStageAtOnceView: View {
                 } else {
                     DateSelectingScrollView(selecting: viewStore.cardToDisplay?.startTime) {
 
-                        TabView(
-                            selection: viewStore.binding(\.$selectedStage)
-                        ) {
+                        TabView(selection: viewStore.$selectedStage) {
                             
                             ForEach(viewStore.stages) { stage in
                                 SchedulePageView(viewStore.schedule[page: .init(date: viewStore.selectedDate, stageID: stage.id)]) { scheduleItem in
