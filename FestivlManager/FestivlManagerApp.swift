@@ -27,10 +27,6 @@ struct FestivlManagerApp: App {
                         initialState: ScheduleManagementDomain.State(),
                         reducer: {
                             ScheduleManagementDomain()
-//                                .dependency(\.eventClient, EventClientKey.previewValue)
-//                                .dependency(\.stageClient, StageClientKey.previewValue)
-//                                .dependency(\.scheduleClient, ScheduleClientKey.previewValue)
-//                                .dependency(\.artistClient, ArtistClientKey.previewValue)
                                 .dependency(\.eventID, "NLL2bpmp0IkYF2tohlsI")
                         }
                     )
