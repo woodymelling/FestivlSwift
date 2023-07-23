@@ -9,7 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import Models
 import Utilities
-//import Introspect
+import iOSComponents
 
 
 public struct ArtistPageView: View {
@@ -26,23 +26,22 @@ public struct ArtistPageView: View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             Group {
                 if let artist = viewStore.artist,
-                   let event = viewStore.event,
-                   let schedule = viewStore.schedule,
-                   let stages = viewStore.stages {
+                   let schedule = viewStore.schedule {
                     VStack {
-                        ArtistHeaderView(artist: artist, event: event)
+                        DetailsHeaderView(imageURL: artist.imageURL) {
+                            Text(artist.name)
+                                .font(.system(size: 30))
+                                .padding()
+                        }
                         
                         List {
                             ForEach(
-                                schedule[artistID: viewStore.artistID].sortedByStartTime
+                                schedule[artistID: viewStore.artistID].sorted(by: \.startTime)
                             ) { scheduleItem in
                                 Button {
                                     viewStore.send(.didTapScheduleItem(scheduleItem))
                                 } label: {
-                                    SetView(
-                                        set: scheduleItem,
-                                        stages: stages
-                                    )
+                                    SetView(set: scheduleItem)
                                 }
                             }
                             
@@ -165,7 +164,7 @@ struct ArtistPageView_Previews: PreviewProvider {
     static var previews: some View {
         ArtistPageView(
             store: .init(
-                initialState: .init(artistID: .init(""), isFavorite: false),
+                initialState: .init(artistID: Artist.testValues.first!.id, isFavorite: false),
                 reducer: ArtistDetail()
             )
         )

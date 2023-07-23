@@ -15,7 +15,6 @@ import Tagged
 import ShowScheduleItemDependency
 
 public struct ArtistDetail: ReducerProtocol {
-    @Dependency(\.userDefaults.eventID) var eventID
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.userFavoritesClient) var userFavoritesClient
     
@@ -56,7 +55,7 @@ public struct ArtistDetail: ReducerProtocol {
         switch action {
         case .didTapScheduleItem(let scheduleItem):
             
-            showScheduleItem(scheduleItem)
+            showScheduleItem(scheduleItem.id)
             return .none
             
         case .favoriteArtistButtonTapped:
@@ -68,7 +67,7 @@ public struct ArtistDetail: ReducerProtocol {
             return .run { [state] send in
                 
                 for try await (data, artistIsFavorited) in Publishers.CombineLatest(
-                    eventDataClient.getData(self.eventID),
+                    eventDataClient.getData(),
                     userFavoritesClient.userFavoritesPublisher().map { $0.contains(state.artistID) }
                 ).values {
                     await send(.dataUpdate(data, artistIsFavorited))

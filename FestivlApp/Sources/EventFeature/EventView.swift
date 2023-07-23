@@ -10,6 +10,8 @@ import ComposableArchitecture
 import Models
 import Utilities
 import Components
+import ScheduleComponents
+import FestivlDependencies
 
 public struct EventView: View {
     let store: StoreOf<EventFeature>
@@ -17,40 +19,58 @@ public struct EventView: View {
     public init(store: StoreOf<EventFeature>) {
         self.store = store
     }
+    
+    struct ViewState: Equatable {
+        var eventData: EventData?
+        
+        init(state: EventFeature.State) {
+            self.eventData = state.eventData
+        }
+    }
 
     public var body: some View {
-        WithViewStore(store, observe: Blank.init) { viewStore in
-            TabBarView(store: store)
-                .task { await viewStore.send(.task).finish() }
+        WithViewStore(store, observe: ViewState.init) { viewStore in
+            LoadingView(eventData: viewStore.eventData) { eventData in
+                TabBarView(store: store)
+                    .tint(eventData.event.mainEventColor)
+                    .environment(\.event, eventData.event)
+                    .environment(\.dayStartsAtNoon, eventData.event.dayStartsAtNoon)
+                    .environment(\.stages, eventData.stages)
+                
+            }
+            .task { await viewStore.send(.task).finish() }
         }
     }
 }
 
 
-struct LoadingView: View {
-    var event: Event
+struct LoadingView<Content: View>: View {
+    var eventData: EventData?
+    var content: (EventData) -> Content
 
     @State var rotationAngle: Double = 0
-
-    @State var timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
+    @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    
 
     var body: some View {
-        CachedAsyncImage(url: event.imageURL, renderingMode: .template, placeholder: {
-            ProgressView()
-
-        })
-        .frame(square: 300)
-        .rotationEffect(Angle(degrees: rotationAngle))
-        .onReceive(timer) { _ in
-            withAnimation(.spring()) {
-                rotationAngle += 360
+        if let eventData, rotationAngle >= 720 {
+            content(eventData)
+        } else {
+            CachedAsyncImage(url: eventData?.event.imageURL, renderingMode: .template, placeholder: {
+                ProgressView()
+            })
+            .frame(square: 200)
+            .rotationEffect(Angle(degrees: rotationAngle))
+            .onReceive(timer) { _ in
+                rotate()
             }
+            .onAppear { rotate() }
         }
-        .onAppear {
-            withAnimation(.spring()) {
-                rotationAngle += 360
-            }
-
+    }
+    
+    func rotate() {
+        withAnimation(.spring()) {
+            rotationAngle += 360
         }
     }
 }

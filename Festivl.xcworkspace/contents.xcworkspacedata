@@ -2,9 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../FestivlLibrary">
+      location = "group:FestivlLibrary">
    </FileRef>
    <FileRef
       location = "container:Festivl.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:FestivlManager.xcodeproj">
    </FileRef>
 </Workspace>

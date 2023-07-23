@@ -41,16 +41,20 @@ public struct TabBarView: View {
                      send: EventFeature.Action.didSelectTab
                 )
             ) {
-                ScheduleLoadingView(store: store.scope(state: \.scheduleState, action: EventFeature.Action.scheduleAction))
-                    .tabItem {
-                        Label("Schedule", systemImage: "calendar")
-                    }
-                    .tag(Tab.schedule)
+                NavigationView {
+                    ScheduleLoadingView(store: store.scope(state: \.scheduleState, action: EventFeature.Action.scheduleAction))
+                }
+                .navigationViewStyle(.stack)
+                .tabItem {
+                    Label("Schedule", systemImage: "calendar")
+                }
+                .tag(Tab.schedule)
 
                 NavigationView {
                     ArtistListView(store: store.scope(state: \.artistListState, action: EventFeature.Action.artistListAction))
                         
                 }
+                .navigationViewStyle(.stack)
                 .tabItem { Label("Artists", systemImage: "person.3") }
                 .tag(Tab.artists)
                 
@@ -58,12 +62,14 @@ public struct TabBarView: View {
                 NavigationView {
                     ExploreView(store: store.scope(state: \.exploreState, action: EventFeature.Action.exploreAction))
                 }
+                .navigationViewStyle(.stack)
                 .tabItem { Label("Explore", systemImage: "barometer") }
                 .tag(Tab.explore)
                 
                 NavigationView {
                     MoreView(store: store.scope(state: \.moreState, action: EventFeature.Action.moreAction))
                 }
+                .navigationViewStyle(.stack)
                 .tabItem { Label("More", systemImage: "ellipsis") }
                 .tag(Tab.more)
             }

@@ -9,7 +9,7 @@ extension Target.Dependency {
 
 let package = Package(
     name: "FestivlLibrary",
-    platforms: [.iOS(.v15), .macOS(.v12)],
+    platforms: [.iOS(.v16), .macOS(.v12)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(name: "FestivlLibrary", targets: ["FestivlLibrary"]),
@@ -19,19 +19,25 @@ let package = Package(
         .library(name: "SharedResources", targets: ["SharedResources"]),
         .library(name: "FestivlDependencies", targets: ["FestivlDependencies"]),
         .library(name: "ComposableArchitectureUtilities", targets: ["ComposableArchitectureUtilities"]),
-        .library(name: "FirebaseServiceImpl", targets: ["FirebaseServiceImpl"])
+        .library(name: "FirebaseServiceImpl", targets: ["FirebaseServiceImpl"]),
+        .library(name: "ScheduleComponents", targets: ["ScheduleComponents"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "navigation-beta"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "prerelease/1.0"),
         .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "0.1.4"),
         .package(url: "https://github.com/pointfreeco/swift-identified-collections", from: "0.5.0"),
         .package(url: "https://github.com/pointfreeco/swift-tagged", from: "0.8.0"),
         .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", from: "0.6.0"),
-        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "8.0.0"),
-        .package(url: "https://github.com/onevcat/Kingfisher", from: "7.2.0")
-
+        .package(url: "https://github.com/pointfreeco/swift-custom-dump", from: "0.10.3"),
+        
+        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "10.11.0"),
+        
+        .package(url: "https://github.com/onevcat/Kingfisher", from: "7.2.0"),
+        .package(url: "https://github.com/apple/swift-collections", from: "1.0.4"),
+        
+        .package(url: "https://github.com/diniska/swiftui-system-colors", from: "1.2.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -43,24 +49,27 @@ let package = Package(
         .target(name: "Models", dependencies: [
             .product(name: "Tagged", package: "swift-tagged"),
             .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
-            .target(name: "Utilities")
+            .target(name: "Utilities"),
+            .product(name: "CustomDump", package: "swift-custom-dump"),
+            .product(name: "Collections", package: "swift-collections")
         ]),
         .target(name: "Utilities", dependencies: [
             .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
+            .product(name: "SystemColors", package: "swiftui-system-colors")
         ]),
         .target(name: "Components", dependencies: [
             .models,
             .target(name: "Utilities"),
-            .product(name: "Kingfisher", package: "Kingfisher")
+            .product(name: "Kingfisher", package: "Kingfisher"),
+            .product(name: "Collections", package: "swift-collections")
         ]),
         .target(name: "FirebaseServiceImpl", dependencies: [
             .target(name: "Utilities"),
             .target(name: "FestivlDependencies"),
-            .product(name: "Dependencies", package: "swift-composable-architecture"),
+            .product(name: "Dependencies", package: "swift-dependencies"),
             .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
-            .product(name: "FirebaseStorage", package: "firebase-ios-sdk"),
-            .product(name: "FirebaseFirestoreSwift-Beta", package: "firebase-ios-sdk"),
-            .product(name: "FirebaseStorageSwift-Beta", package: "firebase-ios-sdk")
+            .product(name: "FirebaseFirestoreSwift", package: "firebase-ios-sdk"),
+            .product(name: "FirebaseStorage", package: "firebase-ios-sdk")
         ]),
         .target(
             name: "SharedResources",
@@ -82,6 +91,13 @@ let package = Package(
             name: "ComposableArchitectureUtilities",
             dependencies: [
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            ]
+        ),
+        .target(
+            name: "ScheduleComponents",
+            dependencies: [
+                "Utilities",
+                "Components"
             ]
         ),
         

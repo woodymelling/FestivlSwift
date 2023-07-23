@@ -46,10 +46,14 @@ public struct NotificationsFeature: ReducerProtocol {
         Reduce { state, action in
             switch action {
             case .task:
+                
+                print("NOTIFS Task")
                 userFavoritesClient.registerNotificationCategories()
                 state.currentEnvironment = currentEnvironment
-                state.notificationsEnabled = userFavoritesClient.notificationsEnabled
-                state.notificationTimeBeforeSet = userFavoritesClient.beforeSetNotificationTime
+                
+                
+                state.notificationsEnabled = userFavoritesClient.notificationsEnabled()
+                state.notificationTimeBeforeSet = userFavoritesClient.beforeSetNotificationTime()
                 
             case .binding(\.$notificationsEnabled):
                 if state.notificationsEnabled {

@@ -23,7 +23,7 @@ public struct GroupSetDetailView: View {
     struct ViewState: Equatable {
         enum LoadingState: Equatable {
             case loading
-            case loaded(Schedule, Event, IdentifiedArrayOf<Stage>, IdentifiedArrayOf<Artist>, UserFavorites)
+            case loaded(Schedule, Event, IdentifiedArrayOf<Artist>, UserFavorites)
         }
         
         var loadingState: LoadingState
@@ -37,7 +37,7 @@ public struct GroupSetDetailView: View {
             if let schedule = state.schedule,
                let event = state.event
             {
-                self.loadingState = .loaded(schedule, event, state.stages, state.artists, state.userFavorites)
+                self.loadingState = .loaded(schedule, event, state.artists, state.userFavorites)
             } else {
                 self.loadingState = .loading
             }
@@ -51,13 +51,13 @@ public struct GroupSetDetailView: View {
                     switch viewStore.loadingState {
                     case .loading:
                         ProgressView()
-                    case let .loaded(schedule, event, stages, artists, userFavorites):
+                    case let .loaded(schedule, event, artists, userFavorites):
                         List {
                             Section {
                                 Button(action: {
                                     viewStore.send(.didTapScheduleItem(viewStore.groupSet))
                                 }, label: {
-                                    SetView(set: viewStore.groupSet, stages: stages)
+                                    SetView(set: viewStore.groupSet)
                                 })
                             }
                             
@@ -77,7 +77,6 @@ public struct GroupSetDetailView: View {
                                         ArtistRow(
                                             artist: artist,
                                             event: event,
-                                            stages: stages,
                                             sets: schedule[artistID: artist.id],
                                             isFavorite: userFavorites.contains(artist.id),
                                             showArtistImage: viewStore.showArtistImages

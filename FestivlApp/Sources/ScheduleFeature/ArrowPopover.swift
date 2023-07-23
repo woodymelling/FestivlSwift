@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import Popovers
+@preconcurrency import Popovers
 import SwiftUI
 
 struct ArrowPopover<Content: View>: View {

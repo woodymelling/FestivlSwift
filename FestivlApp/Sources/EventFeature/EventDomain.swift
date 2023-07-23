@@ -26,8 +26,8 @@ import Components
 public struct EventFeature: ReducerProtocol {
     public init() {}
 
-    @Dependency(\.userDefaults.eventID) var eventID
     @Dependency(\.internalPreviewClient) var internalPreviewClient
+    @Dependency(\.eventID) var eventID
     
     @Dependency(\.eventDataClient) var eventDataClient
     @Dependency(\.userNotifications) var userNotifications
@@ -45,9 +45,9 @@ public struct EventFeature: ReducerProtocol {
         
         var eventData: EventData?
         
-        
-        
-        public init() {}
+        public init(selectedTab: Tab = .schedule) {
+            self.selectedTab = selectedTab
+        }
     }
     
     public enum Action {
@@ -57,7 +57,7 @@ public struct EventFeature: ReducerProtocol {
         
         case setUpWhenDataLoaded(EventData)
         
-        case showScheduleItem(ScheduleItem)
+        case showScheduleItem(ScheduleItem.ID)
         
         case artistListAction(ArtistListFeature.Action)
         case scheduleAction(ScheduleLoadingFeature.Action)
@@ -73,7 +73,7 @@ public struct EventFeature: ReducerProtocol {
             case .task:
                 return .merge(
                     .run { send in
-                        for try await data in eventDataClient.getData(self.eventID).values {
+                        for try await data in eventDataClient.getData().values {
                             await send(.setUpWhenDataLoaded(data))
                         }
                     },
@@ -115,6 +115,7 @@ public struct EventFeature: ReducerProtocol {
                 return .fireAndForget {
                     async let _ = await ImageCacher.preFetchImage(urls: data.artists.compactMap { $0.imageURL })
                     async let _ = await ImageCacher.preFetchImage(urls: data.stages.compactMap { $0.iconImageURL })
+                    async let _ = await ImageCacher.preFetchImage(urls: data.event.imageURL.map { [$0] } ?? [] )
                 }
                 
             case let .userNotification(.willPresentNotification(_, completion)):
@@ -137,6 +138,7 @@ public struct EventFeature: ReducerProtocol {
 
             }
         }
+
         
         Scope(state: \.artistListState, action: /Action.artistListAction) {
             ArtistListFeature()
@@ -170,7 +172,7 @@ public struct EventFeature: ReducerProtocol {
                    let scheduleItem = schedule[id: .init(setID)] {
                     state.selectedTab = .schedule
                     return .concatenate(
-                        .send( .scheduleAction(.scheduleAction(.showAndHighlightCard(scheduleItem)))),
+                        .send( .scheduleAction(.scheduleAction(.showAndHighlightCard(scheduleItem.id)))),
                         .run  { _ in
                             completion()
                         }

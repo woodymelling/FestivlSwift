@@ -15,9 +15,7 @@ import FestivlDependencies
 struct WickedWoodsApp: App {
 
     init() {
-        FirebaseServices.initialize()
-        UserDefaultStore.shared.eventID = "NLL2bpmp0IkYF2tohlsI"
-        
+        FirebaseServices.initialize()        
     }
     
     var body: some Scene {
@@ -27,7 +25,7 @@ struct WickedWoodsApp: App {
                     initialState: .init(),
                     reducer: EventFeature()
                         .dependency(\.isEventSpecificApplication, true)
-//                        .dependency(\.eventID, "uxKxjEQe1RDi5AzB9zZI")
+                        .dependency(\.eventID, "NLL2bpmp0IkYF2tohlsI")
                 )
             )
         }

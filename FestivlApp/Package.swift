@@ -13,7 +13,7 @@ extension Target.Dependency {
 
 let package = Package(
     name: "FestivlApp",
-    platforms: [.iOS(.v15)],
+    platforms: [.iOS(.v16)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(name: "FestivlAppFeature", targets: ["FestivlAppFeature"]),
@@ -28,21 +28,22 @@ let package = Package(
         .library(name: "MoreFeature", targets: ["MoreFeature"]),
         .library(name: "NotificationsFeature", targets: ["NotificationsFeature"]),
         .library(name: "ShowScheduleItemDependency", targets: ["ShowScheduleItemDependency"]),
+        .library(name: "WorkshopsFeature", targets: ["WorkshopsFeature"]),
+
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+        .package(name: "FestivlLibrary", path: "../FestivlLibrary"),
+        
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "prerelease/1.0"),
-        .package(url: "https://github.com/yacir/CollectionViewSlantedLayout", branch: "master"),
-        .package(name: "FestivlLibrary", path: "../../FestivlLibrary"),
-        .package(url: "https://github.com/siteline/SwiftUI-Introspect.git", from: "0.0.0"),
-        .package(url: "https://github.com/stonko1994/SimultaneouslyScrollView", from: "1.0.0"),
-        .package(url: "https://github.com/Jake-Short/swiftui-image-viewer.git", from: "2.3.1"),
+        .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "0.1.4"),
+        
         .package(url: "https://github.com/miiha/composable-user-notifications", from: "0.5.0"),
+        
+        .package(url: "https://github.com/yacir/CollectionViewSlantedLayout", branch: "master"),
+        .package(url: "https://github.com/Jake-Short/swiftui-image-viewer.git", from: "2.3.1"),
         .package(url: "https://github.com/elai950/AlertToast", branch: "master"),
         .package(url: "https://github.com/aheze/Popovers", from: "1.3.2"),
-        .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "0.1.4"),
-        .package(url: "https://github.com/danielsaidi/ScrollKit.git", from: "0.3.0")
+        .package(url: "https://github.com/apple/swift-collections", from: "1.0.4")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -53,9 +54,10 @@ let package = Package(
                 .composableArchitecture,
                 .models,
                 
-                .target(name: "EventListFeature"),
-                .product(name: "FirebaseServiceImpl", package: "FestivlLibrary"),
-                .target(name: "EventFeature"),
+                "EventListFeature",
+                "EventFeature",
+                
+                .product(name: "FirebaseServiceImpl", package: "FestivlLibrary")
             ]
         ),
         .target(
@@ -76,11 +78,13 @@ let package = Package(
                 .models,
                 .festivlDependencies,
                 
-                .target(name: "ArtistListFeature"),
-                .target(name: "ScheduleFeature"),
-                .target(name: "ExploreFeature"),
-                .target(name: "MoreFeature"),
-                .target(name: "ShowScheduleItemDependency"),
+                "ArtistListFeature",
+                "ScheduleFeature",
+                "ExploreFeature",
+                "MoreFeature",
+                
+                "ShowScheduleItemDependency",
+                
                 .product(name: "ComposableUserNotifications", package: "composable-user-notifications")
             ]
         ),
@@ -92,9 +96,10 @@ let package = Package(
                 .utlities,
                 .festivlDependencies,
                 
-                .target(name: "ArtistPageFeature"),
+                "ArtistPageFeature",
+                "iOSComponents",
+                
                 .product(name: "Components", package: "FestivlLibrary"),
-                .target(name: "iOSComponents"),
             ]
         ),
         .target(
@@ -104,12 +109,13 @@ let package = Package(
                 .models,
                 .utlities,
                 
+                "ShowScheduleItemDependency",
+                "iOSComponents",
+                
                 .product(name: "Components", package: "FestivlLibrary"),
                 .product(name: "SharedResources", package: "FestivlLibrary"),
                 .product(name: "FestivlDependencies", package: "FestivlLibrary"),
-                .product(name: "ScrollKit", package: "ScrollKit"),
                 
-                "ShowScheduleItemDependency"
             ]
         ),
 
@@ -120,15 +126,15 @@ let package = Package(
                 .models,
                 .utlities,
                 
-                .target(name: "ArtistPageFeature"),
-                .target(name: "GroupSetDetailFeature"),
+                "ArtistPageFeature",
+                "GroupSetDetailFeature",
+                
+                .product(name: "ScheduleComponents", package: "FestivlLibrary"),
                 
                 .product(name: "AlertToast", package: "AlertToast"),
                 .product(name: "Popovers", package: "Popovers"),
                 .product(name: "Components", package: "FestivlLibrary"),
-                .product(name: "ComposableArchitectureUtilities", package: "FestivlLibrary"),
-                .product(name: "Introspect", package: "SwiftUI-Introspect"),
-                .product(name: "SimultaneouslyScrollView", package: "SimultaneouslyScrollView")
+                .product(name: "ComposableArchitectureUtilities", package: "FestivlLibrary")
             ]
 
         ),
@@ -139,8 +145,9 @@ let package = Package(
                 .models,
                 .utlities,
                 
-                .product(name: "CollectionViewSlantedLayout", package: "CollectionViewSlantedLayout"),
-                .target(name: "ArtistPageFeature")
+                "ArtistPageFeature",
+                
+                .product(name: "CollectionViewSlantedLayout", package: "CollectionViewSlantedLayout")
             ]
         ),
         .target(
@@ -150,10 +157,11 @@ let package = Package(
                 .models,
                 .utlities,
                 
-                .product(name: "Components", package: "FestivlLibrary"),
-                .target(name: "ArtistPageFeature"),
-                .target(name: "iOSComponents"),
-                .target(name: "ShowScheduleItemDependency")
+                "ArtistPageFeature",
+                "iOSComponents",
+                "ShowScheduleItemDependency",
+                
+                .product(name: "Components", package: "FestivlLibrary")
             ]
         ),
         .target(
@@ -164,6 +172,7 @@ let package = Package(
                 .utlities,
                 
                 .product(name: "Components", package: "FestivlLibrary"),
+                .product(name: "Collections", package: "swift-collections")
            ]
         ),
         .target(
@@ -173,9 +182,12 @@ let package = Package(
                 .models,
                 .festivlDependencies,
                 
-                .product(name: "ImageViewer", package: "swiftui-image-viewer"),
                 .product(name: "Components", package: "FestivlLibrary"),
-                .target(name: "NotificationsFeature")
+                
+                .product(name: "ImageViewer", package: "swiftui-image-viewer"),
+                .target(name: "NotificationsFeature"),
+                
+                "WorkshopsFeature"
             ],
             resources: [
                 .copy("Media.xcassets")
@@ -194,10 +206,24 @@ let package = Package(
         .target(
             name: "ShowScheduleItemDependency",
             dependencies: [
-                .product(name: "Dependencies", package: "swift-dependencies"),
-                .models
+                .models,
+                
+                .product(name: "Dependencies", package: "swift-dependencies")
             ]
-        )
-
+        ),
+        
+        .target(
+            name: "WorkshopsFeature",
+            dependencies: [
+                .models,
+                .composableArchitecture,
+                .festivlDependencies,
+                .utlities,
+                
+                "iOSComponents",
+                
+                .product(name: "ScheduleComponents", package: "FestivlLibrary")
+            ]
+        ),
     ]
 )
