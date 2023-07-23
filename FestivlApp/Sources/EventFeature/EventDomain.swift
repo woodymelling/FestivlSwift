@@ -36,7 +36,7 @@ public struct EventFeature: Reducer {
     
     
     public struct State: Equatable {
-        var selectedTab: Tab = .schedule
+        @BindingState var selectedTab: Tab = .schedule
         
         var scheduleState: ScheduleLoadingFeature.State = .init()
         var artistListState: ArtistListFeature.State = .init()
@@ -50,12 +50,13 @@ public struct EventFeature: Reducer {
         }
     }
     
-    public enum Action {
+    public enum Action: BindableAction {
         case task
+        case binding(BindingAction<State>)
         
         case didSelectTab(Tab)
         
-        case setUpWhenDataLoaded(EventData)
+        case loadedEventData(EventData)
         
         case showScheduleItem(ScheduleItem.ID)
         
@@ -68,27 +69,17 @@ public struct EventFeature: Reducer {
     }
     
     public var body: some Reducer<State, Action> {
+        BindingReducer()
+        
         Reduce<State, Action> { state, action in
             switch action {
+            case .binding:
+                return .none
             case .task:
                 return .merge(
-                    .run { send in
-                        for try await data in eventDataClient.getData().values {
-                            await send(.setUpWhenDataLoaded(data))
-                        }
-                    },
-                    
-                    .run { send in
-                        for await event in userNotifications.delegate() {
-                            await send(.userNotification(event))
-                        }
-                    },
-
-                    .run { send in
-                        for await scheduleItemToShow in showScheduleItem.items().values {
-                            await send(.showScheduleItem(scheduleItemToShow))
-                        }
-                    }
+                    .observe(eventDataClient.getData(), sending: Action.loadedEventData),
+                    .observe(userNotifications.delegate(), sending: Action.userNotification),
+                    .observe(showScheduleItem.items(), sending: Action.showScheduleItem)
                 )
                 
             case .didSelectTab(let tab):
@@ -102,7 +93,7 @@ public struct EventFeature: Reducer {
                     await send(.scheduleAction(.scheduleAction(.showAndHighlightCard(scheduleItem)))) // TODO: Function on state
                 }
 
-            case .setUpWhenDataLoaded(let data):
+            case .loadedEventData(let data):
                 state.eventData = data
                 
                 let hasScheduleAccess = data.event.scheduleIsPublished || self.internalPreviewClient.internalPreviewsAreUnlocked(self.eventID)

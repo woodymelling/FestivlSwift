@@ -26,13 +26,15 @@ public struct MoreFeature: Reducer {
         var isEventSpecificApplication: Bool = true
         
         var isShowingKeyInput: Bool = false
-        var keyInputText: String = ""
+        @BindingState var keyInputText: String = ""
         
         @PresentationState var destination: Destination.State?
     }
     
-    public enum Action {
+    public enum Action: BindableAction {
         case task
+        case binding(BindingAction<State>)
+        
         case dataLoaded(EventData)
         
         case didTapNotifications
@@ -94,18 +96,16 @@ public struct MoreFeature: Reducer {
     public var body: some Reducer<MoreFeature.State, MoreFeature.Action> {
         Reduce { state, action in
             switch action {
-            case .didExitEvent:
+            case .binding:
                 return .none
+                
             case .task:
                 state.isEventSpecificApplication = isEventSpecificApplication
                 
-                return .run { send in
-                    for try await data in eventDataClient.getData().values {
-                        await send(.dataLoaded(data))
-                    }
-                } catch: { _, _ in
-                    print("Event Data Loading Error")
-                }
+                return .observe(eventDataClient.getData(), sending: Action.dataLoaded)
+                
+            case .didExitEvent:
+                return .none
                 
             case .didTapNotifications:
                 state.destination = .notifications(NotificationsFeature.State())

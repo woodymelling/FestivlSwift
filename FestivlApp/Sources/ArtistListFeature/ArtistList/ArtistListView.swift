@@ -28,11 +28,11 @@ public struct ArtistListView: View {
         }
         
         var loadingState: LoadingState
-        var searchText: String
+        @BindingViewState var searchText: String
         var showArtistImages: Bool
         
-        init(_ state: ArtistListFeature.State){
-            self.searchText = state.searchText
+        init(_ state: BindingViewStore<ArtistListFeature.State>){
+            self._searchText = state.$searchText
             self.showArtistImages = state.showArtistImages
             
             if !state.isLoading,
@@ -83,12 +83,7 @@ public struct ArtistListView: View {
                     }
                 }
             }
-            .searchable(
-                text: viewStore.binding(
-                    get: { $0.searchText },
-                    send: { .binding(.set(\.$searchText, $0)) }
-                )
-            )
+            .searchable(text: viewStore.$searchText)
             .autocorrectionDisabled(true)
             .task { viewStore.send(.task) }
             .navigationTitle("Artists")
