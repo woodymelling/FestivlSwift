@@ -6,29 +6,13 @@
 //
 
 import Foundation
+import Utilities
 
-public protocol TimeRangeRepresentable { // TODO: Replace All Range<Date> with DateInterval
-    var timeRange: Range<Date> { get }
-}
-
-public protocol TimelineCard: Equatable, Identifiable {
-    var dateRange: Range<Date> { get }
+public protocol TimelineCard: Equatable, Identifiable, DateIntervalRepresentable {
     var groupWidth: Range<Int> { get }
 }
 
-extension Collection {
-    public func sorted<T, U>(by keyPath: KeyPath<Element, T>, and secondaryKeyPath: KeyPath<Element, U>) -> [Element] where T : Comparable, U: Comparable {
-        self.sorted {
-            if $0[keyPath: keyPath] == $1[keyPath: keyPath] {
-                return $0[keyPath: secondaryKeyPath] < $1[keyPath: secondaryKeyPath]
-            } else {
-                return $0[keyPath: keyPath] < $1[keyPath: keyPath]
-            }
-        }
-    }
-}
-
-public struct TimelineWrapper<Value: Identifiable & Equatable & TimeRangeRepresentable>: TimelineCard, Equatable, Identifiable {
+public struct TimelineWrapper<Value: Identifiable & Equatable & DateIntervalRepresentable>: TimelineCard, Equatable, Identifiable {
     public var groupWidth: Range<Int>
     public var item: Value
     
@@ -38,22 +22,22 @@ public struct TimelineWrapper<Value: Identifiable & Equatable & TimeRangeReprese
     }
     
     public var id: Value.ID { item.id }
-    public var dateRange: Range<Date> { item.timeRange }
+    public var dateInterval: DateInterval { item.dateInterval }
 }
 
-extension Collection where Element: TimeRangeRepresentable & Equatable & Identifiable {
+extension Collection where Element: DateIntervalRepresentable & Equatable & Identifiable {
     public var groupedToPreventOverlaps: [TimelineWrapper<Element>] {
         var columns: [[Element]] = [[]]
         
         let sortedItems = self.sorted(
-            by: \.timeRange.lowerBound,
-            and: \.timeRange.upperBound
+            by: \.dateInterval.start,
+            and: \.dateInterval.end
         )
         
         for item in sortedItems {
             for (idx, column) in columns.enumerated() {
                 // Has overlap
-                if let lastItem = column.last, item.timeRange.overlaps(lastItem.timeRange) {
+                if let lastItem = column.last, item.dateInterval.intersects(lastItem.dateInterval, adjacentIntersects: false) {
                     if !columns.indices.contains(idx + 1) {
                         columns.append([item])
                     }
@@ -74,7 +58,7 @@ extension Collection where Element: TimeRangeRepresentable & Equatable & Identif
                 var endColumn = columnIdx
                 for columnIdx in (columnIdx)..<columns.count {
                     if !columns[columnIdx].contains(where: {
-                        item.timeRange.overlaps($0.timeRange)
+                        item.dateInterval.intersects($0.dateInterval, adjacentIntersects: false)
                     }) {
                         endColumn = columnIdx
                     }
@@ -88,3 +72,4 @@ extension Collection where Element: TimeRangeRepresentable & Equatable & Identif
         return output
     }
 }
+

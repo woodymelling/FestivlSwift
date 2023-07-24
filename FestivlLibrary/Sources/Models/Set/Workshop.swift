@@ -10,7 +10,7 @@ import Tagged
 import Utilities
 import IdentifiedCollections
 
-public struct Workshop: Equatable, Identifiable {
+public struct Workshop: Equatable, Identifiable, DateIntervalRepresentable {
     public init(id: Tagged<Workshop, String> = .init(UUID().uuidString), name: String, location: String, instructorName: String? = nil, description: String? = nil, startTime: Date, endTime: Date, imageURL: URL? = nil) {
         self.id = id
         self.name = name
@@ -29,6 +29,11 @@ public struct Workshop: Equatable, Identifiable {
     public var description: String?
     public var startTime: Date
     public var endTime: Date
+    
+    public var dateInterval: DateInterval {
+        .init(start: startTime, end: endTime)
+    }
+    
     public var imageURL: URL?
 }
 

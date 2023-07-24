@@ -72,7 +72,7 @@ extension SchedulePageView {
     )
     where T: RandomAccessCollection,
         ListType == Array<TimelineWrapper<T.Element>>,
-        T.Element: TimeRangeRepresentable & Equatable & Identifiable
+        T.Element: DateIntervalRepresentable & Equatable & Identifiable
     {
         self.init(cards.groupedToPreventOverlaps, cardContent: { cardContent($0.item) })
     }
@@ -86,7 +86,7 @@ public extension TimelineCard {
     
     /// Get the y placement for a set in a container of a specific height
     func yOrigin(containerHeight: CGFloat, dayStartsAtNoon: Bool) -> CGFloat {
-        return dateRange.lowerBound.toY(containerHeight: containerHeight, dayStartsAtNoon: dayStartsAtNoon)
+        return dateInterval.start.toY(containerHeight: containerHeight, dayStartsAtNoon: dayStartsAtNoon)
     }
     /// Get the frame size for an artistSet in a specfic container
     func size(in containerSize: CGSize, groupMapping: [Int:Int]) -> CGSize {
@@ -94,7 +94,7 @@ public extension TimelineCard {
     }
     
     func height(in containerSize: CGSize) -> CGFloat {
-        let setLengthInSeconds = dateRange.lengthInSeconds
+        let setLengthInSeconds = dateInterval.duration
         return secondsToY(Int(setLengthInSeconds), containerHeight: containerSize.height)
     }
     

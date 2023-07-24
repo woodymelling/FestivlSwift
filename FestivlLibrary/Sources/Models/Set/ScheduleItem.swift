@@ -14,7 +14,7 @@ import CustomDump
 import Collections
 
 
-public struct ScheduleItem: Identifiable, Hashable {
+public struct ScheduleItem: Identifiable, Hashable, DateIntervalRepresentable {
     public init(
         id: Tagged<ScheduleItem, String>,
         stageID: Stage.ID,
@@ -38,7 +38,7 @@ public struct ScheduleItem: Identifiable, Hashable {
     public var startTime: Date
     public var endTime: Date
     
-    public var timeInterval: DateInterval { .init(start: startTime, end: endTime) }
+    public var dateInterval: DateInterval { .init(start: startTime, end: endTime) }
     
     public var title: String
     public var subtext: String?

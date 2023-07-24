@@ -79,17 +79,6 @@ public struct WorkshopsView: View {
     }
 }
 
-extension Workshop: TimeRangeRepresentable {
-    public var timeRange: Range<Date> {
-        
-        guard startTime < endTime else {
-            return Date.now..<(Date.now + 1.seconds)
-        }
-        
-        return startTime..<endTime
-    }
-}
-
 struct WorkshopCard: View {
     var workshop: Workshop
     

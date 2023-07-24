@@ -106,7 +106,7 @@ struct ScheduleCardView: View {
                 let color = stages[id: viewStore.scheduleItem.stageID]?.color ?? .clear
                 
                 ScheduleCardBackground(color: color, isSelected: viewStore.isSelected) {
-                    cardContent(title: viewStore.scheduleItem.title, timeInterval: viewStore.scheduleItem.timeInterval)
+                    cardContent(title: viewStore.scheduleItem.title, timeInterval: viewStore.scheduleItem.dateInterval)
                         
                         .padding(.top, 4)
                 }                
@@ -189,15 +189,6 @@ struct ScheduleCardView: View {
     }
 }
 
-extension ScheduleItem: TimeRangeRepresentable {
-    public var timeRange: Range<Date> {
-        self.timeInterval.start..<self.timeInterval.end
-    }
-}
-
-
-
-
 struct ScheduleItem_Preview: PreviewProvider {
     
     struct CardPreview: View {
@@ -226,10 +217,6 @@ struct StageColorsEnvironmentKey: EnvironmentKey {
 
 
 extension ScheduleItem: TimelineCard {
-    public var dateRange: Range<Date> {
-        timeInterval.start..<timeInterval.end
-    }
-    
     public var groupWidth: Range<Int> {
         0..<0
     }

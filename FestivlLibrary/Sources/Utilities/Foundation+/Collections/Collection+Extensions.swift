@@ -24,3 +24,15 @@ public extension Optional where Wrapped: Collection {
         }
     }
 }
+
+extension Collection {
+    public func sorted<T, U>(by keyPath: KeyPath<Element, T>, and secondaryKeyPath: KeyPath<Element, U>) -> [Element] where T : Comparable, U: Comparable {
+        self.sorted {
+            if $0[keyPath: keyPath] == $1[keyPath: keyPath] {
+                return $0[keyPath: secondaryKeyPath] < $1[keyPath: secondaryKeyPath]
+            } else {
+                return $0[keyPath: keyPath] < $1[keyPath: keyPath]
+            }
+        }
+    }
+}

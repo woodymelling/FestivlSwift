@@ -7,7 +7,7 @@
 
 import Foundation
 
-infix operator ?!: NilCoalescingPrecedence
+infix operator ?! : NilCoalescingPrecedence
 
 /// Throws the right hand side error if the left hand side optional is `nil`.
 public func ?!<T>(value: T?, error: @autoclosure () -> Error) throws -> T {

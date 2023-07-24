@@ -278,7 +278,7 @@ struct CardView: View {
             ViewThatFits {
                 VStack(alignment: .leading) {
 
-                    Text(card.dateRange.lowerBound.formatted(.dateTime.hour(.conversationalDefaultDigits(amPM: .abbreviated)).minute()))
+                    Text(card.dateInterval.start.formatted(.dateTime.hour(.conversationalDefaultDigits(amPM: .abbreviated)).minute()))
                         
                     
                     Text(card.name)
@@ -296,16 +296,13 @@ struct CardView: View {
 
 struct Card: TimelineCard {
     var name: String
-    var dateRange: Range<Date>
+    var dateInterval: DateInterval
     var color: Color
     
     var groupWidth: Range<Int>
     
     var id = UUID()
 }
-
-
-import SystemColors
 
 
 func getCards(count: Int) -> [Card] {
@@ -326,7 +323,7 @@ func getCards(count: Int) -> [Card] {
         let endDate = Calendar.current.date(byAdding: .hour, value: 1, to: startDate)!
         
         let group = index % 4
-        let card = Card(name: name, dateRange: startDate..<endDate, color: colors[wrapped: index], groupWidth: group..<group)
+        let card = Card(name: name, dateInterval: DateInterval(start: startDate, end: endDate), color: colors[wrapped: index], groupWidth: group..<group)
         cards.append(card)
     }
     

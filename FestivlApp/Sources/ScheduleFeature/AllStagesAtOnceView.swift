@@ -13,13 +13,6 @@ import Utilities
 import ScheduleComponents
 import FestivlDependencies
 
-extension ScheduleItem: TimeRangeRepresentable {
-    public var timeRange: Range<Date> {
-        return startTime..<endTime
-    }
-}
-
-
 struct AllStagesAtOnceView: View {
     let store: StoreOf<ScheduleFeature>
     let date: CalendarDate

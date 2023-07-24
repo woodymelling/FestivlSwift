@@ -83,7 +83,5 @@ struct ArtistRowView_Previews: PreviewProvider {
             .navigationTitle("Artists")
 
         }
-        .previewAllColorModes()
-
     }
 }

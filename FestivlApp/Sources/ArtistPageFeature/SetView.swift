@@ -76,6 +76,5 @@ struct ArtistSetViewView_Previews: PreviewProvider {
             SetView(set: ScheduleItem.previewData().first!)
         }
         .listStyle(.plain)
-        .previewAllColorModes()
     }
 }

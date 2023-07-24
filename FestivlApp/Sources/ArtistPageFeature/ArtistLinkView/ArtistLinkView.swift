@@ -50,10 +50,9 @@ struct ArtistLinkView: View {
                     .frame(width: 30, height: 30)
                 Text(linkType.name)
                 Spacer()
-                NavigationLink.empty
             }
         })
-
+        .navigationLinkListButton()
     }
 }
 
@@ -68,7 +67,6 @@ struct ArtistLinkView_Previews: PreviewProvider {
 
             ArtistLinkView(linkType: .spotify) { }
         }
-        .previewAllColorModes()
         .previewLayout(.sizeThatFits)
     }
 }

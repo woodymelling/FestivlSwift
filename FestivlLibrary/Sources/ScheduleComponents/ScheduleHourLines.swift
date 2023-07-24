@@ -45,8 +45,6 @@ public struct ScheduleHourLines: View {
 
 struct ScheduleGridView_Previews: PreviewProvider {
     static var previews: some View {
-        
         ScheduleHourLines()
-            .previewAllColorModes()
     }
 }
