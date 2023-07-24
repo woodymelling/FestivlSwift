@@ -59,17 +59,10 @@ public struct ArtistListView: View {
                         NoResultsView(searchText: viewStore.searchText)
                     } else {
                         List(artists) { artist in
-                            NavigationLinkStore(
-                                self.store.scope(
-                                    state: \.$destination,
-                                    action: ArtistListFeature.Action.destination
-                                ),
-                                state: /ArtistListFeature.Destination.State.artistDetail,
-                                action: ArtistListFeature.Destination.Action.artistDetail,
-                                id: artist.id,
-                                onTap: { viewStore.send(.didTapArtist(artist.id)) },
-                                destination: ArtistPageView.init
-                            ) {
+                            
+                            Button {
+                                viewStore.send(.didTapArtist(artist.id))
+                            } label: {
                                 ArtistRow(
                                     artist: artist,
                                     event: event,
@@ -87,7 +80,13 @@ public struct ArtistListView: View {
             .autocorrectionDisabled(true)
             .task { viewStore.send(.task) }
             .navigationTitle("Artists")
-
+            .navigationDestination(
+                store: store.scope(
+                    state: \.$artistDetail,
+                    action: ArtistListFeature.Action.artistDetail
+                ),
+                destination: ArtistPageView.init
+            )
         }
     }
 }

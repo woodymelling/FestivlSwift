@@ -5,6 +5,7 @@
 //  Created by Woody on 4/22/2022.
 //
 
+import Foundation
 import ComposableArchitecture
 import Models
 import FestivlDependencies
@@ -51,7 +52,6 @@ public struct MoreFeature: Reducer {
         
         case destination(PresentationAction<Destination.Action>)
     }
-    
 
     public struct Destination: Reducer {
         public enum State: Equatable {

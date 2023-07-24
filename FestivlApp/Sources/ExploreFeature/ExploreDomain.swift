@@ -23,7 +23,7 @@ public struct ExploreFeature: Reducer {
         public var schedule: Schedule?
         public var stages: IdentifiedArrayOf<Stage>?
         
-        @BindingState var selectedArtistPageState: ArtistDetail.State?
+        @PresentationState var artistDetailState: ArtistDetail.State?
         
         var isLoading: Bool = false
         
@@ -36,7 +36,7 @@ public struct ExploreFeature: Reducer {
         case task
         case dataUpdate(EventData)
         
-        case artistDetail(id: Artist.ID, action: ArtistDetail.Action)
+        case artistDetail(PresentationAction<ArtistDetail.Action>)
         
         case didTapArtist(ArtistDetail.State)
     }
@@ -81,11 +81,11 @@ public struct ExploreFeature: Reducer {
                 return .none
                 
             case .didTapArtist(let artistPageState):
-                state.selectedArtistPageState = artistPageState
+                state.artistDetailState = artistPageState
                 return .none
             }
         }
-        .forEach(\.artistStates, action: /Action.artistDetail) {
+        .ifLet(\.$artistDetailState, action: /Action.artistDetail) {
             ArtistDetail()
         }
     }

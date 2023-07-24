@@ -36,7 +36,7 @@ public struct TabBarView: View {
     public var body: some View {
         WithViewStore(store, observe: ViewState.init) { viewStore in
             TabView(selection: viewStore.$selectedTab) {
-                NavigationView {
+                NavigationStack {
                     ScheduleLoadingView(store: store.scope(state: \.scheduleState, action: EventFeature.Action.scheduleAction))
                 }
                 .navigationViewStyle(.stack)
@@ -45,7 +45,7 @@ public struct TabBarView: View {
                 }
                 .tag(Tab.schedule)
 
-                NavigationView {
+                NavigationStack {
                     ArtistListView(store: store.scope(state: \.artistListState, action: EventFeature.Action.artistListAction))
                         
                 }
@@ -54,14 +54,14 @@ public struct TabBarView: View {
                 .tag(Tab.artists)
                 
                 
-                NavigationView {
+                NavigationStack {
                     ExploreView(store: store.scope(state: \.exploreState, action: EventFeature.Action.exploreAction))
                 }
                 .navigationViewStyle(.stack)
                 .tabItem { Label("Explore", systemImage: "barometer") }
                 .tag(Tab.explore)
                 
-                NavigationView {
+                NavigationStack {
                     MoreView(store: store.scope(state: \.moreState, action: EventFeature.Action.moreAction))
                 }
                 .navigationViewStyle(.stack)

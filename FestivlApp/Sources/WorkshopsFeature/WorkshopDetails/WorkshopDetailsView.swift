@@ -16,7 +16,7 @@ struct WorkshopDetailsView: View {
     var workshop: Workshop
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 DetailsHeaderView(imageURL: workshop.imageURL) {
                     VStack(alignment: .leading) {

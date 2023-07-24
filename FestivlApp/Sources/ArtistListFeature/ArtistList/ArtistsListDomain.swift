@@ -24,10 +24,11 @@ public struct ArtistListFeature: Reducer {
         public var schedule: Schedule?
         public var stages: IdentifiedArrayOf<Stage>?
         
-        @PresentationState var destination: Destination.State?
+        @PresentationState var artistDetail: ArtistDetail.State?
+        
+        @BindingState public var searchText: String = ""
         
         var showArtistImages: Bool = false
-        @BindingState public var searchText: String = ""
         var isLoading: Bool = false
         
         var userFavorites: UserFavorites = .init()
@@ -41,29 +42,12 @@ public struct ArtistListFeature: Reducer {
 
     public enum Action: BindableAction {
         case binding(_ action: BindingAction<State>)
-        case destination(PresentationAction<Destination.Action>)
         case task
         
+        case artistDetail(PresentationAction<ArtistDetail.Action>)
         case dataUpdate(EventData, UserFavorites)
         
         case didTapArtist(Artist.ID)
-    }
-    
-    
-    public struct Destination: Reducer {
-        public enum State: Equatable {
-            case artistDetail(ArtistDetail.State)
-        }
-        
-        public enum Action {
-            case artistDetail(ArtistDetail.Action)
-        }
-        
-        public var body: some ReducerOf<Self> {
-            Scope(state: /State.artistDetail, action: /Action.artistDetail) {
-                ArtistDetail()
-            }
-        }
     }
     
     public var body: some Reducer<State, Action> {
@@ -71,7 +55,7 @@ public struct ArtistListFeature: Reducer {
         
         Reduce { state, action in
             switch action {
-            case .binding, .destination:
+            case .binding, .artistDetail:
                 return .none
             case .task:
                 return .run { send in
@@ -100,15 +84,13 @@ public struct ArtistListFeature: Reducer {
                 
             case let .didTapArtist(artistID):
                 
-                state.destination = .artistDetail(
-                    ArtistDetail.State(artistID: artistID)
-                )
+                state.artistDetail = ArtistDetail.State(artistID: artistID)
                 
                 return .none
             }
         }
-        .ifLet(\.$destination, action: /Action.destination) {
-            Destination()
+        .ifLet(\.$artistDetail, action: /Action.artistDetail) {
+            ArtistDetail()
         }
     }
 }
