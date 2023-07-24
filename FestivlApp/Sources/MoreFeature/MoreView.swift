@@ -29,135 +29,142 @@ public struct MoreView: View {
     
     public var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
-            Group {
-                if let eventData = viewStore.eventData {
-                    List {
-                        Section {
-                            NavigationLinkStore(
-                                store.scope(state: \.$destination, action: MoreFeature.Action.destination),
-                                state: /MoreFeature.Destination.State.workshops,
-                                action: MoreFeature.Destination.Action.workshops,
-                                onTap: { viewStore.send(.didTapWorkshops) },
-                                destination: WorkshopsView.init,
-                                label: {
-                                    Label(title: {
-                                        Text("Workshops")
-                                    }, icon: {
-                                        Image("workshops", bundle: .module)
-                                            .resizable()
-                                    })
-                                    .labelStyle(ColorfulIconLabelStyle(color: workshopsColor))
-                                }
-                            )
+            LoadingView(viewStore.eventData) { eventData in
+                List {
+                    Section {
+                        MoreButton(
+                            "Workshops",
+                            image: Image("workshops", bundle: .module),
+                            color: workshopsColor
+                        ) {
+                            viewStore.send(.didTapWorkshops)
                         }
-                        
-                        Section {
-                            if eventData.event.siteMapImageURL != nil {
-                                
-                                NavigationLinkStore(
-                                    store.scope(state: \.$destination, action: MoreFeature.Action.destination),
-                                    state: /MoreFeature.Destination.State.siteMap,
-                                    action: MoreFeature.Destination.Action.siteMap,
-                                    onTap: { viewStore.send(.didTapSiteMap) },
-                                    destination: {
-                                        SiteMapView(store: $0)
-                                    },
-                                    label: {
-                                        Label("Site Map", systemImage: "map.fill")
-                                            .labelStyle(ColorfulIconLabelStyle(color: .customBlue))
-                                    }
-                                )
-                            }
-
-                            if !eventData.event.address.isNilOrEmpty {
-                                NavigationLinkStore(
-                                    store.scope(state: \.$destination, action: MoreFeature.Action.destination),
-                                    state: /MoreFeature.Destination.State.address,
-                                    action: MoreFeature.Destination.Action.address,
-                                    onTap: { viewStore.send(.didTapAddress) },
-                                    destination: { AddressView(store: $0) },
-                                    label: {
-                                        Label("Address", systemImage: "mappin")
-                                            .labelStyle(ColorfulIconLabelStyle(color: .customPurple))
-                                    }
-                                )
+                    }
+                    
+                    Section {
+                        if eventData.event.siteMapImageURL != nil {
+                            MoreButton("Site Map", systemName: "map.fill", color: .customBlue) {
+                                viewStore.send(.didTapSiteMap)
                             }
                         }
                         
-                        Section {
-                            NavigationLinkStore(
-                                store.scope(state: \.$destination, action: MoreFeature.Action.destination),
-                                state: /MoreFeature.Destination.State.notifications,
-                                action: MoreFeature.Destination.Action.notifications,
-                                onTap: { viewStore.send(.didTapNotifications) },
-                                destination: {
-                                    NotificationsView(store: $0)
-                                },
-                                label: {
-                                    Label("Notifications", systemImage: "bell.badge.fill")
-                                        .labelStyle(ColorfulIconLabelStyle(color: .customRed))
-                                }
-                            )
-                        }
-                        
-                        Section {
-                            if !eventData.event.contactNumbers.isNilOrEmpty {
-                                NavigationLinkStore(
-                                    store.scope(state: \.$destination, action: MoreFeature.Action.destination),
-                                    state: /MoreFeature.Destination.State.contactInfo,
-                                    action: MoreFeature.Destination.Action.contactInfo,
-                                    onTap: { viewStore.send(.didTapContactInfo) },
-                                    destination: { ContactInfoView(store: $0) },
-                                    label: {
-                                        Label("Emergency Contact", systemImage: "phone.fill")
-                                            .labelStyle(ColorfulIconLabelStyle(color: .customOrange))
-                                    }
-                                )
-                            }
-                        }
-
-                        
-
-                        if !viewStore.isEventSpecificApplication {
-                            Section {
-                                Button {
-                                    viewStore.send(.didExitEvent, animation: .default)
-                                } label: {
-                                    Text("Exit \(viewStore.eventData?.event.name ?? "")")
-                                }
-                            }
-                        }
-                        
-                        if viewStore.isShowingKeyInput {
-                            Section {
-                                TextField("Internal Preview Key", text: viewStore.$keyInputText)
-                                    .textInputAutocapitalization(.none)
-                                Button("Unlock Internal Preview") {
-                                    viewStore.send(.didTapUnlockInternalPreview)
-                                }
+                        if !eventData.event.address.isNilOrEmpty {
+                            MoreButton("Address", systemName: "mappin", color: .customPurple) {
+                                viewStore.send(.didTapAddress)
                             }
                         }
                     }
-                    .listStyle(.insetGrouped)
-                    .navigationTitle("More")
-                } else {
-                    ProgressView()
+                    
+                    Section {
+                        MoreButton("Notifications", systemName: "bell.badge.fill", color: .customRed) {
+                            viewStore.send(.didTapNotifications)
+                        }
+                    }
+                    
+                    Section {
+                        if !eventData.event.contactNumbers.isNilOrEmpty {
+                            MoreButton("Emergency Contact", systemName: "phone.fill", color: .customOrange) {
+                                viewStore.send(.didTapContactInfo)
+                            }
+                        }
+                    }
+                    
+                    Section {
+                        if !viewStore.isEventSpecificApplication {
+                            Button {
+                                viewStore.send(.didExitEvent, animation: .default)
+                            } label: {
+                                Text("Exit \(viewStore.eventData?.event.name ?? "")")
+                            }
+                        }
+                    }
+                    
+                    if viewStore.isShowingKeyInput {
+                        Section {
+                            TextField("Internal Preview Key", text: viewStore.$keyInputText)
+                                .textInputAutocapitalization(.none)
+                            Button("Unlock Internal Preview") {
+                                viewStore.send(.didTapUnlockInternalPreview)
+                            }
+                        }
+                    }
                 }
+                .listStyle(.insetGrouped)
+                .navigationTitle("More")
+                
             }
             .onTapGesture(count: 7) {
                 viewStore.send(.didTap7Times)
             }
             .task { await viewStore.send(.task).finish() }
+            .navigationDestination(
+                store: destinationStore,
+                state: /MoreFeature.Destination.State.workshops,
+                action: MoreFeature.Destination.Action.workshops,
+                destination: WorkshopsView.init
+            )
+            .navigationDestination(
+                store: destinationStore,
+                state: /MoreFeature.Destination.State.siteMap,
+                action: MoreFeature.Destination.Action.siteMap,
+                destination: SiteMapView.init
+            )
+            .navigationDestination(
+                store: destinationStore,
+                state: /MoreFeature.Destination.State.address,
+                action: MoreFeature.Destination.Action.address,
+                destination: AddressView.init
+            )
+            .navigationDestination(
+                store: destinationStore,
+                state: /MoreFeature.Destination.State.notifications,
+                action: MoreFeature.Destination.Action.notifications,
+                destination: NotificationsView.init
+            )
+            .navigationDestination(
+                store: destinationStore,
+                state: /MoreFeature.Destination.State.contactInfo,
+                action: MoreFeature.Destination.Action.contactInfo,
+                destination: ContactInfoView.init
+            )
+        }
+    }
+    
+    var destinationStore: PresentationStoreOf<MoreFeature.Destination> {
+        self.store.scope(
+            state: \.$destination,
+            action: MoreFeature.Action.destination
+        )
+    }
+}
+
+typealias PresentationStoreOf<R: Reducer> = Store<PresentationState<R.State>, PresentationAction<R.Action>>
+
+struct LoadingView<T, Content: View>: View {
+    let value: T?
+    let content: (T) -> Content
+    
+    init(_ value: T?, content: @escaping (T) -> Content) {
+        self.value = value
+        self.content = content
+    }
+    
+    var body: some View {
+        if let value {
+            content(value)
+        } else {
+            ProgressView()
         }
     }
 }
 
-struct ColorfulIconLabelStyle: LabelStyle {
+internal struct ColorfulIconLabelStyle: LabelStyle {
     var color: Color
     
     func makeBody(configuration: Configuration) -> some View {
         Label {
             configuration.title
+                .foregroundStyle(Color.label)
         } icon: {
             configuration.icon
                 .aspectRatio(contentMode: .fit)
@@ -166,31 +173,44 @@ struct ColorfulIconLabelStyle: LabelStyle {
                 .foregroundColor(.white)
                 .background(
                     RoundedRectangle(cornerRadius: 7)
-                    .frame(square: 28)
-                    .foregroundColor(color)
+                        .frame(square: 28)
+                        .foregroundColor(color)
                 )
         }
     }
 }
 
-extension LabelStyle {
-    static func colorfulIcon(color: Color) -> ColorfulIconLabelStyle {
-        ColorfulIconLabelStyle(color: color)
+struct MoreButton: View {
+    var title: () -> Text
+    var image: () -> Image
+    var color: Color
+    var action: () -> Void
+    
+    init(_ title: LocalizedStringKey, systemName: String, color: Color, action: @escaping () -> Void) {
+        self.title = { Text(title) }
+        self.image = { Image(systemName: systemName) }
+        self.color = color
+        self.action = action
     }
-}
-
-fileprivate struct SFSymbolKey: PreferenceKey {
-    typealias Value = CGFloat
-    static var defaultValue = CGFloat.zero
-    static func reduce(value: inout Value, nextValue: () -> Value) {
-        value += nextValue()
+    
+    init(_ title: LocalizedStringKey, image: Image, color: Color, action: @escaping () -> Void) {
+        self.title = { Text(title) }
+        self.image = { image.resizable() }
+        self.color = color
+        self.action = action
+    }
+    
+    var body: some View {
+        Button(action: action) {
+            Label(title: title, icon: image)
+                .labelStyle(ColorfulIconLabelStyle(color: color))
+        }
     }
 }
 
 struct MoreView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
-            
+        NavigationStack {
             MoreView(
                 store: .init(
                     initialState: .init(),

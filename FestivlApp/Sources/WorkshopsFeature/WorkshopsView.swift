@@ -127,7 +127,7 @@ struct WorkshopCard: View {
 
 struct WorkshopsView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
+        NavigationStack {
             
             WorkshopsView(
                 store: StoreOf<WorkshopsFeature>(

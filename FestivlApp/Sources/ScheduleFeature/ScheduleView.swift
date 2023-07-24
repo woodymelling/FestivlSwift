@@ -82,13 +82,12 @@ public struct ScheduleView: View {
                     FilterMenu(store: store)
                 }
             }
-            .navigationBarTitleDisplayMode(.inline)
             .sheet(
                 store: self.store.scope(state: \.$destination, action: ScheduleFeature.Action.destination),
                 state: /ScheduleFeature.Destination.State.artist,
                 action: ScheduleFeature.Destination.Action.artist
             ) { store in
-                NavigationView {
+                NavigationStack {
                     ArtistPageView(store: store)
                 }
             }

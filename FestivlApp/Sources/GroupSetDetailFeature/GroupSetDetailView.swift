@@ -46,7 +46,7 @@ public struct GroupSetDetailView: View {
     
     public var body: some View {
         WithViewStore(store, observe: ViewState.init) { viewStore in
-            NavigationView {
+            NavigationStack {
                 Group {
                     switch viewStore.loadingState {
                     case .loading:

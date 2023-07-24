@@ -99,7 +99,7 @@ extension String {
 struct ContactInfoView_Previews: PreviewProvider {
     static var previews: some View {
         
-        NavigationView {
+        NavigationStack {
             ContactInfoView(
                 store: .init(
                     initialState: ContactInfoFeature.State(

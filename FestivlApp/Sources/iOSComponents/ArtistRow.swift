@@ -71,7 +71,7 @@ public struct ArtistRow: View {
 
 struct ArtistRowView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 ForEach(Array(0...10), id: \.self) { _ in
                     NavigationLink(destination: EmptyView()) {

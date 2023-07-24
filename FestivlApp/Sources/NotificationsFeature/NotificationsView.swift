@@ -77,7 +77,7 @@ public struct NotificationsView: View {
 //struct NotificationsView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        ForEach(ColorScheme.allCases.reversed(), id: \.self) {
-//            NavigationView {
+//            NavigationStack {
 //                NotificationsView(
 //                    store: .init(
 //                        initialState: .init(

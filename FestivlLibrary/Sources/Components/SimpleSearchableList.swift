@@ -107,7 +107,7 @@ struct SimpleSearchableList_Previews: PreviewProvider {
     }
     
     static var previews: some View {
-        NavigationView {
+        NavigationStack {
             Wrapper()
         }
     }
