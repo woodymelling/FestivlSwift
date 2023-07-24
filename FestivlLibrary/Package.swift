@@ -31,7 +31,7 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", from: "0.6.0"),
         .package(url: "https://github.com/pointfreeco/swift-custom-dump", from: "0.10.3"),
         
-        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "10.11.0"),
+        .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "10.12.0"),
         
         .package(url: "https://github.com/onevcat/Kingfisher", from: "7.2.0"),
         .package(url: "https://github.com/apple/swift-collections", from: "1.0.4"),
@@ -96,8 +96,6 @@ let package = Package(
                 "Components"
             ]
         ),
-        
-
         // MARK: Tests
         .testTarget(name: "ComponentTests", dependencies: ["Components"])
     ]

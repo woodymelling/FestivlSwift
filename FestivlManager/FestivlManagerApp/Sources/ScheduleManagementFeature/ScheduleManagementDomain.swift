@@ -62,7 +62,6 @@ public struct ScheduleManagementDomain: Reducer {
                 return .none
                 
             case .task:
-                // TODO: Potentially cancel future data ovservation for schedule and stages so local data doesn't get overriden when the schedule changes
                 return .merge(
                     .observe(eventClient.getEvent(), sending: { .dataUpdate(.event($0))}),
                     .observe(scheduleClient.getSchedule(), sending: { .dataUpdate(.schedule($0)) }),

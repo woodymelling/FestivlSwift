@@ -18,11 +18,6 @@ public struct GroupSetDetail: Reducer {
     
     public init() {}
     
-    @Dependency(\.eventDataClient) var eventDataClient
-    @Dependency(\.userFavoritesClient) var userFavoritesClient
-    
-    @Dependency(\.showScheduleItem) var showScheduleItem
-    
     public struct State: Equatable {
         public init(groupSet: ScheduleItem) {
             self.groupSet = groupSet
@@ -39,7 +34,7 @@ public struct GroupSetDetail: Reducer {
         
         var showArtistImages: Bool = false
         
-        @PresentationState var destination: Destination.State?
+        @PresentationState var artistDetail: ArtistDetail.State?
     }
     
     public enum Action {
@@ -49,24 +44,12 @@ public struct GroupSetDetail: Reducer {
         case didTapScheduleItem(ScheduleItem)
         case didTapArtist(Artist.ID)
 
-        case destination(PresentationAction<Destination.Action>)
+        case artistDetail(PresentationAction<ArtistDetail.Action>)
     }
     
-    public struct Destination: Reducer {
-        public enum State: Equatable {
-            case artistDetail(ArtistDetail.State)
-        }
-        
-        public enum Action {
-            case artistDetail(ArtistDetail.Action)
-        }
-        
-        public var body: some ReducerOf<Self> {
-            Scope(state: /State.artistDetail, action: /Action.artistDetail) {
-                ArtistDetail()
-            }
-        }
-    }
+    @Dependency(\.eventDataClient) var eventDataClient
+    @Dependency(\.userFavoritesClient) var userFavoritesClient
+    @Dependency(\.showScheduleItem) var showScheduleItem
     
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
@@ -107,19 +90,17 @@ public struct GroupSetDetail: Reducer {
                 
             case let .didTapArtist(artistID):
                 
-                state.destination = .artistDetail(
-                    ArtistDetail.State(artistID: artistID)
-                )
+                state.artistDetail = ArtistDetail.State(artistID: artistID)
                 
                 return .none
                 
                 
-            case .destination:
+            case .artistDetail:
                 return .none
             }
         }
-        .ifLet(\.$destination, action: /Action.destination) {
-            Destination()
+        .ifLet(\.$artistDetail, action: /Action.artistDetail) {
+            ArtistDetail()
         }
     }
 }

@@ -7,15 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		EF1FFAEB2A4FEAF50064FE5F /* SchedulePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF1FFAE22A4FEAF50064FE5F /* SchedulePageView.swift */; };
-		EF1FFAEC2A4FEAF50064FE5F /* ScheduleHourLabelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF1FFAE32A4FEAF50064FE5F /* ScheduleHourLabelsView.swift */; };
-		EF1FFAED2A4FEAF50064FE5F /* ScheduleDaySelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF1FFAE42A4FEAF50064FE5F /* ScheduleDaySelector.swift */; };
-		EF1FFAEE2A4FEAF50064FE5F /* TimeIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF1FFAE52A4FEAF50064FE5F /* TimeIndicatorView.swift */; };
-		EF1FFAEF2A4FEAF50064FE5F /* DateSelectingScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF1FFAE62A4FEAF50064FE5F /* DateSelectingScrollView.swift */; };
-		EF1FFAF02A4FEAF50064FE5F /* TimelineRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF1FFAE72A4FEAF50064FE5F /* TimelineRepresentable.swift */; };
-		EF1FFAF12A4FEAF50064FE5F /* ScheduleHourLines.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF1FFAE82A4FEAF50064FE5F /* ScheduleHourLines.swift */; };
-		EF1FFAF22A4FEAF50064FE5F /* ScheduleGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF1FFAE92A4FEAF50064FE5F /* ScheduleGrid.swift */; };
-		EF1FFAF32A4FEAF50064FE5F /* ScheduleCardBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF1FFAEA2A4FEAF50064FE5F /* ScheduleCardBackground.swift */; };
 		EF4066802A65C8A1000C8F7B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EF40667F2A65C8A1000C8F7B /* GoogleService-Info.plist */; };
 		EF9748FF2A6DEE8000A1E0FE /* FirebaseServiceImpl in Frameworks */ = {isa = PBXBuildFile; productRef = EF9748FE2A6DEE8000A1E0FE /* FirebaseServiceImpl */; };
 		EF9749012A6DEE9F00A1E0FE /* ScheduleManagementFeature in Frameworks */ = {isa = PBXBuildFile; productRef = EF9749002A6DEE9F00A1E0FE /* ScheduleManagementFeature */; };
@@ -26,15 +17,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		EF1FFAE22A4FEAF50064FE5F /* SchedulePageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SchedulePageView.swift; sourceTree = "<group>"; };
-		EF1FFAE32A4FEAF50064FE5F /* ScheduleHourLabelsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleHourLabelsView.swift; sourceTree = "<group>"; };
-		EF1FFAE42A4FEAF50064FE5F /* ScheduleDaySelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleDaySelector.swift; sourceTree = "<group>"; };
-		EF1FFAE52A4FEAF50064FE5F /* TimeIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeIndicatorView.swift; sourceTree = "<group>"; };
-		EF1FFAE62A4FEAF50064FE5F /* DateSelectingScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateSelectingScrollView.swift; sourceTree = "<group>"; };
-		EF1FFAE72A4FEAF50064FE5F /* TimelineRepresentable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineRepresentable.swift; sourceTree = "<group>"; };
-		EF1FFAE82A4FEAF50064FE5F /* ScheduleHourLines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleHourLines.swift; sourceTree = "<group>"; };
-		EF1FFAE92A4FEAF50064FE5F /* ScheduleGrid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleGrid.swift; sourceTree = "<group>"; };
-		EF1FFAEA2A4FEAF50064FE5F /* ScheduleCardBackground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScheduleCardBackground.swift; sourceTree = "<group>"; };
 		EF1FFAFD2A52A9410064FE5F /* FestivlManagerApp */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FestivlManagerApp; path = FestivlManager/FestivlManagerApp; sourceTree = "<group>"; };
 		EF40667F2A65C8A1000C8F7B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EFF9C9982A48955400119691 /* FestivlManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FestivlManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,22 +40,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		EF1FFAE12A4FEAF50064FE5F /* ScheduleComponents */ = {
-			isa = PBXGroup;
-			children = (
-				EF1FFAE22A4FEAF50064FE5F /* SchedulePageView.swift */,
-				EF1FFAE32A4FEAF50064FE5F /* ScheduleHourLabelsView.swift */,
-				EF1FFAE42A4FEAF50064FE5F /* ScheduleDaySelector.swift */,
-				EF1FFAE52A4FEAF50064FE5F /* TimeIndicatorView.swift */,
-				EF1FFAE62A4FEAF50064FE5F /* DateSelectingScrollView.swift */,
-				EF1FFAE72A4FEAF50064FE5F /* TimelineRepresentable.swift */,
-				EF1FFAE82A4FEAF50064FE5F /* ScheduleHourLines.swift */,
-				EF1FFAE92A4FEAF50064FE5F /* ScheduleGrid.swift */,
-				EF1FFAEA2A4FEAF50064FE5F /* ScheduleCardBackground.swift */,
-			);
-			path = ScheduleComponents;
-			sourceTree = "<group>";
-		};
 		EF4066782A64A43A000C8F7B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -103,7 +69,6 @@
 			isa = PBXGroup;
 			children = (
 				EF40667F2A65C8A1000C8F7B /* GoogleService-Info.plist */,
-				EF1FFAE12A4FEAF50064FE5F /* ScheduleComponents */,
 				EFF9C99B2A48955400119691 /* FestivlManagerApp.swift */,
 				EFF9C99D2A48955400119691 /* ContentView.swift */,
 				EFF9C99F2A48955500119691 /* Assets.xcassets */,
@@ -199,17 +164,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF1FFAEC2A4FEAF50064FE5F /* ScheduleHourLabelsView.swift in Sources */,
-				EF1FFAF02A4FEAF50064FE5F /* TimelineRepresentable.swift in Sources */,
-				EF1FFAF32A4FEAF50064FE5F /* ScheduleCardBackground.swift in Sources */,
-				EF1FFAF22A4FEAF50064FE5F /* ScheduleGrid.swift in Sources */,
 				EFF9C99E2A48955400119691 /* ContentView.swift in Sources */,
-				EF1FFAF12A4FEAF50064FE5F /* ScheduleHourLines.swift in Sources */,
-				EF1FFAED2A4FEAF50064FE5F /* ScheduleDaySelector.swift in Sources */,
-				EF1FFAEB2A4FEAF50064FE5F /* SchedulePageView.swift in Sources */,
 				EFF9C99C2A48955400119691 /* FestivlManagerApp.swift in Sources */,
-				EF1FFAEF2A4FEAF50064FE5F /* DateSelectingScrollView.swift in Sources */,
-				EF1FFAEE2A4FEAF50064FE5F /* TimeIndicatorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

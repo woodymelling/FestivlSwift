@@ -63,25 +63,13 @@ public struct GroupSetDetailView: View {
                             
                             Section("Artists") {
                                 ForEach(artists) { artist in
-                                    NavigationLinkStore(
-                                        self.store.scope(
-                                            state: \.$destination,
-                                            action: GroupSetDetail.Action.destination
-                                        ),
-                                        state: /GroupSetDetail.Destination.State.artistDetail,
-                                        action: GroupSetDetail.Destination.Action.artistDetail,
-                                        id: artist.id,
-                                        onTap: { viewStore.send(.didTapArtist(artist.id)) },
-                                        destination: ArtistPageView.init
-                                    ) {
-                                        ArtistRow(
-                                            artist: artist,
-                                            event: event,
-                                            sets: schedule[artistID: artist.id],
-                                            isFavorite: userFavorites.contains(artist.id),
-                                            showArtistImage: viewStore.showArtistImages
-                                        )
-                                    }
+                                    ArtistRow(
+                                        artist: artist,
+                                        event: event,
+                                        sets: schedule[artistID: artist.id],
+                                        isFavorite: userFavorites.contains(artist.id),
+                                        showArtistImage: viewStore.showArtistImages
+                                    )
                                 }
                             }
                         }
@@ -90,6 +78,13 @@ public struct GroupSetDetailView: View {
                 }
                 .navigationTitle(viewStore.groupSet.title)
                 .task { await viewStore.send(.task).finish() }
+                .navigationDestination(
+                    store: store.scope(
+                        state: \.$artistDetail,
+                        action: GroupSetDetail.Action.artistDetail
+                    ),
+                    destination: ArtistPageView.init
+                )
             }
         }
     }

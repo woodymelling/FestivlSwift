@@ -25,16 +25,6 @@ public struct ExploreView: View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             
             ZStack {
-                NavigationLink(isActive: viewStore.$selectedArtistPageState.isPresent()) {
-                    IfLetStore(
-                        store.scope(
-                            state: \.selectedArtistPageState,
-                            action: { .artistDetail(id: viewStore.selectedArtistPageState!.id, action: $0)
-                            }
-                        ),
-                        then: ArtistPageView.init
-                    )
-                } label: { EmptyView() }
                 
                 if !viewStore.isLoading,
                    let stages = viewStore.stages,
@@ -58,6 +48,13 @@ public struct ExploreView: View {
             .task {
                 await viewStore.send(.task).finish()
             }
+            .navigationDestination(
+                store: store.scope(
+                    state: \.$artistDetailState,
+                    action: ExploreFeature.Action.artistDetail
+                ),
+                destination: ArtistPageView.init
+            )
         }
         
     }
