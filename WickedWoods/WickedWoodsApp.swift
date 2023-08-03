@@ -23,9 +23,10 @@ struct WickedWoodsApp: App {
             EventView(
                 store: Store(
                     initialState: .init(),
-                    reducer: EventFeature()
-                        .dependency(\.isEventSpecificApplication, true)
-                        .dependency(\.eventID, "NLL2bpmp0IkYF2tohlsI")
+                    reducer: {
+                        EventFeature()
+                            .dependency(\.eventID, "NLL2bpmp0IkYF2tohlsI")
+                    }
                 )
             )
         }

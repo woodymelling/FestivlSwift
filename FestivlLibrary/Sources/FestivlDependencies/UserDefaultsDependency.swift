@@ -24,13 +24,13 @@ public class UserDefaultStore {
 
 
 public enum EventIDDependencyKey: DependencyKey {
-    public static var liveValue: Event.ID = Event.ID("00000000-0000-0000-0000-0000000000001")
+    public static var liveValue: Event.ID = unimplemented("Accessed EventID before it has been set")
     public static var testValue: Event.ID = unimplemented("EventID not set")
 }
 
 
 public enum IsEventSpecificApplicationDependencyKey: DependencyKey {
-    public static var liveValue = false
+    public static var liveValue = true
 }
 
 public extension DependencyValues {

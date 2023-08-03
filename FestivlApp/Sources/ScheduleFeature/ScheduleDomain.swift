@@ -310,7 +310,7 @@ public struct ScheduleFeature: Reducer {
 
                 return .run { send in
                     
-                    try! await Task.sleep(nanoseconds: 2 * NSEC_PER_SEC)
+                    try! await Task.sleep(for: .seconds(2))
                     
 //                    await send(.unHighlightCard)
                          
@@ -373,14 +373,15 @@ public struct ScheduleFeature: Reducer {
         self.userDefaults.hasShownScheduleTutorial = true
 
         return .run { send in
-            try await Task.sleep(nanoseconds: 1 * NSEC_PER_SEC)
+            try await Task.sleep(for: .seconds(1))
             
             await send(.scheduleTutorial(.showLandscapeTutorial))
-            try await Task.sleep(nanoseconds: 5 * NSEC_PER_SEC)
+            
+            try await Task.sleep(for: .seconds(2))
             await send(.scheduleTutorial(.hideLandscapeTutorial))
             
             await send(.scheduleTutorial(.showFilterTutorial))
-            try await Task.sleep(nanoseconds: 5 * NSEC_PER_SEC)
+            try await Task.sleep(for: .seconds(5))
             await send(.scheduleTutorial(.hideFilterTutorial))
         }
     }

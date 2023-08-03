@@ -29,7 +29,7 @@ public struct MoreFeature: Reducer {
         var isShowingKeyInput: Bool = false
         @BindingState var keyInputText: String = ""
         
-        @PresentationState var destination: Destination.State?
+        @PresentationState var destination: Navigation.State?
     }
     
     public enum Action: BindableAction {
@@ -50,10 +50,10 @@ public struct MoreFeature: Reducer {
         case didUpdateKeyInput(String)
         case didTapUnlockInternalPreview
         
-        case destination(PresentationAction<Destination.Action>)
+        case destination(PresentationAction<Navigation.Action>)
     }
 
-    public struct Destination: Reducer {
+    public struct Navigation: Reducer {
         public enum State: Equatable {
             case address(AddressFeature.State)
             case contactInfo(ContactInfoFeature.State)
@@ -160,7 +160,7 @@ public struct MoreFeature: Reducer {
             return .none
         }
         .ifLet(\.$destination, action: /Action.destination) {
-            Destination()
+            Navigation()
         }
     }
 }

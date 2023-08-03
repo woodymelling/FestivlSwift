@@ -16,7 +16,6 @@ let package = Package(
         .library(name: "Utilities", targets: ["Utilities"]),
         .library(name: "Components", targets: ["Components"]),
         .library(name: "SharedResources", targets: ["SharedResources"]),
-        .library(name: "ComposableArchitectureUtilities", targets: ["ComposableArchitectureUtilities"]),
         .library(name: "FestivlDependencies", targets: ["FestivlDependencies"]),
         .library(name: "FirebaseServiceImpl", targets: ["FirebaseServiceImpl"]),
         .library(name: "ScheduleComponents", targets: ["ScheduleComponents"])
@@ -48,7 +47,8 @@ let package = Package(
         ]),
         .target(name: "Utilities", dependencies: [
             .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
-            .product(name: "CustomDump", package: "swift-custom-dump")
+            .product(name: "CustomDump", package: "swift-custom-dump"),
+            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ]),
         .target(name: "Components", dependencies: [
             .models,
@@ -62,11 +62,14 @@ let package = Package(
             .product(name: "Dependencies", package: "swift-dependencies"),
             .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
             .product(name: "FirebaseFirestoreSwift", package: "firebase-ios-sdk"),
-            .product(name: "FirebaseStorage", package: "firebase-ios-sdk")
+            .product(name: "FirebaseStorage", package: "firebase-ios-sdk"),
+            .product(name: "FirebaseAuth", package: "firebase-ios-sdk")
         ]),
         .target(
             name: "SharedResources",
-            dependencies: [],
+            dependencies: [
+                "Utilities"
+            ],
             resources: [
                 .copy("Media.xcassets")
             ]
@@ -79,12 +82,6 @@ let package = Package(
                 .product(name: "Dependencies", package: "swift-composable-architecture"),
                 .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
                 .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
-            ]
-        ),
-        .target(
-            name: "ComposableArchitectureUtilities",
-            dependencies: [
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
             ]
         ),
         .target(

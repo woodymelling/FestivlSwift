@@ -25,7 +25,9 @@ struct FestivlApp: App {
                 store: .init(
                     initialState: .init(),
                     reducer: {
-                        AppFeature().dependency(\.currentEnvironment, .test)
+                        AppFeature()
+                            .dependency(\.currentEnvironment, .test)
+                            .dependency(\.isEventSpecificApplication, false)
                     }
                 )
             )

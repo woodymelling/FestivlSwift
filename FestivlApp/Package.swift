@@ -9,6 +9,7 @@ extension Target.Dependency {
     static let models = product(name: "Models", package: "FestivlLibrary")
     static let utlities = product(name: "Utilities", package: "FestivlLibrary")
     static let festivlDependencies = product(name: "FestivlDependencies", package: "FestivlLibrary")
+    static let sharedResources = product(name: "SharedResources", package: "FestivlLibrary")
 }
 
 let package = Package(
@@ -133,8 +134,7 @@ let package = Package(
                 
                 .product(name: "AlertToast", package: "AlertToast"),
                 .product(name: "Popovers", package: "Popovers"),
-                .product(name: "Components", package: "FestivlLibrary"),
-                .product(name: "ComposableArchitectureUtilities", package: "FestivlLibrary")
+                .product(name: "Components", package: "FestivlLibrary")
             ]
 
         ),
@@ -181,6 +181,7 @@ let package = Package(
                 .composableArchitecture,
                 .models,
                 .festivlDependencies,
+                .sharedResources,
                 
                 .product(name: "Components", package: "FestivlLibrary"),
                 

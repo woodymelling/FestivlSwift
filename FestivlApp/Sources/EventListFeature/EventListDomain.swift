@@ -13,7 +13,7 @@ import Combine
 public struct EventList: Reducer {
     public init() {}
     
-    @Dependency(\.eventClient.getEvents) var getEvents
+    @Dependency(\.eventClient.getPublicEvents) var getEvents
     
     public struct State: Equatable {
         public init() {}
@@ -21,6 +21,12 @@ public struct EventList: Reducer {
         var events: IdentifiedArrayOf<Event> = []
         
         @BindingState var searchText = ""
+        
+        struct Thing: Equatable {
+             var foo: Bool = false
+        }
+        
+        @BindingState var thing: Thing = .init()
 
         var isLoading: Bool = true
         

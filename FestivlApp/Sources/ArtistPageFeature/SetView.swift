@@ -21,8 +21,6 @@ public struct SetView: View {
         
         ZStack {
             NavigationLink(destination: { EmptyView() }, label: { EmptyView() })
-
-            // TODO: Row Spacing Signleton FestivlTheme
             HStack(spacing: 10) {
                 StagesIndicatorView(stageIDs: [set.stageID])
                     .frame(width: 5)

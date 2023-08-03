@@ -10,13 +10,8 @@ import ComposableArchitecture
 import Models
 import NotificationsFeature
 import WorkshopsFeature
-
-extension Color {
-    static var customPurple = Color(hex: "#401F34")
-    static var customRed = Color(hex: "#A62428")
-    static var customOrange = Color(hex: "#DE5F29")
-    static var customBlue = Color(hex: "#143144")
-}
+import SharedResources
+import Utilities
 
 public struct MoreView: View {
     let store: StoreOf<MoreFeature>
@@ -34,7 +29,7 @@ public struct MoreView: View {
                     Section {
                         MoreButton(
                             "Workshops",
-                            image: Image("workshops", bundle: .module),
+                            image: FestivlAssets.Icons.workshops,
                             color: workshopsColor
                         ) {
                             viewStore.send(.didTapWorkshops)
@@ -43,32 +38,48 @@ public struct MoreView: View {
                     
                     Section {
                         if eventData.event.siteMapImageURL != nil {
-                            MoreButton("Site Map", systemName: "map.fill", color: .customBlue) {
+                            MoreButton(
+                                "Site Map",
+                                systemName: "map.fill",
+                                color: FestivlAssets.Colors.customBlue
+                            ) {
                                 viewStore.send(.didTapSiteMap)
                             }
                         }
                         
                         if !eventData.event.address.isNilOrEmpty {
-                            MoreButton("Address", systemName: "mappin", color: .customPurple) {
+                            MoreButton(
+                                "Address",
+                                systemName: "mappin",
+                                color: FestivlAssets.Colors.customPurple
+                            ) {
                                 viewStore.send(.didTapAddress)
                             }
                         }
                     }
                     
                     Section {
-                        MoreButton("Notifications", systemName: "bell.badge.fill", color: .customRed) {
+                        MoreButton(
+                            "Notifications",
+                            systemName: "bell.badge.fill",
+                            color: FestivlAssets.Colors.customRed
+                        ) {
                             viewStore.send(.didTapNotifications)
                         }
                     }
                     
                     Section {
                         if !eventData.event.contactNumbers.isNilOrEmpty {
-                            MoreButton("Emergency Contact", systemName: "phone.fill", color: .customOrange) {
+                            MoreButton(
+                                "Emergency Contact",
+                                systemName: "phone.fill",
+                                color: FestivlAssets.Colors.customOrange
+                            ) {
                                 viewStore.send(.didTapContactInfo)
                             }
                         }
                     }
-                    
+//                    
                     Section {
                         if !viewStore.isEventSpecificApplication {
                             Button {
@@ -99,46 +110,44 @@ public struct MoreView: View {
             .task { await viewStore.send(.task).finish() }
             .navigationDestination(
                 store: destinationStore,
-                state: /MoreFeature.Destination.State.workshops,
-                action: MoreFeature.Destination.Action.workshops,
+                state: /MoreFeature.Navigation.State.workshops,
+                action: MoreFeature.Navigation.Action.workshops,
                 destination: WorkshopsView.init
             )
             .navigationDestination(
                 store: destinationStore,
-                state: /MoreFeature.Destination.State.siteMap,
-                action: MoreFeature.Destination.Action.siteMap,
+                state: /MoreFeature.Navigation.State.siteMap,
+                action: MoreFeature.Navigation.Action.siteMap,
                 destination: SiteMapView.init
             )
             .navigationDestination(
                 store: destinationStore,
-                state: /MoreFeature.Destination.State.address,
-                action: MoreFeature.Destination.Action.address,
+                state: /MoreFeature.Navigation.State.address,
+                action: MoreFeature.Navigation.Action.address,
                 destination: AddressView.init
             )
             .navigationDestination(
                 store: destinationStore,
-                state: /MoreFeature.Destination.State.notifications,
-                action: MoreFeature.Destination.Action.notifications,
+                state: /MoreFeature.Navigation.State.notifications,
+                action: MoreFeature.Navigation.Action.notifications,
                 destination: NotificationsView.init
             )
             .navigationDestination(
                 store: destinationStore,
-                state: /MoreFeature.Destination.State.contactInfo,
-                action: MoreFeature.Destination.Action.contactInfo,
+                state: /MoreFeature.Navigation.State.contactInfo,
+                action: MoreFeature.Navigation.Action.contactInfo,
                 destination: ContactInfoView.init
             )
         }
     }
     
-    var destinationStore: PresentationStoreOf<MoreFeature.Destination> {
+    var destinationStore: PresentationStoreOf<MoreFeature.Navigation> {
         self.store.scope(
             state: \.$destination,
             action: MoreFeature.Action.destination
         )
     }
 }
-
-typealias PresentationStoreOf<R: Reducer> = Store<PresentationState<R.State>, PresentationAction<R.Action>>
 
 struct LoadingView<T, Content: View>: View {
     let value: T?

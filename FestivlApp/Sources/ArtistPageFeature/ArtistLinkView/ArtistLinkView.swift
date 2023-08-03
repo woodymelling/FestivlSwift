@@ -16,12 +16,12 @@ struct ArtistLinkView: View {
 
         var icon: Image {
             switch self {
-            case .soundcloud: return SharedResources.LinkIcons.soundcloud
-            case .spotify: return SharedResources.LinkIcons.spotify
-            case .website: return SharedResources.LinkIcons.website
-            case .instagram: return SharedResources.LinkIcons.instagram
-            case .facebook: return SharedResources.LinkIcons.facebook
-            case .youtube: return SharedResources.LinkIcons.youtube
+            case .soundcloud: return FestivlAssets.LinkIcons.soundcloud
+            case .spotify: return FestivlAssets.LinkIcons.spotify
+            case .website: return FestivlAssets.LinkIcons.website
+            case .instagram: return FestivlAssets.LinkIcons.instagram
+            case .facebook: return FestivlAssets.LinkIcons.facebook
+            case .youtube: return FestivlAssets.LinkIcons.youtube
             }
         }
 

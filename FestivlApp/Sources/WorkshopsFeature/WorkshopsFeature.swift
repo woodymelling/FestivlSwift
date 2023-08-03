@@ -80,7 +80,6 @@ public struct WorkshopsFeature: Reducer {
                 return .none
             }
         }
-        ._printChanges()
     }
 }
 

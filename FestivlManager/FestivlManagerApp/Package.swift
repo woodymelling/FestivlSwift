@@ -9,8 +9,11 @@ extension Target.Dependency {
     static let models = library(name: "Models")
     static let utlities = library(name: "Utilities")
     static let festivlDependencies = library(name: "FestivlDependencies")
+    static let sharedResources = library(name: "SharedResources")
     
-    static func library(name: String) -> Target.Dependency {
+    static let forms = product(name: "ComposableArchitectureForms", package: "composable-architecture-forms")
+    
+    static func library(name: String) -> Self {
         product(name: name, package: "FestivlLibrary")
     }
 }
@@ -27,19 +30,27 @@ let package = Package(
         .library(
             name: "ScheduleManagementFeature",
             targets: ["ScheduleManagementFeature"]
-        )
+        ),
     ],
     dependencies: [
         .package(name: "FestivlLibrary", path: "../FestivlLibrary"),
         
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "release/1.0"),
+        .package(url: "https://github.com/woodymelling/composable-architecture-forms", branch: "main")
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "FestivlManagerApp"
+            name: "FestivlManagerApp",
+            dependencies: [
+                .composableArchitecture,
+                .utlities,
+                .models,
+                .festivlDependencies,
+                .sharedResources,
+                .forms
+            ]
         ),
+
         .target(
             name: "ScheduleManagementFeature",
             dependencies: [
@@ -50,13 +61,14 @@ let package = Package(
                 .festivlDependencies
             ]
         ),
-        .testTarget(
-            name: "FestivlManagerAppTests",
-            dependencies: ["FestivlManagerApp"]
-        ),
+        
         .testTarget(
             name: "ScheduleManagementTests",
             dependencies: ["ScheduleManagementFeature"]
+        ),
+        .testTarget(
+            name: "FestivlManagerAppTests",
+            dependencies: ["FestivlManagerApp", .festivlDependencies]
         )
     ]
 )

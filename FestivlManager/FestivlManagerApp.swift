@@ -6,10 +6,11 @@
 //
 
 import SwiftUI
-import ScheduleManagementFeature
+import FestivlManagerApp
 import FestivlDependencies
 import FirebaseServiceImpl
 import Models
+import ComposableArchitecture
 
 @main
 struct FestivlManagerApp: App {
@@ -20,17 +21,10 @@ struct FestivlManagerApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                
-                ScheduleManagementView(
-                    store: .init(
-                        initialState: ScheduleManagementDomain.State(),
-                        reducer: {
-                            ScheduleManagementDomain()
-                                .dependency(\.eventID, "NLL2bpmp0IkYF2tohlsI")
-                        }
-                    )
-                )
-            }
+                FestivlManagerView(store: Store(initialState: .init()) {
+                    FestivlManagerDomain()
+                        ._printChanges()
+                })
         }
     }
 }

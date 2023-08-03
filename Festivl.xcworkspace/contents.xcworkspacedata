@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:../../../composable-architecture-forms">
+   </FileRef>
+   <FileRef
       location = "group:FestivlLibrary">
    </FileRef>
    <FileRef
