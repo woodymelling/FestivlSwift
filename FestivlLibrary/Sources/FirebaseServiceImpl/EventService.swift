@@ -72,6 +72,11 @@ extension EventClientKey: DependencyKey {
             return FirebaseService.observeDocument(db.collection("events").document(eventID.rawValue), mapping: Event.DTO.asEvent)
             .eraseToAnyPublisher()
         },
+        getMyEvents: {
+            @Dependency(\.eventID) var eventID
+            return FirebaseService.observeDocument(db.collection("events").document(eventID.rawValue), mapping: Event.DTO.asEvent)
+            .eraseToAnyPublisher()
+        },
         createEvent: { _ in
             fatalError("Not Implemented")
         },

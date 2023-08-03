@@ -35,10 +35,10 @@ let package = Package(
     dependencies: [
         .package(name: "FestivlLibrary", path: "../../FestivlLibrary"),
         
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "release/1.0"),
-        .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "0.1.4"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.0.0"),
+        .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.0.0"),
         
-        .package(url: "https://github.com/miiha/composable-user-notifications", from: "0.5.0"),
+        .package(url: "https://github.com/woodymelling/composable-user-notifications", from: "1.0.0"),
         
         .package(url: "https://github.com/yacir/CollectionViewSlantedLayout", branch: "master"),
         .package(url: "https://github.com/Jake-Short/swiftui-image-viewer.git", from: "2.3.1"),
