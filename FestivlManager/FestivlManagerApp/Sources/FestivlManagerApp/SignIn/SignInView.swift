@@ -32,38 +32,35 @@ struct SignInView: View {
     
     var body: some View {
         WithViewStore(store, observe: ViewState.init) { viewStore in
-            Form {
+            VStack {
                 TextField("Email", text: viewStore.$email)
                     .validation(self.store, field: .email)
                 
                 SecureField("Password", text: viewStore.$password)
                     .validation(self.store, field: .password)
                 
-                Section {
-                    VStack {
-                        Text(hiddenWhenNil: viewStore.submitError)
-                            .foregroundStyle(Color.red)
-                        
-                        Button {
-                            viewStore.send(.form(.submittedForm))
-                        } label: {
-                            Group {
-                                if viewStore.isSigningIn {
-                                    ProgressView()
-                                } else {
-                                    Text("Sign in")
-                                }
-                            }
-                            .frame(maxWidth: .infinity)
+                Text(hiddenWhenNil: viewStore.submitError)
+                    .foregroundStyle(Color.red)
+                
+                Button {
+                    viewStore.send(.form(.submittedForm))
+                } label: {
+                    Group {
+                        if viewStore.isSigningIn {
+                            ProgressView()
+                        } else {
+                            Text("Sign in")
                         }
-                        .buttonStyle(.borderedProminent)
-                        .disabled(viewStore.isSigningIn)
                     }
+                    .frame(maxWidth: .infinity)
                 }
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
+                .buttonStyle(.borderedProminent)
+                .disabled(viewStore.isSigningIn)
+                .padding(.horizontal)
+                
+                Spacer()
             }
-            .navigationTitle("Sign In")
+            .textFieldStyle(.roundedBorder)
             .animation(.default, value: viewStore.submitError)
             .animation(.default, value: viewStore.formState.validationErrors)
         }

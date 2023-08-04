@@ -12,27 +12,14 @@ import FestivlDependencies
 
 @MainActor
 final class HomePageTests: XCTestCase {
-    func testSignInButton() async {
+    func testAuthFlowBinding() async {
         let store = TestStore(initialState: HomePageDomain.State()) {
             HomePageDomain()
         }
         
-        await store.send(.didTapSignInButton) {
-            $0.destination = .signIn(SignInDomain.State())
+        await store.send(.binding(.set(\.$authFlow, .signIn))) {
+            $0.authFlow = .signIn
         }
-        
-        await store.send(.destination(.dismiss))  {
-            $0.destination = nil
-        }
-    }
-    
-    func testSignUpdomain() async {
-        let store = TestStore(initialState: HomePageDomain.State()) {
-            HomePageDomain()
-        }
-        
-        await store.send(.didTapSignUpButton) {
-            $0.destination = .signUp(SignUpDomain.State())
-        }
+
     }
 }

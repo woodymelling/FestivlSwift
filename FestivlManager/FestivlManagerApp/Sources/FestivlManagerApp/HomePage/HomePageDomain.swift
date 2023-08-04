@@ -12,60 +12,33 @@ public struct HomePageDomain: Reducer {
     public init() {}
     
     public struct State: Equatable {
-        public init(destination: Destination.State? = nil) {
-            self.destination = destination
-        }
+        public init() {}
         
-        @PresentationState var destination: Destination.State?
+        
+        
+        var signInState: SignInDomain.State = .init()
+        var signUpState: SignUpDomain.State = .init()
+        
+        @BindingState var authFlow: AuthenticationFlow = .signUp
     }
     
-    public struct Destination: Reducer {
-        public enum State: Equatable {
-            case signIn(SignInDomain.State)
-            case signUp(SignUpDomain.State)
-        }
+    public enum Action: Equatable, BindableAction {
+        case binding(BindingAction<State>)
         
-        public enum Action: Equatable {
-            case signIn(SignInDomain.Action)
-            case signUp(SignUpDomain.Action)
-        }
-        
-        public var body: some ReducerOf<Self> {
-            Scope(state: /State.signIn, action: /Action.signIn) {
-                SignInDomain()
-            }
-            
-            Scope(state: /State.signUp, action: /Action.signUp) {
-                SignUpDomain()
-            }
-        }
-    }
-    
-    public enum Action: Equatable {
-        case didTapSignInButton
-        case didTapSignUpButton
-        
-        case destination(PresentationAction<Destination.Action>)
+        case signIn(SignInDomain.Action)
+        case signUp(SignUpDomain.Action)
     }
     
     public var body: some ReducerOf<Self> {
-        Reduce { state, action in
-            switch action {
-            case .destination:
-                return .none
-                
-            case .didTapSignInButton:
-                state.destination = .signIn(SignInDomain.State())
-                
-                return .none
-                
-            case .didTapSignUpButton:
-                state.destination = .signUp(SignUpDomain.State())
-                return .none
-            }
+        BindingReducer()
+        
+        Scope(state: \.signInState, action: /Action.signIn) {
+            SignInDomain()
         }
-        .ifLet(\.$destination, action: /Action.destination) {
-            Destination()
+        
+        Scope(state: \.signUpState, action: /Action.signUp) {
+            SignUpDomain()
         }
     }
 }
+

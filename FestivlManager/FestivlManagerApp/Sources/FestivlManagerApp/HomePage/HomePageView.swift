@@ -11,6 +11,18 @@ import ComposableArchitecture
 import SharedResources
 import Utilities
 
+
+public enum AuthenticationFlow: PickableValue {
+    case signUp, signIn
+    
+    var label: LocalizedStringKey {
+        switch self {
+        case .signIn: "Sign In"
+        case .signUp: "Sign Up"
+        }
+    }
+}
+
 public struct HomePageView: View {
     let store: StoreOf<HomePageDomain>
     
@@ -18,76 +30,77 @@ public struct HomePageView: View {
         self.store = store
     }
     
-    public var body: some View {
-        VStack {
-            Spacer()
-            
-            TitleView()
-            
-            VStack {
-                InfoView(
-                    title: "Your Festivals App",
-                    "Amplify the festival experience, putting the stage lineup, information, maps, and real-time updates at attendees' fingertips."
-                ) {
-                    FestivlAssets.Icons.handWithSmartphone
-                        .resizable()
-                        .foregroundStyle(Color.systemBlue)
-                }
-                
-                InfoView(
-                    title: "Manage Schedule",
-                    "Create the schedule for your event, and update info in the app live during showtime."
-                ) {
-                    Image(systemName: "calendar")
-                        .resizable()
-                        .foregroundStyle(Color.systemPurple)
-                    
-                }
-                
-                InfoView(
-                    title: "Notifications",
-                    "Real-time notifications for schedule changes and important updates, keeping attendees informed during the festival."
-                ) {
-                    Image(systemName: "bell.badge")
-                        .resizable()
-                        .foregroundStyle(Color.systemRed)
-                }
-            }
-            
-            Spacer()
-            Spacer()
-            
-            VStack {
-                Button { store.send(.didTapSignInButton) } label: {
-                    Text("Log In")
-                        .frame(width: 200)
-                }
-                .buttonStyle(.borderless)
-                
-                Button { store.send(.didTapSignUpButton) } label: {
-                    Text("Sign Up")
-                        .frame(width: 200)
-                }
-                .buttonStyle(.borderedProminent)
-            }
+    struct ViewState: Equatable {
+        @BindingViewState var authFlow: AuthenticationFlow
+        
+        init(state: BindingViewStore<HomePageDomain.State>) {
+            self._authFlow = state.$authFlow
         }
-        .frame(width: 300)
-        .sheet(
-            store: self.store.scope(state: \.$destination, action: { .destination($0) }),
-            state: /HomePageDomain.Destination.State.signIn,
-            action: HomePageDomain.Destination.Action.signIn,
-            content: { store in
-                NavigationStack {
-                    SignInView(store: store)
+    }
+    
+    public var body: some View {
+        WithViewStore(store, observe: ViewState.init) { viewStore in
+            ScrollView {
+                VStack {
+                    TitleView()
+                        .padding(.top)
+                    
+                    VStack {
+                        InfoView(
+                            title: "Your Festivals App",
+                            "Amplify the festival experience, putting the stage lineup, information, maps, and real-time updates at attendees' fingertips."
+                        ) {
+                            FestivlAssets.Icons.handWithSmartphone
+                                .resizable()
+                                .foregroundStyle(Color.systemBlue)
+                        }
+                        
+                        InfoView(
+                            title: "Manage Schedule",
+                            "Create the schedule for your event, and update info in the app live during showtime."
+                        ) {
+                            Image(systemName: "calendar")
+                                .resizable()
+                                .foregroundStyle(Color.systemPurple)
+                        }
+                        
+                        InfoView(
+                            title: "Notifications",
+                            "Real-time notifications for schedule changes and important updates, keeping attendees informed during the festival."
+                        ) {
+                            Image(systemName: "bell.badge")
+                                .resizable()
+                                .foregroundStyle(Color.systemRed)
+                        }
+                    }
+                    
+                    SegmentedPickerWithPages(selectedOption: viewStore.$authFlow) {
+                        switch $0 {
+                        case .signIn:
+                            SignInView(
+                                store: self.store.scope(
+                                    state: \.signInState,
+                                    action: { .signIn($0) }
+                                )
+                            )
+                        case .signUp:
+                            SignUpView(
+                                store: self.store.scope(
+                                    state: \.signUpState,
+                                    action: { .signUp($0) }
+                                )
+                            )
+                        }
+                    }
+                    .padding(.top)
+                    .frame(height: 300) // Scrollview is making this resize improperly
+                    
+                    Spacer()
                 }
             }
-        )
-        .navigationDestination(
-            store: self.store.scope(state: \.$destination, action: { .destination($0) }),
-            state: /HomePageDomain.Destination.State.signUp,
-            action: HomePageDomain.Destination.Action.signUp,
-            content: { SignUpView(store: $0) }
-        )
+            .frame(width: 300)
+        }
+
     }
     
     struct TitleView: View {
@@ -148,3 +161,99 @@ public struct HomePageView: View {
     }
 }
 
+protocol PickableValue: CaseIterable, Hashable {
+    var label: LocalizedStringKey { get }
+}
+
+extension Picker
+where SelectionValue: PickableValue,
+      Content == ForEach<Array<SelectionValue>, SelectionValue, Label>,
+      Label == Text
+{
+    init(selection: Binding<SelectionValue>, label: () -> Label) {
+        self.init(
+            selection: selection,
+            content: { 
+                ForEach(Array(SelectionValue.allCases), id: \.self) {
+                    Text($0.label)
+                }
+            },
+            label: label
+        )
+    }
+    
+    init(_ titleKey: LocalizedStringKey, selection: Binding<SelectionValue>) {
+        self.init(
+            titleKey,
+            selection: selection,
+            content: { 
+                ForEach(Array(SelectionValue.allCases), id: \.self) {
+                    Text($0.label)
+                }
+            }
+        )
+    }
+}
+
+struct SegmentedPickerWithPages<SelectionValue: PickableValue, Content: View>: View {
+    
+    @Binding var selectedOption: SelectionValue
+    @ViewBuilder var content: (SelectionValue) -> Content
+    
+    init(
+        selectedOption: Binding<SelectionValue>,
+        @ViewBuilder content: @escaping (SelectionValue) -> Content
+    ) {
+        self._selectedOption = selectedOption
+        self.content = content
+    }
+    
+    var body: some View {
+        VStack {
+            Picker("Sign In / Out", selection: $selectedOption)
+                .pickerStyle(.segmented)
+            
+            TabView(selection: $selectedOption) {
+                ForEach(Array(SelectionValue.allCases), id: \.self) {
+                    content($0)
+                }
+            }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+        }
+        .animation(.default, value: selectedOption)
+    }
+}
+
+
+fileprivate struct SegmentedPickerWithPages_Preview: View {
+    
+    enum Option: PickableValue {
+        case first, second, third
+        
+        var label: LocalizedStringKey {
+            switch self {
+            case .first: "First"
+            case .second: "Second"
+            case .third: "Third"
+            }
+        }
+    }
+    
+    @State var option: Option = .first
+    
+    var body: some View {
+        SegmentedPickerWithPages(selectedOption: $option) {
+            switch $0 {
+            case .first: Label("First", systemImage: "star")
+            case .second: Label("Second", systemImage: "circle")
+            case .third: Label("Third", systemImage: "square")
+            }
+        }
+    }
+}
+
+#Preview {
+    SegmentedPickerWithPages_Preview()
+        .padding()
+        .frame(height: 400)
+}

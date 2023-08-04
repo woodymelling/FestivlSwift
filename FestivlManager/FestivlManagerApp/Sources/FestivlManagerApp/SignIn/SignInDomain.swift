@@ -12,6 +12,9 @@ import FestivlDependencies
 
 public struct SignInDomain: Reducer {
     public struct State: Equatable, HasFormState {
+        
+        public init() {}
+        
         @BindingState var email: String = ""
         @BindingState var password: String = ""
         

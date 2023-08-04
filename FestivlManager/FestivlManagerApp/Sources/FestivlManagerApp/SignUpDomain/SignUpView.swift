@@ -33,38 +33,35 @@ struct SignUpView: View {
     
     var body: some View {
         WithViewStore(store, observe: ViewState.init) { viewStore in
-            Form {
+            VStack {
                 TextField("Email", text: viewStore.$email)
                     .validation(self.store, field: .email)
                 
                 SecureField("Password", text: viewStore.$password)
                     .validation(self.store, field: .password)
                 
-                Section {
-                    VStack {
-                        Text(hiddenWhenNil: viewStore.submitError)
-                            .foregroundStyle(Color.red)
-                        
-                        Button {
-                            viewStore.send(.form(.submittedForm))
-                        } label: {
-                            Group {
-                                if viewStore.isCreatingAccount {
-                                    ProgressView()
-                                } else {
-                                    Text(localized: "Sign up")
-                                }
-                            }
-                            .frame(maxWidth: .infinity)
+                Text(hiddenWhenNil: viewStore.submitError)
+                    .foregroundStyle(Color.red)
+                
+                Button {
+                    viewStore.send(.form(.submittedForm))
+                } label: {
+                    Group {
+                        if viewStore.isCreatingAccount {
+                            ProgressView()
+                        } else {
+                            Text(localized: "Sign up")
                         }
-                        .buttonStyle(.borderedProminent)
-                        .disabled(viewStore.isCreatingAccount)
                     }
+                    .frame(maxWidth: .infinity)
                 }
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
+                .buttonStyle(.borderedProminent)
+                .disabled(viewStore.isCreatingAccount)
+                .padding(.horizontal)
+                
+                Spacer()
             }
-            .navigationTitle("Sign Up")
+            .textFieldStyle(.roundedBorder)
             .animation(.default, value: viewStore.submitError)
             .animation(.default, value: viewStore.formState.validationErrors)
         }

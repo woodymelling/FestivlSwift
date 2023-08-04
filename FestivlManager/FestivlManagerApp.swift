@@ -25,6 +25,7 @@ struct FestivlManagerApp: App {
                     FestivlManagerDomain()
                         ._printChanges()
                 })
+            }
         }
     }
 }
