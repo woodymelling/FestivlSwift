@@ -12,13 +12,18 @@ public protocol Searchable {
 }
 
 public extension Collection where Element: Searchable {
-    func filterForSearchTerm(_ searchTerm: String) -> [Element] {
+    func filterForSearchTerm(_ searchText: String) -> [Element] {
+        filterForSearchTerm(searchText, terms: \.searchTerms)
+    }
+}
 
-        guard !searchTerm.isEmpty else { return Array(self) }
+public extension Collection {
+    func filterForSearchTerm(_ searchText: String, terms: (Element) -> [String]) -> [Element] {
+        guard !searchText.isEmpty else { return Array(self) }
 
         return self.filter { element in
-            element.searchTerms.contains {
-                $0.lowercased().contains(searchTerm.lowercased())
+            terms(element).contains {
+                $0.lowercased().contains(searchText.lowercased())
             }
         }
     }

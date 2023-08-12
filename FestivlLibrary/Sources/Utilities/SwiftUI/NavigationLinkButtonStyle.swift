@@ -8,25 +8,35 @@
 import Foundation
 import SwiftUI
 
-extension View {
-    
-    public func navigationLinkListButton() -> some View {
-        self.modifier(NavigationLinkButtonStyle())
+public struct NavigationArrow: View {
+
+    public init() {}
+
+    @ScaledMetric var height = 12
+    public var body: some View {
+        Image(systemName: "chevron.forward")
+            .resizable()
+            .foregroundStyle(.tertiary)
+            .aspectRatio(contentMode: .fit)
+            .fontWeight(.bold)
+            .frame(height: self.height)
     }
 }
 
-struct NavigationLinkButtonStyle: ViewModifier {
-    func body(content: Content) -> some View {
-        ZStack(alignment: .leading) {
-            NavigationLink {
-               Rectangle()
-                    .opacity(0)
-            } label: {
-                EmptyView()
-            }
+struct NavigationLinkButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack {
+            configuration.label
+            NavigationArrow()
+        }
+    }
+}
 
-            content
-                
+public extension View {
+    func navigationLinkButtonStyle() -> some View {
+        HStack {
+            self
+            NavigationArrow()
         }
     }
 }
@@ -43,7 +53,7 @@ struct NavigationLinkButtonStyle: ViewModifier {
                 } label: {
                     Text("Press Me")
                 }
-                .modifier(NavigationLinkButtonStyle())
+                .navigationLinkButtonStyle()
             }
         }
     }

@@ -5,6 +5,8 @@ import PackageDescription
 
 extension Target.Dependency {
     static var models: Self = "Models"
+    static var identifiedCollections: Self = .product(name: "IdentifiedCollections", package: "swift-identified-collections")
+    static var utilities: Self = "Utilities"
 }
 
 let package = Package(
@@ -18,7 +20,8 @@ let package = Package(
         .library(name: "SharedResources", targets: ["SharedResources"]),
         .library(name: "FestivlDependencies", targets: ["FestivlDependencies"]),
         .library(name: "FirebaseServiceImpl", targets: ["FirebaseServiceImpl"]),
-        .library(name: "ScheduleComponents", targets: ["ScheduleComponents"])
+        .library(name: "ScheduleComponents", targets: ["ScheduleComponents"]),
+        .library(name: "TimeZonePicker", targets: ["TimeZonePicker"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -90,6 +93,10 @@ let package = Package(
                 "Utilities",
                 "Components"
             ]
+        ),
+        .target(
+            name: "TimeZonePicker",
+            dependencies: [.utilities]
         ),
         // MARK: Tests
         .testTarget(name: "ComponentTests", dependencies: ["Components"])

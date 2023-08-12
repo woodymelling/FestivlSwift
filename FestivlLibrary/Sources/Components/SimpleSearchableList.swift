@@ -8,27 +8,49 @@
 import SwiftUI
 import Utilities
 
+struct UseNativeSearchBarEnvironmentKey: EnvironmentKey {
+    static var defaultValue = true
+}
 
-public struct SimpleSearchableList<Data: RandomAccessCollection, Content: View>: View where Data.Element: Identifiable & Searchable {
+extension EnvironmentValues {
+    var useNativeSearchBar: Bool {
+        get { self[UseNativeSearchBarEnvironmentKey.self] }
+        set { self[UseNativeSearchBarEnvironmentKey.self] = newValue }
+    }
+}
+
+extension View {
+    public func useNativeSearchBar(_ shouldUse: Bool) -> some View {
+        self.environment(\.useNativeSearchBar, shouldUse)
+    }
+}
+
+
+public struct SimpleSearchableList<
+    Data: RandomAccessCollection,
+    Content: View,
+    NothingView: View
+>: View where Data.Element: Identifiable & Searchable {
+    @Environment(\.useNativeSearchBar) var useNativeSearchBar
     
     var data: Data
     @Binding var searchText: String
     var isLoading: Bool
-    var useNativeSearchBar: Bool
     var content: (Data.Element) -> Content
+    var emptyContent: () -> NothingView
     
     public init(
         data: Data,
         searchText: Binding<String>,
-        isLoading: Bool = false,
-        useNativeSearchBar: Bool = true,
-        content: @escaping (Data.Element) -> Content
+        isLoading: Bool,
+        rowContent: @escaping (Data.Element) -> Content,
+        emptyContent: @escaping () -> NothingView  = { EmptyView() }
     ) {
         self.data = data
         self._searchText = searchText
         self.isLoading = isLoading
-        self.useNativeSearchBar = useNativeSearchBar
-        self.content = content
+        self.content = rowContent
+        self.emptyContent = emptyContent
     }
     
     public var body: some View {
@@ -39,12 +61,18 @@ public struct SimpleSearchableList<Data: RandomAccessCollection, Content: View>:
                 let filteredData = data.filterForSearchTerm(searchText)
                 
                 if filteredData.isEmpty {
-                    NoResultsView(searchText: searchText)
-                        .frame(maxHeight: .infinity)
+                    if searchText == "" {
+                        emptyContent()
+                    } else {
+                        
+                        NoResultsView(searchText: searchText)
+                            .frame(maxHeight: .infinity)
+                    }
                 } else {
                     List {
                         ForEach(filteredData, content: content)
                     }
+                    .listStyle(.plain)
                 }
             }
         }
