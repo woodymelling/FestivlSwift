@@ -7,6 +7,8 @@ extension Target.Dependency {
     static var models: Self = "Models"
     static var identifiedCollections: Self = .product(name: "IdentifiedCollections", package: "swift-identified-collections")
     static var utilities: Self = "Utilities"
+
+    static var composableArchitecture: Self = .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
 }
 
 let package = Package(
@@ -21,7 +23,8 @@ let package = Package(
         .library(name: "FestivlDependencies", targets: ["FestivlDependencies"]),
         .library(name: "FirebaseServiceImpl", targets: ["FirebaseServiceImpl"]),
         .library(name: "ScheduleComponents", targets: ["ScheduleComponents"]),
-        .library(name: "TimeZonePicker", targets: ["TimeZonePicker"])
+        .library(name: "TimeZonePicker", targets: ["TimeZonePicker"]),
+        .library(name: "ComposablePhotosPicker", targets: ["ComposablePhotosPicker"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -81,10 +84,7 @@ let package = Package(
             name: "FestivlDependencies",
             dependencies: [
                 .models,
-                .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
-                .product(name: "Dependencies", package: "swift-composable-architecture"),
-                .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-                .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+                .composableArchitecture,
             ]
         ),
         .target(
@@ -97,6 +97,13 @@ let package = Package(
         .target(
             name: "TimeZonePicker",
             dependencies: [.utilities]
+        ),
+        .target(
+            name: "ComposablePhotosPicker",
+            dependencies: [
+                .utilities,
+                .composableArchitecture
+            ]
         ),
         // MARK: Tests
         .testTarget(name: "ComponentTests", dependencies: ["Components"])
