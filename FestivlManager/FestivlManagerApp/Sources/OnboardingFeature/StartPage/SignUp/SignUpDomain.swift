@@ -47,12 +47,12 @@ public struct SignUpDomain: Reducer {
         case binding(BindingAction<State>)
         case form(FormAction<State, Field>)
                 
-        case succesfullyCreatedAccount
+        case succesfullyCreatedAccount(User.ID)
         case failedToCreateAccount(FestivlError.SignUpError?)
     }
     
-    @Dependency(\.authenticationClient) var authenticationClient
-    
+    @Dependency(\.sessionClient.signUp) var signUp
+
     public var body: some ReducerOf<Self> {
         BindingReducer()
         
@@ -62,9 +62,9 @@ public struct SignUpDomain: Reducer {
                 state.isCreatingAccount = true
                 
                 return .run { [password = state.password, email = state.email] send in
-                    try await authenticationClient.signUp(SignInUpData(email: email, password: password))
-                    
-                    await send(.succesfullyCreatedAccount)
+                    let userID = try await self.signUp(SignInUpData(email: email, password: password))
+
+                    await send(.succesfullyCreatedAccount(userID))
                     
                 } catch: { error, send in
                     await send(.failedToCreateAccount(error as? FestivlError.SignUpError))

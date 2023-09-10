@@ -22,6 +22,10 @@ public class UserDefaultStore {
     public var hasShownScheduleTutorial: Bool
 }
 
+public enum OrganizationIDDependencyKey: DependencyKey {
+    public static var liveValue: Organization.ID = unimplemented("Accessed EventID before it has been set")
+    public static var testValue: Organization.ID = unimplemented("OrganizationID not set")
+}
 
 public enum EventIDDependencyKey: DependencyKey {
     public static var liveValue: Event.ID = unimplemented("Accessed EventID before it has been set")
@@ -47,6 +51,11 @@ public extension DependencyValues {
     var eventID: Event.ID {
         get { self[EventIDDependencyKey.self] }
         set { self[EventIDDependencyKey.self] = newValue }
+    }
+
+    var organizationID: Organization.ID {
+        get { self[OrganizationIDDependencyKey.self] }
+        set { self[OrganizationIDDependencyKey.self] = newValue }
     }
 }
 

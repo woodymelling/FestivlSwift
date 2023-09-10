@@ -17,6 +17,8 @@ public struct ScheduleArtistListDomain: Reducer {
     public struct State: Equatable {
         @BindingState var searchText: String = ""
         
+        var isLoading: Bool = false
+        
         var artists: IdentifiedArrayOf<Artist> = []
     }
     
@@ -34,12 +36,14 @@ public struct ScheduleArtistListDomain: Reducer {
             switch action {
             case .binding: return .none
             case .task:
+                state.isLoading = true
                 return .run { send in
                     for try await artists in artistsClient.getArtists().values {
                         await send(.artistsListUpdate(artists))
                     }
                 }
             case .artistsListUpdate(let artistList):
+                state.isLoading = false
                 state.artists = artistList
                 return .none
             }

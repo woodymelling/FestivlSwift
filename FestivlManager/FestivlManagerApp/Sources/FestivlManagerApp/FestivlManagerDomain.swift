@@ -3,21 +3,18 @@ import ComposableArchitecture
 import Models
 import FestivlDependencies
 import Utilities
+import OnboardingFeature
 
 public struct FestivlManagerDomain: Reducer {
     
     public init() {}
     
     public struct State: Equatable {
-        
-        public init(loggedInState: LoggedInDomain.State? = nil, homePageState: HomePageDomain.State = .init()) {
-            self.loggedInState = loggedInState
-            self.homePageState = homePageState
-        }
-        
-        @PresentationState var loggedInState: LoggedInDomain.State?
-        var homePageState: HomePageDomain.State = .init()
-        
+        public init() {}
+
+        var home: HomeDomain.State = .init()
+        @PresentationState var onboarding: OnboardingDomain.State?
+
         var session: Session?
     }
     
@@ -25,44 +22,125 @@ public struct FestivlManagerDomain: Reducer {
         case task
         case dataUpdate(DataUpdate)
         
-        case loggedIn(PresentationAction<LoggedInDomain.Action>)
-        case homePage(HomePageDomain.Action)
-        
+        case onboarding(PresentationAction<OnboardingDomain.Action>)
+        case home(HomeDomain.Action)
+
         public enum DataUpdate: Equatable {
             case session(Session?)
         }
     }
     
-    @Dependency(\.authenticationClient) var authenticationClient
-        
+    @Dependency(\.sessionClient.publisher) var sessionPublisher
+
     public var body: some ReducerOf<Self> {
-        ReducerReader { state, _ in
+        CombineReducers {
+
             Reduce { state, action in
                 switch action {
                 case .task:
-                    return .observe(authenticationClient.session()) { .dataUpdate(.session($0)) }
-                    
+                    /**
+                     This runs at application start, which is before firebase can provide the app
+                     with the already logged in user.
+
+                     We have to drop the initial nil value provided so the app doesn't pop
+                     the onboarding screen thinking we're in a logged out state
+
+                     This is validated inFestivlManagerAppTests.testLoginLogout
+                     */
+                    return .observe(sessionPublisher().dropFirst()) { .dataUpdate(.session($0))
+                    }
+
                 case let .dataUpdate(dataType):
                     switch dataType {
                     case let .session(session):
                         state.session = session
-                        state.loggedInState = session.map { _ in .init() }
+
+                        if session == nil {
+                            state.onboarding = OnboardingDomain.State()
+                        }
                     }
-                    
+
                     return .none
-                    
-                case .loggedIn, .homePage:
+
+                case .onboarding, .home:
                     return .none
                 }
             }
-            .ifLet(\.$loggedInState, action: /Action.loggedIn) {
-                LoggedInDomain()
-                    .dependency(\.session, state.session)
+            .ifLet(\.$onboarding, action: /Action.onboarding) {
+                OnboardingDomain()
+            }
+
+            ReducerReader { state, _ in
+                Scope(state: \.home, action: /Action.home) {
+                    HomeDomain()
+                        .dependency(\.session, state.session)
+                }
             }
         }
-        
-        Scope(state: \.homePageState, action: /Action.homePage) {
-            HomePageDomain()
+        ._printChanges(
+            .customDump { Logger.applicationRoot.debug("\($0)") }
+        )
+
+        ._printChanges(.osLog(to: .applicationRoot, level: .debug))
+    }
+}
+
+import OSLog
+extension Logger {
+    static let applicationRoot = Logger(
+        subsystem: "FestivlManager",
+        category: "Application Root"
+    )
+}
+
+extension _ReducerPrinter {
+    static func osLog(
+        to: Logger,
+        level: OSLogType = .default
+    ) -> Self {
+        .customDump { Logger.applicationRoot.log(level: level, "\($0)") }
+    }
+}
+
+public struct HomeDomain: Reducer {
+    public init() {}
+
+    public struct State: Equatable {
+        public init() {}
+
+    }
+
+    public enum Action: Equatable {
+        case task
+        case didTapLogout
+    }
+
+    @Dependency(\.sessionClient.signOut) var signOut
+
+    public var body: some ReducerOf<Self> {
+        Reduce { state, action in
+            switch action {
+            case .task:
+                return .none
+
+            case .didTapLogout:
+                return .run { send in
+                    try? await self.signOut()
+                }
+            }
         }
+    }
+}
+
+import SwiftUI
+
+struct HomeView: View {
+    var store: StoreOf<HomeDomain>
+
+    var body: some View {
+        Button("Logout") {
+            store.send(.didTapLogout)
+        }
+        .buttonStyle(.bordered)
     }
 }

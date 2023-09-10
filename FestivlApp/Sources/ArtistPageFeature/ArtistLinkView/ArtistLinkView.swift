@@ -52,7 +52,7 @@ struct ArtistLinkView: View {
                 Spacer()
             }
         })
-        .navigationLinkListButton()
+        .navigationLinkButtonStyle()
     }
 }
 

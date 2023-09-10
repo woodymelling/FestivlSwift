@@ -56,7 +56,10 @@ public typealias PhotosPickerAction = PhotosPickerDomain.Action
  */
 public struct PhotosPickerDomain: Reducer {
     public struct State: Equatable {
-        public init() {}
+        public init(pickerItem: PhotosPickerItem? = nil, image: Image? = nil) {
+            self.pickerItem = pickerItem
+            self.image = image
+        }
 
         public var pickerItem: PhotosPickerItem?
         public var image: Image?
@@ -91,6 +94,7 @@ public extension BindingReducer {
                     guard let photosPickerItem = newValue else { return .none }
 
                     @Dependency(\.photosPickerClient) var photosPickerClient
+                    
                     return .run { [photosPickerItem] send in
                         try await send(action.embed(.didLoadImage(photosPickerClient.loadTransferable(photosPickerItem))))
                     }

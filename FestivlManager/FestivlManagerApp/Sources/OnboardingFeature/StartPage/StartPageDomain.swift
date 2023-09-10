@@ -7,14 +7,13 @@
 
 import Foundation
 import ComposableArchitecture
+import Models
 
-public struct HomePageDomain: Reducer {
+public struct StartPageDomain: Reducer {
     public init() {}
     
     public struct State: Equatable {
         public init() {}
-        
-        
         
         var signInState: SignInDomain.State = .init()
         var signUpState: SignUpDomain.State = .init()
@@ -27,11 +26,31 @@ public struct HomePageDomain: Reducer {
         
         case signIn(SignInDomain.Action)
         case signUp(SignUpDomain.Action)
+
+        case delegate(Delegate)
+
+        public enum Delegate: Equatable {
+            case didSignUp(User.ID)
+            case didSignIn(User.ID)
+        }
     }
     
     public var body: some ReducerOf<Self> {
         BindingReducer()
-        
+
+        Reduce { state, action in
+            switch action {
+            case let .signIn(.successfullySignedIn(userID)):
+                return .send(.delegate(.didSignIn(userID)))
+
+            case let .signUp(.succesfullyCreatedAccount(userID)):
+                return .send(.delegate(.didSignUp(userID)))
+
+            case .delegate, .binding, .signIn, .signUp:
+                return .none
+            }
+        }
+
         Scope(state: \.signInState, action: /Action.signIn) {
             SignInDomain()
         }

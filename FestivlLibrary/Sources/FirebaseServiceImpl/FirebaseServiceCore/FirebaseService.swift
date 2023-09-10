@@ -18,7 +18,7 @@ enum FirebaseService {
     private static let db = Firestore.firestore()
     
     
-    static func observeQuery<DTO: Decodable, T>(_ query: Query, mapping: @escaping (DTO) -> T) -> DataStream<IdentifiedArrayOf<T>>  where T: Identifiable {
+    static func observeQuery<DTO: Decodable, T>(_ query: Query, mapping: @escaping (DTO) throws -> T) -> DataStream<IdentifiedArrayOf<T>>  where T: Identifiable {
         Publishers.QuerySnapshotPublisher(query: query)
             .flatMap { snapshot -> AnyPublisher<[DTO], FestivlError> in
                 do {
@@ -38,8 +38,16 @@ enum FirebaseService {
                 }
 
             }
-            .map { (values: [DTO]) in
-                IdentifiedArrayOf<T>(uniqueElements: values.map { mapping($0) })
+            .tryMap { (values: [DTO]) in
+                IdentifiedArrayOf<T>(uniqueElements: try values.map { try mapping($0) })
+
+            }
+            .mapError { error in
+                if let error = error as? FestivlError {
+                    error
+                } else {
+                    FestivlError.default(description: "Failed to map from DTO")
+                }
             }
             .share()
             .eraseToAnyPublisher()

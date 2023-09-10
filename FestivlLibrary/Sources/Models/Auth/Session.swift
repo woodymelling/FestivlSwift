@@ -8,22 +8,38 @@
 import Foundation
 
 public struct Session: Identifiable, Equatable {
-    public init(user: Session.User) {
+    public init(
+        user: User,
+        organization: Organization.ID?,
+        event: Event.ID?
+    ) {
         self.user = user
     }
     
-    public var user: Session.User
-    public var id: Session.User.ID { user.id }
-    
-    
-    // MARK: User
-    public struct User: Identifiable, Equatable {
-        public var id: Tagged<Self, String>
-        public var email: String
-        
-        public init(id: Self.ID, email: String) {
-            self.id = id
-            self.email = email
-        }
+    public var user: User
+    public var id: User.ID { user.id }
+    public var selectedOrganization: Organization.ID?
+    public var selectedEvent: Event.ID?
+}
+
+
+// MARK: User
+public struct User: Identifiable, Equatable {
+    public var id: Tagged<Self, String>
+    public var email: String
+
+    public init(id: Self.ID, email: String) {
+        self.id = id
+        self.email = email
+    }
+
+}
+
+extension User {
+    public enum Role {
+        case owner
+        case admin
     }
 }
+
+public typealias UserRoles = [User.ID: User.Role]

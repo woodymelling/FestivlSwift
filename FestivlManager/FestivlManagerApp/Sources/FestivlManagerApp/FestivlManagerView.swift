@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import ComposableArchitecture
+import OnboardingFeature
 
 public struct FestivlManagerView: View {
     
@@ -18,12 +19,24 @@ public struct FestivlManagerView: View {
     }
     
     public var body: some View {
-        IfLetStore(
-            store.scope(state: \.$loggedInState, action: { .loggedIn($0) } ),
-            then: LoggedInView.init
-        ) {
-            HomePageView(store: store.scope(state: \.homePageState, action: { .homePage($0) } ))
-        }
+        HomeView(
+            store: store.scope(state: \.home, action: { .home($0) })
+        )
         .task { store.send(.task) }
+        .sheet(
+            store: store.scope(state: \.$onboarding, action: { .onboarding($0) }),
+            content: OnboardingView.init
+        )
     }
+}
+
+import Combine
+
+#Preview {
+    FestivlManagerView(store: Store(initialState: FestivlManagerDomain.State()) {
+        FestivlManagerDomain()
+            .transformDependency(\.sessionClient.publisher) {
+                $0 = { Just(nil).eraseToAnyPublisher() }
+            }
+    })
 }

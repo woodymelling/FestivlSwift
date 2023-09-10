@@ -23,13 +23,13 @@ public struct TimeZonePicker: View {
         case timeZoneList
     }
     
-    @State private var destination: Destination?
+    @State private var isShowingTimeZoneList: Bool = false
     @Environment(\.locale) private var locale
     
     
     public var body: some View {
         Button(action: {
-            destination = .timeZoneList
+            self.isShowingTimeZoneList = true
         }, label: {
             HStack() {
                 Text(title)
@@ -43,13 +43,9 @@ public struct TimeZonePicker: View {
         })
         .buttonStyle(.plain)
         .navigationLinkButtonStyle()
-        .navigationDestination(isPresented: $destination.isPresent(), destination: {
-            switch destination {
-            case .timeZoneList:
-                TimeZoneList(selectedTimeZone: $selectedTimeZone)
-            case .none: EmptyView()
-            }
-        })
+        .navigationDestination(isPresented: $isShowingTimeZoneList) {
+            TimeZoneList(selectedTimeZone: $selectedTimeZone)
+        }
     }
 }
 
@@ -59,6 +55,8 @@ struct TimeZoneList: View {
         .knownTimeZoneIdentifiers
         .compactMap(TimeZone.init(identifier:))
         .sorted(by: \.identifier)
+
+//    var timeZones: [TimeZone] = []
 
 
     @Environment(\.locale) var locale
@@ -85,14 +83,16 @@ struct TimeZoneList: View {
     }
 
     var body: some View {
-        List(filteredTimeZones, id: \.self) { timeZone in
-            Button(timeZone.displayName) {
-                self.selectedTimeZone = timeZone
-                self.dismiss()
-            }
-            .buttonStyle(.plain)
+        List {
+            ForEach(filteredTimeZones, id: \.self) { timeZone in
+                 Button(timeZone.displayName) {
+                     self.selectedTimeZone = timeZone
+                     self.dismiss()
+                 }
+                 .buttonStyle(.plain)
+             }
+             .listStyle(.plain)
         }
-        .listStyle(.plain)
         .task {
             withAnimation {
                 self.searchText = self.selectedTimeZone.identifier
@@ -101,6 +101,7 @@ struct TimeZoneList: View {
         .navigationTitle("Time Zone")
         .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
         .autocorrectionDisabled()
+
 
     }
 }

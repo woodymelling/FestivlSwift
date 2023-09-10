@@ -8,3 +8,4 @@
 import Foundation
 
 @_exported import Tagged
+@_exported import IdentifiedCollections

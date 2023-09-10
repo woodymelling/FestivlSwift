@@ -11,16 +11,35 @@ import FirebaseAuth
 import Models
 
 // MARK: AuthClient
-extension AuthenticationClient: DependencyKey {
-    static public var liveValue = AuthenticationClient(
-        session: { SessionStore.shared.publisher.eraseToAnyPublisher() },
+extension SessionClient: DependencyKey {
+    public static var liveValue = SessionClient.firebase
+}
+
+extension SessionClient {
+    static public var firebase = SessionClient(
+        session: { 
+            SessionStore
+                .shared
+                .publisher
+                .share()
+                .eraseToAnyPublisher()
+        },
         signIn: SessionStore.shared.signIn(_:),
         signUp: SessionStore.shared.signUp(_:),
-        signOut: SessionStore.shared.signOut
+        signOut: SessionStore.shared.signOut,
+        selectOrganization: { SessionStore.shared.publisher.value?.selectedOrganization = $0 },
+        selectEvent: { SessionStore.shared.publisher.value?.selectedEvent = $0 }
     )
 }
 
-// MARK: Session Singleton
+import OSLog
+extension Logger {
+    static let auth = Logger(
+        subsystem: "FestivlAuthentication",
+        category: "firebase"
+    )
+}
+
 private class SessionStore {
     static var shared = SessionStore()
     
@@ -29,9 +48,19 @@ private class SessionStore {
     
     init() {
         self.handle = Auth.auth().addStateDidChangeListener { [weak self] auth, user in
+            Logger.auth.debug(
+                """
+                Session Update:
+                auth: \(auth)
+                user: \(user)
+                """
+            )
+
             if let user {
                 let session = Session(
-                    user: Session.User(id: .init(user.uid), email: user.email ?? "No Email")
+                    user: User(id: .init(user.uid), email: user.email ?? "No Email"),
+                    organization: nil, // TODO: Get out of UserDefaults?
+                    event: nil // TODO: Same
                 )
                 
                 self?.publisher.send(session)
@@ -45,24 +74,28 @@ private class SessionStore {
     // These functions don't interact with the SessionStore object itself,
     // instead they go through the Auth.auth() singleton firebase provides.
     // This mostly wraps them up cleanly into async throwing function
-    func signIn(_ signInData: SignInUpData) async throws {
+    func signIn(_ signInData: SignInUpData) async throws -> Models.User.ID {
         do {
-            try await Auth.auth().signIn(
+            let response = try await Auth.auth().signIn(
                 withEmail: signInData.email,
                 password: signInData.password
             )
+
+            return .init(response.user.uid)
         } catch let error as AuthErrorCode {
             throw error.toSignInErrror
         }
     }
     
-    func signUp(_ signUpData: SignInUpData) async throws {
-        
+    func signUp(_ signUpData: SignInUpData) async throws -> Models.User.ID {
+
         do {
-            try await Auth.auth().signIn(
+            let response = try await Auth.auth().signIn(
                 withEmail: signUpData.email,
                 password: signUpData.password
             )
+
+            return .init(response.user.uid)
         } catch let error as AuthErrorCode {
             throw error.toSignUpError
         }

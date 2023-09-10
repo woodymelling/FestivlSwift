@@ -24,12 +24,11 @@ public struct Event: Identifiable, Equatable {
         latitude: String? = nil,
         longitude: String? = nil,
         timeZone: TimeZone,
-        isTestEvent: Bool,
-        scheduleIsPublished: Bool,
+        isTestEvent: Bool = false,
+        scheduleIsPublished: Bool = false,
         internalPreviewKey: String? = nil,
-        mainEventColor: Color,
-        workshopsColor: Color
-        
+        mainEventColor: Color = .systemBlue,
+        workshopsColor: Color = .systemGreen
     ) {
         self.id = id
         self.name = name
@@ -50,18 +49,23 @@ public struct Event: Identifiable, Equatable {
         self.mainEventColor = mainEventColor
     }
     
-    public var id: Tagged<Event, String>
-    public var name: String
+    public var id: Tagged<Event, String> //
+    public var name: String //
+    
     public var startDate: CalendarDate
     public var endDate: CalendarDate
+    public var timeZone: TimeZone
+    
     public var dayStartsAtNoon: Bool
+    
     public var imageURL: URL?
     public var siteMapImageURL: URL?
     public var contactNumbers: IdentifiedArrayOf<ContactNumber>?
+    
     public var address: String?
     public var latitude: String?
     public var longitude: String?
-    public var timeZone: TimeZone
+    
     public var isTestEvent: Bool
     public var scheduleIsPublished: Bool
     public var internalPreviewKey: String?

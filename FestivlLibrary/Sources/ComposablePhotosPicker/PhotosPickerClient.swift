@@ -12,7 +12,7 @@ import Dependencies
 
 
 public struct PhotosPickerClient: DependencyKey {
-    var loadTransferable: (PhotosPickerItem) async throws -> Image?
+    public var loadTransferable: (PhotosPickerItem) async throws -> Image?
 
     public static var liveValue = PhotosPickerClient(
         loadTransferable: { imageSelection in
@@ -26,7 +26,7 @@ public struct PhotosPickerClient: DependencyKey {
 }
 
 extension DependencyValues {
-    var photosPickerClient: PhotosPickerClient {
+    public var photosPickerClient: PhotosPickerClient {
         get { self[PhotosPickerClient.self] }
         set { self[PhotosPickerClient.self] = newValue }
     }

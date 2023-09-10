@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import FestivlManagerApp
+@testable import OnboardingFeature
 import ComposableArchitecture
 import FestivlDependencies
 
@@ -19,9 +19,11 @@ final class SignInTests: XCTestCase {
         let store = TestStore(initialState: SignInDomain.State()) {
             SignInDomain()
         } withDependencies: {
-            $0.authenticationClient.signIn = {
+            $0.sessionClient.signIn = {
                 XCTAssert($0.email == testEmail)
                 XCTAssert($0.password == testPassword)
+
+                return "12345"
             }
         }
         
@@ -37,7 +39,7 @@ final class SignInTests: XCTestCase {
             $0.isSigningIn = true
         }
         
-        await store.receive(.successfullySignedIn) {
+        await store.receive(.successfullySignedIn("12345")) {
             $0.isSigningIn = false
         }
     }
@@ -47,7 +49,7 @@ final class SignInTests: XCTestCase {
         let store = TestStore(initialState: SignInDomain.State()) {
             SignInDomain()
         } withDependencies: {
-            $0.authenticationClient.signIn = { _ in
+            $0.sessionClient.signIn = { _ in
                 throw FestivlError.SignInError.invalidEmail
             }
         }
@@ -66,7 +68,7 @@ final class SignInTests: XCTestCase {
         let store = TestStore(initialState: SignInDomain.State()) {
             SignInDomain()
         } withDependencies: {
-            $0.authenticationClient.signIn = { _ in
+            $0.sessionClient.signIn = { _ in
                 throw FestivlError.SignInError.wrongPassword
             }
         }
@@ -85,7 +87,7 @@ final class SignInTests: XCTestCase {
         let store = TestStore(initialState: SignInDomain.State()) {
             SignInDomain()
         } withDependencies: {
-            $0.authenticationClient.signIn = { _ in
+            $0.sessionClient.signIn = { _ in
                 throw FestivlError.SignInError.other
             }
         }

@@ -12,6 +12,19 @@ import ComposableArchitecture
 
 public enum FestivlError: Error {
     case `default`(description: String)
+
+    case authorization(AuthorizationError)
+}
+
+
+extension FestivlError {
+    public enum DecodingError: Error {
+        case noID
+    }
+
+    public enum AuthorizationError: Error {
+        case notLoggedIn
+    }
 }
 
 public typealias DataStream<T> = AnyPublisher<T, FestivlError>
@@ -29,7 +42,7 @@ public extension Effect {
     }
     
     static func observe<T>(
-        _ dataStream: AnyPublisher<T, Never>,
+        _ dataStream: some Publisher<T, Never>,
         sending action: @escaping (T) -> Action
     ) -> Effect<Action> {
         Effect.publisher {

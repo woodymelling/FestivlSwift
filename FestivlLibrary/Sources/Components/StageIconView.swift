@@ -22,7 +22,9 @@ public struct StageIconView: View {
     public var body: some View {
         if let stage = stages[id: stageID] {
             GeometryReader { geo in
-                CachedAsyncImage(url: stage.iconImageURL, renderingMode: .template, placeholder: {
+                CachedAsyncIcon(
+                    url: stage.iconImageURL,
+                    placeholder: {
                     Text(stage.symbol)
                         .font(.system(size: 500, weight: .bold))
                         .minimumScaleFactor(0.001)
@@ -33,10 +35,10 @@ public struct StageIconView: View {
                 .if(stage.iconImageURL == nil, transform: {
                     $0.background(LinearGradient(colors: [stage.color, .primary], startPoint: .topLeading, endPoint: .bottomTrailing))
                 })
-                .if(colorScheme == .light, transform: {
-                    $0.foregroundColor(stage.color)
-                })
-                    .clipShape(Circle())
+//                .if(colorScheme == .light, transform: {
+//                    $0.foregroundColor(stage.color)
+//                })
+//                    .clipShape(Circle())
             }
         }
 

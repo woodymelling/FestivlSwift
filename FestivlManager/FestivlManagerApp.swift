@@ -23,9 +23,14 @@ struct FestivlManagerApp: App {
             NavigationStack {
                 FestivlManagerView(store: Store(initialState: .init()) {
                     FestivlManagerDomain()
-                        ._printChanges()
                 })
             }
         }
     }
+}
+
+#Preview {
+    FestivlManagerView(store: Store(initialState: .init()) {
+        FestivlManagerDomain()
+    })
 }

@@ -10,6 +10,7 @@ extension Target.Dependency {
     static let utlities = library(name: "Utilities")
     static let festivlDependencies = library(name: "FestivlDependencies")
     static let sharedResources = library(name: "SharedResources")
+    static let components = library(name: "Components")
     
     static let forms = product(name: "ComposableArchitectureForms", package: "composable-architecture-forms")
     
@@ -31,12 +32,16 @@ let package = Package(
             name: "ScheduleManagementFeature",
             targets: ["ScheduleManagementFeature"]
         ),
+        .library(name: "OnboardingFeature", targets: ["OnboardingFeature"]),
+        .library(name: "CriteriaUI", targets: ["CriteriaUI"])
+
     ],
     dependencies: [
         .package(name: "FestivlLibrary", path: "../FestivlLibrary"),
         
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.0.0"),
-        .package(url: "https://github.com/woodymelling/composable-architecture-forms", branch: "main")
+        .package(url: "https://github.com/woodymelling/composable-architecture-forms", branch: "main"),
+        .package(url: "https://github.com/WilhelmOks/ArrayBuilder.git", from: "1.0.0")
     ],
     targets: [
         .target(
@@ -47,7 +52,8 @@ let package = Package(
                 .models,
                 .festivlDependencies,
                 .sharedResources,
-                .forms
+                .forms,
+                "OnboardingFeature"
             ]
         ),
 
@@ -58,10 +64,32 @@ let package = Package(
                 .utlities,
                 .models,
                 .library(name: "ScheduleComponents"),
-                .festivlDependencies
+                .festivlDependencies,
             ]
         ),
         
+        .target(
+            name: "OnboardingFeature",
+            dependencies: [
+                .composableArchitecture,
+                .utlities,
+                .models,
+                .festivlDependencies,
+                .sharedResources,
+                .components,
+                .library(name: "TimeZonePicker"),
+                .library(name: "ComposablePhotosPicker"),
+                .forms,
+                "CriteriaUI"
+            ]
+        ),
+        .target(
+            name: "CriteriaUI",
+            dependencies: [
+                .utlities,
+                .product(name: "ArrayBuilderModule", package: "arraybuilder")
+            ]
+        ),
         .testTarget(
             name: "ScheduleManagementTests",
             dependencies: ["ScheduleManagementFeature"]
@@ -69,6 +97,10 @@ let package = Package(
         .testTarget(
             name: "FestivlManagerAppTests",
             dependencies: ["FestivlManagerApp", .festivlDependencies]
+        ),
+        .testTarget(
+            name: "OnboardingTests",
+            dependencies: ["OnboardingFeature", .festivlDependencies]
         )
     ]
 )

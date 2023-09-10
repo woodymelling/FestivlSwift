@@ -9,6 +9,8 @@ extension Target.Dependency {
     static var utilities: Self = "Utilities"
 
     static var composableArchitecture: Self = .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+    static var tagged: Self = .product(name: "Tagged", package: "swift-tagged")
+    static var prelude: Self = .product(name: "Prelude", package: "swift-prelude")
 }
 
 let package = Package(
@@ -24,7 +26,7 @@ let package = Package(
         .library(name: "FirebaseServiceImpl", targets: ["FirebaseServiceImpl"]),
         .library(name: "ScheduleComponents", targets: ["ScheduleComponents"]),
         .library(name: "TimeZonePicker", targets: ["TimeZonePicker"]),
-        .library(name: "ComposablePhotosPicker", targets: ["ComposablePhotosPicker"])
+        .library(name: "ComposablePhotosPicker", targets: ["ComposablePhotosPicker"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -33,19 +35,20 @@ let package = Package(
         .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-identified-collections", from: "1.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-tagged", from: "0.10.0"),
-        .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", from: "1.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-custom-dump", from: "1.0.0"),
-        
+        .package(url: "https://github.com/pointfreeco/swift-prelude.git", branch: "main"),
+
         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "10.12.0"),
         
         .package(url: "https://github.com/onevcat/Kingfisher", from: "7.9.0"),
+        .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image", from: "2.1.1"),
         .package(url: "https://github.com/apple/swift-collections", from: "1.0.4"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(name: "Models", dependencies: [
-            .product(name: "Tagged", package: "swift-tagged"),
+            .tagged,
             .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
             .target(name: "Utilities"),
             .product(name: "CustomDump", package: "swift-custom-dump"),
@@ -54,12 +57,15 @@ let package = Package(
         .target(name: "Utilities", dependencies: [
             .product(name: "IdentifiedCollections", package: "swift-identified-collections"),
             .product(name: "CustomDump", package: "swift-custom-dump"),
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+            .composableArchitecture,
+            .tagged,
+            .prelude
         ]),
         .target(name: "Components", dependencies: [
             .models,
             .target(name: "Utilities"),
             .product(name: "Kingfisher", package: "Kingfisher"),
+            .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
             .product(name: "Collections", package: "swift-collections")
         ]),
         .target(name: "FirebaseServiceImpl", dependencies: [
@@ -106,6 +112,10 @@ let package = Package(
             ]
         ),
         // MARK: Tests
-        .testTarget(name: "ComponentTests", dependencies: ["Components"])
+        .testTarget(name: "ComponentTests", dependencies: ["Components"]),
+        .testTarget(name: "ComposablePhotosPickerTests", dependencies: [
+            "ComposablePhotosPicker",
+            .composableArchitecture
+        ])
     ]
 )

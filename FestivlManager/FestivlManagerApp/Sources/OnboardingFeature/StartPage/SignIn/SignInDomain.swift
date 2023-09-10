@@ -9,15 +9,16 @@ import Foundation
 import ComposableArchitecture
 import ComposableArchitectureForms
 import FestivlDependencies
+import Models
 
 public struct SignInDomain: Reducer {
     public struct State: Equatable, HasFormState {
         
         public init() {}
         
-        @BindingState var email: String = ""
-        @BindingState var password: String = ""
-        
+        @BindingState var email: String = "woodymelling@gmail.com"
+        @BindingState var password: String = "wmelling3618"
+
         public var formState: FormState<Field> = .init()
         var submitError: String?
         
@@ -28,9 +29,8 @@ public struct SignInDomain: Reducer {
         case binding(BindingAction<State>)
         case form(FormAction<State, Field>)
         
-        case successfullySignedIn
+        case successfullySignedIn(User.ID)
         case failedToSignIn(FestivlError.SignInError?)
-        
     }
     
     public enum Field: FormField {
@@ -44,8 +44,8 @@ public struct SignInDomain: Reducer {
         }
     }
     
-    @Dependency(\.authenticationClient) var authenticationClient
-    
+    @Dependency(\.sessionClient.signIn) var signIn
+
     public var body: some ReducerOf<Self> {
         BindingReducer()
         
@@ -55,9 +55,9 @@ public struct SignInDomain: Reducer {
                 state.isSigningIn = true
                 
                 return .run { [password = state.password, email = state.email] send in
-                    try await authenticationClient.signIn(SignInUpData(email: email, password: password))
-                    
-                    await send(.successfullySignedIn)
+                    let userID = try await self.signIn(SignInUpData(email: email, password: password))
+
+                    await send(.successfullySignedIn(userID))
                     
                 } catch: { error, send in
                     await send(.failedToSignIn(error as? FestivlError.SignInError))

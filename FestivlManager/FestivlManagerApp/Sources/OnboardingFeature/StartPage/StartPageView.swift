@@ -23,17 +23,17 @@ public enum AuthenticationFlow: PickableValue {
     }
 }
 
-public struct HomePageView: View {
-    let store: StoreOf<HomePageDomain>
+public struct StartPageView: View {
+    let store: StoreOf<StartPageDomain>
     
-    public init(store: StoreOf<HomePageDomain>) {
+    public init(store: StoreOf<StartPageDomain>) {
         self.store = store
     }
     
     struct ViewState: Equatable {
         @BindingViewState var authFlow: AuthenticationFlow
         
-        init(state: BindingViewStore<HomePageDomain.State>) {
+        init(state: BindingViewStore<StartPageDomain.State>) {
             self._authFlow = state.$authFlow
         }
     }
@@ -43,7 +43,7 @@ public struct HomePageView: View {
             ScrollView {
                 VStack {
                     TitleView()
-                        .padding(.top)
+                        .padding(.top, 40)
                     
                     VStack {
                         InfoView(
@@ -152,10 +152,10 @@ public struct HomePageView: View {
 
 #Preview("Home Page") {
     NavigationStack {
-        HomePageView(
+        StartPageView(
             store: .init(
                 initialState: .init(),
-                reducer: HomePageDomain.init
+                reducer: StartPageDomain.init
             )
         )
     }

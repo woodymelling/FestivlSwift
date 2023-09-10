@@ -23,11 +23,12 @@ struct ScheduleArtistListView: View {
                 SimpleSearchableList(
                     data: viewStore.artists,
                     searchText: viewStore.$searchText,
-                    useNativeSearchBar: false
+                    isLoading: viewStore.isLoading
                 ) { artist in
                     Text(artist.name)
                         .lineLimit(1)
                 }
+                .useNativeSearchBar(false)
                 .listStyle(.plain)
             }
             .task { await viewStore.send(.task).finish() }

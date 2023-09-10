@@ -10,6 +10,8 @@ import SwiftUI
 import Utilities
 
 public enum FestivlAssets {
+    public static var logo = Image("festivlLogo", bundle: .module)
+    
     public enum LinkIcons {
         public static var spotify = Image("spotify", bundle: .module)
         public static var soundcloud = Image("soundcloud", bundle: .module)

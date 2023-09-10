@@ -136,6 +136,11 @@ extension CalendarDate: CustomDumpStringConvertible {
     }
 }
 
-extension CalendarDate: CustomStringConvertible {
-    
+extension CalendarDate: CustomStringConvertible {}
+
+public extension Date {
+    var calendarDate: CalendarDate {
+        return CalendarDate(date: self)
+    }
 }
+

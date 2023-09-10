@@ -32,9 +32,25 @@ extension Event {
         var isTestEvent: Bool?
         var scheduleIsPublished: Bool?
         var internalPreviewKey: String?
-        var workshopsColorString: String?
-        var mainEventColorString: String?
-        
+
+        init(event: Event) {
+            self.id = event.id.rawValue
+            self.name = event.name
+            self.startDate = event.startDate.date
+            self.endDate = event.endDate.date
+            self.dayStartsAtNoon = event.dayStartsAtNoon
+            self.imageURL = event.imageURL
+            self.siteMapImageURL = event.siteMapImageURL
+            self.contactNumbers = event.contactNumbers
+            self.address = event.address
+            self.latitude = event.latitude
+            self.longitude = event.longitude
+            self.timeZone = event.timeZone.identifier
+            self.isTestEvent = event.isTestEvent
+            self.scheduleIsPublished = event.scheduleIsPublished
+            self.internalPreviewKey = event.internalPreviewKey
+        }
+
         static var asEvent: (Self) -> Event = {
             
             return Event(
@@ -52,9 +68,7 @@ extension Event {
                 timeZone: TimeZone(identifier: $0.timeZone ?? "") ?? NSTimeZone.default, // TODO replace with default timeZone
                 isTestEvent: $0.isTestEvent ?? false,
                 scheduleIsPublished: $0.scheduleIsPublished ?? true,
-                internalPreviewKey: $0.internalPreviewKey,
-                mainEventColor: $0.mainEventColorString.map { Color(hex: $0) } ?? .blue,
-                workshopsColor: $0.workshopsColorString.map { Color(hex: $0) } ?? .orange
+                internalPreviewKey: $0.internalPreviewKey
             )
         }
     }
@@ -77,8 +91,18 @@ extension EventClientKey: DependencyKey {
             return FirebaseService.observeDocument(db.collection("events").document(eventID.rawValue), mapping: Event.DTO.asEvent)
             .eraseToAnyPublisher()
         },
-        createEvent: { _ in
-            fatalError("Not Implemented")
+        createEvent: { eventData in
+            @Dependency(\.organizationID) var organizationID
+
+            var eventData = Event.DTO(event: eventData)
+            eventData.id = nil
+
+            let response = try await FirebaseService.createDocument(
+                reference: db.collection("organizations").document(organizationID.rawValue).collection("events"),
+                data: eventData
+            )
+
+            return Event.ID(response.documentID)
         },
         editEvent: { _ in
             fatalError("Not Implemented")

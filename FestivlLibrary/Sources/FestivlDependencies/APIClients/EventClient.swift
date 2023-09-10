@@ -25,7 +25,7 @@ public struct EventClient {
         self.getPublicEvents = getEvents
         self.getEvent = getEvent
         self.getMyEvents = getMyEvents
-        self.createEvent = createEvent
+        self._createEvent = createEvent
         self.editEvent = editEvent
     }
     
@@ -33,8 +33,30 @@ public struct EventClient {
     public var getEvent: () -> DataStream<Event>
     
     public var getMyEvents: () -> DataStream<Event>
-    public var createEvent: (Event) async throws -> (Event.ID)
+    public var _createEvent: (Event) async throws -> (Event.ID)
     public var editEvent: (Event) async throws -> Void
+
+
+    public func createEvent(
+        name: String,
+        startDate: CalendarDate,
+        endDate: CalendarDate,
+        dayStartsAtNoon: Bool,
+        timeZone: TimeZone,
+        imageURL: URL? = nil
+    )  async throws -> Event.ID {
+        try await self._createEvent(
+            Event(
+                id: .init(""),
+                name: name,
+                startDate: startDate,
+                endDate: endDate,
+                dayStartsAtNoon: dayStartsAtNoon,
+                timeZone: timeZone,
+                isTestEvent: true
+            )
+        )
+    }
 }
 
 public enum EventClientKey: TestDependencyKey {
@@ -84,8 +106,6 @@ class InMemoryEventService {
         return event.id
     }
 }
-
-
 
 
 extension Event {
