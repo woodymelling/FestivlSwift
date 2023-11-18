@@ -8,29 +8,20 @@
 import Foundation
 import Models
 import IdentifiedCollections
+import DependenciesMacros
 import XCTestDynamicOverlay
 import Dependencies
 import Combine
 
+@DependencyClient
 public struct ArtistClient {
-    public init(
-        getArtists: @escaping () -> DataStream<IdentifiedArrayOf<Artist>>,
-        getArtist: @escaping (Event.ID, Artist.ID) -> DataStream<Artist>
-    ) {
-        self.getArtists = getArtists
-        self.getArtist = getArtist
-    }
-    
-    public var getArtists: () -> DataStream<IdentifiedArrayOf<Artist>>
-    public var getArtist: (Event.ID, Artist.ID) -> DataStream<Artist>
+    public var getArtists: () -> DataStream<IdentifiedArrayOf<Artist>> = { Empty().eraseToDataStream() }
+    public var getArtist: (Event.ID, Artist.ID) -> DataStream<Artist> = { _, _ in Empty().eraseToDataStream() }
 }
 
-public enum ArtistClientKey: TestDependencyKey {
-    public static var testValue = ArtistClient(
-        getArtists: unimplemented("ArtistClient.getArtists"),
-        getArtist: unimplemented("ArtistClient.getArtist")
-    )
-    
+extension ArtistClient: TestDependencyKey {
+    public static var testValue: ArtistClient = Self()
+
     public static var previewValue = ArtistClient(
         getArtists: {
             Just(Artist.testValues.asIdentifiedArray).eraseToDataStream()
@@ -41,7 +32,7 @@ public enum ArtistClientKey: TestDependencyKey {
 
 public extension DependencyValues {
     var artistClient: ArtistClient {
-        get { self[ArtistClientKey.self] }
-        set { self[ArtistClientKey.self] = newValue }
+        get { self[ArtistClient.self] }
+        set { self[ArtistClient.self] = newValue }
     }
 }

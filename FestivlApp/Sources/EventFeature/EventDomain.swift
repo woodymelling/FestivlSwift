@@ -105,11 +105,12 @@ public struct EventFeature: Reducer {
                 
                 NSTimeZone.default = data.event.timeZone
                 
-                return .run { _ in
-                    async let _ = await ImageCacher.preFetchImage(urls: data.artists.compactMap { $0.imageURL })
-                    async let _ = await ImageCacher.preFetchImage(urls: data.stages.compactMap { $0.iconImageURL })
-                    async let _ = await ImageCacher.preFetchImage(urls: data.event.imageURL.map { [$0] } ?? [] )
-                }
+                return .none
+//                return .run { _ in
+//                    async let _ = await ImageCacher.preFetchImage(urls: data.artists.compactMap { $0.imageURL })
+//                    async let _ = await ImageCacher.preFetchImage(urls: data.stages.compactMap { $0.iconImageURL })
+//                    async let _ = await ImageCacher.preFetchImage(urls: data.event.imageURL.map { [$0] } ?? [] )
+//                }
                 
             case let .userNotification(.willPresentNotification(_, completion)):
                 completion([.list, .banner, .sound])

@@ -56,9 +56,9 @@ struct LoadingView<Content: View>: View {
         if let eventData, rotationAngle >= 720 {
             content(eventData)
         } else {
-            CachedAsyncImage(url: eventData?.event.imageURL, renderingMode: .template, placeholder: {
+            FestivlCachedAsyncImage(url: eventData?.event.imageURL) {
                 ProgressView()
-            })
+            }
             .frame(square: 200)
             .rotationEffect(Angle(degrees: rotationAngle))
             .onReceive(timer) { _ in

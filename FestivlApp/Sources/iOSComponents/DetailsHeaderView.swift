@@ -29,14 +29,14 @@ public struct DetailsHeaderView<Content: View>: View {
         ZStack(alignment: .bottom) {
             
             Group {
-                if let imageURL = imageURL {
-                    CachedAsyncImage(url: imageURL) { ProgressView() }
-                        .aspectRatio(contentMode: .fill)
-                } else {
-                    CachedAsyncImage(url: eventImageURL, renderingMode: .template) {
-                        ProgressView()
-                    }
-                }
+//                if let imageURL = imageURL {
+//                    CachedAsyncImage(url: imageURL) { ProgressView() }
+//                        .aspectRatio(contentMode: .fill)
+//                } else {
+//                    CachedAsyncImage(url: eventImageURL, renderingMode: .template) {
+//                        ProgressView()
+//                    }
+//                }
             }
             .frame(height: initialHeight)
             .aspectRatio(contentMode: .fill)

@@ -25,11 +25,13 @@ public class UserDefaultStore {
 public enum OrganizationIDDependencyKey: DependencyKey {
     public static var liveValue: Organization.ID = unimplemented("Accessed EventID before it has been set")
     public static var testValue: Organization.ID = unimplemented("OrganizationID not set")
+    public static var previewValue: Organization.ID = ""
 }
 
 public enum EventIDDependencyKey: DependencyKey {
-    public static var liveValue: Event.ID = unimplemented("Accessed EventID before it has been set")
+    public static var liveValue: Event.ID = "" // unimplemented("Accessed EventID before it has been set")
     public static var testValue: Event.ID = unimplemented("EventID not set")
+    public static var previewValue: Event.ID = ""
 }
 
 

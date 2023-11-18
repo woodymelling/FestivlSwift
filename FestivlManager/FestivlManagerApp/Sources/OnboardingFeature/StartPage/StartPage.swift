@@ -1,20 +1,73 @@
 //
-//  File.swift
+//  HomePageDomain.swift
+//  
 //
-//
-//  Created by Woodrow Melling on 7/25/23.
+//  Created by Woodrow Melling on 7/27/23.
 //
 
 import Foundation
-import SwiftUI
 import ComposableArchitecture
+import Models
+import SwiftUI
 import SharedResources
-import Utilities
+
+@Reducer
+public struct StartPageDomain {
+    public init() {}
+    
+    public struct State: Equatable {
+        public init() {}
+        
+        var signIn: SignInDomain.State = .init()
+        var signUp: SignUpDomain.State = .init()
+        
+        @BindingState var authFlow: AuthenticationFlow = .signUp
+    }
+    
+    public enum Action: Equatable, BindableAction {
+        case binding(BindingAction<State>)
+        
+        case signIn(SignInDomain.Action)
+        case signUp(SignUpDomain.Action)
+
+        case delegate(Delegate)
+
+        public enum Delegate: Equatable {
+            case didSignUp(User.ID)
+            case didSignIn(User.ID)
+        }
+    }
+    
+    public var body: some ReducerOf<Self> {
+        BindingReducer()
+
+        Reduce { state, action in
+            switch action {
+            case let .signIn(.successfullySignedIn(userID)):
+                return .send(.delegate(.didSignIn(userID)))
+
+            case let .signUp(.succesfullyCreatedAccount(userID)):
+                return .send(.delegate(.didSignUp(userID)))
+
+            case .delegate, .binding, .signIn, .signUp:
+                return .none
+            }
+        }
+
+        Scope(state: \.signIn, action: \.signIn) {
+            SignInDomain()
+        }
+        
+        Scope(state: \.signUp, action: \.signUp) {
+            SignUpDomain()
+        }
+    }
+}
 
 
 public enum AuthenticationFlow: PickableValue {
     case signUp, signIn
-    
+
     var label: LocalizedStringKey {
         switch self {
         case .signIn: "Sign In"
@@ -25,26 +78,26 @@ public enum AuthenticationFlow: PickableValue {
 
 public struct StartPageView: View {
     let store: StoreOf<StartPageDomain>
-    
+
     public init(store: StoreOf<StartPageDomain>) {
         self.store = store
     }
-    
+
     struct ViewState: Equatable {
         @BindingViewState var authFlow: AuthenticationFlow
-        
+
         init(state: BindingViewStore<StartPageDomain.State>) {
             self._authFlow = state.$authFlow
         }
     }
-    
+
     public var body: some View {
         WithViewStore(store, observe: ViewState.init) { viewStore in
             ScrollView {
                 VStack {
                     TitleView()
                         .padding(.top, 40)
-                    
+
                     VStack {
                         InfoView(
                             title: "Your Festivals App",
@@ -54,7 +107,7 @@ public struct StartPageView: View {
                                 .resizable()
                                 .foregroundStyle(Color.systemBlue)
                         }
-                        
+
                         InfoView(
                             title: "Manage Schedule",
                             "Create the schedule for your event, and update info in the app live during showtime."
@@ -63,7 +116,7 @@ public struct StartPageView: View {
                                 .resizable()
                                 .foregroundStyle(Color.systemPurple)
                         }
-                        
+
                         InfoView(
                             title: "Notifications",
                             "Real-time notifications for schedule changes and important updates, keeping attendees informed during the festival."
@@ -73,28 +126,18 @@ public struct StartPageView: View {
                                 .foregroundStyle(Color.systemRed)
                         }
                     }
-                    
+
                     SegmentedPickerWithPages(selectedOption: viewStore.$authFlow) {
                         switch $0 {
                         case .signIn:
-                            SignInView(
-                                store: self.store.scope(
-                                    state: \.signInState,
-                                    action: { .signIn($0) }
-                                )
-                            )
+                            SignInView(store: self.store.scope(state: \.signIn, action: \.signIn))
                         case .signUp:
-                            SignUpView(
-                                store: self.store.scope(
-                                    state: \.signUpState,
-                                    action: { .signUp($0) }
-                                )
-                            )
+                            SignUpView(store: self.store.scope(state: \.signUp, action: \.signUp))
                         }
                     }
                     .padding(.top)
                     .frame(height: 300) // Scrollview is making this resize improperly
-                    
+
                     Spacer()
                 }
             }
@@ -102,13 +145,13 @@ public struct StartPageView: View {
         }
 
     }
-    
+
     struct TitleView: View {
         var body: some View {
             VStack(spacing: 0) {
                 Text("Welcome to                  ")
                     .lineLimit(1)
-                
+
                 Text("Festivl Manager  ")
                     .foregroundStyle(Color.accentColor)
                     .lineLimit(1)
@@ -120,28 +163,28 @@ public struct StartPageView: View {
             .minimumScaleFactor(0.1)
         }
     }
-    
+
     struct InfoView<ImageContent: View>: View {
         var title: LocalizedStringKey
         var content: LocalizedStringKey
         var image: () -> ImageContent
-        
+
         init(title: LocalizedStringKey, _ content: LocalizedStringKey, image: @escaping () -> ImageContent) {
             self.title = title
             self.content = content
             self.image = image
         }
-        
+
         var body: some View {
             HStack(spacing: 20) {
                 image()
                     .aspectRatio(contentMode: .fit)
                     .frame(square: 60)
-                
+
                 VStack(alignment: .leading) {
                     Text(title)
                         .font(.headline)
-                    
+
                     Text(content)
                         .font(.caption)
                 }
@@ -161,6 +204,7 @@ public struct StartPageView: View {
     }
 }
 
+// TODO: Move to Components or Utilities
 protocol PickableValue: CaseIterable, Hashable {
     var label: LocalizedStringKey { get }
 }
@@ -173,7 +217,7 @@ where SelectionValue: PickableValue,
     init(selection: Binding<SelectionValue>, label: () -> Label) {
         self.init(
             selection: selection,
-            content: { 
+            content: {
                 ForEach(Array(SelectionValue.allCases), id: \.self) {
                     Text($0.label)
                 }
@@ -181,12 +225,12 @@ where SelectionValue: PickableValue,
             label: label
         )
     }
-    
+
     init(_ titleKey: LocalizedStringKey, selection: Binding<SelectionValue>) {
         self.init(
             titleKey,
             selection: selection,
-            content: { 
+            content: {
                 ForEach(Array(SelectionValue.allCases), id: \.self) {
                     Text($0.label)
                 }
@@ -196,10 +240,10 @@ where SelectionValue: PickableValue,
 }
 
 struct SegmentedPickerWithPages<SelectionValue: PickableValue, Content: View>: View {
-    
+
     @Binding var selectedOption: SelectionValue
     @ViewBuilder var content: (SelectionValue) -> Content
-    
+
     init(
         selectedOption: Binding<SelectionValue>,
         @ViewBuilder content: @escaping (SelectionValue) -> Content
@@ -207,12 +251,12 @@ struct SegmentedPickerWithPages<SelectionValue: PickableValue, Content: View>: V
         self._selectedOption = selectedOption
         self.content = content
     }
-    
+
     var body: some View {
         VStack {
             Picker("Sign In / Out", selection: $selectedOption)
                 .pickerStyle(.segmented)
-            
+
             TabView(selection: $selectedOption) {
                 ForEach(Array(SelectionValue.allCases), id: \.self) {
                     content($0)
@@ -226,10 +270,10 @@ struct SegmentedPickerWithPages<SelectionValue: PickableValue, Content: View>: V
 
 
 fileprivate struct SegmentedPickerWithPages_Preview: View {
-    
+
     enum Option: PickableValue {
         case first, second, third
-        
+
         var label: LocalizedStringKey {
             switch self {
             case .first: "First"
@@ -238,9 +282,9 @@ fileprivate struct SegmentedPickerWithPages_Preview: View {
             }
         }
     }
-    
+
     @State var option: Option = .first
-    
+
     var body: some View {
         SegmentedPickerWithPages(selectedOption: $option) {
             switch $0 {

@@ -55,7 +55,7 @@ public struct WorkshopsFeature: Reducer {
                 return .run { send in
                     for try await (event, workshops) in Publishers.CombineLatest(
                         eventClient.getEvent(),
-                        workshopsClient.fetchWorkshops(eventID)
+                        workshopsClient.fetchWorkshops()
                     ).values {
                         await send(.loadedData(event, workshops.sortedByDay))
                     }

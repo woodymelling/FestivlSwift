@@ -32,7 +32,7 @@ struct FirebaseStageDTO: Codable {
     }
 }
 
-extension StageClientKey: DependencyKey {
+extension StageClient: DependencyKey {
     public static var liveValue = StageClient(
         getStages: {
             @Dependency(\.eventID) var eventID

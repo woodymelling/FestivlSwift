@@ -33,22 +33,38 @@ extension Event {
         var scheduleIsPublished: Bool?
         var internalPreviewKey: String?
 
-        init(event: Event) {
-            self.id = event.id.rawValue
-            self.name = event.name
-            self.startDate = event.startDate.date
-            self.endDate = event.endDate.date
-            self.dayStartsAtNoon = event.dayStartsAtNoon
-            self.imageURL = event.imageURL
-            self.siteMapImageURL = event.siteMapImageURL
-            self.contactNumbers = event.contactNumbers
-            self.address = event.address
-            self.latitude = event.latitude
-            self.longitude = event.longitude
-            self.timeZone = event.timeZone.identifier
-            self.isTestEvent = event.isTestEvent
-            self.scheduleIsPublished = event.scheduleIsPublished
-            self.internalPreviewKey = event.internalPreviewKey
+        init(
+            id: String? = nil,
+            name: String,
+            startDate: Date,
+            endDate: Date,
+            dayStartsAtNoon: Bool,
+            imageURL: URL? = nil,
+            siteMapImageURL: URL? = nil,
+            contactNumbers: IdentifiedArrayOf<ContactNumber>? = nil,
+            address: String? = nil,
+            latitude: String? = nil,
+            longitude: String? = nil,
+            timeZone: String? = nil,
+            isTestEvent: Bool? = nil,
+            scheduleIsPublished: Bool? = nil,
+            internalPreviewKey: String? = nil
+        ) {
+            self.id = id
+            self.name = name
+            self.startDate = startDate
+            self.endDate = endDate
+            self.dayStartsAtNoon = dayStartsAtNoon
+            self.imageURL = imageURL
+            self.siteMapImageURL = siteMapImageURL
+            self.contactNumbers = contactNumbers
+            self.address = address
+            self.latitude = latitude
+            self.longitude = longitude
+            self.timeZone = timeZone
+            self.isTestEvent = isTestEvent
+            self.scheduleIsPublished = scheduleIsPublished
+            self.internalPreviewKey = internalPreviewKey
         }
 
         static var asEvent: (Self) -> Event = {
@@ -76,9 +92,9 @@ extension Event {
 }
 
 
-extension EventClientKey: DependencyKey {
+extension EventClient: DependencyKey {
     public static var liveValue = EventClient(
-        getEvents: {
+        getPublicEvents: {
             FirebaseService.observeQuery(db.collection("events").order(by: "startDate", descending: true), mapping: Event.DTO.asEvent)
         },
         getEvent: {
@@ -91,11 +107,15 @@ extension EventClientKey: DependencyKey {
             return FirebaseService.observeDocument(db.collection("events").document(eventID.rawValue), mapping: Event.DTO.asEvent)
             .eraseToAnyPublisher()
         },
-        createEvent: { eventData in
+        createEvent: { name, startDate, endDate, dayStartsAtNoon, timeZone, imageURL in
             @Dependency(\.organizationID) var organizationID
 
-            var eventData = Event.DTO(event: eventData)
-            eventData.id = nil
+            var eventData = Event.DTO(
+                name: name,
+                startDate: startDate.date,
+                endDate: endDate.date,
+                dayStartsAtNoon: dayStartsAtNoon
+            )
 
             let response = try await FirebaseService.createDocument(
                 reference: db.collection("organizations").document(organizationID.rawValue).collection("events"),

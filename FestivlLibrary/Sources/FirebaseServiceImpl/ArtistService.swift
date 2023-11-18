@@ -41,7 +41,7 @@ struct FirebaseArtistDTO: Codable {
     }
 }
 
-extension ArtistClientKey: DependencyKey {
+extension ArtistClient: DependencyKey {
     public static var liveValue = ArtistClient(
         getArtists: {
             @Dependency(\.eventID) var eventID

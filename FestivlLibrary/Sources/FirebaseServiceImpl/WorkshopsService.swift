@@ -45,15 +45,19 @@ struct FirebaseWorkshopDTO: Codable {
     }
 }
 
-extension WorkshopsClientDependencyKey: DependencyKey {
+extension WorkshopsClient: DependencyKey {
     public static var liveValue = WorkshopsClient(
-        fetchWorkshops: { eventID in
-            FirebaseService.observeQuery(
+        fetchWorkshops: {
+            @Dependency(\.eventID) var eventID
+
+            return FirebaseService.observeQuery(
                 db.collection("events").document(eventID.rawValue).collection("workshops").order(by: "name"),
                 mapping: FirebaseWorkshopDTO.asWorkshop
             )
         },
-        createWorkshop: { eventID, workshop in
+        createWorkshop: { workshop in
+            @Dependency(\.eventID) var eventID
+
             try await FirebaseService.createDocument(
                 reference: db.collection("events").document(eventID.rawValue).collection("workshops"),
                 data: FirebaseWorkshopDTO(from: workshop)

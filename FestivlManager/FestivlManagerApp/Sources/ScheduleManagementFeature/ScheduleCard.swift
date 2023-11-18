@@ -10,7 +10,8 @@ import ComposableArchitecture
 import Models
 import Tagged
 
-public struct ScheduleCardDomain: Reducer {
+@Reducer
+public struct ScheduleCardDomain {
     
     public struct State: Equatable, Identifiable {
         var scheduleItem: ScheduleItem

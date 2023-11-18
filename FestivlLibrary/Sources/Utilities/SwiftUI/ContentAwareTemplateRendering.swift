@@ -46,9 +46,11 @@ extension View {
         ImageRenderer(content: self).cgImage
     }
 
+    #if os(iOS)
     public var uiImage: UIImage? {
         ImageRenderer(content: self).uiImage
     }
+    #endif
 }
 
 extension View {

@@ -10,42 +10,33 @@ import Foundation
 import Combine
 import Models
 import Dependencies
+import DependenciesMacros
 import Utilities
 import IdentifiedCollections
 
 
+@DependencyClient
 public struct WorkshopsClient {
-    public init(
-        fetchWorkshops: @escaping (Event.ID) -> DataStream<IdentifiedArrayOf<Workshop>>,
-        createWorkshop: @escaping (Event.ID, Workshop) async throws -> Void
-    ) {
-        self.fetchWorkshops = fetchWorkshops
-        self.createWorkshop = createWorkshop
-    }
-    
-    public var fetchWorkshops: (Event.ID) -> DataStream<IdentifiedArrayOf<Workshop>>
-    public var createWorkshop: (Event.ID, Workshop) async throws -> Void
+    public var fetchWorkshops: () -> DataStream<IdentifiedArrayOf<Workshop>> = { Empty().eraseToDataStream() }
+    public var createWorkshop: (Workshop) async throws -> Void
 }
 
 
-public struct WorkshopsClientDependencyKey: TestDependencyKey {
-    public static var testValue = WorkshopsClient(
-        fetchWorkshops: unimplemented("WorkshopsClient.fetchWorkshops"),
-        createWorkshop: unimplemented("WorkshopsClient.createWorkshop")
-    )
-    
+extension WorkshopsClient: TestDependencyKey {
+    public static var testValue: WorkshopsClient = Self()
+
     public static var previewValue = WorkshopsClient(
-        fetchWorkshops: { _ in
+        fetchWorkshops: {
             Just(Workshop.testData.values.flatMap { $0 }.asIdentifiedArray)
                 .eraseToDataStream()
         },
-        createWorkshop: { _, _ in }
+        createWorkshop: { _ in }
     )
 }
 
 extension DependencyValues {
     public var workshopsClient: WorkshopsClient {
-        get { self[WorkshopsClientDependencyKey.self] }
-        set { self[WorkshopsClientDependencyKey.self] = newValue }
+        get { self[WorkshopsClient.self] }
+        set { self[WorkshopsClient.self] = newValue }
     }
 }

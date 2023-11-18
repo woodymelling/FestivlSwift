@@ -10,8 +10,10 @@ import ComposableArchitecture
 import FestivlDependencies
 import Models
 import Utilities
+import SwiftUI
 
-public struct ScheduleManagementDomain: Reducer {
+@Reducer
+public struct ScheduleManagementDomain {
     
     public init() {}
     
@@ -99,14 +101,70 @@ public struct ScheduleManagementDomain: Reducer {
                 return .none
             }
         }
-        .ifLet(\.scheduleState, action: /Action.scheduleAction) {
+        .ifLet(\.scheduleState, action: \.scheduleAction) {
             ScheduleDomain()
-                ._printChanges()
         }
         
         // Always keep sidebar lists running
-        Scope(state: \.artistListState, action: /Action.artistListAction) {
+        Scope(state: \.artistListState, action: \.artistListAction) {
             ScheduleArtistListDomain()
         }
     }
+}
+
+
+public struct ScheduleManagementView: View {
+    public init(store: StoreOf<ScheduleManagementDomain>) {
+        self.store = store
+    }
+
+    let store: StoreOf<ScheduleManagementDomain>
+
+    @Dependency(\.eventID) var eventID
+
+    struct ViewState: Equatable {
+        var presentingArtistList: Bool
+
+        init(_ state: ScheduleManagementDomain.State) {
+            presentingArtistList = state.presentingArtistList
+        }
+    }
+
+    public var body: some View {
+        WithViewStore(store, observe: ViewState.init ) { viewStore in
+            IfLetStore(store.scope(state: \.scheduleState, action: \.scheduleAction)) {
+                ScheduleView(store: $0)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding()
+            }
+            .leadingSidebar(isPresented: viewStore.presentingArtistList) {
+                ScheduleArtistListView(store: store.scope(state: \.artistListState, action: \.artistListAction))
+            }
+            .task { await viewStore.send(.task).finish() }
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Artists", systemImage: "person.3") {
+                        viewStore.send(.didTapArtistListToggle)
+                    }
+                    .symbolVariant(viewStore.presentingArtistList ? .fill : .none)
+                }
+            }
+
+        }
+    }
+}
+
+
+// MARK: - Preview
+#Preview("Main Schedule") {
+    NavigationStack {
+        ScheduleManagementView(
+            store: Store(
+                initialState: .init()
+            ) {
+                ScheduleManagementDomain()
+            }
+        )
+    }
+    .environment(\.stages, .previewData)
 }

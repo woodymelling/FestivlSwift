@@ -116,7 +116,7 @@ private class ScheduleService {
 }
 
 
-extension ScheduleClientKey: DependencyKey {
+extension ScheduleClient: DependencyKey {
     public static var liveValue = ScheduleClient(
         getSchedule: {
             @Dependency(\.eventID) var eventID

@@ -8,6 +8,7 @@
 import Foundation
 import Models
 import Dependencies
+import DependenciesMacros
 import XCTestDynamicOverlay
 import Utilities
 import Combine
@@ -29,23 +30,24 @@ public extension UserFavorites {
 }
 
 // MARK: API
+@DependencyClient
 public struct UserFavoritesClient {
-    public let toggleArtistFavorite: (Artist.ID) -> Void
-    public let userFavoritesPublisher: () -> DataStream<UserFavorites>
-    public let updateScheduleData: (Schedule, IdentifiedArrayOf<Artist>, IdentifiedArrayOf<Stage>) -> Void
-    
-    public let updateNotificationSettings: (Bool, Int) -> Void
-    
-    public let registerNotificationCategories: () -> Void
-    
-    public var notificationsEnabled: () -> Bool
-    public var beforeSetNotificationTime: () -> Int
-    
+    public var toggleArtistFavorite: (Artist.ID) -> Void
+    public var userFavoritesPublisher: () -> DataStream<UserFavorites> = { Empty().eraseToDataStream() }
+    public var updateScheduleData: (Schedule, IdentifiedArrayOf<Artist>, IdentifiedArrayOf<Stage>) -> Void
+
+    public var updateNotificationSettings: (_ notificationsEnabled: Bool, _ beforeSetNotificationTime: Int) -> Void
+
+    public var registerNotificationCategories: () -> Void
+
+    public var notificationsEnabled: () -> Bool = { false }
+    public var beforeSetNotificationTime: () -> Int = { 0 }
+
     public var sendNotificationsNow: () -> Void
 }
 
 // MARK: DependencyKey
-public enum UserFavoritesClientKey: DependencyKey {
+extension UserFavoritesClient: DependencyKey {
     public static var liveValue: UserFavoritesClient = .init(
         toggleArtistFavorite: UserFavoritesStore.shared.toggleArtistFavorite(artistID:),
         userFavoritesPublisher: UserFavoritesStore.shared.publisher.eraseToDataStream,
@@ -63,17 +65,8 @@ public enum UserFavoritesClientKey: DependencyKey {
         sendNotificationsNow: { UserFavoritesStore.shared.regenerateNotifications(sendNow: true) }
     )
     
-    public static var testValue: UserFavoritesClient = .init(
-        toggleArtistFavorite: unimplemented("UserFavoritesClient.toggleArtistFavorite"),
-        userFavoritesPublisher: unimplemented("UserFavoritesClient.userFavoritesPublisher"),
-        updateScheduleData: unimplemented("UserFavoritesClient.updateScheduleData"),
-        updateNotificationSettings: unimplemented("UserFavoritesClient.updateNotificationsSettings"),
-        registerNotificationCategories: unimplemented("UserFavoritesclient.registerNotificationCategories"),
-        notificationsEnabled: unimplemented("UserFavoritesClient.notificationsEnabled"),
-        beforeSetNotificationTime: unimplemented("UserFavoritesClient.beforeSetNotificationTime"),
-        sendNotificationsNow: unimplemented("UserFavoritesclient.sendNotificationsNow")
-    )
-    
+    public static var testValue: UserFavoritesClient = Self()
+
     public static var previewValue: UserFavoritesClient = .init(
         toggleArtistFavorite: UserFavoritesPreviewStore.shared.toggleArtistFavorite,
         userFavoritesPublisher: UserFavoritesPreviewStore.shared.userFavoritesPublisher,
@@ -88,8 +81,8 @@ public enum UserFavoritesClientKey: DependencyKey {
 
 public extension DependencyValues {
     var userFavoritesClient: UserFavoritesClient {
-        get { self[UserFavoritesClientKey.self] }
-        set { self[UserFavoritesClientKey.self] = newValue }
+        get { self[UserFavoritesClient.self] }
+        set { self[UserFavoritesClient.self] = newValue }
     }
 }
 

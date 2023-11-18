@@ -10,21 +10,17 @@ import Models
 import IdentifiedCollections
 import XCTestDynamicOverlay
 import Dependencies
+import DependenciesMacros
 import Combine
 
+@DependencyClient
 public struct StageClient {
-    public init(getStages: @escaping () -> DataStream<IdentifiedArrayOf<Stage>>) {
-        self.getStages = getStages
-    }
-    
-    public var getStages: () -> DataStream<IdentifiedArrayOf<Stage>>
+    public var getStages: () -> DataStream<IdentifiedArrayOf<Stage>> = { Empty().eraseToDataStream() }
 }
 
-public enum StageClientKey: TestDependencyKey {
-    public static var testValue = StageClient(
-        getStages: XCTUnimplemented("StageClient.getStages")
-    )
-    
+extension StageClient: TestDependencyKey {
+    public static var testValue = Self()
+
     public static var previewValue = StageClient(
         getStages: { Just(Stage.previewData.asIdentifiedArray).eraseToDataStream() }
     )
@@ -32,8 +28,8 @@ public enum StageClientKey: TestDependencyKey {
 
 public extension DependencyValues {
     var stageClient: StageClient {
-        get { self[StageClientKey.self] }
-        set { self[StageClientKey.self] = newValue }
+        get { self[StageClient.self] }
+        set { self[StageClient.self] = newValue }
     }
 }
 

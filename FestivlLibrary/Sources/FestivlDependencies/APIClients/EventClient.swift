@@ -10,69 +10,50 @@ import Models
 import IdentifiedCollections
 import XCTestDynamicOverlay
 import Dependencies
+import DependenciesMacros
 import Combine
 import Tagged
 import Utilities
 
+@DependencyClient
 public struct EventClient {
-    public init(
-        getEvents: @escaping () -> DataStream<IdentifiedArrayOf<Event>>,
-        getEvent: @escaping () -> DataStream<Event>,
-        getMyEvents: @escaping () -> DataStream<Event>,
-        createEvent: @escaping (Event) async throws -> (Event.ID),
-        editEvent: @escaping (Event) async throws -> Void
-    ) {
-        self.getPublicEvents = getEvents
-        self.getEvent = getEvent
-        self.getMyEvents = getMyEvents
-        self._createEvent = createEvent
-        self.editEvent = editEvent
-    }
-    
-    public var getPublicEvents: () -> DataStream<IdentifiedArrayOf<Event>>
-    public var getEvent: () -> DataStream<Event>
-    
-    public var getMyEvents: () -> DataStream<Event>
-    public var _createEvent: (Event) async throws -> (Event.ID)
+    public var getPublicEvents: () -> DataStream<IdentifiedArrayOf<Event>> = { Empty().eraseToDataStream() }
+    public var getEvent: () -> DataStream<Event> = { Empty().eraseToDataStream() }
+    public var getMyEvents: () -> DataStream<Event> = { Empty().eraseToDataStream() }
+
+    public var createEvent: (
+        _ name: String,
+        _ startDate: CalendarDate,
+        _ endDate: CalendarDate,
+        _ dayStartsAtNoon: Bool,
+        _ timeZone: TimeZone,
+        _ imageURL: URL?
+    ) async throws -> (Event.ID)
+
     public var editEvent: (Event) async throws -> Void
-
-
-    public func createEvent(
-        name: String,
-        startDate: CalendarDate,
-        endDate: CalendarDate,
-        dayStartsAtNoon: Bool,
-        timeZone: TimeZone,
-        imageURL: URL? = nil
-    )  async throws -> Event.ID {
-        try await self._createEvent(
-            Event(
-                id: .init(""),
-                name: name,
-                startDate: startDate,
-                endDate: endDate,
-                dayStartsAtNoon: dayStartsAtNoon,
-                timeZone: timeZone,
-                isTestEvent: true
-            )
-        )
-    }
 }
 
-public enum EventClientKey: TestDependencyKey {
-    public static var testValue = EventClient(
-        getEvents: unimplemented("EventClient.getEvents"),
-        getEvent: unimplemented("EventClient.getMyEvents"),
-        getMyEvents: unimplemented("EventClient.getEvent"),
-        createEvent: unimplemented("EventClient.createEvent"),
-        editEvent: unimplemented("EventClient.editEvent")
-    )
-    
+extension EventClient: TestDependencyKey {
+    public static var testValue: EventClient = Self()
+
     public static var previewValue = EventClient(
-        getEvents: { .just(InMemoryEventService.shared.events) },
+        getPublicEvents: {
+            .just(InMemoryEventService.shared.events)
+        },
         getEvent: { .just(Event.previewData) },
         getMyEvents: { .just(Event.previewData) },
-        createEvent: { return try await InMemoryEventService.shared.createEvent($0) },
+        createEvent: { name, startDate, endDate, dayStartsAtNoon, timeZone, imageURL in
+            try await InMemoryEventService.shared.createEvent(
+                Event(
+                    id: "",
+                    name: name,
+                    startDate: startDate,
+                    endDate: endDate,
+                    dayStartsAtNoon: dayStartsAtNoon,
+                    timeZone: timeZone
+                )
+            )
+        },
         editEvent: {
             if let event = InMemoryEventService.shared.events[id: $0.id] {
                 InMemoryEventService.shared.events[id: $0.id] = $0
@@ -86,8 +67,8 @@ public enum EventClientKey: TestDependencyKey {
 
 public extension DependencyValues {
     var eventClient: EventClient {
-        get { self[EventClientKey.self] }
-        set { self[EventClientKey.self] = newValue }
+        get { self[EventClient.self] }
+        set { self[EventClient.self] = newValue }
     }
 }
 

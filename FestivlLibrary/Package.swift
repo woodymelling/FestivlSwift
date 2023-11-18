@@ -15,7 +15,7 @@ extension Target.Dependency {
 
 let package = Package(
     name: "FestivlLibrary",
-    platforms: [.iOS(.v16), .macOS(.v12)],
+    platforms: [.iOS(.v16), .macOS(.v13)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(name: "Models", targets: ["Models"]),
@@ -31,8 +31,8 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.0.0"),
-        .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.0.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "store-tree"),
+        .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.1.0"),
         .package(url: "https://github.com/pointfreeco/swift-identified-collections", from: "1.0.0"),
         .package(url: "https://github.com/pointfreeco/swift-tagged", from: "0.10.0"),
         .package(url: "https://github.com/pointfreeco/swift-custom-dump", from: "1.0.0"),
@@ -91,6 +91,7 @@ let package = Package(
             dependencies: [
                 .models,
                 .composableArchitecture,
+                .product(name: "DependenciesMacros", package: "swift-dependencies")
             ]
         ),
         .target(

@@ -101,8 +101,6 @@ struct TimeZoneList: View {
         .navigationTitle("Time Zone")
         .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
         .autocorrectionDisabled()
-
-
     }
 }
 

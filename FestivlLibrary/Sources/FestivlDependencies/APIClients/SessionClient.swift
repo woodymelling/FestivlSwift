@@ -8,27 +8,12 @@
 import Foundation
 import Models
 import XCTestDynamicOverlay
+import DependenciesMacros
 
+@DependencyClient
 public struct SessionClient {
-    public init(
-        session: @escaping () -> AnyPublisher<Session?, Never>,
-        signIn: @escaping (SignInUpData) async throws -> User.ID,
-        signUp: @escaping (SignInUpData) async throws -> User.ID,
-        signOut: @escaping () async throws -> Void,
-        selectOrganization: @escaping (Organization.ID) async throws -> Void,
-        selectEvent: @escaping (Event.ID) async throws -> Void
-    ) {
-        self.publisher = session
-        self.signIn = signIn
-        self.signUp = signUp
-        self.signOut = signOut
-        self.selectOrganization = selectOrganization
-        self.selectEvent = selectEvent
-    }
+    public var publisher: () -> AnyPublisher<Session?, Never> = { Empty().eraseToAnyPublisher() }
 
-
-    public var publisher: () -> AnyPublisher<Session?, Never>
-    
     /// Sign In a user. Throws FestivlError.SignInError
     public var signIn: (SignInUpData) async throws -> User.ID
 
@@ -69,19 +54,12 @@ extension FestivlError {
 }
 
 extension SessionClient: TestDependencyKey {
-    public static var testValue = SessionClient(
-        session: unimplemented("SessionClient.sessionPublisher"),
-        signIn: unimplemented("SessionClient.signIn"),
-        signUp: unimplemented("SessionClient.signUp"),
-        signOut: unimplemented("SessionClient.signOut"),
-        selectOrganization: unimplemented("SessionClient.selectOrganization"),
-        selectEvent: unimplemented("SessionClient.selectEvent")
-    )
-    
+    public static var testValue = Self()
+
     public static var previewValue: SessionClient = signedIn
     
     public static var signedIn = SessionClient(
-        session: { signedInPreviewAuthStore.publisher.eraseToAnyPublisher() },
+        publisher: { signedInPreviewAuthStore.publisher.eraseToAnyPublisher() },
         signIn: signedInPreviewAuthStore.signIn(_:),
         signUp: signedInPreviewAuthStore.signUp(_:),
         signOut: signedInPreviewAuthStore.signOut,
@@ -90,7 +68,7 @@ extension SessionClient: TestDependencyKey {
     )
     
     public static var signedOut = SessionClient(
-        session: { signedOutPreviewAuthStore.publisher.eraseToAnyPublisher() },
+        publisher: { signedOutPreviewAuthStore.publisher.eraseToAnyPublisher() },
         signIn: signedOutPreviewAuthStore.signIn(_:),
         signUp: signedOutPreviewAuthStore.signUp(_:),
         signOut: signedOutPreviewAuthStore.signOut,

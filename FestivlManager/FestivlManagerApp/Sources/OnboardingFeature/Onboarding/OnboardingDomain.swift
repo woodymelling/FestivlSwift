@@ -8,8 +8,10 @@
 import Foundation
 import ComposableArchitecture
 import Models
+import SwiftUI
 
-public struct OnboardingDomain: Reducer {
+@Reducer
+public struct OnboardingDomain {
     public init() {}
 
     public struct State: Equatable {
@@ -37,6 +39,7 @@ public struct OnboardingDomain: Reducer {
         }
     }
 
+    @Reducer
     public struct Path: Reducer {
         public enum State: Equatable {
             case createOrganization(CreateOrganizationDomain.State)
@@ -49,11 +52,11 @@ public struct OnboardingDomain: Reducer {
         }
 
         public var body: some ReducerOf<Self> {
-            Scope(state: /State.createOrganization, action: /Action.createOrganization) {
+            Scope(state: \.createOrganization, action: \.createOrganization) {
                 CreateOrganizationDomain()
             }
 
-            Scope(state: /State.createEvent, action: /Action.createEvent) {
+            Scope(state: \.createEvent, action: \.createEvent) {
                 CreateEventDomain()
             }
         }
@@ -117,100 +120,55 @@ public struct OnboardingDomain: Reducer {
                 return .none
             }
         }
-        .forEach(\.path, action: /Action.path) {
+        .forEach(\.path, action: \.path) {
             Path()
         }
 
-        Scope(state: \State.startPage, action: /Action.startPage) {
+        Scope(state: \.startPage, action: \.startPage) {
             StartPageDomain()
         }
     }
-
-
-
 }
 
-extension OnboardingDomain.State {
-    func saveOnboardingData() -> EffectOf<OnboardingDomain> {
+public struct OnboardingView: View {
+    let store: StoreOf<OnboardingDomain>
 
-        @Dependency(\.remoteImageClient) var remoteImageClient
-        @Dependency(\.organizationClient) var organizationClient
-        @Dependency(\.eventClient) var eventClient
-        @Dependency(\.uuid) var uuid
+    public init(store: StoreOf<OnboardingDomain>) {
+        self.store = store
+    }
 
-        guard let createEventState = self.path.first(/OnboardingDomain.Path.State.createEvent),
-              let createOrganizationState = self.path.first(/OnboardingDomain.Path.State.createOrganization),
-              let userID = self.userID
-        else {
-            return .send(.failedToOnboard)
-        }
-
-        return .run { send in
-            let imageURL: URL? = if let selectedPhoto = createEventState.eventImage.pickerItem {
-                try await remoteImageClient.uploadImage(selectedPhoto, uuid().uuidString)
-            } else {
-                nil
-            }
-
-            let organization = try await organizationClient.createOrganization(
-                name: createOrganizationState.name,
-                imageURL: imageURL, // Use the image from the event when going through onboarding.
-                owner: userID
+    public var body: some View {
+        NavigationStackStore(self.store.scope(state: \.path, action: \.path)) {
+            StartPageView(
+                store: store.scope(state: \.startPage, action: \.startPage)
             )
-
-            // Have to manually wrap the withDependencies here, and probably only here
-            // This is because createEvent depends on having an organization ID, but we just created the organization.
-            // In other spots we should be in a place in the dependency tree where the organizationID is populated.
-            try await withDependencies {
-                $0.organizationID = organization.id
-            } operation: {
-                let eventID = try await eventClient.createEvent(
-                    name: createOrganizationState.name, // Use the name from the organization when going through onboarding.
-                    startDate: createEventState.startDate.calendarDate,
-                    endDate: createEventState.endDate.calendarDate,
-                    dayStartsAtNoon: createEventState.dayStartsAtNoon,
-                    timeZone: createEventState.timeZone,
-                    imageURL: imageURL
+        } destination: { state in
+            switch state {
+            case .createOrganization:
+                CaseLet(
+                    /OnboardingDomain.Path.State.createOrganization,
+                     action: OnboardingDomain.Path.Action.createOrganization,
+                     then: CreateOrganizationView.init
                 )
-
-                await send(.finishedSaving(organization, eventID))
+            case .createEvent:
+                CaseLet(
+                    /OnboardingDomain.Path.State.createEvent,
+                    action: OnboardingDomain.Path.Action.createEvent,
+                    then: CreateEventView.init
+                )
             }
         }
     }
 }
 
-extension Collection {
-    public func first<ElementOfResult>(
-        _ transform: (Self.Element) throws -> ElementOfResult?
-    ) rethrows -> ElementOfResult? {
-        try self.compactMap(transform).first
-    }
-}
 
-import Combine
-enum AsyncError: Error {
-    case finishedWithoutValue
-}
-extension Publisher {
-    func firstValue() async throws -> Output {
-        try await withCheckedThrowingContinuation { continuation in
-            var cancellable: AnyCancellable?
-            var finishedWithoutValue = true
-            cancellable = first()
-                .sink { result in
-                    switch result {
-                    case .finished:
-                        if finishedWithoutValue {
-                            continuation.resume(throwing: AsyncError.finishedWithoutValue)
-                        }
-                    case let .failure(error):
-                        continuation.resume(throwing: error)
-                    }
-                    cancellable?.cancel()
-                } receiveValue: { value in
-                    finishedWithoutValue = false
-                    continuation.resume(with: .success(value))
-                }
-        }
-    }
+#Preview {
+    Text("Blah")
+        .sheet(isPresented: .constant(true), content: {
+            OnboardingView(store: Store(initialState: OnboardingDomain.State()) {
+                OnboardingDomain()
+                    ._printChanges()
+            })
+        })
+
 }

@@ -39,7 +39,7 @@ let package = Package(
     dependencies: [
         .package(name: "FestivlLibrary", path: "../FestivlLibrary"),
         
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.0.0"),
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", branch: "store-tree"),
         .package(url: "https://github.com/woodymelling/composable-architecture-forms", branch: "main"),
         .package(url: "https://github.com/WilhelmOks/ArrayBuilder.git", from: "1.0.0")
     ],

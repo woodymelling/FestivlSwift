@@ -6,36 +6,20 @@
 //
 
 import Foundation
+import DependenciesMacros
 import Models
 
+@DependencyClient
 public struct OrganizationClient {
-    public var observeMyOrganizations: () -> DataStream<IdentifiedArrayOf<Organization>>
-    public var observeAllOrganizations: () -> DataStream<IdentifiedArrayOf<Organization>>
-    public var createOrganization: (String, URL?, User.ID) async throws -> Organization
-
-    public init(
-        observeMyOrganizations: @escaping () -> DataStream<IdentifiedArrayOf<Organization>>,
-        observeAllOrganizations: @escaping () -> DataStream<IdentifiedArrayOf<Organization>>,
-        createOrganization: @escaping (String, URL?, User.ID) async throws -> Organization
-    ) {
-        self.observeMyOrganizations = observeMyOrganizations
-        self.observeAllOrganizations = observeAllOrganizations
-        self.createOrganization = createOrganization
-    }
-
-    public func createOrganization(name: String, imageURL: URL? = nil, owner: User.ID) async throws -> Organization {
-        try await self.createOrganization(name, imageURL, owner)
-    }
+    public var observeMyOrganizations: () -> DataStream<IdentifiedArrayOf<Organization>> = { Empty().eraseToDataStream() }
+    public var observeAllOrganizations: () -> DataStream<IdentifiedArrayOf<Organization>> = { Empty().eraseToDataStream() }
+    public var createOrganization: (_ name: String, _ imageURL: URL?, _ owner: User.ID) async throws -> Organization
 }
 
 extension OrganizationClient: TestDependencyKey {
 
-    public static var testValue = OrganizationClient(
-        observeMyOrganizations: unimplemented("OrganizationClient.fetchMyOrganizations"),
-        observeAllOrganizations: unimplemented("OrganizationClient.fetchMyOrganizations"),
-        createOrganization: unimplemented("OrganizationClient.createOrganization")
-    )
-
+    public static var testValue = OrganizationClient()
+    
     public static var previewValue: OrganizationClient = OrganizationClient(
         observeMyOrganizations: { InMemoryOrganizationStore.shared.$organizations.eraseToDataStream() },
         observeAllOrganizations: { InMemoryOrganizationStore.shared.$organizations.eraseToDataStream() },

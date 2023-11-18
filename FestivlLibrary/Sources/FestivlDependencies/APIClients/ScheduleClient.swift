@@ -10,21 +10,17 @@ import IdentifiedCollections
 import Models
 import XCTestDynamicOverlay
 import Dependencies
+import DependenciesMacros
 import Combine
 
+@DependencyClient
 public struct ScheduleClient {
-    public init(getSchedule: @escaping () -> DataStream<Schedule>) {
-        self.getSchedule = getSchedule
-    }
-    
-    public var getSchedule: () -> DataStream<Schedule>
+    public var getSchedule: () -> DataStream<Schedule> = { Empty().eraseToDataStream() }
 }
 
-public enum ScheduleClientKey: TestDependencyKey {
-    public static var testValue = ScheduleClient(
-        getSchedule: XCTUnimplemented("EventClient.getEvents")
-    )
-    
+extension ScheduleClient: TestDependencyKey {
+    public static var testValue: ScheduleClient = Self()
+
     public static var previewValue = ScheduleClient(
         getSchedule: { Just(Schedule(scheduleItems: ScheduleItem.previewData(), dayStartsAtNoon: true, timeZone: NSTimeZone.default)).eraseToDataStream() }
     )
@@ -32,8 +28,8 @@ public enum ScheduleClientKey: TestDependencyKey {
 
 public extension DependencyValues {
     var scheduleClient: ScheduleClient {
-        get { self[ScheduleClientKey.self] }
-        set { self[ScheduleClientKey.self] = newValue }
+        get { self[ScheduleClient.self] }
+        set { self[ScheduleClient.self] = newValue }
     }
 }
 

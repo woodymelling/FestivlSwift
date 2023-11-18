@@ -34,7 +34,7 @@ public struct ArtistRow: View {
 
             if showArtistImage {
                
-                CachedAsyncImage(url: artist.imageURL, placeholder: {
+                FestivlCachedAsyncImage(url: artist.imageURL, placeholder: {
                     Image(systemName: "person.fill")
                         .resizable()
                         .frame(square: 30)

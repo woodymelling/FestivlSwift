@@ -9,10 +9,12 @@ import Foundation
 import Models
 import Dependencies
 import Utilities
+import DependenciesMacros
 
+@DependencyClient
 public struct InternalPreviewClient {
     public var unlockInternalPreviews: (Event.ID) -> Void
-    public var internalPreviewsAreUnlocked: (Event.ID) -> Bool
+    public var internalPreviewsAreUnlocked: (Event.ID) -> Bool = { _ in false }
 }
 
 private class InternalPreviewStore {
@@ -36,18 +38,20 @@ private class InternalPreviewStore {
 }
 
 
-public struct InternalPreviewDependencyKey: DependencyKey {
+extension InternalPreviewClient: DependencyKey {
     public static var liveValue: InternalPreviewClient {
         InternalPreviewClient(
             unlockInternalPreviews: { InternalPreviewStore.unlockedEvents.insert($0)  },
             internalPreviewsAreUnlocked: { InternalPreviewStore.unlockedEvents.contains($0) }
         )
     }
+
+    public static var testValue: InternalPreviewClient = Self()
 }
 
 public extension DependencyValues {
     var internalPreviewClient: InternalPreviewClient {
-        get { self[InternalPreviewDependencyKey.self] }
-        set { self[InternalPreviewDependencyKey.self] = newValue }
+        get { self[InternalPreviewClient.self] }
+        set { self[InternalPreviewClient.self] = newValue }
     }
 }

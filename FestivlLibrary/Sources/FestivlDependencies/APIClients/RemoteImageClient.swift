@@ -9,13 +9,10 @@ import Foundation
 import SwiftUI
 import PhotosUI
 import Dependencies
+import DependenciesMacros
 
-
+@DependencyClient
 public struct RemoteImageClient {
-    public init(uploadImage: @escaping (_: PhotosPickerItem, _: String) async throws -> URL) {
-        self.uploadImage = uploadImage
-    }
-    
     public var uploadImage: (_ image: PhotosPickerItem, _ path: String) async throws -> URL
 }
 
@@ -24,7 +21,8 @@ public enum ImageUploadError: Error {
 }
 
 extension RemoteImageClient: TestDependencyKey {
-    public static var testValue: RemoteImageClient = .init(uploadImage: unimplemented("RemoteImageClient.uploadImage"))
+    public static var testValue: RemoteImageClient = Self()
+    
     public static var previewValue: RemoteImageClient = .init(uploadImage: { _, path in URL(string: "userContent/\(path).png")!})
 }
 

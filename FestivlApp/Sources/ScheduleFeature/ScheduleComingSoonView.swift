@@ -22,7 +22,7 @@ struct ScheduleComingSoonView: View {
         ZStack {
             
             
-            CachedAsyncImage(url: eventImageURL, renderingMode: .template) {
+            FestivlCachedAsyncImage(url: eventImageURL) {
                 ProgressView()
             }
 //            .frame(square: 300)
@@ -48,7 +48,7 @@ struct ScheduleComingSoonView: View {
             
             
             VStack {
-                CachedAsyncImage(url: imageURL, renderingMode: .template) {
+                FestivlCachedAsyncImage(url: imageURL) {
                     ProgressView()
                 }
                 .frame(square: 200)

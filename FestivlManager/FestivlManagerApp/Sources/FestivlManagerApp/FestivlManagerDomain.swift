@@ -5,7 +5,8 @@ import FestivlDependencies
 import Utilities
 import OnboardingFeature
 
-public struct FestivlManagerDomain: Reducer {
+@Reducer
+public struct FestivlManagerDomain {
     
     public init() {}
     
@@ -66,12 +67,12 @@ public struct FestivlManagerDomain: Reducer {
                     return .none
                 }
             }
-            .ifLet(\.$onboarding, action: /Action.onboarding) {
+            .ifLet(\.$onboarding, action: \.onboarding) {
                 OnboardingDomain()
             }
 
             ReducerReader { state, _ in
-                Scope(state: \.home, action: /Action.home) {
+                Scope(state: \.home, action: \.home) {
                     HomeDomain()
                         .dependency(\.session, state.session)
                 }
@@ -80,8 +81,6 @@ public struct FestivlManagerDomain: Reducer {
         ._printChanges(
             .customDump { Logger.applicationRoot.debug("\($0)") }
         )
-
-        ._printChanges(.osLog(to: .applicationRoot, level: .debug))
     }
 }
 
@@ -107,7 +106,6 @@ public struct HomeDomain: Reducer {
 
     public struct State: Equatable {
         public init() {}
-
     }
 
     public enum Action: Equatable {

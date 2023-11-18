@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import SwiftUI
 import ComposableArchitecture
 
-public struct CreateOrganizationDomain: Reducer {
+@Reducer
+public struct CreateOrganizationDomain {
     public struct State: Equatable {
         public init() {}
         
@@ -48,3 +50,57 @@ public struct CreateOrganizationDomain: Reducer {
         }
     }
 }
+
+
+struct CreateOrganizationView: View {
+    let store: StoreOf<CreateOrganizationDomain>
+
+    init(store: StoreOf<CreateOrganizationDomain>) {
+        self.store = store
+    }
+
+    @FocusState var focusedField: CreateOrganizationDomain.State.Field?
+
+    var body: some View {
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            Form {
+                Section {
+                    TextField(
+                        "What is your festival called?",
+                        text: viewStore.$name
+                    )
+                    .focused($focusedField, equals: .name)
+                    .onSubmit { viewStore.send(.didSubmitField(.name)) }
+
+                } header: {
+                    Spacer()
+                }
+
+                Section {} footer: {
+                    Button {
+                        viewStore.send(.didTapCreateButton)
+                    } label: {
+                        Text("Create")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
+            }
+            .navigationTitle("Create your festival!")
+            .bind(viewStore.$focusedField, to: $focusedField)
+        }
+    }
+}
+
+#Preview {
+    NavigationStack {
+
+        CreateOrganizationView(
+            store: Store(initialState: CreateOrganizationDomain.State()) {
+                CreateOrganizationDomain()
+            }
+        )
+    }
+}
+
+

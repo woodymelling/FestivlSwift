@@ -17,7 +17,7 @@ extension SessionClient: DependencyKey {
 
 extension SessionClient {
     static public var firebase = SessionClient(
-        session: { 
+        publisher: { 
             SessionStore
                 .shared
                 .publisher

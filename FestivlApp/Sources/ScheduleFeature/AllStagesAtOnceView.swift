@@ -83,9 +83,9 @@ struct StagesIndicatorView: View {
     var body: some View {
         HStack {
             ForEach(stages) { stage in
-                CachedAsyncImage(url: stage.iconImageURL, renderingMode: .template, placeholder: {
+                CachedAsyncIcon(url: stage.iconImageURL) {
                     ProgressView()
-                })
+                }
                 .foregroundColor(stage.color)
                 .frame(square: 50)
 

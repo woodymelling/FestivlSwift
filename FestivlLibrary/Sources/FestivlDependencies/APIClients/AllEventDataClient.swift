@@ -9,6 +9,7 @@ import Foundation
 import Models
 import IdentifiedCollections
 import Dependencies
+import DependenciesMacros
 import XCTestDynamicOverlay
 import Combine
 import CustomDump
@@ -41,12 +42,9 @@ public struct EventData: Equatable {
     public var schedule: Schedule
 }
 
+@DependencyClient
 public struct AllEventDataClient {
-    public init(getData: @escaping () -> DataStream<EventData>) {
-        self.getData = getData
-    }
-    
-    public var getData: () -> DataStream<EventData>
+    public var getData: () -> DataStream<EventData> = { Empty().eraseToDataStream() }
 }
 
 
@@ -57,22 +55,28 @@ extension EventData: CustomDumpStringConvertible {
 }
 
 
-public enum AllEventDataClientKey: TestDependencyKey {
-    public static var testValue = AllEventDataClient(
-        getData: XCTUnimplemented("AllEventDataClient.getData")
-    )
+extension AllEventDataClient: TestDependencyKey {
+    public static var testValue = Self()
     
-    public static var previewValue = AllEventDataClient(
-        getData: {            
+    public static var liveValue = AllEventDataClient(
+        getData: {
+            @Dependency(\.eventID) var eventID
+
+            @Dependency(\.artistClient) var artistClient
+            @Dependency(\.eventClient) var eventClient
+            @Dependency(\.scheduleClient) var scheduleClient
+            @Dependency(\.stageClient) var stageClient
+
             return Publishers.CombineLatest4(
-                EventClientKey.previewValue.getEvent(),
-                StageClientKey.previewValue.getStages(),
-                ArtistClientKey.previewValue.getArtists(),
-                ScheduleClientKey.previewValue.getSchedule()
+                eventClient.getEvent(),
+                stageClient.getStages(),
+                artistClient.getArtists(),
+                scheduleClient.getSchedule()
             )
             .map { event, stages, artists, schedule in
                 EventData(event: event, stages: stages, artists: artists, schedule: schedule)
             }
+            .share()
             .eraseToAnyPublisher()
         }
     )
@@ -80,7 +84,7 @@ public enum AllEventDataClientKey: TestDependencyKey {
 
 public extension DependencyValues {
     var eventDataClient: AllEventDataClient {
-        get { self[AllEventDataClientKey.self] }
-        set { self[AllEventDataClientKey.self] = newValue }
+        get { self[AllEventDataClient.self] }
+        set { self[AllEventDataClient.self] = newValue }
     }
 }
